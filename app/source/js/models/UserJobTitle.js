@@ -16,6 +16,7 @@ function UserJobTitle(values) {
         userListingID: 0,
         userID: 0,
         jobTitleID: 0,
+        title: '',
         intro: null,
         statusID: 0,
         cancellationPolicyID: 0,

@@ -158,8 +158,9 @@ public class RestUserJobProfile : RestWebPage
     }
 
     /// <summary>
-    /// Process a request to create a user job title given a jobTitleID or as
-    /// fallback a validated and sanitized jobTitleName (pass in GetValidatedJobTitleName result).
+    /// Process a request to create a user job title given a jobTitleID with
+    /// a validated and sanitized jobTitleName (pass in GetValidatedJobTitleName result)
+    /// as a custom listing title.
     /// </summary>
     /// <param name="userID"></param>
     /// <param name="jobTitleID"></param>
@@ -167,81 +168,72 @@ public class RestUserJobProfile : RestWebPage
     /// <returns></returns>
     public dynamic Create(int userID, int jobTitleID, string jobTitleName)
     {
-        var jobTitleExists = false;
-
-        if (jobTitleID == 0)
+        if (jobTitleID == 0 || jobTitleID == LcRest.UserJobTitle.UserGeneratedJobTitleID)
         {
-            // Look-up/new-job-title version: it's possible that the user wrotes a 
-            // job title name without pick-up one from the list, we look-up for that in database
-            // for a jobTitleID,
-            // and may not exists, so we try to create a new one with a template.
+            // new-job-title version: it's possible that the user wrotes a 
+            // job title name without pick-up one from the list, on that case
+            // the user generated job title is assigned and the given title name is
+            // used as listing title
 
             // Name for the job title is required
-            if (String.IsNullOrEmpty(jobTitleName))
+            if (String.IsNullOrWhiteSpace(jobTitleName))
             {
                 throw new HttpException(400, "A Job Title is required");
             }
 
-            // Search
-            var jobTitle = LcRest.JobTitleSearchResult.SearchBySearchTerm(jobTitleName,
-                LcRest.Search.DEFAULT_LOCATION_LAT, 
-                LcRest.Search.DEFAULT_LOCATION_LNG,
-                LcRest.Search.DEFAULT_LOCATION_SEARCH_DISTANCE,
-                LcRest.Locale.Current).FirstOrDefault();
-            if (jobTitle != null)
+            // Search: we try an exact match, just in case we have already the job title (singular or plural) and
+            // user didn't select it from the list
+            var locale = LcRest.Locale.Current;
+            var jobTitle = LcRest.JobTitle.FindExactName(jobTitleName, locale.languageID, locale.countryID);
+            if (jobTitle.HasValue)
             {
                 // Use the first one
-                jobTitleID = jobTitle.jobTitleID;
-                jobTitleExists = true;
+                jobTitleID = jobTitle.Value;
             }
             else
             {
                 //  Create a new job-title based on the given name #650
-                jobTitleID = LcRest.JobTitle.CreateByName(jobTitleName, LcRest.Locale.Current.languageID, LcRest.Locale.Current.countryID, userID);
-                // Check well know custom error codes
-                if (jobTitleID == -1)
-                {
-                    throw new HttpException(400, String.Format("The Job Title '{0}' is not allowed.", jobTitleName));
-                }
-                LcMessaging.NotifyNewJobTitle(jobTitleName, jobTitleID);
-                jobTitleExists = true;
+                jobTitleID = LcRest.UserJobTitle.UserGeneratedJobTitleID;
             }
         }
+        // Double check that the job title exists
         else
         {
-            // Double check that the job title exists
-            jobTitleExists = LcRest.PublicJobTitle.Get(jobTitleID, LcRest.Locale.Current) != null;
-        }
-
-        if (jobTitleID > 0 && jobTitleExists)
-        {
-            // Read data; It stops on not valid:
-            var data = GetValidatedItemBodyInput();
-
-            LcRest.UserJobTitle.Create(new LcRest.UserJobTitle
+            var existentTitle = LcRest.PublicJobTitle.Get(jobTitleID, LcRest.Locale.Current);
+            if (existentTitle == null)
             {
-                userID = userID,
-                jobTitleID = jobTitleID,
-                intro = data.intro,
-                cancellationPolicyID = data.policyID,
-                collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton,
-                instantBooking = data.instantBooking
-            });
-
-            // If user is just a client, needs to become a professional
-            var user = LcRest.UserProfile.Get(userID);
-            if (!user.isServiceProfessional)
+                throw new HttpException(404, "Job Title not found or disapproved");
+            }
+            // If exists, we use the user given title, with fallback to the one we have for the given jobTitleID
+            else if (String.IsNullOrWhiteSpace(jobTitleName))
             {
-                LcAuth.BecomeProvider(userID);
-                // Set onboarding step as done for 'add job title' to avoid display that screen again to the user:
-                LcData.UserInfo.SetOnboardingStep(userID, "addJobTitle");
-                // Send email as provider
-                LcMessaging.SendWelcomeProvider(userID, WebSecurity.CurrentUserName);
+                jobTitleName = existentTitle.singularName;
             }
         }
-        else
+
+        // Read data; It stops on not valid:
+        var data = GetValidatedItemBodyInput();
+
+        LcRest.UserJobTitle.Create(new LcRest.UserJobTitle
         {
-            throw new HttpException(404, "Job Title not found or disapproved");
+            userID = userID,
+            jobTitleID = jobTitleID,
+            title = jobTitleName,
+            intro = data.intro,
+            cancellationPolicyID = data.policyID,
+            collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton,
+            instantBooking = data.instantBooking
+        });
+
+        // If user is just a client, needs to become a professional
+        var user = LcRest.UserProfile.Get(userID);
+        if (!user.isServiceProfessional)
+        {
+            LcAuth.BecomeProvider(userID);
+            // Set onboarding step as done for 'add job title' to avoid display that screen again to the user:
+            LcData.UserInfo.SetOnboardingStep(userID, "addJobTitle");
+            // Send email as provider
+            LcMessaging.SendWelcomeProvider(userID, WebSecurity.CurrentUserName);
         }
 
         return LcRest.UserJobTitle.GetItem(userID, jobTitleID);

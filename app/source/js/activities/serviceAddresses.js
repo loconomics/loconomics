@@ -3,11 +3,12 @@
 **/
 'use strict';
 
+import { item as getUserListing } from '../data/userListings';
+
 var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
-var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
 var clientAddresses = require('../data/clientAddresses');
 var showError = require('../modals/error').show;
@@ -32,7 +33,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
 
     this.title = ko.pureComputed(function() {
         if(this.isInOnboarding() && this.serviceAddresses.sourceAddresses().length === 0) {
-            return 'Where do you work as a ' + this.jobTitleName() + '?';
+            return 'Where do you work as a ' + this.listingTitle() + '?';
         }
         else if (this.isInOnboarding()) {
             return 'Location for your listing';
@@ -44,64 +45,6 @@ var A = Activity.extend(function ServiceAddressesActivity() {
             return 'Location';
         }
     }, this.viewModel);
-
-    // On changing jobTitleID:
-    // - load addresses
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-            if (jobTitleID) {
-                // Get data for the Job title ID
-                jobTitles.getJobTitle(jobTitleID)
-                .then(function(jobTitle) {
-                    // Save for use in the view
-                    this.viewModel.jobTitle(jobTitle);
-                    // Update navbar (may indicate the jobTitle name)
-                    this.updateNavBarState();
-
-                    // Fill in job title name
-                    this.viewModel.jobTitleName(jobTitle.singularName());
-
-                    // Get addresses
-                    return serviceAddresses.getList(jobTitleID);
-                }.bind(this))
-                .then(function(list) {
-                    list = serviceAddresses.asModel(list);
-                    this.viewModel.serviceAddresses.sourceAddresses(list);
-                    if (this.requestData.selectedAddressID) {
-                        this.viewModel.serviceAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
-                    }
-                }.bind(this))
-                .catch(function (err) {
-                    showError({
-                        title: 'There was an error while loading.',
-                        error: err
-                    });
-                });
-
-                /// Rewrite URL
-                // IMPORTANT: When in isSelectionMode, pushState cannot be use
-                // because it conflicts with the selection logic (on new-booking progress)
-                // TODO: discarded URL rewrite until the bug with replaceState in HashbangHistory is fixed
-                if (this.viewModel.serviceAddresses.isSelectionMode()) return;
-                // If the URL didn't included the jobTitleID, or is different,
-                // we put it to avoid reload/resume problems
-                var found = /serviceAddresses\/(\d+)/i.exec(window.location);
-                var urlID = found && found[1] |0;
-                if (urlID !== jobTitleID) {
-                    var url = '/serviceAddresses/' + jobTitleID;
-                    this.app.shell.replaceState(null, null, url);
-                }
-            }
-            else {
-                this.viewModel.serviceAddresses.sourceAddresses([]);
-                this.viewModel.serviceAddresses.selectedAddress(null);
-                this.viewModel.jobTitle(null);
-                this.updateNavBarState();
-                this.viewModel.jobTitleName('Job Title');
-            }
-        }.bind(this)
-    });
 
     // On changing clientUserID: load its addresses
     this.registerHandler({
@@ -167,7 +110,7 @@ A.prototype.applyOwnNavbarRules = function() {
         this.navBar.leftAction().model.updateWith(this.defaultLeftAction, true);
 
         var jid = this.viewModel.jobTitleID();
-        var jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler';
+        var jname = this.viewModel.listingTitle() || 'Scheduler';
         var url = this.mustReturnTo || (jid && '/listingEditor/' + jid || '/schedulingPreferences');
 
         this.navBar.leftAction().link(url);
@@ -196,7 +139,6 @@ A.prototype.show = function show(options) {
 
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
-    this.viewModel.jobTitleID(0);
     this.viewModel.clientUserID(0);
     this.viewModel.requestData = this.requestData;
 
@@ -221,13 +163,47 @@ A.prototype.show = function show(options) {
         return;
     }
 
+    // Resets
     this.viewModel.jobTitleID(jobTitleID);
-
-    this.updateNavBarState();
-
-    if (jobTitleID === 0) {
+    this.viewModel.listingTitle('Job Title');
+    this.viewModel.serviceAddresses.sourceAddresses([]);
+    this.viewModel.serviceAddresses.selectedAddress(null);
+    // Data for listing
+    if (jobTitleID) {
+        // Get Listing Title
+        const listingDataProvider = getUserListing(jobTitleID);
+        this.subscribeTo(listingDataProvider.onData, (listing) => {
+            this.viewModel.listingTitle(listing.title);
+            this.updateNavBarState();
+        });
+        this.subscribeTo(listingDataProvider.onDataError, (error) => {
+            showError({
+                title: 'Unable to load listing details.',
+                error
+            });
+        });
+        // Get data for the Job title ID
+        return serviceAddresses.getList(jobTitleID)
+        .then(function(list) {
+            list = serviceAddresses.asModel(list);
+            this.viewModel.serviceAddresses.sourceAddresses(list);
+            if (this.requestData.selectedAddressID) {
+                this.viewModel.serviceAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
+            }
+        }.bind(this))
+        .catch(function (err) {
+            showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
+        });
+    }
+    else {
+        // Load titles to display for selection
         this.viewModel.jobTitles.sync();
     }
+
+    this.updateNavBarState();
 };
 
 function ViewModel(app) {
@@ -248,7 +224,6 @@ function ViewModel(app) {
     }, this);
 
     this.jobTitleID = ko.observable(0);
-    this.jobTitle = ko.observable(null);
 
     // Optionally, some times a clientUserID can be passed in order to create
     // a location for that client where perform a work.
@@ -261,15 +236,9 @@ function ViewModel(app) {
         return !(this.clientAddresses.hasAddresses() || this.serviceAddresses.isSelectionMode());
     }, this);
 
-    this.jobTitleName = ko.observable('Job Title');
+    this.listingTitle = ko.observable('Job Title');
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceAddress');
-    this.jobTitles.selectJobTitle = function(jobTitle) {
-
-        this.jobTitleID(jobTitle.jobTitleID());
-
-        return false;
-    }.bind(this);
 
     this.isSyncing = serviceAddresses.state.isSyncing();
     this.isLoading = ko.computed(function() {

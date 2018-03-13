@@ -37,6 +37,14 @@ module.exports = function(grunt) {
      */
     var fullPaths = !!grunt.option('fullPaths');
     /**
+     * Whether enable verbose output for some extra modules, plugins or custom code.
+     * NOTE: this flag is already supported by Grunt and most plugins to generate
+     * additional output, while some others needs to pass in this as setting
+     * explicitely (happens with some Browserify plugins, but not others)
+     * @private {Boolean}
+     */
+    var verbose = !!grunt.option('verbose');
+    /**
      * Whether current environment is 'development', in order to enable
      * features like source-maps (Browserify debug mode).
      * IMPORTANT: This parameter is shared with other tasks and settings, should
@@ -154,7 +162,7 @@ module.exports = function(grunt) {
                 fullPaths: fullPaths
             },
             plugin: [
-                'common-shakeify'
+                ['common-shakeify', { verbose: verbose }]
             ],
             preBundleCB: function(b) {
                 b.on('bundle', function() {
