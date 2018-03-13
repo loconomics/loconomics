@@ -66,6 +66,13 @@ function RemoteModel(options) {
         firstTimeLoad = true;
     };
 
+    /**
+     * Tags cache as invalid, forcing a refresh next time data is accessed
+    */
+    this.invalidateCache = function() {
+        this.cache.latest = null;
+    };
+
     // Optional name used to persist a copy of the data as plain object
     // in the local storage on every successfully load/save operation.
     // With no name, no saved (default).

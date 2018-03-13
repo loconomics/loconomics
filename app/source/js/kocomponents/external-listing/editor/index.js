@@ -5,8 +5,6 @@
  * @module kocomponents/external-listing/editor
  */
 
-// import '../../job-title-autocomplete.js'; ASKIAGO how to add multiple job titles-may need new component as current job-title-autocomplete only allows one job title to be added.
-// import '../../../../html/kocomponents/job-title-autocomplete.html';
 import '../../utilities/icon-dec.js';
 import { ActionForValue } from '../../job-title-autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';

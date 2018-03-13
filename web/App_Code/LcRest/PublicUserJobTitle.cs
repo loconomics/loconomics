@@ -10,6 +10,7 @@ namespace LcRest
     /// </summary>
     public class PublicUserJobTitle
     {
+        public int userListingID { get; set; }
         public int userID { get; set; }
         public int jobTitleID { get; set; }
         public string intro { get; set; }
@@ -28,6 +29,7 @@ namespace LcRest
 
             return new PublicUserJobTitle
             {
+                userListingID = userJobTitle.userListingID,
                 userID = userJobTitle.userID,
                 jobTitleID = userJobTitle.jobTitleID,
                 intro = userJobTitle.intro,

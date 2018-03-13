@@ -1,6 +1,6 @@
 {
   "name": "LoconomicsApp",
-  "version": "1.8.2",
+  "version": "1.8.5",
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
   "appId": "com.loconomics.app",
@@ -40,7 +40,7 @@
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
     "grunt": "^1.0.1",
-    "grunt-bliss": "git+https://git@github.com/IagoSRL/grunt-bliss.git",
+    "grunt-bliss": "git://github.com/IagoSRL/grunt-bliss.git#942b7fae7132e060a73042a70a0fa26e8747969f",
     "grunt-browserify": "^5.2.0",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "1.x",
@@ -139,6 +139,7 @@
     }
   },
   "dependencies": {
+    "browsernizr": "^2.2.0",
     "load-script2": "^1.0.0"
   }
 }

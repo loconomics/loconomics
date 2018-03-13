@@ -30,6 +30,8 @@ namespace LcRest
         }
 
         #region Fields
+        public int userListingID { get; set; }
+
         public int userID { get; set; }
         public int jobTitleID { get; set; }
 
@@ -57,10 +59,15 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// New record with default values
+        /// </summary>
         public UserJobTitle()
         {
             cancellationPolicyID = CancellationPolicy.DefaultCancellationPolicyID;
             alerts = new List<Alert>();
+            instantBooking = false;
+            collectPaymentAtBookMeButton = false;
         }
 
         public static UserJobTitle FromDB(dynamic record)
@@ -68,6 +75,8 @@ namespace LcRest
             if (record == null) return null;
             return new UserJobTitle
             {
+                userListingID = record.userListingID,
+
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
 
@@ -108,6 +117,7 @@ namespace LcRest
         /// </summary>
         private const string sqlSelect = @"
             SELECT
+                u.UserListingID as userListingID,
                 u.UserID As userID,
                 u.PositionID As jobTitleID,
                 u.PositionIntro As intro,
@@ -183,6 +193,25 @@ namespace LcRest
                 }                
 
                 return userJobTitle;
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the user has the job title assigned already (publicly active or not).
+        /// Does not include blocked records (Active=0).
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="jobTitleID"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public static Boolean HasItem(int userID, int jobTitleID, int? languageID = null, int? countryID = null)
+        {
+            languageID = languageID ?? LcData.GetCurrentLanguageID();
+            countryID = countryID ?? LcData.GetCurrentCountryID();
+            using (var db = new LcDatabase())
+            {
+                return db.QuerySingle(sqlGetActiveOrInactiveItem, userID, languageID, countryID, jobTitleID) != null;
             }
         }
 

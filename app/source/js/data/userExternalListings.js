@@ -8,7 +8,10 @@ import LocalForageItemDataProviderDriver from './helpers/LocalForageItemDataProv
 import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
 import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver';
 import localforage from './drivers/localforage';
+import marketplaceProfile from './marketplaceProfile';
 import rest from './drivers/restClient';
+import userJobProfile from './userJobProfile';
+import { list as userListingsList } from './userListings';
 
 const API_NAME = 'me/external-listings';
 const LOCAL_KEY = 'external-listings';
@@ -21,7 +24,7 @@ const localListDriver = new LocalForageIndexedListDataProviderDriver(localforage
  * @returns {CachedDataProvider<Array<rest/UserExternalListing>>}
  * Usage:
  * - list.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - list.onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - list.onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export const list = new CachedDataProvider({
     // 1 minute
@@ -36,7 +39,7 @@ export const list = new CachedDataProvider({
  * @returns {CachedDataProvider<rest/UserExternalListing>}
  * Usage:
  * - item(platformID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - item(platformID).onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - item(platformID).onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export function item(id) {
     const localItemDriver = new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME);
@@ -46,29 +49,37 @@ export function item(id) {
         remote: new RestItemDataProviderDriver(rest, API_NAME, id),
         local: localItemDriver
     });
-    const notifyList = function() {
+
+    // Keep list notified because of item changes
+    itemProvider.onCacheChanged.subscribe((cache) => {
+        if (cache && cache.data) {
+            // Data stored:
+            // ensure the item (maybe new) is registered in the index (then, included in the list)
+            // (we use data[prop] because the ID could have set in the server, so
+            // scoped 'id' has not a relevant value)
+            localListDriver.registerID(cache.data[ID_PROPERTY_NAME]);
+        }
+        else {
+            // Data removed:
+            // the item needs to be removed from the index
+            localListDriver.unregisterID(id);
+        }
         // If someone subscribed to new list data
         if (list.onLoaded.count) {
             // We need to notify them, but we need the full list
             // and we just have an item, load it from cache and provide it
-            localListDriver.fetch().then((cache) => list.onLoaded.emit(cache.data));
+            localListDriver.fetch()
+            .then((cache) => {
+                // A change is like list data was loaded and cache changed with
+                // new data. All relevants events needs to be notified, preferibly
+                // in same internal order.
+                list.onCachedData.emit(cache);
+                list.onCacheChanged.emit(cache);
+                list.onLoaded.emit(cache.data);
+                // take care that onData is connected to onLoaded, so already
+                // triggered.
+            });
         }
-    };
-    // Keep list notified because of item updates
-    itemProvider.onRemoteLoaded.subscribe((itemData) => {
-        // ensure the fresh item is registered in the index (then, included in the list)
-        localListDriver.registerID(itemData[ID_PROPERTY_NAME]);
-        notifyList();
-    });
-    itemProvider.onDeleted.subscribe((itemData) => {
-        // the item needs to be removed from the index
-        localListDriver.unregisterID(itemData[ID_PROPERTY_NAME]);
-        notifyList();
-    });
-    itemProvider.onSaved.subscribe((itemData) => {
-        // ensure the item (maybe new) is registered in the index (then, included in the list)
-        localListDriver.registerID(itemData[ID_PROPERTY_NAME]);
-        notifyList();
     });
 
     /* In theory, if an updated load of the list happens in the meantime with
@@ -98,3 +109,14 @@ export function item(id) {
     // Return the instance
     return itemProvider;
 }
+
+// Whenever a change is know in external listings,
+// we must invalidate the listings data since some job titles could have
+// being added automatically as of being included in an external listing.
+const invalidateListings = () => {
+    userJobProfile.invalidateCache();
+    marketplaceProfile.invalidateCache();
+    userListingsList.invalidateCache();
+};
+list.onCacheChanged.subscribe(invalidateListings);
+list.onCacheInvalidated.subscribe(invalidateListings);

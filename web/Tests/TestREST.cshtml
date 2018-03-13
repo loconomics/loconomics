@@ -7,7 +7,6 @@
     var url = Request["url"];
 }
 <script type="text/javascript">
-
     var REST_API = {
         "Test": {
             "url": "/api/v1/en-US/Test",
@@ -416,8 +415,8 @@
                 "clientUserID": 141,
                 "serviceProfessionalUserID": 141,
                 "jobTitleID": 106,
-                "subject": 'Testing conversation',
-                "bodyText": 'Testing first message'
+                "subject": "Testing conversation",
+                "bodyText": "Testing first message"
             }
         },
         "Messaging: Single Thread": {
@@ -1131,8 +1130,51 @@
                 "notes": "Something public about me"
             },
             "delete": {}
+        },
+        "Earnings (list and create)": {
+            "url": "/api/v1/en-US/me/earnings",
+            "get": {
+                "limit": 40,
+                "untilID": null,
+                "sinceID": null
+            },
+            "post": {
+                "paidDate": "2018-02-09T10:00:00Z",
+                "durationMinutes": 120,
+                "userExternalListingID": 1,
+                "jobTitleID": 106,
+                "clientUserID": 141,
+                "amount": 120.40,
+                "notes": "Something else"
+            }
+        },
+        "Earnings entry (udpate and delete": {
+            "url": "/api/v1/en-US/me/earnings/123",
+            "get": { },
+            "put": {
+                "paidDate": "2018-02-09T10:00:00Z",
+                "durationMinutes": 120,
+                "userExternalListingID": 1,
+                "jobTitleID": 106,
+                "clientUserID": 141,
+                "amount": 120.40,
+                "notes": "Something else"
+            },
+            "delete": { }
+        },
+        "Earnings Report (queries)": {
+            "url": "/api/v1/en-US/me/earnings/report",
+            "get": {
+                "fromDate": "2018-01-01 00:00:00+0100",
+                "toDate": "2019-01-01 00:00:00+0100",
+                "jobTitleID": null,
+                "userExternalListingID": null
+            }
         }
     };
+
+</script>
+<script type="text/javascript">
 
     function useApi(name, method) {
         var api = REST_API[name],
@@ -1148,45 +1190,45 @@
         Object.keys(REST_API).forEach(function (name) {
 
             var $li = $('<li/>')
-            .text(name + ':')
-            .appendTo($l);
+                .text(name + ':')
+                .appendTo($l);
 
             ['all', 'get', 'post', 'put', 'delete'].forEach(function (method) {
 
                 if (REST_API[name][method]) {
                     $('<span/>')
-                    .text(method)
-                    .on('click', function () {
-                        useApi(name, method);
-                    })
-                    .appendTo($li);
+                        .text(method)
+                        .on('click', function () {
+                            useApi(name, method);
+                        })
+                        .appendTo($li);
                 }
             });
         });
     }
 
-/// http://stackoverflow.com/questions/4810841/how-can-i-pretty-print-json-using-javascript
-function syntaxHighlight(json) {
-    if (typeof json != 'string') {
-         json = JSON.stringify(json, undefined, 2);
-    }
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
+    /// http://stackoverflow.com/questions/4810841/how-can-i-pretty-print-json-using-javascript
+    function syntaxHighlight(json) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 2);
         }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
-}
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
 
     jQuery(function ($) {
 
@@ -1211,41 +1253,41 @@ function syntaxHighlight(json) {
                     //data: JSON.stringify(data),
                     //contentType: 'application/json'
                 }).then(
-                function (d, status, xhr) {
-                    console.log('OK   ', d);
-                    var formattedResult = xhr.responseText;
-                    try {
-                        formattedResult = JSON.stringify(JSON.parse(xhr.responseText), null, 4);
-                        $formattedLog.html(syntaxHighlight(formattedResult));
-                    } catch (ex) {
-                        $formattedLog.text(formattedResult);
+                    function (d, status, xhr) {
+                        console.log('OK   ', d);
+                        var formattedResult = xhr.responseText;
+                        try {
+                            formattedResult = JSON.stringify(JSON.parse(xhr.responseText), null, 4);
+                            $formattedLog.html(syntaxHighlight(formattedResult));
+                        } catch (ex) {
+                            $formattedLog.text(formattedResult);
+                        }
+
+                        $log.text(formattedResult);
+                        $resultStatus.text('OK    ' + xhr.status + ':' + xhr.statusText);
+                    }, function (err) {
+
+                        var msg = err.responseText;
+                        try {
+                            msg = JSON.parse(err.responseText);
+                        } catch (ex) { }
+
+                        console.log('ERROR', msg);
+                        $resultStatus.text('ERROR ' + err.status + ':' + err.statusText);
+
+                        var formattedResult = err.responseText;
+                        try {
+                            formattedResult = JSON.stringify(JSON.parse(err.responseText), null, 4);
+                            $formattedLog.html(syntaxHighlight(formattedResult));
+                        } catch (ex) {
+                            $formattedLog.text(formattedResult);
+                        }
+
+                        $log.text(formattedResult);
                     }
-
-                    $log.text(formattedResult);
-                    $resultStatus.text('OK    ' + xhr.status + ':' + xhr.statusText);
-                }, function (err) {
-
-                    var msg = err.responseText;
-                    try {
-                        msg = JSON.parse(err.responseText);
-                    } catch (ex) { }
-
-                    console.log('ERROR', msg);
-                    $resultStatus.text('ERROR ' + err.status + ':' + err.statusText);
-
-                    var formattedResult = err.responseText;
-                    try {
-                        formattedResult = JSON.stringify(JSON.parse(err.responseText), null, 4);
-                        $formattedLog.html(syntaxHighlight(formattedResult));
-                    } catch (ex) {
-                        $formattedLog.text(formattedResult);
-                    }
-
-                    $log.text(formattedResult);
-                }
-                ).always(function () {
-                    $('body').removeClass('is-loading');
-                });
+                    ).always(function () {
+                        $('body').removeClass('is-loading');
+                    });
 
             } catch (ex) {
                 $('body').removeClass('is-loading');
@@ -1265,7 +1307,7 @@ function syntaxHighlight(json) {
             return false;
         });
 
-        $('#switchResult').on('click', function() {
+        $('#switchResult').on('click', function () {
             var formatVisible = !$formattedLog.is('[hidden]');
             if (formatVisible) {
                 $formattedLog.attr('hidden', 'hidden');

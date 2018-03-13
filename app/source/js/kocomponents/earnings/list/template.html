@@ -1,0 +1,27 @@
+<h2 data-bind="visible: earningsList()">Recent Earnings</h2>
+<ul class="TilesList TilesList--openEnd" data-bind="foreach: earningsList">
+    <li data-bind="attr: { id: 'earnings' + earningsEntryID }">
+        <!-- ko if: $component.listMode() == 'select' -->
+        <button type="button" data-bind="click: $component.selectItem" class="ListingSummaryItem">
+            <div class="Item-content">
+                <p data-bind="text: $component.firstLine($data)"></p>
+                <p data-bind="text: $component.secondLine($data)"></p>
+            </div>
+            <div class="Item-action">
+                <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+            </div>
+        </button>
+        <!-- /ko -->
+        <!-- ko if: $component.listMode() == 'link' -->
+        <a href="#" data-bind="attr: { href: $component.linkToItemView($data) } " class="ListingSummaryItem">
+            <div class="Item-content">
+                    <p data-bind="text: $component.firstLine($data)"></p>
+                    <p data-bind="text: $component.secondLine($data)"></p>
+            </div>
+            <div class="Item-action">
+                <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+            </div>
+        </a>
+        <!-- /ko -->
+    </li>
+</ul>
