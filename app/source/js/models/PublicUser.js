@@ -69,23 +69,6 @@ function PublicUser(values) {
         else if (v === false) return 'FAILED';
         else return '';
     }, this);
-
-    // Utilities for /listing
-    /**
-        Get an array of the non-selected job titles.
-    **/
-    this.otherJobTitles = ko.pureComputed(function() {
-        var jid = this.selectedJobTitleID();
-        var jp = this.jobProfile();
-        return jp.filter(function(jt) {
-            return jt.jobTitleID() !== jid;
-        });
-    }, this);
-    this.otherJobTitleNames = ko.pureComputed(function() {
-        return this.otherJobTitles().map(function(jd) {
-            return jd.jobTitleSingularName();
-        }).join(', ');
-    }, this);
 }
 
 module.exports = PublicUser;

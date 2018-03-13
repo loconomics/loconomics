@@ -158,7 +158,6 @@ function ViewModel(app) {
     this.userLicenseCertificationID = ko.observable(0);
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
-    this.jobTitleNamePlural = ko.observable();
     this.inputElement = ko.observable();
     this.isLoading = ko.pureComputed(function() {
         return (

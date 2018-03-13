@@ -3,8 +3,9 @@
 **/
 'use strict';
 
-var ko = require('knockout');
+import { list as userListings } from '../data/userListings';
 
+var ko = require('knockout');
 var Activity = require('../components/Activity');
 var AppointmentView = require('../viewmodels/AppointmentView');
 var Appointment = require('../models/Appointment');
@@ -14,7 +15,6 @@ var user = require('../data/userProfile').data;
 var bookings = require('../data/bookings');
 var users = require('../data/users');
 var messaging = require('../data/messaging');
-var userJobProfile = require('../data/userJobProfile');
 var showError = require('../modals/error').show;
 
 var A = Activity.extend(function DashboardActivity() {
@@ -34,7 +34,7 @@ var A = Activity.extend(function DashboardActivity() {
     //this.$performance = this.$activity.find('#dashboardPerformance');
     //this.$getMore = this.$activity.find('#dashboardGetMore');
 
-    this.prepareShowErrorFor = function prepareShowErrorFor(title) {
+    this.prepareShowErrorFor = function(title) {
         return function(err) {
             showError({
                 title: title,
@@ -153,18 +153,19 @@ A.prototype.syncUpcomingAppointments = function syncUpcomingAppointments() {
     });
 };
 
-A.prototype.syncGetMore = function syncGetMore() {
+A.prototype.syncGetMore = function() {
     // Professional only alerts/to-dos
     if (user.isServiceProfessional()) {
-        // Check the 'profile' alert
-        userJobProfile.syncList()
-        .then(function(list) {
-            var yep = list.some(function(job) {
-                if (job.statusID() !== UserJobTitle.status.on)
+        // Check the 'profile' alert based on listings status
+        const checkStatus = (list) => {
+            var yep = list.some(function(listing) {
+                if (listing.statusID !== UserJobTitle.status.on)
                     return true;
             });
             this.viewModel.getMore.profile(!!yep);
-        }.bind(this));
+        };
+        this.subscribeTo(userListings.onData, checkStatus);
+        this.subscribeTo(userListings.onDataError, this.prepareShowErrorFor('Error loading listing status'));
     }
 };
 

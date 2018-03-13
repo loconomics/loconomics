@@ -83,7 +83,7 @@
                     <li data-bind="if: hasServices()">
                         <a href="#" class="ItemTile" data-bind="click: $root.tapServiceSummary" role="button">
                             <div class="Tile-content">
-                                <div data-bind="text: jobTitle() + ' special pricing'"></div>
+                                <div data-bind="text: listingTitle() + ' special pricing'"></div>
                                 <em data-bind="text: summaryText()"></em>
                             </div>
                             <div class="Tile-icon text-muted">
@@ -93,7 +93,7 @@
                     </li>
                     <li data-bind="ifnot: hasServices()">
                         <a href="#" class="ItemTile" data-bind="click: $root.tapServiceSummaryNew" role="button">
-                            <div class="Tile-content text-muted" data-bind="text: 'Add ' + jobTitle() + ' special pricings for ' + $root.client().firstName()"></div>
+                            <div class="Tile-content text-muted" data-bind="text: 'Add ' + listingTitle() + ' special pricings for ' + $root.client().firstName()"></div>
                             <div class="Tile-icon text-muted">
                              <span class="fa ion ion-plus"></span>
                             </div>

@@ -3,13 +3,13 @@
 **/
 'use strict';
 
-var $ = require('jquery');
-var ko = require('knockout');
-var Activity = require('../components/Activity');
-var textSearch = require('../utils/textSearch');
-var clients = require('../data/clients');
-var showError = require('../modals/error').show;
-var Client = require('../models/Client');
+import * as textSearch from '../utils/textSearch';
+import { list as clientsList, publicSearch as clientsPublicSearch } from '../data/clients';
+import $ from 'jquery';
+import Activity from '../components/Activity';
+import Client from '../models/Client';
+import ko from 'knockout';
+import { show as showError } from'../modals/error';
 
 var A = Activity.extend(function ClientsActivity() {
 
@@ -128,28 +128,18 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
 
     // Keep data updated:
-    if (this.dataSub) this.dataSub.dispose();
-    if (this.errorSub) this.errorSub.dispose();
     this.viewModel.isLoading(true);
-    this.dataSub = clients
-    .list.onData.subscribe((data) => {
+    this.subscribeTo(clientsList.onData, (data) => {
         this.viewModel.clients(data.map((raw) => new Client(raw)));
         this.viewModel.isLoading(false);
     });
-    this.errorSub = clients
-    .list.onDataError.subscribe((error) => {
+    this.subscribeTo(clientsList.onDataError, (error) => {
         this.viewModel.isLoading(false);
         showError({
             title: 'Error loading the clients list',
             error
         });
     });
-};
-
-A.prototype.hide = function() {
-    Activity.prototype.hide.call(this);
-    if (this.dataSub) this.dataSub.dispose();
-    if (this.errorSub) this.errorSub.dispose();
 };
 
 function ViewModel(app) {
@@ -172,6 +162,8 @@ function ViewModel(app) {
     // Utility to get a filtered list of clients based on search and deleted property
     this.getFilteredList = function getFilteredList() {
         var s = (this.searchText() || '').toLowerCase();
+        // Prepare search term
+        const doSearch = textSearch.searchFor(s);
         // Search the client by:
         // - full name
         // - (else) email
@@ -179,11 +171,11 @@ function ViewModel(app) {
         return this.clients().filter(function(client) {
             if (!client) return false;
             if (client.deleted()) return false;
-            var found = textSearch(s, client.fullName());
+            var found = doSearch.allAtWords(client.fullName());
             if (found) return true;
-            found = textSearch(s, client.email());
+            found = doSearch.allAt([client.email()]);
             if (found) return true;
-            found = textSearch(s, client.phone());
+            found = doSearch.allAt([client.phone()]);
             return found;
         });
     };
@@ -247,7 +239,7 @@ function ViewModel(app) {
             // Remove previous results
             this.publicSearchResults([]);
 
-            request = clients.publicSearch({
+            request = clientsPublicSearch({
                 fullName: searchText,
                 email: searchText,
                 phone: searchText

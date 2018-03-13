@@ -3,13 +3,13 @@
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm" data-bind="visible: !isInOnboarding()">
                 <ul>
                     <li>
                         <a href="/listingEditor/" data-bind="attr: {href: '/listingEditor/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
-                            <span data-bind="text: jobTitleName"></span>
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                            <span data-bind="text: listingTitle"></span>
                         </a>
                     </li>
                 </ul>
@@ -17,23 +17,23 @@
             <div class="col-md-7 col-sm-reset">
                 <h1><icon-dec params="icon: 'fa-certificate'"></icon-dec> <span data-bind="text: title"></span></h1>
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <div class="OnboardingValueProp"> 
+                <div class="OnboardingValueProp">
                     <div class="Icon-container">
                         <span class="Tile-icon fa fa-certificate" aria-hidden="true"></span>
                     </div>
                     <span class="Tile-content">
-                        <h2><span data-bind="visible: isInOnboarding()">Upload your <span data-bind="text: jobTitleName"></span> credentials</span><span data-bind="visible: !isInOnboarding()"><span data-bind="text: jobTitleName"></span> credentials</span></h2> 
-                        <p>Our records indicate credentials are legally required to provide <span data-bind="text: jobTitleName"></span> services in your area. See our <a href="/terms/background-check-policy" target="_blank">License Verification Policy</a> for more info.</p>
+                        <h2><span data-bind="visible: isInOnboarding()">Upload your <span data-bind="text: listingTitle"></span> credentials</span><span data-bind="visible: !isInOnboarding()"><span data-bind="text: listingTitle"></span> credentials</span></h2>
+                        <p>Our records indicate credentials are legally required to provide <span data-bind="text: listingTitle"></span> services in your area. See our <a href="/terms/background-check-policy" target="_blank">License Verification Policy</a> for more info.</p>
                     </span>
                 </div>
                 <h2 class="SectionTitle" data-bind="visible: submittedUserLicensesCertifications()">
-                    <span>Your <span data-bind="text: jobTitleName"></span> credentials</span>
+                    <span>Your <span data-bind="text: listingTitle"></span> credentials</span>
                 </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
-                <div data-bind="visible: jobTitleID">                
+                <div data-bind="visible: jobTitleID">
                     <ul class="TilesList TilesList--openEnd" data-bind="foreach: submittedUserLicensesCertifications">
                         <li>
                             <button class="InfoTile" type="button" data-bind="click: $root.selectItem">
@@ -75,10 +75,10 @@
                                             <div>
                                                 <em data-bind="text: licenseCertification().authority"></em>
                                             </div>
-                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">
                                                 <span class="fa ion ion-ios-checkmark-outline"></span>
                                             </div>
-                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">
                                                 <span class="fa ion ion-plus"></span>
                                             </div>
                                         </div>
@@ -98,10 +98,10 @@
                                             <div>
                                                 <em data-bind="text: licenseCertification().authority"></em>
                                             </div>
-                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">
                                                 <span class="fa ion ion-ios-checkmark-outline"></span>
                                             </div>
-                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">
                                                 <span class="fa ion ion-plus"></span>
                                             </div>
                                         </div>
@@ -121,10 +121,10 @@
                                             <div>
                                                 <em data-bind="text: licenseCertification().authority"></em>
                                             </div>
-                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">
                                                 <span class="fa ion ion-ios-checkmark-outline"></span>
                                             </div>
-                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">
                                                 <span class="fa ion ion-plus"></span>
                                             </div>
                                         </div>
@@ -158,5 +158,5 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
 
