@@ -20,7 +20,7 @@
     <a href="#continue-onboarding" data-bind="click: continueOnboarding"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Finish Profile</a>
 </li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'go-dashboard' }" class="go-dashboard">
-    <a data-bind="attr: { href: isInOnboarding() ? null : '/dashboard' }"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> [[[Dashboard]]]</a>
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/dashboard' }"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a>
 </li>
 <li class="divider" data-bind="visible: !isServiceProfessional() && !isAnonymous()"></li>
 <h2 class="App-menus-group-header" data-bind="visible: isServiceProfessional">QUICK LINKS</h2>

@@ -90,7 +90,7 @@
                 }
                 else if (photoStream != null && photoStream.Length == 0) {
                     // DOUBT: to check for this error, must be the photoStream or Request.InputStream.Length? Double check
-                    ModelState.AddFormError("[[[Maximum request length exceeded]]]");
+                    ModelState.AddFormError("Maximum request length exceeded");
                 }
                 else {
                     itemID = LcRest.UserLicenseCertification.SubmitPhoto(new LcRest.UserLicenseCertification {
@@ -115,7 +115,6 @@
 
                 // We don't want the ugly default asp.net message for file-size-exceeded
                 // As of #454 (https://github.com/joshdanielson/Loconomics/issues/454#issuecomment-37782181)
-                //TODO: fix for localisation of strings
                 if (errMsg.Contains("Maximum request length exceeded"))
                 {
                     var max = LcHelpers.GetMaxRequestSize();
@@ -124,11 +123,11 @@
                     {
                         printMax = LcHelpers.PrettyFileSize(max * 1024);
 
-                        errMsg = string.Format("[[[The file is too large, maximum file size is {0}]]]", printMax);
+                        errMsg = string.Format("The file is too large, maximum file size is {0}", printMax);
                     }
                     else
                     {
-                        errMsg = "[[[The file is too large]]]";
+                        errMsg = "The file is too large";
                     }
                     throw new ValidationException(errMsg, "profilePicture");
                 }
