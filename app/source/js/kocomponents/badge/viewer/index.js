@@ -66,8 +66,8 @@ export default class BadgeViewer extends Komponent {
          * The Badgr URL for the badge or collection.
          * @member {KnockoutObservable<string>}
          */
-        this.badgrURL = getObservable(params.badgrURL);
-        const src = this.badgrURL();
+        this.badgeURL = getObservable(params.badgeURL);
+        const src = this.badgeURL();
 
         /**
          * The type of URL – either 'badge' or 'collection'.
@@ -153,7 +153,7 @@ export default class BadgeViewer extends Komponent {
                 return r.json();
             }).then((json) => populateObservables(json));
             } else {
-            populateObservables(this.badgrURL());
+            populateObservables(this.badgeURL());
         }     
     }
 }
