@@ -93,8 +93,8 @@ namespace LcRest
                 bookMeButtonReady = record.bookMeButtonReady,
                 collectPaymentAtBookMeButton = record.collectPaymentAtBookMeButton,
 
-                jobTitleSingularName = record.jobTitleSingularName,
-                jobTitlePluralName = record.jobTitlePluralName,
+                jobTitleSingularName = record.title,
+                jobTitlePluralName = record.title,
 
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
@@ -142,9 +142,7 @@ namespace LcRest
                 u.CreateDate As createdDate,
                 u.UpdatedDate As updatedDate,
                 u.bookMeButtonReady As bookMeButtonReady,
-                u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton,
-                positions.PositionSingular As jobTitleSingularName,
-                positions.PositionPlural As jobTitlePluralName
+                u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton
             FROM
                 userprofilepositions as u
                     INNER JOIN

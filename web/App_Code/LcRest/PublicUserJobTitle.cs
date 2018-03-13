@@ -42,8 +42,8 @@ namespace LcRest
                 isActive = userJobTitle.isActive,
                 cancellationPolicyID = userJobTitle.cancellationPolicyID,
                 instantBooking = userJobTitle.instantBooking,
-                jobTitleSingularName = userJobTitle.jobTitleSingularName,
-                jobTitlePluralName = userJobTitle.jobTitlePluralName
+                jobTitleSingularName = userJobTitle.title,
+                jobTitlePluralName = userJobTitle.title
             };
         }
     }
