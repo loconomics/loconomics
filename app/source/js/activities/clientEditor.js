@@ -7,13 +7,14 @@
 **/
 'use strict';
 
+import { list as userListings } from '../data/userListings';
+
 var Activity = require('../components/Activity');
 var is = require('is_js');
 var ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter');
 var RouteParser = require('../utils/Router.js').RouteParser;
 var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
-var userJobProfile = require('../data/userJobProfile');
 var pricingTypes = require('../data/pricingTypes');
 var ko = require('knockout');
 var showConfirm = require('../modals/confirm').show;
@@ -255,13 +256,13 @@ function ViewModel(app) {
         this.isLoadingServices(true);
 
         Promise.all([serviceProfessionalServices.getClientSpecificServices(clientID),
-                     userJobProfile.getJobTitles(),
+                     userListings.onceLoaded(),
                      pricingTypes.getList()])
         .then(function(models) {
             var services = serviceProfessionalServices.asModel(models[0]);
-            var jobTitles = models[1];
+            var listings = models[1];
             var pricingTypes = models[2]();
-            var summaries = ServicesSummaryPresenter.summaries(jobTitles, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
+            var summaries = ServicesSummaryPresenter.summaries(listings, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
 
             view.serviceSummaries(summaries);
         })

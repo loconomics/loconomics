@@ -118,7 +118,8 @@ module.exports = {
         'build-css',
         'build-webapp-html',
         'build-images',
-        'build-fonts'
+        'build-fonts',
+        'copyto:webapp_assets'
     ],
     'atwork': [
         'connect:atbuild',

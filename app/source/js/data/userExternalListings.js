@@ -10,7 +10,6 @@ import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver
 import localforage from './drivers/localforage';
 import marketplaceProfile from './marketplaceProfile';
 import rest from './drivers/restClient';
-import userJobProfile from './userJobProfile';
 import { list as userListingsList } from './userListings';
 
 const API_NAME = 'me/external-listings';
@@ -114,7 +113,6 @@ export function item(id) {
 // we must invalidate the listings data since some job titles could have
 // being added automatically as of being included in an external listing.
 const invalidateListings = () => {
-    userJobProfile.invalidateCache();
     marketplaceProfile.invalidateCache();
     userListingsList.invalidateCache();
 };

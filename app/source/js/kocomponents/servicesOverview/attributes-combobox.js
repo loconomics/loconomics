@@ -90,8 +90,9 @@ function ViewModel(params, refs) {
             attributes = userOpened ? a : [];
         }
         else {
+            const doSearch = textSearch.searchFor(s);
             attributes = a.filter(function(att) {
-                return textSearch(s, att.name());
+                return doSearch.allAtWords(att.name());
             });
 
             // Append the search text as a selectable option at the beggining of the list
