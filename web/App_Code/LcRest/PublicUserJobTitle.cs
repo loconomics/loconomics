@@ -10,13 +10,19 @@ namespace LcRest
     /// </summary>
     public class PublicUserJobTitle
     {
+        public int userListingID { get; set; }
         public int userID { get; set; }
         public int jobTitleID { get; set; }
+        public string title { get; set; }
         public string intro { get; set; }
         public bool isActive { get; set; }
         public int cancellationPolicyID { get; set; }
         public bool instantBooking { get; set; }
+        [Obsolete("Preferred usage of title property. Is not in use at the current " +
+            "App code, will be removed once old App instances are updated.")]
         public string jobTitleSingularName { get; set; }
+        [Obsolete("Preferred usage of title property. Is not in use at the current " +
+            "App code, will be removed once old App instances are updated.")]
         public string jobTitlePluralName { get; set; }
 
         public static PublicUserJobTitle FromUserJobTitle(UserJobTitle userJobTitle)
@@ -28,14 +34,16 @@ namespace LcRest
 
             return new PublicUserJobTitle
             {
+                userListingID = userJobTitle.userListingID,
                 userID = userJobTitle.userID,
                 jobTitleID = userJobTitle.jobTitleID,
+                title = userJobTitle.title,
                 intro = userJobTitle.intro,
                 isActive = userJobTitle.isActive,
                 cancellationPolicyID = userJobTitle.cancellationPolicyID,
                 instantBooking = userJobTitle.instantBooking,
-                jobTitleSingularName = userJobTitle.jobTitleSingularName,
-                jobTitlePluralName = userJobTitle.jobTitlePluralName
+                jobTitleSingularName = userJobTitle.title,
+                jobTitlePluralName = userJobTitle.title
             };
         }
     }

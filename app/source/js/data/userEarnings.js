@@ -21,7 +21,7 @@ const localListDriver = new LocalForageIndexedListDataProviderDriver(localforage
  * @returns {CachedDataProvider<Array<rest/UserExternalListing>>}
  * Usage:
  * - list.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - list.onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - list.onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export const list = new CachedDataProvider({
     // 1 minute
@@ -35,8 +35,8 @@ export const list = new CachedDataProvider({
  * @param {number} id The userExternalListingID
  * @returns {CachedDataProvider<rest/UserExternalListing>}
  * Usage:
- * - item(platformID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - item(platformID).onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - item(itemID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
+ * - item(itemID).onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export function item(id) {
     const localItemDriver = new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME);

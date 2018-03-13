@@ -7,7 +7,6 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var weeklySchedule = require('../data/weeklySchedule');
 var schedulingPreferences = require('../data/schedulingPreferences');
-var userJobProfile = require('../data/userJobProfile');
 var showError = require('../modals/error').show;
 
 // Components in use in the template
@@ -91,10 +90,6 @@ function ViewModel(app) {
             this.weeklySchedule.save()
         ])
         .then(function() {
-            // A weekly schedule change may change the status of userJobTitles and bookMeButtonReady, so
-            // force a refresh of that data
-            userJobProfile.clearCache();
-            userJobProfile.syncList();
             app.successSave();
         })
         .catch(function() {

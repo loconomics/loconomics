@@ -58,11 +58,11 @@
                             <div class="row">
                                 <div class="form-group col-sm-8">
                                     <label for="selectedBirthMonth">Birth month:</label>
-                                    <select id="selectedBirthMonth" class="form-control" data-bind="textInput: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Select month', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
+                                    <select id="selectedBirthMonth" class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Select month', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <label for="birthMonthDay">Birth day:</label>
-                                    <select id="birthMonthDay" class="form-control" data-bind="textInput: birthMonthDay, options: $root.monthDays, optionsCaption: 'Select day', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
+                                    <select id="birthMonthDay" class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Select day', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -83,7 +83,7 @@
                     <li data-bind="if: hasServices()">
                         <a href="#" class="ItemTile" data-bind="click: $root.tapServiceSummary" role="button">
                             <div class="Tile-content">
-                                <div data-bind="text: jobTitle() + ' special pricing'"></div>
+                                <div data-bind="text: listingTitle() + ' special pricing'"></div>
                                 <em data-bind="text: summaryText()"></em>
                             </div>
                             <div class="Tile-icon text-muted">
@@ -93,7 +93,7 @@
                     </li>
                     <li data-bind="ifnot: hasServices()">
                         <a href="#" class="ItemTile" data-bind="click: $root.tapServiceSummaryNew" role="button">
-                            <div class="Tile-content text-muted" data-bind="text: 'Add ' + jobTitle() + ' special pricings for ' + $root.client().firstName()"></div>
+                            <div class="Tile-content text-muted" data-bind="text: 'Add ' + listingTitle() + ' special pricings for ' + $root.client().firstName()"></div>
                             <div class="Tile-icon text-muted">
                              <span class="fa ion ion-plus"></span>
                             </div>

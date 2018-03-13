@@ -9,12 +9,14 @@ var Model = require('./Model');
 var ProfileAlert = require('./ProfileAlert');
 
 function UserJobTitle(values) {
-    
+
     Model(this);
-    
+
     this.model.defProperties({
+        userListingID: 0,
         userID: 0,
         jobTitleID: 0,
+        title: '',
         intro: null,
         statusID: 0,
         cancellationPolicyID: 0,
@@ -25,8 +27,8 @@ function UserJobTitle(values) {
         updatedDate: null,
         alerts: { isArray: true, Model: ProfileAlert }
     }, values);
-    
-    this.model.defID(['userID', 'jobTitleID']);
+
+    this.model.defID(['userID', 'jobTitleID']); // Will be userListingID
 
     this.requiredAlerts = ko.pureComputed(function() {
         return this.alerts().filter(function(profileAlert) {

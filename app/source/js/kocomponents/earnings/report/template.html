@@ -1,6 +1,5 @@
 <div data-bind="with: earningsReport">
-    <!-- If we don't complete the filters, this report should be 2018 year-to-date for the release -->
-    <h2>2018 Year-to-date Summary</h2>
+    <h2 data-bind="text: $component.timeRangeHeader"></h2>
     <h3><span data-bind="
         text: total,
         format: {
@@ -31,7 +30,7 @@
             " class="pull-right"></span>
     </div>
     <h3>Performance</h3>
-    <p><span data-bind="text: jobTitleName"></span>, <span data-bind="text: listingTitle"></span></p>
+    <p><span data-bind="text: $component.selectedJobTitleText"></span>, <span data-bind="text: $component.selectedUserExternalListingText"></span></p>
     <div data-bind="visible: averageHourlyRate > 0">
         <span>Average hourly rate</span>
         <span data-bind="
