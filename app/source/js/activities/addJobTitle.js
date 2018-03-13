@@ -98,6 +98,9 @@ function ViewModel(app) {
             };
         }
         this.selectedJobTitle(item);
+        // Auto save on seletion (https://github.com/loconomics/loconomics/issues/832#issuecomment-372696848)
+        this.save();
+
         return {
             value: ActionForValue.copySelected
         };

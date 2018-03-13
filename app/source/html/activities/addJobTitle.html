@@ -12,6 +12,7 @@
             </div>
             <app-onboarding-progress-bar></app-onboarding-progress-bar>
             <h1><icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
+            <!-- ko if:isShown -->
             <form id="addJobTitleForm" role="form" data-bind="submit: save" class="LightForm col-md-7 col-sm-reset" aria-describedby="addJobTitleFormInstructions">
                 <p id="addJobTitleFormInstructions" class="help-block">Clients will find you when searching listings by job title. It's best to keep it general, e.g. “photographer” rather than “product photographer.”</p>
                 <div class="isolated inset">
@@ -28,6 +29,7 @@
                         click: save"></button>
                 </div>
             </form>
+            <!-- /ko -->
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
