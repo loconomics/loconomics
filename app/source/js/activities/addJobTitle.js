@@ -47,6 +47,9 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 
 A.prototype.show = function show(options) {
 
+    // reset
+    this.viewModel.selectedJobTitle(null);
+
     Activity.prototype.show.call(this, options);
 
     // Check if we are in onboarding and a jobTitle was already added in the sign-up
