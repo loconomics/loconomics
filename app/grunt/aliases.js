@@ -123,7 +123,7 @@ module.exports = {
     ],
     'atwork': [
         'connect:atbuild',
-        'browserify:watchAppCommon',
+        //'browserify:watchAppCommon',
         'watch'
     ],
     'build-landingPages': [

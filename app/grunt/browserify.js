@@ -124,7 +124,8 @@ module.exports = function(grunt) {
         options: {
             browserifyOptions: {
                 fullPaths: fullPaths
-            }
+            },
+            cacheFile: './build/.browserify-cache.json'
         }
     });
 
