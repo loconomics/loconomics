@@ -123,7 +123,11 @@ module.exports = {
     ],
     'atwork': [
         'connect:atbuild',
-        'browserify:watchAppCommon',
+        // Build all to ensure we are up-to-date when starting to work (specially
+        // when switching branches or after pull content), since the js build most
+        // times will be incremental now, will not be a huge problem (while previously
+        // with watchAppCommon it was all the time a slow full build)
+        'build',
         'watch'
     ],
     'build-landingPages': [

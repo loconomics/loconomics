@@ -21,15 +21,17 @@
   "private": true,
   "devDependencies": {
     "aliasify": "^2.1.0",
-    "autoprefixer": "^7.2.3",
+    "autoprefixer": "8.1.0",
+    "babel-core": "6.26",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
-    "babelify": "^7.3.0",
+    "babelify": "8.0.0",
     "bliss": "git://github.com/cstivers78/bliss.git#54c7da14babc80b39734b771c539ac7ee07b1255",
     "blueimp-file-upload": "^9.19.1",
-    "browserify": "^14.5.0",
+    "browserify": "16.1.1",
     "browserify-casesensitiverequire": "^1.0.1",
     "browserify-shim": "~3.8.14",
+    "browsernizr": "^2.2.0",
     "chai": "^4.1.2",
     "clean-css": "^4.1.9",
     "common-shakeify": "^0.4.5",
@@ -67,7 +69,8 @@
     "less": "1.4.2",
     "less2stylus": "^0.1.0",
     "load-grunt-config": "~0.19.2",
-    "localforage": "1.5.x",
+    "load-script2": "^1.0.0",
+    "localforage": "1.6.0",
     "lodash": "~4.17.4",
     "mocha": "^3.5.3",
     "moment": "^2.19.2",
@@ -137,9 +140,5 @@
         "jquery"
       ]
     }
-  },
-  "dependencies": {
-    "browsernizr": "^2.2.0",
-    "load-script2": "^1.0.0"
   }
 }

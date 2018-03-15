@@ -43,7 +43,8 @@ TARGETS.APP = {
     js: {
         files: ['<%= eslint.app.src %>'],
         tasks: [
-            'newer:eslint:app'
+            'newer:eslint:app',
+            'browserify:appCommon'
         ]
     },
 
@@ -105,9 +106,8 @@ TARGETS.LANDING_PAGES = {
         files: ['<%= eslint.app.src %>'],
         tasks: [
             // Just lint updated files
-            'newer:eslint:app'
-            // No browserify, the watchify-enabled task must be used
-            // No notification on completion, we just let errors to get notified
+            'newer:eslint:app',
+            'browserify:appCommon'
         ]
     },
 
