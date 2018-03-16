@@ -9,7 +9,6 @@ var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
 var ko = require('knockout');
 var moment = require('moment');
 var user = require('../data/userProfile').data;
-var marketplaceProfile = require('../data/marketplaceProfile');
 
 var A = Activity.extend(function ListingsActivity() {
 
@@ -32,7 +31,6 @@ A.prototype.show = function show(state) {
 
     if (this.viewModel.user.isServiceProfessional()) {
         this.viewModel.sync();
-        marketplaceProfile.sync();
     }
 };
 
@@ -68,15 +66,6 @@ function ViewModel(app) {
     }, jobVm);
 
     jobVm.user = user;
-
-    jobVm.marketplaceProfileUrl = ko.computed(function() {
-        var example = 'www.loconomics.com/YOURNAME';
-        // IMPORTANT: the ProfileUrl ever returns a value, with automatic SEO URL when no custom slug
-        // so we check if there is slug or not to show the actual URL or the example
-        var slug = marketplaceProfile.data.serviceProfessionalProfileUrlSlug();
-        var url = marketplaceProfile.data.serviceProfessionalProfileUrl();
-        return slug ? url : example;
-    }, jobVm);
 
     return jobVm;
 }
