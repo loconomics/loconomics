@@ -1,12 +1,36 @@
 'use strict';
 
 module.exports = {
-    // Default task builds everything and run tests (linting included in 'build-js' as part of 'build')
+    // Default task builds everything, lints and run tests
+    // The 'dev' modifier is not supported; this is expected to use for CI and
+    // to try all the processes
     'default': [
+        'clean:build',
         'prepare-for-build',
-        'build',
-        'build-landingPages',
-        'build-webapp',
+
+        'build-js',
+        'build-css',
+        'build-html',
+        'build-images',
+        'build-fonts',
+
+        'stylus:landingPages',
+        'cssmin:landingPages',
+        'bliss:landingPagesBuild',
+        'htmlmin:landingPagesBuild',
+        'copyto:landingPages_assets',
+
+        'bliss:webapp',
+        'copyto:webapp_assets',
+
+        'copyto:phonegap',
+        'copyto:phonegapcli_res',
+        'copyto:platform_merges',
+        'bliss:cordovaConfigJson',
+        'bliss:phonegap',
+        'bliss:cordovaConfigXml',
+        'zip:phonegap',
+
         'test'
     ],
     // RELEASE: Make a clean* build of everything to publish a version on the web
