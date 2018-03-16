@@ -40,10 +40,16 @@ TARGETS.APP = {
         }
     },
 
+    jsLint: {
+        files: ['./source/js/**/*.js'],
+        tasks: [
+            'newer:eslint:app'
+        ]
+    },
+
     js: {
         files: ['./source/js/**/*.*'],
         tasks: [
-            'newer:eslint:app',
             'browserify:appCommon'
         ]
     },
@@ -101,11 +107,17 @@ TARGETS.LANDING_PAGES = {
         }
     },
 
+    jsLint: {
+        files: ['./source/js/**/*.js'],
+        tasks: [
+            // Just lint updated files
+            'newer:eslint:app'
+        ]
+    },
+
     js: {
         files: ['./source/js/**/*.*'],
         tasks: [
-            // Just lint updated files
-            'newer:eslint:app',
             'browserify:appCommon'
         ]
     },
