@@ -152,15 +152,22 @@
             <section id="listing-editor-credentials-verifications" class="row" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials and verifications</h2>
-                    <a data-bind="visible: licensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(), 'aria-label': 'Edit your '+ title() + ' credentials' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ title() + ' credentials' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="col-xs-12 col-sm-12" data-bind="with: selectedJobTitle">
                     <div class="col-xs-12 SectionHeading">
                         <h3 data-bind="visible: $root.submittedUserLicensesCertifications().length">Professional credentials</h3>
                         <a data-bind="visible: $root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ title() + ' professional credentials' }" class="btn btn-default pull-right">Edit</a>
                         <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ title() + ' professional credentials' }" class="btn btn-default pull-right">Add</a>
-                        <em data-bind="visible: !$root.submittedUserLicensesCertifications().length">List any <span data-bind="text: title()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active. <span data-bind="visible: !serviceAddresses().length"><a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span></em>
+                    </div>
+                    <div class="col-xs-12">
+                        <em data-bind="visible: !$root.submittedUserLicensesCertifications().length">
+                            List any <span data-bind="text: title()"></span> professional licenses, certifications, training, and education you've obtained.
+                            Depending on your location, we may need to verify credentials for your listing to become active.
+                            <span data-bind="visible: !serviceAddresses().length">
+                                <a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a>
+                                to determine credentials needed.
+                            </span>
+                        </em>
                     </div>
                     <ul data-bind="template: { name: 'license-card-edit-template', foreach: $root.submittedUserLicensesCertifications }"></ul>
                 </div>
