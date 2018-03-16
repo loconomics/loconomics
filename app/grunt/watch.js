@@ -41,7 +41,7 @@ TARGETS.APP = {
     },
 
     js: {
-        files: ['<%= eslint.app.src %>'],
+        files: ['./source/js/**/*.*'],
         tasks: [
             'newer:eslint:app',
             'browserify:appCommon'
@@ -102,8 +102,7 @@ TARGETS.LANDING_PAGES = {
     },
 
     js: {
-        // All js source and bundle generation is shared with app/appCommon
-        files: ['<%= eslint.app.src %>'],
+        files: ['./source/js/**/*.*'],
         tasks: [
             // Just lint updated files
             'newer:eslint:app',
