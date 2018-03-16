@@ -4,17 +4,17 @@
 'use strict';
 import '../kocomponents/external-listing/list';
 import '../kocomponents/utilities/icon-dec.js';
+import UserType from '../enums/UserType';
 var Activity = require('../components/Activity');
 var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
 var ko = require('knockout');
 var moment = require('moment');
-var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function ListingsActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.loggedUser;
+    this.accessLevel = UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
@@ -29,9 +29,7 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
-    if (this.viewModel.user.isServiceProfessional()) {
-        this.viewModel.sync();
-    }
+    this.viewModel.sync();
 };
 
 function ViewModel(app) {
@@ -64,8 +62,6 @@ function ViewModel(app) {
         var lastDate = new Date(2014, 10, 14);
         return moment(lastDate).format('L');
     }, jobVm);
-
-    jobVm.user = user;
 
     return jobVm;
 }

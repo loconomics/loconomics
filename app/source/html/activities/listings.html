@@ -8,7 +8,7 @@
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
         <div class="col-md-7 col-sm-reset" data-bind="if: isShown">
-            <div data-bind="visible: user.isServiceProfessional">
+            <div>
                 <h2 class="SectionTitle">Listings on Loconomics.com</h2>
                 <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
                 <a class="IconContentItem" href="/addJobTitle">
