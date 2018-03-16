@@ -4,18 +4,16 @@
 'use strict';
 import '../kocomponents/external-listing/list';
 import '../kocomponents/utilities/icon-dec.js';
+import Activity from '../components/Activity';
+import UserJobProfileViewModel from '../viewmodels/UserJobProfile';
 import UserType from '../enums/UserType';
-var Activity = require('../components/Activity');
-var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
-var ko = require('knockout');
-var moment = require('moment');
 
 var A = Activity.extend(function ListingsActivity() {
 
     Activity.apply(this, arguments);
 
     this.accessLevel = UserType.serviceProfessional;
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new UserJobProfileViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
     this.title('Your Listings');
@@ -31,37 +29,3 @@ A.prototype.show = function show(state) {
 
     this.viewModel.sync();
 };
-
-function ViewModel(app) {
-    // Just use the job profile view model (created for the job title listing
-    // at 'scheduling'), instance, extend and return
-    var jobVm = new UserJobProfileViewModel(app);
-
-    // TODO read verifications count from model; computed
-    jobVm.verificationsCount = ko.observable(3);
-
-    jobVm.displayedVerificationsNumber = ko.computed(function() {
-        var verificationsCount = this.verificationsCount();
-        // Format
-        // L18N
-        return '(' + verificationsCount + ')';
-    }, jobVm);
-
-    jobVm.verificationsSecondaryText = ko.computed(function() {
-        // TODO read count limit
-        var verificationsLimit = 10;
-        var count = this.verificationsCount();
-        var remaining = verificationsLimit - count;
-        // Format
-        // L18N
-        return remaining > 0 ? 'You can add up to ' + remaining + ' more' : 'You cannot add more';
-    }, jobVm);
-
-    jobVm.displayedLastBackgroundCheck = ko.computed(function() {
-        // TODO read last check date
-        var lastDate = new Date(2014, 10, 14);
-        return moment(lastDate).format('L');
-    }, jobVm);
-
-    return jobVm;
-}
