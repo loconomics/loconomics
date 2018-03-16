@@ -1,0 +1,40 @@
+<div class="Boxes-sm animated">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="row">
+            <h1 data-bind="text: title"></h1>
+            <div data-bind="css: { 'is-loading': isLoading }">
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">Listings on Loconomics.com</h2>
+                <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
+                <a class="IconContentItem" href="/addJobTitle">
+                    <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Add new Loconomics listing</p>
+                    </div>
+                </a>
+                <h2 class="SectionTitle">Listings elsewhere</h2>
+                <external-listing-list params="userID: 540"></external-listing-list>
+                <a class="IconContentItem" href="/market-externally?mustReturn=listings&returnText=Listings">
+                    <div class="Item-content">
+                        <p>Find places to market yourself</p>
+                    </div>
+                    <icon-dec class="Item-icon" params="icon: 'ion-ios-arrow-right'"></icon-dec>
+                </a>
+                <h2 class="SectionTitle">Availability settings</h2>
+                <a class="IconContentItem" href="/schedulingPreferences?mustReturn=listings&returnText=Listings">
+                    <icon-dec class="Item-icon" params="icon: 'ion-ios-settings'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Adjust your availability</p>
+                    </div>
+                </a>
+                <app-feedback-entry class="visible-xs visible-sm" params="section: 'marketplaceProfile'"></app-feedback-entry>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>
