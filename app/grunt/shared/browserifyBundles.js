@@ -131,8 +131,10 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
         b.on('bundle', function (output) {
             output.removeListener('error', handleOutputError);
             output.on('error', handleOutputError);
-            // Exorcist integration
-            b.pipeline.get('wrap').push(exorcist(commonBundle.map));
+            if (usesMapFiles) {
+                // Exorcist integration
+                b.pipeline.get('wrap').push(exorcist(commonBundle.map));
+            }
         });
         b.on('error', function (err) {
             // Something went wrong.
