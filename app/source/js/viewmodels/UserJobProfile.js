@@ -5,37 +5,14 @@
 **/
 'use strict';
 
-var ko = require('knockout');
-var UserJobTitle = require('../models/UserJobTitle');
-var jobTitles = require('../data/jobTitles');
-var userJobProfile = require('../data/userJobProfile');
-var showError = require('../modals/error').show;
+import UserJobTitle from '../models/UserJobTitle';
+import ko from 'knockout';
+import { show as showError } from '../modals/error';
+import { list as userListings } from '../data/userListings';
 
 function UserJobProfileViewModel(app) {
 
     this.showMarketplaceInfo = ko.observable(false);
-
-    // Load and save job title info
-    var jobTitlesIndex = {};
-    function syncJobTitle(jobTitleID) {
-        return jobTitles.getJobTitle(jobTitleID)
-        .then(function(jobTitle) {
-            jobTitlesIndex[jobTitleID] = jobTitle;
-
-            // TODO: errors? not-found job title?
-        });
-    }
-    // Creates a 'jobTitle' observable on the userJobTitle
-    // model to have access to a cached jobTitle model.
-    function attachJobTitle(userJobTitle) {
-        userJobTitle.jobTitle = ko.computed(function(){
-            return jobTitlesIndex[this.jobTitleID()];
-        }, userJobTitle);
-        // Shortcut to singular name
-        userJobTitle.displayedSingularName = ko.computed(function() {
-            return this.jobTitle() && this.jobTitle().singularName() || 'Unknow';
-        }, userJobTitle);
-    }
 
     function attachMarketplaceStatus(userJobtitle) {
         userJobtitle.marketplaceStatusHtml = ko.pureComputed(function() {
@@ -56,15 +33,10 @@ function UserJobProfileViewModel(app) {
         }, userJobtitle);
     }
 
-    function attachExtras(userJobtitle) {
-        attachJobTitle(userJobtitle);
-        attachMarketplaceStatus(userJobtitle);
-    }
-
-    var showLoadingError = function showLoadingError(err) {
+    var showLoadingError = function(error) {
         showError({
             title: 'An error happening when loading your job profile.',
-            error: err
+            error
         });
 
         this.isLoading(false);
@@ -74,23 +46,21 @@ function UserJobProfileViewModel(app) {
 
     this.userJobProfile = ko.observableArray([]);
     // Updated using the live list, for background updates
-    userJobProfile.list.subscribe(function(list) {
-        // We need the job titles info before end
-        Promise.all(list.map(function(userJobTitle) {
-            return syncJobTitle(userJobTitle.jobTitleID());
-        }))
-        .then(function() {
-            // Needs additional properties for the view
-            list.forEach(attachExtras);
+    userListings.onData.subscribe((listings) => {
+        // Convert to model with additional properties for the view
+        const list = listings.map((listing) => {
+            const m = new UserJobTitle(listing);
+            attachMarketplaceStatus(m);
+            return m;
+        });
 
-            this.userJobProfile(list);
+        this.userJobProfile(list);
 
-            this.isLoading(false);
-            this.isSyncing(false);
-            this.thereIsError(false);
-        }.bind(this))
-        .catch(showLoadingError);
-    }, this);
+        this.isLoading(false);
+        this.isSyncing(false);
+        this.thereIsError(false);
+    });
+    userListings.onDataError.subscribe(showLoadingError);
 
     this.isFirstTime = ko.observable(true);
     this.isLoading = ko.observable(false);
@@ -119,7 +89,10 @@ function UserJobProfileViewModel(app) {
         }
 
         // Keep data updated:
-        userJobProfile.syncList()
+        // NOTE: In a proper component-based usage of this VM, this call and this
+        // whole 'sync' method would not be needed since a load will be triggered
+        // by subscribing to onLoad as done previously
+        userListings.onceLoaded()
         .catch(showLoadingError);
 
     }.bind(this);

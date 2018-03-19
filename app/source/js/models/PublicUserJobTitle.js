@@ -32,12 +32,11 @@ function PublicUserJobTitle(values) {
         userListingID: 0,
         userID: 0,
         jobTitleID: 0,
+        title: '',
         intro: null,
         cancellationPolicyID: 0,
         instantBooking: false,
         isActive: false,
-        jobTitleSingularName: '',
-        jobTitlePluralName: '',
 
         rating: { Model: PublicUserRating },
         verificationsSummary: { Model: PublicUserVerificationsSummary },

@@ -5,6 +5,8 @@
 // TODO store-jsdocs
 'use strict';
 
+import { list as userListings } from './userListings';
+
 var WeeklySchedule = require('../models/WeeklySchedule');
 var RemoteModel = require('./helpers/RemoteModel');
 var session = require('./session');
@@ -32,4 +34,11 @@ module.exports = api;
 
 session.on.cacheCleaningRequested.subscribe(function() {
     api.clearCache();
+});
+
+// A weekly schedule change may change the status of listings and bookMeButtonReady
+const save = api.save.bind(api);
+api.save = (data) => save(data).then((result) => {
+    userListings.invalidateCache();
+    return result;
 });

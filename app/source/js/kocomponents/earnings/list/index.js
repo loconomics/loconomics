@@ -12,6 +12,7 @@ import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import moment from 'moment';
 import numeral from 'numeral';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
 import { list as userEarningsList } from '../../../data/userEarnings';
 
@@ -64,6 +65,12 @@ export default class EarningsList extends Komponent {
 
         // Use earnings data when available
         this.subscribeTo(userEarningsList.onData, this.earningsList);
+        this.subscribeTo(userEarningsList.onDataError, (error) => {
+            showError({
+                title: 'There was an error loading earnings',
+                error
+            });
+        });
 
         /**
          * Creats link to an expanded view of the item

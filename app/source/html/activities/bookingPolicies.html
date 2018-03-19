@@ -8,7 +8,7 @@
                     <li>
                         <a href="/listingEditor/" data-bind="attr: { href: '/listingEditor/' + jobTitleID() }">
                             <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
-                            <span data-bind="text: jobTitleName"></span>
+                            <span data-bind="text: listingTitle"></span>
                         </a>
                     </li>
                 </ul>
@@ -19,7 +19,7 @@
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
                 <form id="bookingPoliciesForm" data-bind="submit: save" aria-describedby="bookingPoliciesFormInstructions">
-                    <p id="bookingPoliciesFormInstructions" class="help-block">Communicate clearly to clients your <span class="text-lowercase" data-bind="text: jobTitleName"></span> booking policies. We'll help you enforce them when we can. Please review our <a href="#loconomicsGeneralCancellationPolicy">general cancellation policy.</a></p>
+                    <p id="bookingPoliciesFormInstructions" class="help-block">Communicate clearly to clients your <span class="text-lowercase" data-bind="text: listingTitle"></span> booking policies. We'll help you enforce them when we can. Please review our <a href="#loconomicsGeneralCancellationPolicy">general cancellation policy.</a></p>
                     <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                     <div data-bind="visible: jobTitleID">
                         <fieldset>
@@ -28,12 +28,12 @@
                                 <div>
                                     <input id="acceptanceRequired" name="bookingPolicy-policy" type="radio" data-bind="checked: instantBooking, value: false, disable: isLocked" aria-describedby="acceptanceRequiredInstructions"/>
                                     <label for="acceptanceRequired"> Acceptance required (default)</label>
-                                    <p id="acceptanceRequiredInstructions" class="help-block">Clients will choose up to three times for their appointment when booking your <span class="text-lowercase" data-bind="text: jobTitleName"></span> offerings. You'll then have to approve one of them within 18 hours. We recommend this if you're using another scheduler software.</p>
+                                    <p id="acceptanceRequiredInstructions" class="help-block">Clients will choose up to three times for their appointment when booking your <span class="text-lowercase" data-bind="text: listingTitle"></span> offerings. You'll then have to approve one of them within 18 hours. We recommend this if you're using another scheduler software.</p>
                                 </div>
                                 <div>
                                     <input id="instantBooking" name="bookingPolicy-policy" type="radio" data-bind="checked: instantBooking, value: true, disable: isLocked" aria-describedby="instantBookingInstructions"/>
                                     <label for="instantBooking">Instant scheduling</label>
-                                    <p id="instantBookingInstructions" class="help-block">Clients love the ability to schedule <span class="text-lowercase" data-bind="text: jobTitleName"></span> services on the spot, but this works only if you keep your calendar up-to-date. You can <a href="/calendarSyncing">sync your calendars</a> to make this easier for you.</p>
+                                    <p id="instantBookingInstructions" class="help-block">Clients love the ability to schedule <span class="text-lowercase" data-bind="text: listingTitle"></span> services on the spot, but this works only if you keep your calendar up-to-date. You can <a href="/calendarSyncing">sync your calendars</a> to make this easier for you.</p>
                                 </div>
                             </div>
                         </fieldset>

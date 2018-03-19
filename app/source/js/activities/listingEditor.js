@@ -5,6 +5,9 @@
 **/
 'use strict';
 
+import UserJobTitle from '../models/UserJobTitle';
+import { item as userListingItem } from '../data/userListings';
+
 var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
@@ -12,7 +15,6 @@ var PublicUser = require('../models/PublicUser');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
-var userJobProfile = require('../data/userJobProfile');
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
 var showNotification = require('../modals/notification').show;
@@ -31,7 +33,7 @@ var A = Activity.extend(function ListingEditorActivity() {
     this.title = ko.pureComputed(function() {
         var user = this.user();
         if (user) {
-            return 'Edit your ' + (user.selectedJobTitle() && user.selectedJobTitle().jobTitleSingularName()) + ' listing';
+            return 'Edit your ' + (user.selectedJobTitle() && user.selectedJobTitle().title()) + ' listing';
         }
     }, this.viewModel);
 
@@ -64,18 +66,16 @@ A.prototype.loadData = function(jobTitleID) {
             if (jobTitleID) {
                 ////////////
                 // User Job Title
-                // Get data for the Job Title and User Profile
-                userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
-                //jobTitles.getJobTitle(jobTitleID)
-                .then(function(job) {
+                userListingItem(jobTitleID).onceLoaded()
+                .then((listing) => {
                     // Fill the job title record
-                    this.viewModel.jobTitle(job.jobTitle);
-                    this.viewModel.userJobTitle(job.userJobTitle);
-                }.bind(this))
-                .catch(function(err) {
+                    this.viewModel.listingTitle(listing.title);
+                    this.viewModel.userJobTitle(new UserJobTitle(listing));
+                })
+                .catch(function(error) {
                     showError({
                         title: 'There was an error loading your listing.',
-                        error: err
+                        error
                     });
                 });
                 ////////////
@@ -110,6 +110,9 @@ A.prototype.loadData = function(jobTitleID) {
     If not jobTitleID, the first one is returned
 **/
 A.prototype.show = function show(options) {
+    // reset
+    this.viewModel.listingTitle('Job Title');
+
     Activity.prototype.show.call(this, options);
 
     var params = options.route && options.route.segments;
@@ -125,12 +128,9 @@ function ViewModel(app) {
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
     this.jobTitleID = ko.observable(0);
-    this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
 
-    this.jobTitleName = ko.pureComputed(function() {
-        return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
-    }, this);
+    this.listingTitle = ko.observable();
 
     this.timeZone = ko.pureComputed(function(){
         var tz = this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone();
@@ -260,27 +260,22 @@ function ViewModel(app) {
         return hasIntro || hasAttributes;
     }, this);
 
-    this.jobTitleSingularName = ko.pureComputed(function() {
-        return this.selectedJobTitle().jobTitleSingularName();
-    }, this);
-
     this.selectedJobTitle = ko.pureComputed(function() {
         return (this.user() && this.user().selectedJobTitle()) || new PublicUserJobTitle();
     }, this);
 
     this.deleteJobTitle = function() {
         var jid = this.jobTitleID();
-        var jname = this.jobTitleName();
+        var jname = this.listingTitle();
         if (jid) {
             showConfirm({
                 title: 'Delete ' + jname + ' listing',
                 message: 'Are you sure you really want to delete your ' + jname +' listing?',
                 yes: 'Delete',
                 no: 'Keep'
-            }).then(function() {
-                app.shell.goBack();
-                return userJobProfile.deleteUserJobTitle(jid);
             })
+            .then(() => userListingItem(jid).delete())
+            .then(() => app.shell.go('/listings'))
             .catch(function(err) {
                 if (err) {
                     showError({ error: err, title: 'Error while deleting your listing' });
@@ -305,7 +300,7 @@ function ViewModel(app) {
             if (v === true && status === UserJobTitle.status.off) {
                 this.userJobTitle().statusID(UserJobTitle.status.on);
                 // Push change to back-end
-                userJobProfile.reactivateUserJobTitle(this.jobTitleID())
+                userListingItem(this.jobTitleID()).reactivate()
                 .catch(function(err) {
                     showError({ title: 'Error enabling your listing', error: err });
                 });
@@ -313,7 +308,7 @@ function ViewModel(app) {
             else if (v === false && status === UserJobTitle.status.on) {
                 this.userJobTitle().statusID(UserJobTitle.status.off);
                 // Push change to back-end
-                userJobProfile.deactivateUserJobTitle(this.jobTitleID())
+                userListingItem(this.jobTitleID()).deactivate()
                 .catch(function(err) {
                     showError({ title: 'Error disabling your listing', error: err });
                 });

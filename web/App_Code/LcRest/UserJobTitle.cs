@@ -34,6 +34,7 @@ namespace LcRest
 
         public int userID { get; set; }
         public int jobTitleID { get; set; }
+        public string title { get; set; }
 
         public string intro { get; set; }
         public ProfileStatus statusID;
@@ -43,7 +44,11 @@ namespace LcRest
         public bool bookMeButtonReady;
         public bool collectPaymentAtBookMeButton;
 
+        [Obsolete("Preferred usage of title property. Is not in use at the current " +
+            "App code, will be removed once old App instances are updated.")]
         public string jobTitleSingularName { get; set; }
+        [Obsolete("Preferred usage of title property. Is not in use at the current " +
+            "App code, will be removed once old App instances are updated.")]
         public string jobTitlePluralName { get; set; }
 
         public List<Alert> alerts { get; set; }
@@ -79,6 +84,7 @@ namespace LcRest
 
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
+                title = record.title,
 
                 intro = record.intro,
                 statusID = (ProfileStatus)record.statusID,
@@ -87,8 +93,8 @@ namespace LcRest
                 bookMeButtonReady = record.bookMeButtonReady,
                 collectPaymentAtBookMeButton = record.collectPaymentAtBookMeButton,
 
-                jobTitleSingularName = record.jobTitleSingularName,
-                jobTitlePluralName = record.jobTitlePluralName,
+                jobTitleSingularName = record.title,
+                jobTitlePluralName = record.title,
 
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
@@ -110,6 +116,14 @@ namespace LcRest
             return userJobTitles;
         }
 
+        /// <summary>
+        /// Value of the job title ID assigned when a user adds a new name as job title.
+        /// Previously, a real job title was created ("user generated"), now this one is
+        /// used for that cases, preventing from more new ones being added but using the
+        /// user given name as the listing title.
+        /// </summary>
+        public const int UserGeneratedJobTitleID = -2;
+
         #region Fetch
         #region SQL
         /// <summary>
@@ -120,6 +134,7 @@ namespace LcRest
                 u.UserListingID as userListingID,
                 u.UserID As userID,
                 u.PositionID As jobTitleID,
+                u.Title as title,
                 u.PositionIntro As intro,
                 u.StatusID As statusID,
                 u.CancellationPolicyID As cancellationPolicyID,
@@ -127,9 +142,7 @@ namespace LcRest
                 u.CreateDate As createdDate,
                 u.UpdatedDate As updatedDate,
                 u.bookMeButtonReady As bookMeButtonReady,
-                u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton,
-                positions.PositionSingular As jobTitleSingularName,
-                positions.PositionPlural As jobTitlePluralName
+                u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton
             FROM
                 userprofilepositions as u
                     INNER JOIN
@@ -140,7 +153,7 @@ namespace LcRest
                     AND u.CountryID = @2
                     AND u.Active = 1                   
                     -- Double check for approved positions
-                    AND positions.Active = 1
+                    AND (positions.Active = 1 OR positions.positionID = -2)
                     AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
         
@@ -270,7 +283,7 @@ namespace LcRest
             userJobTitle.ValidateAndFixBookingPolicies();
             using (var db = new LcDatabase())
             {
-                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7",
+                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7, @8",
                     userJobTitle.userID,
                     userJobTitle.jobTitleID,
                     LcData.GetCurrentLanguageID(),
@@ -278,11 +291,28 @@ namespace LcRest
                     userJobTitle.cancellationPolicyID,
                     userJobTitle.intro,
                     userJobTitle.instantBooking,
-                    userJobTitle.collectPaymentAtBookMeButton);
+                    userJobTitle.collectPaymentAtBookMeButton,
+                    userJobTitle.title);
 
                 if (results.Result != "Success")
                 {
-                    throw new Exception("We're sorry, there was an error creating your job title: " + results.Result);
+                    // TODO: Add better error checks (codes) at new back-end when porting this rather than local text errors
+                    var message = (string)results.Result;
+                    if (message.Contains("Cannot insert duplicate key"))
+                    {
+                        if (userJobTitle.jobTitleID == UserGeneratedJobTitleID)
+                        {
+                            throw new ConstraintException("We're sorry, but we currently only support one custom job title (stay tunned, this will change soon!).");
+                        }
+                        else
+                        {
+                            throw new ConstraintException("You already have a listing with that job title.");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("We're sorry, there was an error creating your listing: " + message);
+                    }
                 }
             }
         }

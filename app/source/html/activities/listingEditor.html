@@ -55,7 +55,7 @@
                     <a data-bind="attr: {href: '#!publicProfilePicture' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your public profile photo">Edit photo</a>
                 </div>
                 <div class="Listing-bookingInfo">
-                    <h2><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h2>
+                    <h2><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().title()"></span></h2>
                     <p><span data-bind="visible: profile().businessName(), text: profile().businessName()"></span><span class="text-muted" data-bind="visible: !profile().businessName()"><em>Your business name</em></span></p>
                     <p><span data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl()"></span><span class="text-muted" data-bind="visible: !profile().serviceProfessionalWebsiteUrl()"><em>Your business website</em></span></p>
                     <a data-bind="attr: {href: '#!serviceProfessionalBusinessInfo' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your your business info">Edit business info</a>
@@ -76,11 +76,11 @@
                 <div class="col-xs-12 col-sm-12 SectionHeading" >
                     <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview</h2>
                     <a data-bind="visible: $root.hasServicesOverview, attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the overview of your services' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.hasServicesOverview(), attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add an overview of your '+ jobTitleSingularName() + ' services' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: !$root.hasServicesOverview(), attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add an overview of your '+ title() + ' services' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="col-xs-12 col-sm-12">
                     <div data-bind="visible: !$root.hasServicesOverview()">
-                        <em class="text-muted">Tell potential clients, in a few sentences, what makes your <span data-bind="text: jobTitleSingularName()"></span> services special.</em>
+                        <em class="text-muted">Tell potential clients, in a few sentences, what makes your <span data-bind="text: title()"></span> services special.</em>
                     </div>
                     <div data-bind="visible: $root.hasServicesOverview">
                         <p class="Listing-userText" data-bind="text: intro, visible: hasIntro"></p>
@@ -100,22 +100,22 @@
             <section id="listing-editor-offerings" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings  <span class="label label-danger" data-bind="visible: !publicServices().length">Required</span></h2>
-                    <a data-bind="visible: publicServices().length, attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Edit offerings">Edit</a>
-                    <a data-bind="visible: !publicServices().length, attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add your  '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
+                    <a data-bind="visible: publicServices().length, attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ title() + ' offerings' }" class="btn btn-default pull-right" aria-label="Edit offerings">Edit</a>
+                    <a data-bind="visible: !publicServices().length, attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add your  '+ title() + ' offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
                 </div>
                 <div class="col-xs-12 col-sm-12">
-                    <em data-bind="visible: !publicServices().length" class="text-muted">List here what <span data-bind="text: jobTitleSingularName()"></span> services you offer along with descriptions and pricing. You must add at least one for your listing to be active in the marketplace.</em>
+                    <em data-bind="visible: !publicServices().length" class="text-muted">List here what <span data-bind="text: title()"></span> services you offer along with descriptions and pricing. You must add at least one for your listing to be active in the marketplace.</em>
                 </div>
                 <ul data-bind="template: { name: 'offering-card-edit-template', foreach: publicServices() }"></ul>
             </section>
             <section id="listing-editor-photos" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
-                    <a data-bind="visible: $root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the photos of your '+ jobTitleSingularName() + ' work' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add photos your '+ jobTitleSingularName() + ' work' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: $root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the photos of your '+ title() + ' work' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add photos your '+ title() + ' work' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="col-xs-12 col-sm-12">
-                    <em data-bind="visible: !$root.workPhotos().length" class="text-muted">Upload here some photos you think clients will want to see pertaining to your <span data-bind="text: jobTitleSingularName()"></span> work.</em>
+                    <em data-bind="visible: !$root.workPhotos().length" class="text-muted">Upload here some photos you think clients will want to see pertaining to your <span data-bind="text: title()"></span> work.</em>
                 </div>
                 <div class="row" data-bind="foreach: $root.workPhotos">
                     <figure class="col-xs-12 col-sm-6">
@@ -141,26 +141,33 @@
             <section id="listing-editor-weekly-schedule" data-bind="with: selectedJobTitle" class="row" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Location  <span class="label label-danger" data-bind="visible: !$root.serviceAddresses().length">Required</span></h2>
-                    <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ title() + ' locations' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ title() + ' locations' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="col-xs-12 col-sm-12">
-                    <em data-bind="visible: !$root.serviceAddresses().length" class="text-muted">Add a location or service area where you clients can book your <span data-bind="text: jobTitleSingularName()"></span> offerings. You must add one for your listing to be active in the marketplace.</em>
+                    <em data-bind="visible: !$root.serviceAddresses().length" class="text-muted">Add a location or service area where you clients can book your <span data-bind="text: title()"></span> offerings. You must add one for your listing to be active in the marketplace.</em>
                 </div>
                 <ul data-bind="template: { name: 'location-card-edit-template', foreach: $root.serviceAddresses() }"></ul>
             </section>
             <section id="listing-editor-credentials-verifications" class="row" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials and verifications</h2>
-                    <a data-bind="visible: licensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(), 'aria-label': 'Edit your '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="col-xs-12 col-sm-12" data-bind="with: selectedJobTitle">
                     <div class="col-xs-12 SectionHeading">
                         <h3 data-bind="visible: $root.submittedUserLicensesCertifications().length">Professional credentials</h3>
-                        <a data-bind="visible: $root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' professional credentials' }" class="btn btn-default pull-right">Edit</a>
-                        <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' professional credentials' }" class="btn btn-default pull-right">Add</a>
-                        <em data-bind="visible: !$root.submittedUserLicensesCertifications().length">List any <span data-bind="text: jobTitleSingularName()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active. <span data-bind="visible: !serviceAddresses().length"><a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span></em>
+                        <a data-bind="visible: $root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ title() + ' professional credentials' }" class="btn btn-default pull-right">Edit</a>
+                        <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ title() + ' professional credentials' }" class="btn btn-default pull-right">Add</a>
+                    </div>
+                    <div class="col-xs-12">
+                        <em data-bind="visible: !$root.submittedUserLicensesCertifications().length">
+                            List any <span data-bind="text: title()"></span> professional licenses, certifications, training, and education you've obtained.
+                            Depending on your location, we may need to verify credentials for your listing to become active.
+                            <span data-bind="visible: !serviceAddresses().length">
+                                <a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a>
+                                to determine credentials needed.
+                            </span>
+                        </em>
                     </div>
                     <ul data-bind="template: { name: 'license-card-edit-template', foreach: $root.submittedUserLicensesCertifications }"></ul>
                 </div>
@@ -176,18 +183,18 @@
             <section id="listing-editor-booking-policies" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec> Booking policies</h2>
-                    <a data-bind="attr: {href: '#!bookingPolicies/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your ' + jobTitleSingularName() + ' booking policies' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="attr: {href: '#!bookingPolicies/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your ' + title() + ' booking policies' }" class="btn btn-default pull-right">Edit</a>
                 </div>
                 <div class="container-fluid">
                     <div class="col-xs-12 col-md-6">
                         <h3>Your instant booking policy</h3>
                         <div data-bind="visible: !instantBooking()">
                             <strong>Acceptance required</strong>
-                            <p>Clients will choose up to three times for their appointment when booking your <span class="text-lowercase" data-bind="text: jobTitleSingularName()"></span> offerings. You'll then have to approve one of them within 18 hours. We recommend this if you're using another scheduler software.</p>
+                            <p>Clients will choose up to three times for their appointment when booking your <span class="text-lowercase" data-bind="text: title()"></span> offerings. You'll then have to approve one of them within 18 hours. We recommend this if you're using another scheduler software.</p>
                         </div>
                         <div data-bind="visible: instantBooking()">
                             <strong>Instant booking</strong>
-                            <p>Clients love the ability to book <span class="text-lowercase" data-bind="text: jobTitleSingularName()"></span> services on the spot, but this works only if you keep your calendar up-to-date. You can <a data-bind="attr: {href: '#!calendarSyncing' + $root.returnLinkGeneralActivity() }">sync your calendars</a> to make this easier for you.</p>
+                            <p>Clients love the ability to book <span class="text-lowercase" data-bind="text: title()"></span> services on the spot, but this works only if you keep your calendar up-to-date. You can <a data-bind="attr: {href: '#!calendarSyncing' + $root.returnLinkGeneralActivity() }">sync your calendars</a> to make this easier for you.</p>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
@@ -210,7 +217,7 @@
                 </div>
             </section>
             <section id="listing-editor-delete-listing" class="row" title="">
-                <button type="button" class="btn btn-danger center-block" data-bind="click: $root.deleteJobTitle">Delete your <span data-bind="text: $root.jobTitleName"></span> listing</button>
+                <button type="button" class="btn btn-danger center-block" data-bind="click: $root.deleteJobTitle">Delete your <span data-bind="text: $root.listingTitle"></span> listing</button>
             </section>
         </div>
     </div>

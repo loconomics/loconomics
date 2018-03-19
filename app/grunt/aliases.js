@@ -1,12 +1,37 @@
 'use strict';
 
 module.exports = {
-    // Default task builds everything and run tests (linting included in 'build-js' as part of 'build')
+    // Default task builds everything, lints and run tests
+    // The 'dev' modifier is not supported; this is expected to use for CI and
+    // to try all the processes
     'default': [
+        'clean:build',
         'prepare-for-build',
-        'build',
-        'build-landingPages',
-        'build-webapp',
+
+        'build-js',
+        'build-css',
+        'build-html',
+        'build-images',
+        'build-fonts',
+
+        'stylus:landingPages',
+        'cssmin:landingPages',
+        'bliss:landingPagesBuild',
+        'htmlmin:landingPagesBuild',
+        'copyto:landingPages_assets',
+
+        'bliss:webapp',
+        'htmlmin:webapp',
+        'copyto:webapp_assets',
+
+        'copyto:phonegap',
+        'copyto:phonegapcli_res',
+        'copyto:platform_merges',
+        'bliss:cordovaConfigJson',
+        'bliss:phonegap',
+        'bliss:cordovaConfigXml',
+        'zip:phonegap',
+
         'test'
     ],
     // RELEASE: Make a clean* build of everything to publish a version on the web
@@ -102,8 +127,7 @@ module.exports = {
     'build-webapp-html': [
         'replace:html_bad_chars',
         'bliss:webapp',
-        // TODO Fix problem with htmlmin; disabled temporarly
-        //'htmlmin:webapp'
+        'htmlmin:webapp'
     ],
     'build-webapp-html-copy': [
         'build-webapp-html',
@@ -118,11 +142,16 @@ module.exports = {
         'build-css',
         'build-webapp-html',
         'build-images',
-        'build-fonts'
+        'build-fonts',
+        'copyto:webapp_assets'
     ],
     'atwork': [
         'connect:atbuild',
-        'browserify:watchAppCommon',
+        // Build all to ensure we are up-to-date when starting to work (specially
+        // when switching branches or after pull content), since the js build most
+        // times will be incremental now, will not be a huge problem (while previously
+        // with watchAppCommon it was all the time a slow full build)
+        'build',
         'watch'
     ],
     'build-landingPages': [
