@@ -21,6 +21,7 @@ module.exports = {
         'copyto:landingPages_assets',
 
         'bliss:webapp',
+        'htmlmin:webapp',
         'copyto:webapp_assets',
 
         'copyto:phonegap',
