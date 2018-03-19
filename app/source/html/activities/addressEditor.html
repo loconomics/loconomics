@@ -15,7 +15,7 @@
                 <h1><icon-dec params="icon: titleIcon"></icon-dec> <span data-bind="text: title"></span></h1>
                 <form id="addressEditorForm" role="form" data-bind="submit: save" class="container-fluid LightForm" aria-describedby="addressEditorFormInstructions">
                     <p id="addressEditorFormInstructions" class="help-block" data-bind="visible: formInstructions">
-                        <span data-bind="text: formInstructions"></span> <span class="text-lowercase" data-bind="text: jobTitleName"></span> services.
+                        <span data-bind="text: formInstructions"></span> <span class="text-lowercase" data-bind="text: listingTitle"></span> services.
                     </p>
                     <div data-bind="css: { 'is-loading': isLoading }">
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -23,7 +23,7 @@
                     <div data-bind="with: address()">
                         <div data-bind="visible: isServiceLocation">
                             <fieldset>
-                                <legend><span data-bind="text: $root.jobTitleName"></span> place of work:</legend>
+                                <legend><span data-bind="text: $root.listingTitle"></span> place of work:</legend>
                                 <div class="form-group" data-bind="visible: !$parent.clientUserID()">
                                     <label for="locationName">Name of location:</label>
                                     <input id="locationName" type="text" class="form-control" required maxlength="100" data-bind="textInput: addressName, disable: $root.isLocked" aria-describedby="locationNameInstructions">
@@ -58,7 +58,7 @@
                         </div>
                         <div data-bind="visible: isServiceArea">
                             <fieldset>
-                                <legend><span data-bind="text: $root.jobTitleName"></span> work area:</legend>
+                                <legend><span data-bind="text: $root.listingTitle"></span> work area:</legend>
                                 <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
                                     <label for="postalCode">Zip code:</label>
                                     <input id="postalCode" type="number" class="form-control" min="0" required data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM.onBlur }, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">

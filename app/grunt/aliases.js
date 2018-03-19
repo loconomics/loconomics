@@ -109,8 +109,16 @@ module.exports = {
         'build-webapp-html',
         'copyto:webapp_assets'
     ],
-    'build-webapp': [
+    'build-webapp-parallel': [
         'parallel:build-webapp',
+        'copyto:webapp_assets'
+    ],
+    'build-webapp': [
+        'build-js',
+        'build-css',
+        'build-webapp-html',
+        'build-images',
+        'build-fonts',
         'copyto:webapp_assets'
     ],
     'atwork': [

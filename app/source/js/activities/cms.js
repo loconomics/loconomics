@@ -4,10 +4,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var ko = require('knockout');
-var clients = require('../data/clients');
-var showError = require('../modals/error').show;
+import Activity from '../components/Activity';
+import { list as clientsList } from '../data/clients';
+import ko from 'knockout';
+import { show as showError } from'../modals/error';
 
 var A = Activity.extend(function CmsActivity() {
 
@@ -27,24 +27,15 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Keep data updated:
-    if (this.dataSub) this.dataSub.dispose();
-    if (this.errorSub) this.dataSub.dispose();
-    this.dataSub = clients.list.onData.subscribe((data) => {
+    this.subscribeTo(clientsList.onData, (data) => {
         this.viewModel.totalClients(data.length);
     });
-    this.errorSub = clients.list.onDataError.subscribe(function(err) {
+    this.subscribeTo(clientsList.onDataError, (err) => {
         showError({
             title: 'Error loading the clients list',
             error: err
         });
     });
-};
-
-A.prototype.hide = function() {
-    Activity.prototype.hide.call(this);
-
-    if (this.dataSub) this.dataSub.dispose();
-    if (this.errorSub) this.dataSub.dispose();
 };
 
 var numeral = require('numeral');

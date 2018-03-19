@@ -210,4 +210,3 @@ INSERT INTO dbo.positions (PositionID,LanguageID,CountryID,PositionSingular,Posi
 INSERT INTO dbo.positions (PositionID,LanguageID,CountryID,PositionSingular,PositionPlural,Aliases,PositionDescription,CreatedDate,UpdatedDate,ModifiedBy,GovID,GovPosition,GovPositionDescription,Active,DisplayRank,PositionSearchDescription,AttributesComplete,StarRatingsComplete,PricingTypeComplete,EnteredByUserID,Approved,CanBeRemote,AddGratuity,HIPAA,SendReviewReminderToClient) VALUES (1207,1,1,'WIfi and Network Specialist','WIfi and Network Specialists','','','2018-03-05 00:00:00.000','2018-03-05 00:00:00.000','jd','','','',1,2,'',0,0,0,null,1,0,0,0,0);
 
 UPDATE positions SET PositionSingular = 'Home Tech Specialist', PositionPlural = 'Home Tech Specialists' WHERE PositionID = 1202 AND LanguageID = 1 AND CountryID = 1;
-

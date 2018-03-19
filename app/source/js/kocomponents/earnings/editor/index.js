@@ -102,12 +102,14 @@ export default class EarningsEditor extends Komponent {
         /**
          * Holds a list of the user external listings, available to be selected
          * as the earnings entry listing.
+         * @member {KnockoutObservableArray<rest/UserExternalListing>}
          */
         this.userExternalListings = ko.observableArray([]);
 
         /**
          * Holds a list of the user listings at Loconomics, available to allow
          * quick selection of job title.
+         * @member {KnockoutObservableArray<rest/UserJobTitle>}
          */
         this.userListings = ko.observableArray([]);
 
@@ -115,6 +117,7 @@ export default class EarningsEditor extends Komponent {
          * Holds a list of suggested platforms, available to be selected
          * as the earnigns entry listing, but while is not a listing it will
          * create a listing for that platform automatically.
+         * @member {KnockoutObservableArray<rest/Platform>}
          */
         this.suggestedPlatforms = ko.observableArray([]);
 
@@ -415,7 +418,7 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * Makes given client current one selected.
-     * @param {Object} client
+     * @param {rest/Client} client
      * @method
      */
     selectClient(client) {
@@ -428,7 +431,7 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * Makes given listing the one selected
-     * @param {Object} listing
+     * @param {rest/UserExternalListing} listing
      * @method
      */
     selectListing(listing) {
@@ -440,14 +443,14 @@ export default class EarningsEditor extends Komponent {
     }
 
     /**
-     * Gets the job title from the given user listings and use it as the
+     * Gets the job title from the given user listing and use it as the
      * selected job title of the earnings entry
-     * @param {Object} listing
+     * @param {rest/UserJobTitle} listing
      * @method
      */
     selectListingJobTitle(listing) {
         this.earningsEntry.jobTitleID(listing.jobTitleID);
-        this.earningsEntry.jobTitleName(listing.jobTitleSingularName);
+        this.earningsEntry.jobTitleName(listing.title);
         this.goToSummary();
     }
 

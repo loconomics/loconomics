@@ -1,13 +1,18 @@
 /**
     ServiceProfessionalServiceViewModel
+
+    @deprecated Needs refactoring as components and new data modules, along with the
+    only place is used right now, the activity with the same name and
+    MUST NOT be used in more places.
 **/
 'use strict';
+
+import PricingType from '../models/PricingType';
 
 var ko = require('knockout');
 var $ = require('jquery');
 
 var EventEmitter = require('events').EventEmitter;
-var jobTitles = require('../data/jobTitles');
 var pricingTypes = require('../data/pricingTypes');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 var showError = require('../modals/error').show;
@@ -20,7 +25,6 @@ function ServiceProfessionalServiceViewModel(app) {
     this.jobTitleID = ko.observable(0);
     // 0 to load current user pricing and allow edit
     this.serviceProfessionalID = ko.observable(null);
-    this.jobTitle = ko.observable(null);
     this.pricingTypes = ko.observableArray([]);
     this.isAdditionMode = ko.observable(false);
     // Especial mode when instead of pick and edit we are just selecting
@@ -38,7 +42,6 @@ function ServiceProfessionalServiceViewModel(app) {
         this.jobTitleID(0);
         this.pricingTypes([]);
         this.serviceProfessionalID(null);
-        this.jobTitle(null);
         this.isAdditionMode(false);
         this.isSelectionMode(false);
         this.selectedServices([]);
@@ -192,17 +195,10 @@ function ServiceProfessionalServiceViewModel(app) {
         this.isLoading(true);
         // Get data for the Job title ID and pricing types.
         // They are essential data
-        return jobTitles.getJobTitle(jobTitleID)
-        .then(function(jobTitle) {
-            this.jobTitle(jobTitle);
-
-            var pricingTypeIDs = jobTitle.pricingTypes().map(function(type) { return type.pricingTypeID(); });
-
-            return pricingTypes.getListByIDs(pricingTypeIDs);
-        }.bind(this))
+        return pricingTypes.byJobTitle(jobTitleID)
+        .onceLoaded()
         .then(function(pricingTypes) {
-            this.pricingTypes(pricingTypes);
-
+            this.pricingTypes(pricingTypes.map((raw) => new PricingType(raw)));
             // Get services
             return servicesPromise;
         }.bind(this))
@@ -246,7 +242,6 @@ function ServiceProfessionalServiceViewModel(app) {
     this.clearData = function() {
         this.serviceProfessionalID(null);
         this.list([]);
-        this.jobTitle(null);
     }.bind(this);
 }
 

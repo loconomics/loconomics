@@ -6,7 +6,7 @@
     Options:
 
     - GET
-    
+
     - GET /@id
 
     - @Result {
@@ -14,21 +14,27 @@
     }
 
     EXAMPLE {
-        "Service Types": {
+        "Service Types (formerly Pricing Types)": {
             "url": "/api/v1/en-US/pricing-types",
             "get": { }
         },
-        "Service Types (item)": {
+        "Service Types (item) (formerly Pricing Types)": {
             "url": "/api/v1/en-US/pricing-types/3",
+            "get": { }
+        },
+        "Service Types by Job Title (formerly Pricing Types)": {
+            "url": "/api/v1/en-US/pricing-types/job-title/106",
             "get": { }
         }
     }
 *@
-@functions{
+@functions {
     public class RestPricingTypes : RestWebPage
     {
-        private dynamic ConvertPricingType(LcPricingModel.PackageBaseConfig pricing) {
-            return new {
+        private dynamic ConvertPricingType(LcPricingModel.PackageBaseConfig pricing)
+        {
+            return new
+            {
                 pricingTypeID = pricing.PricingTypeID,
                 singularName = pricing.SingularName,
                 pluralName = pricing.PluralName,
@@ -38,7 +44,7 @@
                 // PriceCalculationType enumeration value:
                 priceCalculation = pricing.PriceCalculation,
                 isAddon = pricing.IsAddon,
-        
+
                 // Form Texts
                 namePlaceHolder = pricing.NamePlaceHolder,
                 suggestedName = pricing.SuggestedName,
@@ -115,32 +121,61 @@
                 updatedDate = new DateTime(2015, 2, 26, 16, 25, 00)
             };
         }
-        
+
+        public IEnumerable<dynamic> GetByJobTitleID(int jobTitleID)
+        {
+            var locale = LcRest.Locale.Current;
+            var ids = LcRest.JobTitlePricingType.GetList(jobTitleID, locale.languageID, locale.countryID).Select((x) => x.pricingTypeID);
+            foreach (var pricingTypeID in ids)
+            {
+                if (LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pricingTypeID))
+                {
+                    yield return ConvertPricingType(LcPricingModel.PackageBasePricingTypeConfigs[pricingTypeID]);
+                }
+            }
+        }
+
         public override dynamic Get()
         {
-            if (UrlData[0].IsInt())
+            if (UrlData.Count == 1)
             {
-                var id = UrlData[0].AsInt(0);
-                
-                if (LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(id)) {
-                
-                    return ConvertPricingType(LcPricingModel.PackageBasePricingTypeConfigs[id]);
+                if (UrlData[0].IsInt())
+                {
+                    var id = UrlData[0].AsInt(0);
+
+                    if (LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(id))
+                    {
+
+                        return ConvertPricingType(LcPricingModel.PackageBasePricingTypeConfigs[id]);
+                    }
+                    else
+                    {
+                        throw new HttpException(404, "Pricing Type not found.");
+                    }
                 }
-                else {
-                    throw new HttpException(404, "Pricing Type not found.");
+                else
+                {
+                    throw new HttpException(400, "Invalid format for the Pricing Type ID");
                 }
             }
-            else if (UrlData.Count == 1) {
-                throw new HttpException(400, "Invalid format for the Pricing Type ID");
+            else if (UrlData.Count == 2)
+            {
+                if (UrlData[0] == "job-title" && UrlData[1].IsInt())
+                {
+                    var jobTitleID = UrlData[1].AsInt();
+                    return GetByJobTitleID(jobTitleID).ToList();
+                }
             }
-            else
+            else if (UrlData.Count == 0)
             {
                 // Full list
                 return LcPricingModel.PackageBasePricingTypeConfigs.Values.Select(ConvertPricingType);
             }
+
+            return base.Get();
         }
     }
 }
-@{   
+@{
     new RestPricingTypes().JsonResponse(this);
 }

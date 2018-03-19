@@ -126,19 +126,13 @@ export default class EarningsFilter extends Komponent {
 
         /**
          * Job title object selected.
-         * @member {KnockoutObservable<object>}
+         * @member {KnockoutObservable<rest/UserJobTitle>}
          */
         this.jobTitle = ko.observable();
 
         /**
-         * External Listing ID selected
-         * @member {KnockoutObservable<number>}
-         */
-        this.userExternalListingID = ko.observable();
-
-        /**
          * External listing object selected.
-         * @member {KnockoutObservable<object>}
+         * @member {KnockoutObservable<rest/UserExternalListing>}
          */
         this.externalListing = ko.observable();
 
@@ -251,7 +245,7 @@ export default class EarningsFilter extends Komponent {
                 // keep in sync with it if more specialized usage than just
                 // custom range is needed (like different title and so).
                 timeRangeOption: this.timeRangeOption(),
-                jobTitleText: jobTitle && jobTitle.jobTitleSingularName,
+                jobTitleText: jobTitle && jobTitle.title,
                 userExternalListingText: externalListing && externalListing.title
             });
         })
