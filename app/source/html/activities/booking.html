@@ -73,15 +73,15 @@
                         <fieldset>
                             <legend class="text-uppercase">SELECT A LOCATION</legend>
                             <fieldset data-bind="visible: serviceAddresses.hasAddresses">
-                                <legend class"text-center"><span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations:</legend>
+                                <legend class="text-center"><span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations:</legend>
                                 <div class="Box-sm" data-bind="template: { name: 'addresses-select-template', data: serviceAddresses }"></div>
                             </fieldset>
-                            <fieldset class"text-center" data-bind="visible: clientAddresses.hasAddresses">
+                            <fieldset class="text-center" data-bind="visible: clientAddresses.hasAddresses">
                                 <legend class="text-center" >Select one of your locations:</legend>
                                 <div class="Box-sm" data-bind="template: { name: 'addresses-select-template', data: clientAddresses }"></div>
                             </fieldset>
                             <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep, visible: booking().serviceAddress">Save and continue</button>
-                            <fieldset class"text-center" data-bind="visible: hasServiceArea">
+                            <fieldset class="text-center" data-bind="visible: hasServiceArea">
                                 <legend class="text-center" >Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</legend>
                                 <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
                                     <li>
@@ -334,7 +334,7 @@
                                 <li>
                                     <fieldset>
                                         <div data-bind="visible: !booking().instantBooking()">
-                                            <legend class"text-center">Requested appointment times:</legend>
+                                            <legend class="text-center">Requested appointment times:</legend>
                                             <div class="BookingSummaryItem">
                                                 <div class="Item-icon">
                                                     <icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec>
@@ -367,7 +367,7 @@
                                             </div>
                                         </div>
                                         <div data-bind="visible: booking().instantBooking()">
-                                            <legend class"text-center">Appointment time:</legend>
+                                            <legend class="text-center">Appointment time:</legend>
                                             <div class="BookingSummaryItem">
                                                 <div class="Item-icon">
                                                     <icon-dec data-bind="visible: !hasSomeDateSelected()" params="icon: 'ion-plus'"></icon-dec>
@@ -394,7 +394,7 @@
                                 </li>
                                 <li data-bind="if: !isPhoneServiceOnly()">
                                     <fieldset>
-                                        <legend class"text-center">Location:</legend>
+                                        <legend class="text-center">Location:</legend>
                                         <div class="BookingSummaryItem">
                                             <div class="Item-icon">
                                                 <icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec>
@@ -411,7 +411,7 @@
                                 </li>
                                 <li>
                                     <fieldset>
-                                        <legend class"text-center">Offering(s):</legend>
+                                        <legend class="text-center">Offering(s):</legend>
                                         <div class="BookingSummaryItem">
                                             <div class="Item-icon">
                                                 <icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec>
@@ -428,7 +428,7 @@
                                 </li>
                                 <li>
                                     <fieldset>
-                                        <legend class"text-center">Price:</legend>
+                                        <legend class="text-center">Price:</legend>
                                         <div class="BookingSummaryItem">
                                             <div class="Item-icon">
                                                 <icon-dec params="icon: 'ion-social-usd'"></icon-dec>
@@ -441,7 +441,7 @@
                                 </li>
                                 <li data-bind="if: booking().paymentEnabled() && booking().pricingSummary().totalPrice() > 0">
                                     <fieldset>
-                                        <legend class"text-center">Payment:</legend>
+                                        <legend class="text-center">Payment:</legend>
                                         <div class="BookingSummaryItem">
                                             <div class="Item-icon">
                                                 <icon-dec params="icon: 'ion-card'"></icon-dec>
@@ -458,7 +458,7 @@
                                 </li>
                                 <li>
                                     <fieldset>
-                                        <legend class"text-center">Notes for professional:</legend>
+                                        <legend class="text-center">Notes for professional:</legend>
                                         <div class="BookingSummaryItem">
                                             <div class="Item-icon">
                                                 <icon-dec params="icon: 'ion-clipboard'"></icon-dec>
