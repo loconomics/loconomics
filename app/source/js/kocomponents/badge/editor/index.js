@@ -60,7 +60,7 @@ export default class BadgeEditor extends Komponent {
          * either a badge or collection.
          * @member {KnockoutObservable<string>}
          */
-        this.badgrURL = ko.observable(null);
+        this.badgeURL = ko.observable(null);
 
         /**
          * Holds the type of URL being input – could be a 
@@ -152,7 +152,7 @@ export default class BadgeEditor extends Komponent {
     //                 this.userBadge({
     //                     userBadgeID: 0,
     //                     jobTitleID: this.jobTitleID(),
-    //                     badgrURL: this.badgrURL(),
+    //                     badgeURL: this.badgeURL(),
     //                     type: this.type(),
     //                     modifiedDate: false,
     //                     modifiedBy: 'User'
@@ -170,10 +170,10 @@ export default class BadgeEditor extends Komponent {
     //     // Prevent twice execution
     //     if (this.isSaving()) return;
     //     // Convert badgr URL to v 2.0 and assign type based on URL
-    //     var src = this.badgrURL();
+    //     var src = this.badgeURL();
     //     if(src && src.match(/^assertions.*$/)) {
     //       src = src.replace(/\?v=.+$/, '?v=2_0');
-    //       this.badgrURL = src;
+    //       this.badgeURL = src;
     //       this.type = 'badge';
     //     }
     //     else if (src && src.match(/^collections.*$/)) {

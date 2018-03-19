@@ -4,14 +4,14 @@
     <fieldset data-bind="with: userBadge">
         <div class="col-xs-12">
             <legend>Badgr badge or collection</legend>
-            <label for="badgrURL">URL</label>
+            <label for="badgeURL">URL</label>
             <div class="form-group">
                 <input class="form-control"
-                    id="badgrURL"
+                    id="badgeURL"
                     type="url"
                     placeholder="https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0"
                     data-bind="
-                        value: badgrURL,
+                        value: badgeURL,
                         disable: $component.isWorking
                     " />
             </div>
@@ -24,7 +24,7 @@
             <button type="button" class="btn btn-danger btn-link"
                 data-bind="click: $component.deleteListing.bind($component), text: $component.deleteButtonLabel,
                 disable: $component.isWorking,
-                visible: $component.badgrURL"></button>
+                visible: $component.badgeURL"></button>
         </div>
     </fieldset>
 </form>
