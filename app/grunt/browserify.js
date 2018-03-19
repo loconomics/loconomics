@@ -124,7 +124,8 @@ module.exports = function(grunt) {
         options: {
             browserifyOptions: {
                 fullPaths: fullPaths
-            }
+            },
+            cacheFile: dev && './build/.browserify-cache-appCommon.json'
         }
     });
 
@@ -161,6 +162,7 @@ module.exports = function(grunt) {
                 'debug': true,
                 fullPaths: fullPaths
             },
+            cacheFile: './build/.browserify-cache-tests.json',
             plugin: [
                 ['common-shakeify', { verbose: verbose }]
             ],
