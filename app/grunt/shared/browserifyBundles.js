@@ -64,25 +64,25 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
     var usesMapFiles = !!commonBundle.map;
     /**
      * Given a path to the bundle source file (as given by factor-bundle),
-     * returns the map file for it, or empty
+     * returns the bundle settings for it, or null
      * @param {string} sourcePath
-     * @returns {string}
+     * @returns {BundleSettings}
      */
-    var getMapFileFor = function(sourcePath) {
+    var getBundleSettingForFile = function(sourcePath) {
         // Use UNIX path separator even on Windows to simplify comparisions and
         // ensure cross-platform compatibility.
         var normalizedPath = sourcePath.replace(/\\/g, '/');
-        var mapFile = '';
+        var settings = null;
         bundles.some(function(bundle) {
             // TODO: To document why need to strip first two characters (usually
             // they are './' so maybe sourcePath uses a relative path, without that)
             // and if changes if doesn't play well with other set-ups
             if (normalizedPath.indexOf(bundle.source.substr(2)) > 0) {
-                mapFile = bundle.map;
+                settings = bundle;
                 return true;
             }
         });
-        return mapFile;
+        return settings;
     };
     /**
      * Create a Promise that fulfills when the factorized file was wrote
@@ -94,19 +94,28 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
      */
     var factorToPromise = function (path, factor) {
         factorsPromises.push(new Promise(function (resolve, error) {
-            grunt.verbose.writeln('New Promise for factor', path);
-            // Listen to 'end' event (not to 'finish') that guarantees
-            // that was processed, written to disk and file closed.
-            factor.on('end', resolve);
-            factor.on('error', error);
+            var bundleSettings = getBundleSettingForFile(path);
+            grunt.verbose.writeln('New Promise for factor', bundleSettings.dest);
             if (usesMapFiles) {
                 // Exorcist integration
-                var mapFile = getMapFileFor(path);
-                if (!mapFile) {
+                if (!bundleSettings.map) {
                     grunt.fail.warn('At browserify: unknow factorized path: ' + path);
                 }
-                factor.get('wrap').push(exorcist(mapFile));
+                factor.get('wrap').push(exorcist(bundleSettings.map));
             }
+            // Listen to 'end' event (not to 'finish') that guarantees
+            // that was processed, written to disk and file closed.
+            // (NOTE: per WritableStream docs, seems that 'finish' fulfills that requirements, but doesn't --tested)
+            factor.on('end', function() {
+                // IMPORTANT: There are still cases where the file seems to not have ended writting/flushing when
+                // reaching this point for very few bytes, we put a small timeout to try give
+                // it some more time (that includes another js cycle).
+                setTimeout(function() {
+                    grunt.verbose.writeln('>> Bundle', bundleSettings.dest, 'created (factor-bundle).');
+                    resolve();
+                }, 100);
+            });
+            factor.on('error', error);
         }));
     };
     /**
@@ -131,8 +140,10 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
         b.on('bundle', function (output) {
             output.removeListener('error', handleOutputError);
             output.on('error', handleOutputError);
-            // Exorcist integration
-            b.pipeline.get('wrap').push(exorcist(commonBundle.map));
+            if (usesMapFiles) {
+                // Exorcist integration
+                b.pipeline.get('wrap').push(exorcist(commonBundle.map));
+            }
         });
         b.on('error', function (err) {
             // Something went wrong.
@@ -160,16 +171,19 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
      * @param {Function} next Call when done to let the process to continue
      */
     var postBundle = function (err, src, next) {
-        Promise.all(factorsPromises).then(function () {
+        Promise
+        .all(factorsPromises)
+        .then(function () {
             grunt.log.ok('Browserify factor-bundle completed with', factorsPromises.length, 'bundles');
-            if(onCompleted) onCompleted();
             next(err, src);
+            // Notify just after actually complete creating the bundle
+            if (onCompleted) onCompleted();
         })
-            .catch(function (factorsErr) {
-                grunt.verbose.error().error(factorsErr);
-                grunt.fail.warn('Browserify factor-bundle failed:' + factorsErr.toString());
-                next(factorsErr, src);
-            });
+        .catch(function (factorsErr) {
+            grunt.verbose.error().error(factorsErr);
+            grunt.fail.warn('Browserify factor-bundle failed:' + factorsErr.toString());
+            next(factorsErr, src);
+        });
     };
 
     /**
