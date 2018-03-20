@@ -48,12 +48,12 @@
                         </li>
                     </ul>
                     <div data-bind="with: jobTitleApplicableLicences()">
-                        <div data-bind="visible: country().length">
+                        <div data-bind="visible: $root.hasRequiredLicenses">
                             <h2 class="SectionTitle">
                                 <span>Generally required credentials</span>
                             </h2>
                             <ul class="TilesList TilesList--openEnd" data-bind="foreach: country">
-                                <li data-bind="visible: licenseCertificationID() === -1">
+                                <li data-bind="visible: licenseCertificationID() === $root.REQUIRED_LICENSE_SPECIAL_ID">
                                     <button class="CompactLinkTile" type="button" data-bind="click: $root.addNew">
                                         <div class="Tile-content text-muted">Add <span data-bind="text: licenseCertification() && licenseCertification().name"></span>
                                         </div>
@@ -65,10 +65,10 @@
                         </div>
                     </div>
                     <div data-bind="with: jobTitleApplicableLicences()">
-                        <div data-bind="visible: country().length">
+                        <div data-bind="visible: $root.hasOptionalLicenses">
                             <h2 class="SectionTitle">Supplemental credentials</h2>
                             <ul class="TilesList TilesList--openEnd" data-bind="foreach: country">
-                                <li data-bind="visible: licenseCertificationID() === 0">
+                                <li data-bind="visible: licenseCertificationID() === $root.OPTIONAL_LICENSE_SPECIAL_ID">
                                     <button class="CompactLinkTile" type="button" data-bind="click: $root.addNew">
                                         <div class="Tile-content text-muted">Add <span data-bind="text: licenseCertification() && licenseCertification().name"></span>
                                         </div>
@@ -90,4 +90,3 @@
         </div>
     </div>
 </div>
-
