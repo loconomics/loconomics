@@ -109,11 +109,12 @@ var appInit = function appInit() {
         .show({ route: {} });
     };
 
-    // Try to restore a user session ('remember login')
-    var session = require('./data/session');
-    session.restore()
-    .then(launchPage)
-    .catch(alertError);
+    try {
+        launchPage();
+    }
+    catch (ex) {
+        alertError(ex);
+    }
 
     // DEBUG
     window.app = app;
