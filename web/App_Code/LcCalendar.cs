@@ -1395,7 +1395,7 @@ public static partial class LcCalendar
         var calUser = new CalendarUser(UserID);
         if (calUser.Id == 0)
         {
-            throw new Exception(string.Format("[[[The UserID {0} doesn't exist on database, only its calendar URL {1}]]]", UserID, CalendarURL));
+            throw new Exception(string.Format("[[[The UserID %0 doesn't exist on database, only its calendar URL %1|||{0}|||{1}]]]", UserID, CalendarURL));
         }
         libCalendarUtil.ImportCalendar(iCaltoImport, calUser);
 
@@ -1448,7 +1448,7 @@ public static partial class LcCalendar
                     // Return error for not null or empty, only malformed
                     if (!String.IsNullOrWhiteSpace(p.CalendarURL))
                     {
-                        yield return new Exception(String.Format("[[[Calendar Import error on UserID:{0} : URL is not valid '{1}']]]", p.UserID, p.CalendarURL));
+                        yield return new Exception(String.Format("[[[Calendar Import error on UserID:%0 : URL is not valid '%1'|||{0}|||{1}]]]", p.UserID, p.CalendarURL));
                     }
                     continue;
                 }
@@ -1469,7 +1469,7 @@ public static partial class LcCalendar
                 }
                 catch (Exception ex)
                 {
-                    resultEx = new Exception(String.Format("[[[Calendar Import error on UserID:{0} : Internal error processing iCalendar]]]", p.UserID), ex);
+                    resultEx = new Exception(String.Format("[[[Calendar Import error on UserID:%0 : Internal error processing iCalendar|||{0}]]]", p.UserID), ex);
                 }
                 yield return resultEx;
             }

@@ -165,7 +165,7 @@ public static partial class LcPayment
             {
                 // Transaction worked but impossible to know the transactionID (weird, is even possible?),
                 // notify error
-                throw new Exception(string.Format("[[[Impossible to know transaction details, please contact support. BookingID #{0}]]]", booking.bookingID.ToString()));
+                throw new Exception(string.Format("[[[Impossible to know transaction details, please contact support. BookingID #%0|||{0}]]]", booking.bookingID.ToString()));
             }
         }
         else

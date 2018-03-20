@@ -232,13 +232,13 @@ public static class LcAuthHelper
     }
     const string UserIsServiceProfessionalClientMessage = @"
         [[[We see one of our service professionals has already scheduled services for you in the past.
-        We've just sent an invitation to create your account to {0}.
-        Please follow its instructions. We can't wait to get you on board!]]]
+        We've just sent an invitation to create your account to %0.
+        Please follow its instructions. We can't wait to get you on board!|||{0}]]]
     ";
     const string UserIsSubscriberMessage = @"
         [[[We see you have subscribed previously to our newsletter or referrenced a service professional.
-        We've just sent an invitation to create your account to {0}.
-        Please follow its instructions. We can't wait to get you on board!]]]
+        We've just sent an invitation to create your account to %0.
+        Please follow its instructions. We can't wait to get you on board!|||{0}]]]
     ";
     /// <summary>
     /// Convert a user record with 'Not Enabled Account' into a standard enabled account. See IsUserButNotEnabledAccount

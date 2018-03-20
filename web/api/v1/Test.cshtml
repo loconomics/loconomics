@@ -44,9 +44,11 @@
 
             if (!Request["i18n"].IsEmpty())
             {
-                //var message = string.Format("[[[\"{0}\" requires at least one selection]]]", Request["i18n"]);
+                //var message = string.Format("[[[\"%0\" requires at least one selection|||{0}]]]", Request["i18n"]);
                 //var message = string.Format("[[[welcome %1, today is %0|||{0}|||{1}]]]", "Tuesday", "Iago");
-                var message = string.Format("[[[welcome %1, today is %0|||{0}|||{2}]]]", "Tuesday", "Iago", "Sam");
+                //var message = string.Format("[[[welcome %1, today is %0|||{0}|||{2}]]]", "Tuesday", "Iago", "Sam");
+                //var message = string.Format("[[[%0 %1's phone number: %2|||{0}|||{1}|||{2}]]]\n", "sam", "wa", "0411486180");
+                var message = string.Format("[[[Impossible to know transaction details, please contact support. BookingID #%0|||{0}]]]", "1");
                 return new { rows = new object[] { }, message = message };
             }
 

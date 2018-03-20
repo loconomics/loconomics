@@ -219,7 +219,7 @@ namespace LcRest
         ";
         #endregion
 
-        private const string requiredAttCatError = "[[[\"{0}\" requires at least one selection]]]";
+        private const string requiredAttCatError = "[[[\"%0\" requires at least one selection|||{0}]]]";
         static public void Set(UserJobTitleServiceAttributes serviceAttributes)
         {
             // Validate
