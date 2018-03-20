@@ -201,7 +201,7 @@ public class RestUserJobProfile : RestWebPage
                 // Check well know custom error codes
                 if (jobTitleID == -1)
                 {
-                    throw new HttpException(400, String.Format("[[[The Job Title '{0}' is not allowed.]]]", jobTitleName));
+                    throw new HttpException(400, String.Format("[[[The Job Title '%0' is not allowed.|||{0}]]]", jobTitleName));
                 }
                 LcMessaging.NotifyNewJobTitle(jobTitleName, jobTitleID);
                 jobTitleExists = true;

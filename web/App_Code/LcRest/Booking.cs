@@ -1563,7 +1563,7 @@ namespace LcRest
                 phones = customer.MobilePhone + ", " + customer.AlternatePhone;
             }
             var sb = new System.Text.StringBuilder();
-            sb.AppendFormat("[[[{0} {1}'s phone number: {2}]]]\n", customer.FirstName, customer.LastName, phones);
+            sb.AppendFormat("[[[%0 %1's phone number: %2|||{0}|||{1}|||{2}]]]\n", customer.FirstName, customer.LastName, phones);
             sb.AppendLine("[[[Pricing summary:]]]");
             sb.AppendLine(LcRest.PricingSummary.GetOneLineDescription(pricingSummary));
             sb.AppendLine("[[[Special instructions:]]]");
@@ -2153,7 +2153,7 @@ namespace LcRest
                     throw new ConstraintException("[[[The chosen time is not available, it conflicts with a recent appointment!]]]");
 
                 // Event data
-                string eventSummary = String.Format("[[[{0} services]]]", booking.userJobTitle.jobTitleSingularName);
+                string eventSummary = String.Format("[[[%0 services|||{0}///TRANSLATORS: format is the job title]]]", booking.userJobTitle.jobTitleSingularName);
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");
@@ -2587,7 +2587,7 @@ namespace LcRest
         #region Client Manipulations
         private static string DisplayTimeAvailabilityError(DateTimeOffset time, string timeZone)
         {
-            var format = "[[[The time {0} is not available, it conflicts with a recent appointment!]]]";
+            var format = "[[[The time %0 is not available, it conflicts with a recent appointment!|||{0}]]]";
             return String.Format(format, LcUtils.Time.ZonedTimeToShortString(time, timeZone));
         }
         /// <summary>
@@ -2685,7 +2685,7 @@ namespace LcRest
                 }
 
                 // Event data
-                string eventSummary = String.Format("[[[{0} services]]]", booking.userJobTitle.jobTitleSingularName);
+                string eventSummary = String.Format("[[[%0 services |||{0}///TRANSLATORS: format is the job title]]]", booking.userJobTitle.jobTitleSingularName);
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");

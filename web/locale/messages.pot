@@ -1,18 +1,58 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-03-13 23:17+11:00\n"
+"POT-Creation-Date: 2018-03-20 23:48+11:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: i18n.POTGenerator\n"
 
-#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:196
-msgid "%0 (%1 consultation)"
+#: api\v1\Test.cshtml:50
+#: App_Code\LcRest\Booking.cs:1566
+msgid "%0 %1's phone number: %2"
 msgstr ""
 
-#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:197
-msgid "%0, %1 (%2 consultation)"
+#. TRANSLATORS: format is number of days
+#: App_Code\LcHelpers.cshtml:293
+msgid "%0 days"
+msgstr ""
+
+#: App_Code\LcRessources.cs:18
+msgid "%0 has a not valid value"
+msgstr ""
+
+#. TRANSLATORS: format is number of hours
+#: App_Code\LcHelpers.cshtml:298
+msgid "%0 hours"
+msgstr ""
+
+#: App_Code\LcRessources.cs:17
+msgid "%0 is required"
+msgstr ""
+
+#. TRANSLATORS: format is number of milliseconds
+#: App_Code\LcHelpers.cshtml:313
+msgid "%0 milliseconds"
+msgstr ""
+
+#. TRANSLATORS: format is number of minutes
+#: App_Code\LcHelpers.cshtml:303
+msgid "%0 minutes"
+msgstr ""
+
+#. TRANSLATORS: format is number of seconds
+#: App_Code\LcHelpers.cshtml:308
+msgid "%0 seconds"
+msgstr ""
+
+#. TRANSLATORS: format is the job title
+#: App_Code\LcRest\Booking.cs:2156
+msgid "%0 services"
+msgstr ""
+
+#. TRANSLATORS: format is the job title
+#: App_Code\LcRest\Booking.cs:2688
+msgid "%0 services "
 msgstr ""
 
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:136
@@ -28,58 +68,52 @@ msgstr ""
 
 #: api\v1\Test.cshtml:47
 #: App_Code\LcRest\UserJobTitleServiceAttributes.cs:222
-msgid "\\"{0}\\" requires at least one selection"
+msgid "\\"%0\\" requires at least one selection"
 msgstr ""
 
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:196
+msgid "{0} ({2} consultation)"
+msgstr ""
+
+#. TRANSLATORS: format is client based
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:149
 msgid "{0} ({2} estimate)"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:1566
-msgid "{0} {1}'s phone number: {2}"
+#. TRANSLATORS: format is client based
+#. TRANSLATORS: format is client based
+#. TRANSLATORS: format is client based
+#. TRANSLATORS: format is client based
+#. TRANSLATORS: format is client based
+#. TRANSLATORS: format is client based
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:35
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:75
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:110
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:235
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:266
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:300
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:334
+msgid "{0}, {1}"
 msgstr ""
 
-#: App_Code\LcHelpers.cshtml:293
-msgid "{0} days"
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:197
+msgid "{0}, {1} ({3} consultation)"
 msgstr ""
 
-#: App_Code\LcRessources.cs:18
-msgid "{0} has a not valid value"
-msgstr ""
-
-#: App_Code\LcHelpers.cshtml:298
-msgid "{0} hours"
-msgstr ""
-
-#: App_Code\LcRessources.cs:17
-msgid "{0} is required"
-msgstr ""
-
-#: App_Code\LcHelpers.cshtml:313
-msgid "{0} milliseconds"
-msgstr ""
-
-#: App_Code\LcHelpers.cshtml:303
-msgid "{0} minutes"
-msgstr ""
-
-#: App_Code\LcHelpers.cshtml:308
-msgid "{0} seconds"
-msgstr ""
-
-#: App_Code\LcRest\Booking.cs:2156
-#: App_Code\LcRest\Booking.cs:2688
-msgid "{0} services"
-msgstr ""
-
+#. TRANSLATORS: format is client based
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:150
 msgid "{0}, {1} ({3} estimation)"
 msgstr ""
 
+#. TRANSLATORS: format is client based
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:76
 msgid "{0}, {2} appointments - {1} each"
 msgstr ""
 
+#. TRANSLATORS: format is client based
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:74
 msgid "{1} appointments - {0} each"
 msgstr ""
@@ -237,7 +271,7 @@ msgstr ""
 msgid "An email or phone number is required"
 msgstr ""
 
-#: api\v1\Test.cshtml:146
+#: api\v1\Test.cshtml:148
 msgid "An Item ID is required at the URL"
 msgstr ""
 
@@ -342,11 +376,11 @@ msgid "busy"
 msgstr ""
 
 #: App_Code\LcCalendar.cs:1472
-msgid "Calendar Import error on UserID:{0} : Internal error processing iCalendar"
+msgid "Calendar Import error on UserID:%0 : Internal error processing iCalendar"
 msgstr ""
 
 #: App_Code\LcCalendar.cs:1451
-msgid "Calendar Import error on UserID:{0} : URL is not valid '{1}'"
+msgid "Calendar Import error on UserID:%0 : URL is not valid '%1'"
 msgstr ""
 
 #: App_Code\LcRest\Booking.cs:1573
@@ -365,7 +399,7 @@ msgstr ""
 msgid "Cannot charge booking cancellation fee because there is no payment method."
 msgstr ""
 
-#: api\v1\Test.cshtml:76
+#: api\v1\Test.cshtml:78
 msgid "Cannot POST to an item"
 msgstr ""
 
@@ -668,7 +702,8 @@ msgid "Impossible to create a booking for that Job Title."
 msgstr ""
 
 #: App_Code\LcPayment.cs:168
-msgid "Impossible to know transaction details, please contact support. BookingID #{0}"
+#: api\v1\Test.cshtml:51
+msgid "Impossible to know transaction details, please contact support. BookingID #%0"
 msgstr ""
 
 #: App_Code\LcRest\ServiceProfessionalService.cs:175
@@ -692,8 +727,9 @@ msgstr ""
 msgid "Incorrect username or password."
 msgstr ""
 
+#. TRANSLATORS: format is username
 #: api\v1\auth\reset-password.cshtml:47
-msgid "Instructions to reset your password have been sent to {0}. Please check your spam folder if you don't see it."
+msgid "Instructions to reset your password have been sent to %0. Please check your spam folder if you don't see it."
 msgstr ""
 
 #: App_Code\RestPages\RestUserJobProfile.cs:293
@@ -977,7 +1013,7 @@ msgstr ""
 msgid "not recommended"
 msgstr ""
 
-#: api\v1\Test.cshtml:118
+#: api\v1\Test.cshtml:120
 msgid "Num must be a number"
 msgstr ""
 
@@ -1218,7 +1254,7 @@ msgstr ""
 msgid "Services"
 msgstr ""
 
-#: api\v1\Test.cshtml:116
+#: api\v1\Test.cshtml:118
 msgid "Short must be 5 or less"
 msgstr ""
 
@@ -1323,7 +1359,7 @@ msgstr ""
 msgid "The given e-mail already exists for other client at loconomics.com and cannot be saved."
 msgstr ""
 
-#: api\v1\Test.cshtml:156
+#: api\v1\Test.cshtml:158
 msgid "The Item ID must be an integer"
 msgstr ""
 
@@ -1409,10 +1445,12 @@ msgstr ""
 msgid "Type the name of the add-on service (be descriptive and creative)"
 msgstr ""
 
+#. TRANSLATORS: do not escape speech mark
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:175
 msgid "Type the name of the consultation, e.g. \\"Initial consultation\\", \\"Introductory meeting\\"."
 msgstr ""
 
+#. TRANSLATORS: do not escape speech mark
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:132
 msgid "Type the name of the estimate visit, e.g. \\"Work assessment visit\\", \\"Pricing estimate visit\\""
 msgstr ""
@@ -1481,9 +1519,9 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: api\v1\Test.cshtml:134
-#: api\v1\Test.cshtml:144
-#: api\v1\Test.cshtml:154
+#: api\v1\Test.cshtml:136
+#: api\v1\Test.cshtml:146
+#: api\v1\Test.cshtml:156
 msgid "Validation rules"
 msgstr ""
 
@@ -1558,7 +1596,7 @@ msgstr ""
 msgid "You have already registered that license, please try to update it if you want to submit a new file."
 msgstr ""
 
-#: api\v1\Test.cshtml:56
+#: api\v1\Test.cshtml:58
 msgid "You have not positions. Logged?"
 msgstr ""
 

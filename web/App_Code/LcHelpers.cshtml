@@ -290,27 +290,27 @@
         if (duration > TimeSpan.Zero) {
             var s = new List<string>();
             if (duration.Days > 1) {
-                s.Add(String.Format("[[[{0} days]]]", duration.Days));
+                s.Add(String.Format("[[[%0 days|||{0}///TRANSLATORS: format is number of days]]]", duration.Days));
             } else if (duration.Days == 1) {
                 s.Add("[[[1 day]]]");
             }
             if (duration.Hours > 1) {
-                s.Add(String.Format("[[[{0} hours]]]", duration.Hours));
+                s.Add(String.Format("[[[%0 hours|||{0}///TRANSLATORS: format is number of hours]]]", duration.Hours));
             } else if (duration.Hours == 1) {
                 s.Add("[[[1 hour]]]");
             }
             if (duration.Minutes > 1) {
-                s.Add(String.Format("[[[{0} minutes]]]", duration.Minutes));
+                s.Add(String.Format("[[[%0 minutes|||{0}///TRANSLATORS: format is number of minutes]]]", duration.Minutes));
             } else if (duration.Minutes == 1) {
                 s.Add("[[[1 minute]]]");
             }
             if (duration.Seconds > 1) {
-                s.Add(String.Format("[[[{0} seconds]]]", duration.Seconds));
+                s.Add(String.Format("[[[%0 seconds|||{0}///TRANSLATORS: format is number of seconds]]]", duration.Seconds));
             } else if (duration.Seconds == 1) {
                 s.Add("[[[1 second]]]");
             }
             if (duration.Milliseconds > 1) {
-                s.Add(String.Format("[[[{0} milliseconds]]]", duration.Milliseconds));
+                s.Add(String.Format("[[[%0 milliseconds|||{0}///TRANSLATORS: format is number of milliseconds]]]", duration.Milliseconds));
             } else if (duration.Milliseconds == 1) {
                 s.Add("[[[1 millisecond]]]");
             }
