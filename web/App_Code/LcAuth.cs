@@ -32,7 +32,7 @@ public static class LcAuth
         return "aQ1$" + Membership.GeneratePassword(10, 5);
     }
 
-    public static string AccountLockedErrorMessage = @"Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password";
+    public static string AccountLockedErrorMessage = @"[[[Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password]]]";
     public class RegisteredUser
     {
         public string Email;

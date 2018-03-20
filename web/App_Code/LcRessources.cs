@@ -63,6 +63,7 @@ public static class LcRessources
         return String.Format(InvalidValueForField, fieldLabel.Capitalize());
     }
     #region Dates, time, calendaring
+    //TODO i18n 
     public class DayOfWeekRecord
     {
         public int ID;

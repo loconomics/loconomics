@@ -472,6 +472,7 @@ public static class LcAuthHelper
                     StartOnboardingForUser(userID);
                 }
 
+                // TODO: i18n set email from config
                 // SIGNUP
                 LcMessaging.SendMail("joshua.danielson@loconomics.com", "Sign-up", String.Format(@"
                     <html><body><h3>Sign-up.</h3>

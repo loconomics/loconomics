@@ -392,10 +392,12 @@ public class LcMessaging
             this.info = info;
             flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
         }
+        // TODO: i18n set email from config
         protected virtual string getSenderForClient()
         {
             return info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
         }
+        // TODO: i18n set email from config
         protected virtual string getSenderForServiceProfessional()
         {
             return "Loconomics Scheduler <automated@loconomics.com>";
@@ -489,6 +491,8 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
+
+            // TODO: i18n make string set from service 
             public override void BookingCancelledByClient()
             {
                 var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
@@ -573,6 +577,7 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
+            // TODO: set email from config
             protected override string getSenderForClient()
             {
                 return "Loconomics <automated@loconomics.com>";
@@ -581,6 +586,7 @@ public class LcMessaging
             {
                 return "Loconomics Marketplace <automated@loconomics.com>";
             }
+            // TODO: i18n make string set from service 
             public override void BookingCancelledByClient()
             {
                 var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);

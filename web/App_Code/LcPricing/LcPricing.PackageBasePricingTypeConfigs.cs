@@ -193,8 +193,8 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Consultation removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit consultations]]]",
 
-                SummaryFormat = "[[[{0} ({2} consultation)]]]",
-                NameAndSummaryFormat = "[[[{0}, {1} ({3} consultation)]]]",
+                SummaryFormat = "[[[%0 (%1 consultation)|||{0}|||{2}]]]",
+                NameAndSummaryFormat = "[[[%0, %1 (%2 consultation)|||{0}|||{1}|||{3}]]]",
 
                 LearnMoreLabel = "[[[Learn more about consultation pricing]]]",
                 LearnMoreText = "[[[Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this).]]]",

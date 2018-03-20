@@ -59,19 +59,19 @@ public static partial class LcPayment
             //}
             if (cardNumber.IsEmpty())
             {
-                errors.Add("cardNumber", "Card number is required");
+                errors.Add("cardNumber", "[[[Card number is required]]]");
             }
             if (securityCode.IsEmpty())
             {
-                errors.Add("securityCode", "CVV code is required");
+                errors.Add("securityCode", "[[[CVV code is required]]]");
             }
             if (expirationMonth.IsEmpty())
             {
-                errors.Add("expirationMonth", "Card expiration month is required");
+                errors.Add("expirationMonth", "[[[Card expiration month is required]]]");
             }
             if (expirationYear.IsEmpty())
             {
-                errors.Add("expirationYear", "Card expiration year is required");
+                errors.Add("expirationYear", "[[[Card expiration year is required]]]");
             }
 
             return errors;

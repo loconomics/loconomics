@@ -101,7 +101,7 @@ public static partial class LcPayment
             !booking.pricingSummary.totalPrice.HasValue ||
             booking.pricingSummary.totalPrice.Value <= 0)
         {
-            throw new ConstraintException("To authorize a booking payment is required a price to charge.");
+            throw new ConstraintException("[[[To authorize a booking payment is required a price to charge.]]]");
         }
 
         var gateway = NewBraintreeGateway();
@@ -165,7 +165,7 @@ public static partial class LcPayment
             {
                 // Transaction worked but impossible to know the transactionID (weird, is even possible?),
                 // notify error
-                throw new Exception("Impossible to know transaction details, please contact support. BookingID #" + booking.bookingID.ToString());
+                throw new Exception(string.Format("[[[Impossible to know transaction details, please contact support. BookingID #{0}]]]", booking.bookingID.ToString()));
             }
         }
         else
@@ -196,7 +196,7 @@ public static partial class LcPayment
         if (booking.pricingSummary.totalPrice.HasValue && booking.pricingSummary.totalPrice > 0)
         {
             if (String.IsNullOrEmpty(booking.paymentMethodID))
-                throw new ConstraintException("Cannot charge booking cancellation fee because there is no payment method.");
+                throw new ConstraintException("[[[Cannot charge booking cancellation fee because there is no payment method.]]]");
 
             TransactionRequest request = new TransactionRequest
             {
@@ -449,7 +449,7 @@ public static partial class LcPayment
             }
             else
             {
-                throw new Braintree.Exceptions.BraintreeException("Impossible to create customer #" + gatewayUserID + ":: " + r.Message);
+                throw new Braintree.Exceptions.BraintreeException(string.Format("Impossible to create customer #{0}:: {1}", gatewayUserID, r.Message));
             }
         }
     }
@@ -482,7 +482,7 @@ public static partial class LcPayment
     #endregion
 
     #region Marketplace
-
+    //TODO i18n make fee config value
     public const string MarketplaceProviderFee = "2.9% plus $0.30";
 
     #region Provider information

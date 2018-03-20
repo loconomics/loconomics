@@ -290,29 +290,29 @@
         if (duration > TimeSpan.Zero) {
             var s = new List<string>();
             if (duration.Days > 1) {
-                s.Add(String.Format("{0} days", duration.Days));
+                s.Add(String.Format("[[[{0} days]]]", duration.Days));
             } else if (duration.Days == 1) {
-                s.Add("1 day");
+                s.Add("[[[1 day]]]");
             }
             if (duration.Hours > 1) {
-                s.Add(String.Format("{0} hours", duration.Hours));
+                s.Add(String.Format("[[[{0} hours]]]", duration.Hours));
             } else if (duration.Hours == 1) {
-                s.Add("1 hour");
+                s.Add("[[[1 hour]]]");
             }
             if (duration.Minutes > 1) {
-                s.Add(String.Format("{0} minutes", duration.Minutes));
+                s.Add(String.Format("[[[{0} minutes]]]", duration.Minutes));
             } else if (duration.Minutes == 1) {
-                s.Add("1 minute");
+                s.Add("[[[1 minute]]]");
             }
             if (duration.Seconds > 1) {
-                s.Add(String.Format("{0} seconds", duration.Seconds));
+                s.Add(String.Format("[[[{0} seconds]]]", duration.Seconds));
             } else if (duration.Seconds == 1) {
-                s.Add("1 second");
+                s.Add("[[[1 second]]]");
             }
             if (duration.Milliseconds > 1) {
-                s.Add(String.Format("{0} milliseconds", duration.Milliseconds));
+                s.Add(String.Format("[[[{0} milliseconds]]]", duration.Milliseconds));
             } else if (duration.Milliseconds == 1) {
-                s.Add("1 millisecond");
+                s.Add("[[[1 millisecond]]]");
             }
             result = JoinNotEmptyStrings(", ", s);
         } else {
@@ -967,6 +967,7 @@
     </div>
 }
 @functions {
+    // TODO: i18n US string from config
     public static string GetLocationForGoogleMaps(dynamic data)
     {
         return JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
@@ -991,7 +992,7 @@
     {
     <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
 }
-@helper PrintGoogleLink(string location, string label = "view map and directions")
+@helper PrintGoogleLink(string location, string label = "[[[view map and directions]]]")
     {
     <a class="google-map" href="http://maps.google.com/?q=@(location);z=16" target="_blank">@label</a>
 }
