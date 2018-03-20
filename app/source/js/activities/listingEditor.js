@@ -28,25 +28,25 @@ const dummyData =
 [
   {
     'UserBadgeID': 2,
-    'BadgrURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'BadgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'Type': 'badge',
     'ModifiedBy': 'user'
   },
   {
     'UserBadgeID': 3,
-    'BadgrURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'BadgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'Type': 'badge',
     'ModifiedBy': 'user'
   },
   {
     'UserBadgeID': 4,
-    'BadgrURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'BadgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'Type': 'badge',
     'ModifiedBy': 'user'
   },
   {
     'UserBadgeID': 5,
-    'BadgrURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'BadgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'Type': 'badge',
     'ModifiedBy': 'staff'
   }
