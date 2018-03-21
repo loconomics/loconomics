@@ -40,13 +40,13 @@ export default class BadgeViewActivity extends Activity {
          * Creates a placeholder for the jobTitle ID to be
          * populated using the show(state) method below.
         */
-        this.jobTitleSingularName = ko.observable();
+        this.listingTitle = ko.observable();
 
         /**
          * Title uses a pureComputed to ensure the jobTitleName
          * is updated.
         */
-        this.title = ko.pureComputed( () => 'Add badge(s) to ' + this.jobTitleSingularName() + ' listing');
+        this.title = ko.pureComputed( () => 'Add badge(s) to ' + this.listingTitle() + ' listing');
 
         /**
          * After data being saved, notice and go back to the 
@@ -73,10 +73,10 @@ export default class BadgeViewActivity extends Activity {
         this.badgeURL(params[0] || -1);
 
         /**
-         * jobTitleSingularName is the second segment in the activity
+         * listingTitle is the second segment in the activity
          * URL
          */
-        this.Type(params[1] || '');
+        this.listingTitle(params[1] || '');
     }
 }
 

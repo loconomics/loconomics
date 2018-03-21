@@ -28,13 +28,13 @@ export default class CredentialsAddActivity extends Activity {
         
         this.jobTitleID = ko.observable();
         
-        this.jobTitleSingularName = ko.observable();
+        this.listingTitle = ko.observable();
      
         /**
          * Title uses a pureComputed to ensure the platformName
          * is updated.
          */
-        this.title = ko.pureComputed( () => 'Add ' + this.jobTitleSingularName() + ' credentials');
+        this.title = ko.pureComputed( () => 'Add ' + this.listingTitle() + ' credentials');
     }
 
     /**
@@ -51,10 +51,10 @@ export default class CredentialsAddActivity extends Activity {
         this.jobTitleID(params[0] |0);
 
         /**
-         * jobTitleSingularName is the second segment in the activity 
+         * listingTitle is the second segment in the activity 
          * URL.
          */
-        this.jobTitleSingularName(params[1] |0);
+        this.listingTitle(params[1] |0);
     }
 }
 

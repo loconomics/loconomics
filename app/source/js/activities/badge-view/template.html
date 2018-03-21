@@ -5,14 +5,14 @@
             <ul>
                 <li>
                     <a data-bind="attr: { href: '/listingEditor/' + jobTitleID() + '?mustReturn=listings'+ '&returnText=Listings' }">
-                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> <span data-bind="text: jobTitleSingularName() + ' Listing'"></span>
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> <span data-bind="text: listingTitle() + ' Listing'"></span>
                     </a>
                 </li>
             </ul>
         </div>
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
-            <badge-viewer params="badgeURL: BadgeURL, type: Type, viewMode: 'fullDetails'"></badge-viewer>
+            <badge-viewer params="badgeURL: badgeURL, type: type, viewMode: 'fullDetails'"></badge-viewer>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'credentials'"></app-inline-side-menu>
