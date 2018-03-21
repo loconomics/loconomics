@@ -26,7 +26,7 @@
                         <p>Some professions may require credentials to provide services. See our <a href="/terms/background-check-policy" target="_blank">License Verification Policy</a> for more info.</p>
                     </span>
                 </div>
-                <h2 class="SectionTitle" data-bind="visible: submittedUserLicensesCertifications()">
+                <h2 class="SectionTitle" data-bind="visible: submittedUserLicensesCertifications().length">
                     <span>Your <span data-bind="text: listingTitle"></span> credentials</span>
                 </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
