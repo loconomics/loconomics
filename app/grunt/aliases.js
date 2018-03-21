@@ -43,7 +43,6 @@ module.exports = {
     'build-web-release': [
         'clean:build',
         'prepare-for-build',
-        'build',
         'build-webapp',
         'build-landingPages',
         'publish-landingPages',
