@@ -9,7 +9,7 @@
             </div>
             <div class="Card-action">
                     <!-- @iagosrl this needs a dynamic link if they're coming from the listing or listingEditor with all thats needed to use the editor in badge-edit -->
-                <a class="btn btn-icon-link" data-bind="visible: isServiceProfessional, attr: {href: '/badge-edit/' + userBadgeID() + '?mustReturn=listingEditor/' + jobTitleID() + '&returnText=Listing Editor' ,'aria-label': 'Edit ' + badgeName() + ' badge' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                <a class="btn btn-icon-link" data-bind="visible: isServiceProfessional && createdBy() === 'user', attr: {href: '/badge-edit/' + userBadgeID() + '?mustReturn=listingEditor/' + jobTitleID() + '&returnText=Listing Editor' ,'aria-label': 'Edit ' + badgeName() + ' badge' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
             </div>
         </div>
         <div class="Card-description">

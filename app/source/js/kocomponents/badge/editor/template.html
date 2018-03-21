@@ -3,7 +3,7 @@
     <p id="badgeEntryFormInstructions" class="help-block">Sign into your <a href="https://badgr.io/auth/login">Badgr account</a> to find badges or collections. Make them public, and then click "Share" to find the URL to paste below.</p>
     <fieldset data-bind="with: userBadge">
         <div class="col-xs-12">
-            <legend>Badgr badge or collection</legend>
+            <legend>Badge or collection</legend>
             <label for="badgeURL">URL</label>
             <div class="form-group">
                 <input class="form-control"
@@ -18,6 +18,10 @@
             <label for="type">Type</label>
             <div class="form-group">
                 <span class="form-control-static" data-bind="text: type"></span>
+            </div>
+            <label for="type">Solution</label>
+            <div class="form-group">
+                <span class="form-control-static" data-bind="text: solution"></span>
             </div>
             <button type="submit" class="btn btn-secondary btn-block btn-lg"
                 data-bind="text: $component.saveButtonLabel, disable: $component.isWorking"></button>

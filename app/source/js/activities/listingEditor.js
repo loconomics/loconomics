@@ -27,28 +27,32 @@ require('../kocomponents/badge/viewer');
 const dummyData =
 [
   {
-    'UserBadgeID': 2,
-    'BadgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'Type': 'badge',
-    'ModifiedBy': 'user'
+    'userBadgeID': 2,
+    'solutionID': 275,
+    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'type': 'badge',
+    'createdBy': 'user'
   },
   {
-    'UserBadgeID': 3,
-    'BadgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'Type': 'badge',
-    'ModifiedBy': 'user'
+    'userBadgeID': 3,
+    'solutionID': 275,
+    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'type': 'badge',
+    'createdBy': 'user'
   },
   {
-    'UserBadgeID': 4,
-    'BadgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'Type': 'badge',
-    'ModifiedBy': 'user'
+    'userBadgeID': 4,
+    'solutionID': 275,
+    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'type': 'badge',
+    'createdBy': 'user'
   },
   {
-    'UserBadgeID': 5,
-    'BadgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'Type': 'badge',
-    'ModifiedBy': 'staff'
+    'userBadgeID': 5,
+    'solutionID': 275,
+    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'type': 'badge',
+    'createdBy': 'staff'
   }
 ];
 

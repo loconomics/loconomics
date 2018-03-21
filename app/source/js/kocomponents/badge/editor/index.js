@@ -10,7 +10,7 @@ import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 // import { show as showConfirm } from '../../../modals/confirm';
-import { show as showError } from '../../../modals/error';
+// import { show as showError } from '../../../modals/error';
 import template from './template.html';
 // import { item as userBadgeItem } from '../../../data/userBadges';
 

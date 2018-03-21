@@ -63,6 +63,20 @@ export default class BadgeViewer extends Komponent {
         this.jobTitleID = getObservable(params.jobTitleID);
 
         /**
+         * Holds the ID for the badge being
+         * edited.
+         * @member {KnockoutObservable<number>}
+         */
+        this.solutionID = getObservable(params.solutionID);
+
+        /**
+         * Holds the ID for the badge being
+         * edited.
+         * @member {KnockoutObservable<number>}
+         */
+        this.createdBy = getObservable(params.createdBy);
+
+        /**
          * The Badgr URL for the badge or collection.
          * @member {KnockoutObservable<string>}
          */
