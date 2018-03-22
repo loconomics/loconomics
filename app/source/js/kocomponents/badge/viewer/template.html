@@ -19,17 +19,15 @@
             <a class="btn btn-link btn-default" data-bind="attr: { href: '/badge-view/' + userBadgeID()  + '?mustReturn=listingEditor/' + jobTitleID() + '&returnText=Listing Editor' ,'aria-label': 'View ' + badgeName() + ' badge' }">View details</a>
         </div>
     </li>
-    <div class="BadgeViewer-details col-md-7 col-sm-reset" data-bind="visible: viewMode() === 'fullDetails'">
-        <div class="SectionHeading">
+    <div class="BadgeViewer-details" data-bind="visible: viewMode() === 'fullDetails'">
             <img data-bind="attr: {src: image" aria-hidden="true">
-            <h2 class="pull-right"><span data-bind="text: badgeName"></span></h2>
-        </div>
-        <h3>Evidence</h3>
-        <p data-bind="text: narrative"></p>
-        <div data-bind="foreach: evidence">
-            - <a data-bind="text: narrative, attr: { href: id }"></a>
-        </div>
-        <h3>Description of <span data-bind="text: badgeName"></span></h3>
-        <p data-bind="text: badgeDescription"></p>
+            <h2><span data-bind="text: badgeName"></span></h2>
+            <h3>Evidence</h3>
+            <p data-bind="text: narrative"></p>
+            <div data-bind="foreach: evidence">
+                - <a data-bind="text: narrative, attr: { href: id }"></a>
+            </div>
+            <h3>Description of <span data-bind="text: badgeName"></span></h3>
+            <p data-bind="text: badgeDescription"></p>
     </div>
 </div>
