@@ -75,12 +75,6 @@ export default class BadgeViewer extends Komponent {
         this.detailsURL = getObservable(params.detailsURL);
 
         /**
-         * The type of URL – either 'badge' or 'collection'.
-         * @member {KnockoutObservable<string>}
-         */
-        this.type = getObservable(params.type || 'badge');
-
-        /**
          * The mode the viewer is to be shown.
          * 'card':
          * 'fullDetails':
@@ -133,7 +127,6 @@ export default class BadgeViewer extends Komponent {
      */
     __setupDataOperations() {
         const src = this.badgeURL();
-        const srcType = this.type();
 
         /**
          * Populate assertion information plus general badge information
@@ -152,7 +145,7 @@ export default class BadgeViewer extends Komponent {
             });
         };
 
-        if(src && srcType == 'badge') {
+        if(src) {
             badges.fetchFrom(src)
             .then((json) => populateObservables(json));
         } else {
