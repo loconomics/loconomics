@@ -5,24 +5,22 @@
  * about a user's single badge including:
  * - 'image' of the badge
  * - 'evidence' (optional)
- * - 'narrative'
+ * - 'narrative' 
  * - the 'badge' URL pointing to the general info about the badge
  * The 'badge' contains the following information:
  * - 'name' of the badge
  * - 'narrative' of the badge which is a description
  *
  * You can also pass this information directly into the 'assertion' parameter if you already have it locally.
- *
+ * 
  * To populate this information and display in the component:
- * - we fetch the 'assertion' json object
+ * - we fetch the 'assertion' json object 
  * - we amend the 'badge' url to point it to the json url
  * - we fetch the amended 'badge' json object
  * - we populate the properties
  * @module kocomponents/badge-view
  */
 'use strict';
-
-import * as badges from '../../../data/badges';
 
 var getObservable = require('../../../utils/getObservable');
 
@@ -48,6 +46,10 @@ function ViewModel(params) {
     this.badgeDescription = getObservable('');
 //    this.style = style;
 
+    const headers = new Headers({
+      'Accept': 'application/json'
+    });
+
     const populateObservables = (payload) => {
       this.id(payload.id);
       this.image(payload.image);
@@ -55,16 +57,22 @@ function ViewModel(params) {
       if (payload.evidence && payload.evidence.length > 0) {
         this.evidence(payload.evidence[0].id);
       }
-      badges.fetchFrom(payload.badge)
-      .then((json) => {
+      fetch(payload.badge, {headers})
+      .then((r) => {
+        if(r.ok)
+          return r.json();
+      }).then((json) => {
         this.badgeName(json.name);
         this.badgeDescription(json.description);
       });
     };
 
     if(src) {
-      badges.fetchFrom(src)
-      .then((json) => populateObservables(json));
+      fetch(src, {headers})
+      .then((r) => {
+        if(r.ok)
+          return r.json();
+      }).then((json) => populateObservables(json));
     } else {
       populateObservables(this.assertion());
     }
