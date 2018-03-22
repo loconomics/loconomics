@@ -19,6 +19,7 @@ const dummyData =
   {
     'userBadgeID': 2,
     'solutionID': 275,
+    'jobTitleID': 106,
     'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'type': 'badge',
     'createdBy': 'user'
@@ -26,6 +27,7 @@ const dummyData =
   {
     'userBadgeID': 3,
     'solutionID': 275,
+    'jobTitleID': 106,
     'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'type': 'badge',
     'createdBy': 'user'
@@ -33,6 +35,7 @@ const dummyData =
   {
     'userBadgeID': 4,
     'solutionID': 275,
+    'jobTitleID': 106,
     'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'type': 'badge',
     'createdBy': 'user'
@@ -40,6 +43,7 @@ const dummyData =
   {
     'userBadgeID': 5,
     'solutionID': 275,
+    'jobTitleID': 106,
     'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'type': 'badge',
     'createdBy': 'staff'
@@ -56,6 +60,26 @@ export default class _TestBadgeActivity extends Activity {
         this.title = 'Testing badges';
 
         this.userBadges = dummyData;
+    }
+
+    /**
+     * Returns a URL to where to edit the badge assigned to the user, with a return
+     * link to the listing editor.
+     * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
+     * @returns {string}
+     */
+    getBadgeEditURL(userBadge) {
+        return `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
+    }
+
+    /**
+     * Returns a URL to where to view details of the badge assigned to the user, with a return
+     * link to the listing editor.
+     * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
+     * @returns {string}
+     */
+    getBadgeDetailsURL(userBadge) {
+        return `/badge-view/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
     }
 }
 

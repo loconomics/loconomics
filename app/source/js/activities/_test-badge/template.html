@@ -7,11 +7,10 @@
         <li>
             <badge-viewer params="
                 badgeURL: badgeURL,
-                userBadgeID: userBadgeID,
-                jobTitleID: 106,
-                solutionID: solutionID,
                 type: type,
-                viewMode: 'card'"></badge-viewer>
+                viewMode: 'card',
+                editURL: $parent.getBadgeEditURL($data),
+                detailsURL: $parent.getBadgeDetailsURL($data)"></badge-viewer>
         </li>
     </ul>
 </div>

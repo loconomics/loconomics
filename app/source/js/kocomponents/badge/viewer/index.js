@@ -1,4 +1,7 @@
 /**
+ * Displays a badge assigned to an user, or in OpenBadges terminology, an 'assertion'.
+ *
+ * In detail:
  * Displays badges users have earned. Loconomics badges are currently issued through badgr.io
  * How it works:
  * The 'src' parameter is a URL that includes user-specific information
@@ -24,7 +27,6 @@
 import '../../utilities/icon-dec.js';
 import * as badges from '../../../data/badges';
 import Komponent from '../../helpers/KnockoutComponent';
-import UserType from '../../../enums/UserType';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import style from './style.styl';
@@ -47,44 +49,30 @@ export default class BadgeViewer extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(string|KnockoutObservable<string>)} [params.src]
+     * @param {(string|KnockoutObservable<string>)} params.badgeURL
+     * @param {(string|KnockoutObservable<string>)} [params.editURL]
+     * @param {(string|KnockoutObservable<string>)} [params.viewURL]
      */
     constructor(params) {
         super();
-
-        /**
-         * Holds the ID for the badge being
-         * edited.
-         * @member {KnockoutObservable<number>}
-         */
-        this.userBadgeID = getObservable(params.userBadgeID);
-
-        /**
-         * Holds the ID for the badge being
-         * edited.
-         * @member {KnockoutObservable<number>}
-         */
-        this.jobTitleID = getObservable(params.jobTitleID);
-
-        /**
-         * Holds the ID for the badge being
-         * edited.
-         * @member {KnockoutObservable<number>}
-         */
-        this.solutionID = getObservable(params.solutionID);
-
-        /**
-         * Holds the ID for the badge being
-         * edited.
-         * @member {KnockoutObservable<number>}
-         */
-        this.createdBy = getObservable(params.createdBy);
 
         /**
          * The Badgr URL for the badge or collection.
          * @member {KnockoutObservable<string>}
          */
         this.badgeURL = getObservable(params.badgeURL);
+
+        /**
+         * Optional URL to enable a button/link to where to edit the badge assigned to an user
+         * @member {KnockoutObservable<string>}
+         */
+        this.editURL = getObservable(params.editURL);
+
+        /**
+         * Optional URL to enable a button/link to where to view more details about the badge assigned to an user
+         * @member {KnockoutObservable<string>}
+         */
+        this.detailsURL = getObservable(params.detailsURL);
 
         /**
          * The type of URL – either 'badge' or 'collection'.
@@ -99,7 +87,6 @@ export default class BadgeViewer extends Komponent {
          * @member {KnockoutObservable<string>}
          */
         this.viewMode = getObservable(params.viewMode || 'card');
-        this.isServiceProfessional = UserType.serviceProfessional;
 
          /**
          * Holds the id of the badge assertion.
