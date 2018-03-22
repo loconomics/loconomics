@@ -81,6 +81,12 @@ export default class BadgeViewer extends Komponent {
          */
         this.viewMode = getObservable(params.viewMode || 'card');
 
+        /**
+         * Whether the component is ready to be displayed/used, with data loaded
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isReady = ko.observable(false);
+
          /**
          * Holds the id of the badge assertion.
          * @member {KnockoutObservable<integer>}
@@ -138,6 +144,7 @@ export default class BadgeViewer extends Komponent {
             this.evidence(assertion.evidence);
             this.badgeName(assertion.badge.name);
             this.badgeDescription(assertion.badge.description);
+            this.isReady(true);
         });
     }
 }

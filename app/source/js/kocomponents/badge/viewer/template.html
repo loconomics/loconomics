@@ -1,3 +1,4 @@
+<!-- ko if: isReady -->
 <div class="BadgeViewer-card" data-bind="visible: viewMode() === 'card', attr: { href: id }">
     <div class="Card-heading">
         <div class="Card-image">
@@ -37,3 +38,4 @@
         <h3>Description of <span data-bind="text: badgeName"></span></h3>
         <p data-bind="text: badgeDescription"></p>
 </div>
+<!-- /ko -->
