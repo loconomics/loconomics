@@ -14,13 +14,12 @@
  * - 'name' of the badge
  * - 'narrative' of the badge which is a description
  *
- * You can also pass this information directly into the 'assertion' parameter if you already have it locally.
- *
  * To populate this information and display in the component:
  * - we fetch the 'assertion' json object
  * - we amend the 'badge' url to point it to the json url
  * - we fetch the amended 'badge' json object
  * - we populate the properties
+ *
  * @module kocomponents/badge-viewer
  */
 
@@ -49,7 +48,7 @@ export default class BadgeViewer extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(string|KnockoutObservable<string>)} params.badgeURL
+     * @param {(string|KnockoutObservable<string>)} params.assertionURL
      * @param {(string|KnockoutObservable<string>)} [params.editURL]
      * @param {(string|KnockoutObservable<string>)} [params.viewURL]
      */
@@ -57,10 +56,10 @@ export default class BadgeViewer extends Komponent {
         super();
 
         /**
-         * The Badgr URL for the badge or collection.
-         * @member {KnockoutObservable<string>}
+         * The Badgr URL for the assertion (a badge issued to a person).
+         * @member {string}
          */
-        this.badgeURL = getObservable(params.badgeURL);
+        this.assertionURL = ko.unwrap(params.assertionURL);
 
         /**
          * Optional URL to enable a button/link to where to edit the badge assigned to an user
@@ -126,31 +125,20 @@ export default class BadgeViewer extends Komponent {
      * @private
      */
     __setupDataOperations() {
-        const src = this.badgeURL();
 
         /**
-         * Populate assertion information plus general badge information
+         * Populate the assertion info plus badge general info
          * for the requested assertion URL.
          */
-        const populateObservables = (payload) => {
-            this.id(payload.id);
-            this.image(payload.image);
-            this.narrative(payload.narrative);
-            this.evidence(payload.evidence);
-
-            badges.fetchFrom(payload.badge)
-            .then((json) => {
-                this.badgeName(json.name);
-                this.badgeDescription(json.description);
-            });
-        };
-
-        if(src) {
-            badges.fetchFrom(src)
-            .then((json) => populateObservables(json));
-        } else {
-            populateObservables(this.badgeURL());
-        }
+        badges.getAssertion(this.assertionURL)
+        .then((assertion) => {
+            this.id(assertion.id);
+            this.image(assertion.image);
+            this.narrative(assertion.narrative);
+            this.evidence(assertion.evidence);
+            this.badgeName(assertion.badge.name);
+            this.badgeDescription(assertion.badge.description);
+        });
     }
 }
 
