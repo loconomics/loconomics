@@ -1,33 +1,31 @@
-<div class="BadgeViewer">
-    <li class="col-xs-11 col-sm-5 BadgeViewer-card" data-bind="visible: viewMode() === 'card', attr: {href: id}">
-        <div class="Card-heading">
-            <div class="Card-image">
-                <img data-bind="attr: {src: image, alt: narrative}" aria-hidden="true">
-            </div>
-            <div class="Card-title">
-                <h5 data-bind="text: badgeName"></h5>
-            </div>
-            <div class="Card-action">
-                    <!-- @iagosrl this needs a dynamic link if they're coming from the listing or listingEditor with all thats needed to use the editor in badge-edit -->
-                <a class="btn btn-icon-link" data-bind="visible: isServiceProfessional && createdBy() === 'user', attr: {href: '/badge-edit/' + userBadgeID() + '?mustReturn=listingEditor/' + jobTitleID() + '&returnText=Listing Editor' ,'aria-label': 'Edit ' + badgeName() + ' badge' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
-            </div>
+<div class="col-xs-11 col-sm-5 BadgeViewer-card" data-bind="visible: viewMode() === 'card', attr: { href: id }">
+    <div class="Card-heading">
+        <div class="Card-image">
+            <img data-bind="attr: { src: image, alt: narrative }" aria-hidden="true">
         </div>
-        <div class="Card-description">
-            <hr>
-            <p data-bind="text: narrative"></p>
-            <!-- @iagosrl this needs a dynamic link if they're coming from the listing or listingEditor with all thats needed to use the viewer in badge-view -->
-            <a class="btn btn-link btn-default" data-bind="attr: { href: '/badge-view/' + userBadgeID()  + '?mustReturn=listingEditor/' + jobTitleID() + '&returnText=Listing Editor' ,'aria-label': 'View ' + badgeName() + ' badge' }">View details</a>
+        <div class="Card-title">
+            <h5 data-bind="text: badgeName"></h5>
         </div>
-    </li>
-    <div class="BadgeViewer-details" data-bind="visible: viewMode() === 'fullDetails'">
-            <img data-bind="attr: {src: image" aria-hidden="true">
-            <h2><span data-bind="text: badgeName"></span></h2>
-            <h3>Evidence</h3>
-            <p data-bind="text: narrative"></p>
-            <div data-bind="foreach: evidence">
-                - <a data-bind="text: narrative, attr: { href: id }"></a>
-            </div>
-            <h3>Description of <span data-bind="text: badgeName"></span></h3>
-            <p data-bind="text: badgeDescription"></p>
+        <div class="Card-action">
+                <!-- @iagosrl this needs a dynamic link if they're coming from the listing or listingEditor with all thats needed to use the editor in badge-edit -->
+            <a class="btn btn-icon-link" data-bind="visible: isServiceProfessional && createdBy() === 'user', attr: {href: '/badge-edit/' + userBadgeID() + '?mustReturn=listingEditor/' + jobTitleID() + '&returnText=Listing Editor' ,'aria-label': 'Edit ' + badgeName() + ' badge' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+        </div>
     </div>
+    <div class="Card-description">
+        <hr>
+        <p data-bind="text: narrative"></p>
+        <!-- @iagosrl this needs a dynamic link if they're coming from the listing or listingEditor with all thats needed to use the viewer in badge-view -->
+        <a class="btn btn-link btn-default" data-bind="attr: { href: '/badge-view/' + userBadgeID()  + '?mustReturn=listingEditor/' + jobTitleID() + '&returnText=Listing Editor' ,'aria-label': 'View ' + badgeName() + ' badge' }">View details</a>
+    </div>
+</div>
+<div class="BadgeViewer-details" data-bind="visible: viewMode() === 'fullDetails'">
+        <img data-bind="attr: {src: image" aria-hidden="true">
+        <h2><span data-bind="text: badgeName"></span></h2>
+        <h3>Evidence</h3>
+        <p data-bind="text: narrative"></p>
+        <div data-bind="foreach: evidence">
+            - <a data-bind="text: type, attr: { href: id }"></a>
+        </div>
+        <h3>Description of <span data-bind="text: badgeName"></span></h3>
+        <p data-bind="text: badgeDescription"></p>
 </div>
