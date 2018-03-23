@@ -9,7 +9,9 @@
 import '../../kocomponents/badge/view';
 import '../../kocomponents/badge/viewer';
 import * as activities from '../index';
+import * as badges from '../../data/badges';
 import Activity from '../../components/Activity';
+import ko from 'knockout';
 import template from './template.html';
 
 const ROUTE_NAME = '_test-badge';
@@ -50,6 +52,8 @@ const dummyData =
   }
 ];
 
+const collectionURL = 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035?v=2_0';
+
 export default class _TestBadgeActivity extends Activity {
 
     static get template() { return template; }
@@ -59,7 +63,12 @@ export default class _TestBadgeActivity extends Activity {
         this.accessLevel = null;
         this.title = 'Testing badges';
 
-        this.userBadges = dummyData;
+        this.userBadges = ko.observableArray(dummyData);
+
+        const assertion2UserBadge = (a) => ({ badgeURL: a.id });
+        // Add next collection badges to the list
+        badges.getCollectionAssertions(collectionURL)
+        .then((assertions) => this.userBadges.push(...assertions.map(assertion2UserBadge)));
     }
 
     /**

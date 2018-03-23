@@ -48,6 +48,24 @@ export function fetchFrom(url) {
  */
 
 /**
+ * Given an assertion object, fills in the information about a BadgeClass,
+ * by fetching it from the assertion.badge URL and replacing that property
+ * with the expaned object (the BadgeClass URL is still available, under
+ * the badge.id property)
+ * @param {OpenBadgesV2/Assertion} assertion
+ * @returns {Promise<ExpandedAssertion>}
+ */
+export function fillBadgeIn(assertion) {
+    return fetchFrom(assertion.badge)
+    .then((badgeClass) => {
+        // Replace URL with full object
+        assertion.badge = badgeClass;
+        // Return augmented data:
+        return assertion;
+    });
+}
+
+/**
  * Get the data for an Assertion plus the BadgeClass that belongs to it, replacing in the
  * returned assertion data the 'bagde' property with the object representing the BadgeClass
  * (rather than the URL string that comes there; that URL is still available at 'badge.id')
@@ -56,10 +74,23 @@ export function fetchFrom(url) {
  */
 export function getAssertion(url) {
     return fetchFrom(url)
-    .then((assertion) => fetchFrom(assertion.badge).then((badgeClass) => {
-        // Replace URL with full object
-        assertion.badge = badgeClass;
-        // Return augmented data:
-        return assertion;
-    }));
+    .then(fillBadgeIn);
+}
+
+/**
+ * Get all the assertions, expanded, from a collection URL.
+ * NOTE: If only the original assertions, without expanding the BadgeClass,
+ * is wanted, just run a fetchFrom(collectionURL) and read 'badges' property
+ * on the resulting object.
+ * @param {string} collectionURL
+ * @returns {Promise<Array<ExpandedAssertion>>}
+ */
+export function getCollectionAssertions(collectionURL) {
+    return fetchFrom(collectionURL)
+    // The collection has the list of Assertions at the property 'badges'
+    // (yes, is actually a bit confusing the different naming they use at
+    // some points, on this case assertion==badges, while in an assertion,
+    // the 'badge' property is actually an URL to a BadgeClass)
+    .then((collection) => collection.badges.map(fillBadgeIn))
+    .then(Promise.all.bind(Promise));
 }
