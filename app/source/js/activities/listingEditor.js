@@ -24,38 +24,6 @@ require('../kocomponents/badge/collection');
 require('../kocomponents/badge/view');
 require('../kocomponents/badge/viewer');
 
-const dummyData =
-[
-  {
-    'userBadgeID': 2,
-    'solutionID': 275,
-    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'type': 'badge',
-    'createdBy': 'user'
-  },
-  {
-    'userBadgeID': 3,
-    'solutionID': 275,
-    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'type': 'badge',
-    'createdBy': 'user'
-  },
-  {
-    'userBadgeID': 4,
-    'solutionID': 275,
-    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'type': 'badge',
-    'createdBy': 'user'
-  },
-  {
-    'userBadgeID': 5,
-    'solutionID': 275,
-    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'type': 'badge',
-    'createdBy': 'staff'
-  }
-];
-
 var A = Activity.extend(function ListingEditorActivity() {
 
     Activity.apply(this, arguments);
@@ -164,7 +132,7 @@ function ViewModel(app) {
     this.user = ko.observable(null);
     this.jobTitleID = ko.observable(0);
     this.userJobTitle = ko.observable(null);
-    this.userBadges =  ko.observable(dummyData);
+    this.userBadges = ko.observableArray([]);
 
     this.listingTitle = ko.observable();
 
