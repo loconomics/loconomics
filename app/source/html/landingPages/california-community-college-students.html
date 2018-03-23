@@ -23,6 +23,7 @@
                                 </select>
                                 <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                             </div>
+
                             <h5 class="SignupLogin-prompt">At which college?</h5>
                             <div class="form-group">
                                 <select class="form-control" data-bind="value: institutionID">
@@ -55,6 +56,7 @@
                                 </select>
                                 <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                             </div>
+                            <!-- ko if: isStudent -->
                             <h5 class="SignupLogin-prompt">What is your primary field of study?</h5>
                             <div class="form-group">
                                 <select class="form-control" data-bind="value: fieldOfStudyID">
@@ -254,6 +256,7 @@
                                 <input type="date" class="form-control" data-bind="value: cccUserType">
                                 <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                             </div>
+                            <!-- /ko -->
                         </app-signup>
                     </div>
                 </div>

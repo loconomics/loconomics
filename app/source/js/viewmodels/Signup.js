@@ -167,6 +167,8 @@ function SignupVM() {
      */
     this.cccUserType = new Field();
 
+    this.isStudent = ko.pureComputed(() => this.cccUserType() === 'student');
+
     this.reset = function() {
         this.atBooking(false);
         this.confirmationCode(null);
