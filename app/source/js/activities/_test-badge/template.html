@@ -6,10 +6,10 @@
     <ul data-bind="foreach: $root.userBadges">
         <li>
             <badge-viewer params="
-                assertionURL: badgeURL,
+                assertionData: assertion,
                 viewMode: 'card',
-                editURL: $parent.getBadgeEditURL($data),
-                detailsURL: $parent.getBadgeDetailsURL($data)"></badge-viewer>
+                editURL: $parent.getBadgeEditURL(userBadge),
+                detailsURL: $parent.getBadgeDetailsURL(userBadge)"></badge-viewer>
         </li>
     </ul>
 </div>

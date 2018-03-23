@@ -47,8 +47,11 @@ export default class BadgeViewer extends Komponent {
     static get cssClass() { return 'BadgeViewer'; }
 
     /**
+     * Even if all parameters are optional, one of assertionURL and assertionData
+     * is required, taking data priority if both are given.
      * @param {object} params
-     * @param {(string|KnockoutObservable<string>)} params.assertionURL
+     * @param {(string|KnockoutObservable<string>)} [params.assertionURL]
+     * @param {(string|KnockoutObservable<string>)} [params.assertionData]
      * @param {(string|KnockoutObservable<string>)} [params.editURL]
      * @param {(string|KnockoutObservable<string>)} [params.viewURL]
      */
@@ -60,6 +63,14 @@ export default class BadgeViewer extends Komponent {
          * @member {string}
          */
         this.assertionURL = ko.unwrap(params.assertionURL);
+
+        /**
+         * The expanded assertion data (a badge issued to a person). Expanded
+         * means that should include the BadgeClass information at the 'badge'
+         * property of the object
+         * @member {object}
+         */
+        this.assertionData = ko.unwrap(params.assertionData);
 
         /**
          * Optional URL to enable a button/link to where to edit the badge assigned to an user
@@ -107,9 +118,9 @@ export default class BadgeViewer extends Komponent {
 
         /**
          * Holds the image of the badge assertion.
-         * @member {KnockoutObservable<string>}
+         * @member {KnockoutObservable<Array>}
          */
-        this.evidence = ko.observable();
+        this.evidence = ko.observableArray();
 
         /**
          * Holds the image of the badge assertion.
@@ -133,19 +144,41 @@ export default class BadgeViewer extends Komponent {
     __setupDataOperations() {
 
         /**
-         * Populate the assertion info plus badge general info
-         * for the requested assertion URL.
+         * Whether the given evidence object is valid for display, containing
+         * the needed properties
+         * @param {OpenBadgesV2/Evidence} evidence
+         * @returns {boolean}
          */
-        badges.getAssertion(this.assertionURL)
-        .then((assertion) => {
+        const validVisibleEvidence = (evidence) => evidence.narrative && evidence.id;
+
+        /**
+         * Populates the component properties with data from the given assertion.
+         * @param {data/badges/ExpandedAssertion} assertion
+         */
+        const populateProperties = (assertion) => {
             this.id(assertion.id);
             this.image(assertion.image);
             this.narrative(assertion.narrative);
-            this.evidence(assertion.evidence);
+            this.evidence((assertion.evidence || []).filter(validVisibleEvidence));
             this.badgeName(assertion.badge.name);
             this.badgeDescription(assertion.badge.description);
             this.isReady(true);
-        });
+        };
+
+        if (this.assertionData && typeof(this.assertionData) === 'object') {
+            populateProperties(this.assertionData);
+        }
+        else if (typeof(this.assertionURL) === 'string') {
+            /**
+             * Populate the assertion info plus badge general info
+             * for the requested assertion URL.
+             */
+            badges.getAssertion(this.assertionURL)
+            .then(populateProperties);
+        }
+        else {
+            throw new Error('Assertion data or an URL is required to display a Badge');
+        }
     }
 }
 

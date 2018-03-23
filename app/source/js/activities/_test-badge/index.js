@@ -11,48 +11,51 @@ import '../../kocomponents/badge/viewer';
 import * as activities from '../index';
 import * as badges from '../../data/badges';
 import Activity from '../../components/Activity';
+import flatArray from 'lodash/flatten';
 import ko from 'knockout';
 import template from './template.html';
 
 const ROUTE_NAME = '_test-badge';
 
-const dummyData =
-[
-  {
-    'userBadgeID': 2,
-    'solutionID': 275,
-    'jobTitleID': 106,
-    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'type': 'badge',
-    'createdBy': 'user'
-  },
-  {
-    'userBadgeID': 3,
-    'solutionID': 275,
-    'jobTitleID': 106,
-    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'type': 'badge',
-    'createdBy': 'user'
-  },
-  {
-    'userBadgeID': 4,
-    'solutionID': 275,
-    'jobTitleID': 106,
-    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'type': 'badge',
-    'createdBy': 'user'
-  },
-  {
-    'userBadgeID': 5,
-    'solutionID': 275,
-    'jobTitleID': 106,
-    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
-    'type': 'badge',
-    'createdBy': 'staff'
-  }
+const dummyData = [
+    {
+      'userBadgeID': 2,
+      'solutionID': 275,
+      'jobTitleID': 106,
+      'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+      'type': 'badge',
+      'createdBy': 'user'
+    },
+    {
+      'userBadgeID': 3,
+      'solutionID': 275,
+      'jobTitleID': 106,
+      'badgeURL': 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035?v=2_0',
+      'type': 'collection',
+      'createdBy': 'user'
+    }
 ];
 
-const collectionURL = 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035?v=2_0';
+/**
+ * @returns {Promise<Array<UserBadgeAssertion>>}
+ */
+const expandUserBadges = (userBadge) => {
+    const userBadgeAndAssertion = (assertion) => ({
+        userBadge,
+        assertion
+    });
+
+    switch (userBadge.type) {
+        case 'badge':
+            return badges.getAssertion(userBadge.badgeURL).then(userBadgeAndAssertion);
+        case 'collection':
+            return badges
+              .getCollectionAssertions(userBadge.badgeURL)
+              .then((list) => list.map(userBadgeAndAssertion));
+        default:
+            throw new Error(`Unsupported user badge type ${userBadge.type}`);
+    }
+};
 
 export default class _TestBadgeActivity extends Activity {
 
@@ -63,12 +66,12 @@ export default class _TestBadgeActivity extends Activity {
         this.accessLevel = null;
         this.title = 'Testing badges';
 
-        this.userBadges = ko.observableArray(dummyData);
+        this.userBadges = ko.observableArray([]);
 
-        const assertion2UserBadge = (a) => ({ badgeURL: a.id });
-        // Add next collection badges to the list
-        badges.getCollectionAssertions(collectionURL)
-        .then((assertions) => this.userBadges.push(...assertions.map(assertion2UserBadge)));
+        // Load all the assertions for the user badges, expanding collections
+        // as individual assertions, and the result as a flat array
+        const fetching = dummyData.map(expandUserBadges);
+        Promise.all(fetching).then(flatArray).then(this.userBadges);
     }
 
     /**
