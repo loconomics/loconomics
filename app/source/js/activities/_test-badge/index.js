@@ -24,7 +24,7 @@ const dummyData = [
       'jobTitleID': 106,
       'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
       'type': 'badge',
-      'createdBy': 'user'
+      'createdBy': 'jd'
     },
     {
       'userBadgeID': 3,
@@ -81,7 +81,8 @@ export default class _TestBadgeActivity extends Activity {
      * @returns {string}
      */
     getBadgeEditURL(userBadge) {
-        return `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
+        if (userBadge.createdBy !== 'user') return null;
+        else return `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
     }
 
     /**
