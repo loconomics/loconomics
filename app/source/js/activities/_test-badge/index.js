@@ -6,7 +6,6 @@
  */
 'use strict';
 
-import '../../kocomponents/badge/view';
 import '../../kocomponents/badge/viewer';
 import * as activities from '../index';
 import * as badges from '../../data/badges';
