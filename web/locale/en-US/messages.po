@@ -2,11 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2018-03-27 20:46+11:00\n"
-"PO-Revision-Date: 2018-03-27 20:47+1100\n"
+"PO-Revision-Date: 2018-03-27 22:07+1100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: i18n.POTGenerator\n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
 
 #: api\v1\Test.cshtml:50 App_Code\LcRest\Booking.cs:1566
 msgid "%0 %1's phone number: %2"
@@ -68,7 +71,7 @@ msgstr ""
 
 #: api\v1\Test.cshtml:47 App_Code\LcRest\UserJobTitleServiceAttributes.cs:222
 msgid "\\\"%0\\\" requires at least one selection"
-msgstr ""
+msgstr "\"%0\" requires at least one selection"
 
 #. TRANSLATORS: format is client based
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:196
@@ -218,14 +221,12 @@ msgstr ""
 msgid "Add-Ons"
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:338
-#: api\v1\me\client-booking.cshtml:208
+#: api\v1\me\addresses.cshtml:338 api\v1\me\client-booking.cshtml:208
 #: api\v1\me\service-professional-booking.cshtml:100
 msgid "Address Line 1 must be fewer than 100 characters."
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:339
-#: api\v1\me\client-booking.cshtml:209
+#: api\v1\me\addresses.cshtml:339 api\v1\me\client-booking.cshtml:209
 #: api\v1\me\service-professional-booking.cshtml:101
 msgid "Address Line 2 must be fewer than 100 characters."
 msgstr ""
@@ -238,8 +239,7 @@ msgstr ""
 msgid "Address must contain a postal code"
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:337
-#: api\v1\me\client-booking.cshtml:210
+#: api\v1\me\addresses.cshtml:337 api\v1\me\client-booking.cshtml:210
 #: api\v1\me\service-professional-booking.cshtml:102
 msgid "Address Name must be fewer than 50 characters."
 msgstr ""
@@ -304,8 +304,7 @@ msgstr ""
 msgid "Birth Month must be an number"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2545
-#: App_Code\LcRest\Booking.cs:2841
+#: App_Code\LcRest\Booking.cs:2545 App_Code\LcRest\Booking.cs:2841
 #: App_Code\LcRest\Booking.cs:2865
 msgid "Booking cannot be cancelled. Status:"
 msgstr ""
@@ -326,8 +325,7 @@ msgstr ""
 msgid "Booking cannot set as expired. Status: "
 msgstr ""
 
-#: api\v1\me\bookings.cshtml:50
-#: api\v1\me\client-booking.cshtml:177
+#: api\v1\me\bookings.cshtml:50 api\v1\me\client-booking.cshtml:177
 #: api\v1\me\service-professional-booking.cshtml:73
 #: api\v1\me\service-professional-booking.cshtml:272
 msgid "Booking not found."
@@ -345,14 +343,10 @@ msgstr ""
 msgid "Bookings by SMS preference is required"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2133
-#: App_Code\LcRest\Booking.cs:2143
-#: App_Code\LcRest\Booking.cs:2260
-#: App_Code\LcRest\Booking.cs:2272
-#: App_Code\LcRest\Booking.cs:2652
-#: App_Code\LcRest\Booking.cs:2663
-#: App_Code\LcRest\Booking.cs:2921
-#: App_Code\LcRest\Booking.cs:2932
+#: App_Code\LcRest\Booking.cs:2133 App_Code\LcRest\Booking.cs:2143
+#: App_Code\LcRest\Booking.cs:2260 App_Code\LcRest\Booking.cs:2272
+#: App_Code\LcRest\Booking.cs:2652 App_Code\LcRest\Booking.cs:2663
+#: App_Code\LcRest\Booking.cs:2921 App_Code\LcRest\Booking.cs:2932
 msgid "Bookings require the selection of at least one service"
 msgstr ""
 
@@ -412,20 +406,17 @@ msgstr ""
 msgid "Choose a plan"
 msgstr ""
 
-#: api\v1\me\client-booking.cshtml:224
-#: api\v1\me\client-booking.cshtml:230
+#: api\v1\me\client-booking.cshtml:224 api\v1\me\client-booking.cshtml:230
 #: api\v1\me\service-professional-booking.cshtml:116
 #: api\v1\me\service-professional-booking.cshtml:122
 msgid "Choose at least one service"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:1652
-#: App_Code\LcRest\UserPaymentPlan.cs:297
+#: App_Code\LcRest\Booking.cs:1652 App_Code\LcRest\UserPaymentPlan.cs:297
 msgid "Chosen payment method has expired"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2141
-#: App_Code\LcRest\Booking.cs:2661
+#: App_Code\LcRest\Booking.cs:2141 App_Code\LcRest\Booking.cs:2661
 msgid "Chosen services does not belong to the Job Title"
 msgstr ""
 
@@ -458,10 +449,8 @@ msgstr ""
 msgid "CVV code is required"
 msgstr ""
 
-#: _specialRoutes\app.html:107
-#: _specialRoutes\app.html:206
-#: _specialRoutes\app.html:3957
-#: _specialRoutes\app.html:9764
+#: _specialRoutes\app.html:107 _specialRoutes\app.html:206
+#: _specialRoutes\app.html:3957 _specialRoutes\app.html:9764
 msgid "Dashboard"
 msgstr ""
 
@@ -574,17 +563,13 @@ msgstr ""
 msgid "Estimation type:"
 msgstr ""
 
-#: api\v1\me\events.cshtml:165
-#: api\v1\me\events.cshtml:179
-#: api\v1\me\events.cshtml:254
-#: api\v1\me\events.cshtml:285
-#: api\v1\me\events.cshtml:301
-#: api\vx\icalendar\events.cshtml:89
+#: api\v1\me\events.cshtml:165 api\v1\me\events.cshtml:179
+#: api\v1\me\events.cshtml:254 api\v1\me\events.cshtml:285
+#: api\v1\me\events.cshtml:301 api\vx\icalendar\events.cshtml:89
 msgid "Event not found."
 msgstr ""
 
-#: api\v1\me\external-listings.cshtml:54
-#: api\v1\me\external-listings.cshtml:142
+#: api\v1\me\external-listings.cshtml:54 api\v1\me\external-listings.cshtml:142
 #: api\v1\me\external-listings.cshtml:165
 msgid "External Listing not found."
 msgstr ""
@@ -680,8 +665,7 @@ msgstr ""
 msgid "Impossible to calculate payment without pricing summary values"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2270
-#: App_Code\LcRest\Booking.cs:2930
+#: App_Code\LcRest\Booking.cs:2270 App_Code\LcRest\Booking.cs:2930
 msgid "Impossible to change the services of a booking to another Job Title"
 msgstr ""
 
@@ -689,8 +673,7 @@ msgstr ""
 msgid "Impossible to compute availability."
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2138
-#: App_Code\LcRest\Booking.cs:2657
+#: App_Code\LcRest\Booking.cs:2138 App_Code\LcRest\Booking.cs:2657
 msgid "Impossible to create a booking for that Job Title."
 msgstr ""
 
@@ -702,8 +685,7 @@ msgstr ""
 msgid "Impossible to retrieve information for the ServiceID:"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2264
-#: App_Code\LcRest\Booking.cs:2925
+#: App_Code\LcRest\Booking.cs:2264 App_Code\LcRest\Booking.cs:2925
 msgid "Impossible to update the booking for that Job Title."
 msgstr ""
 
@@ -787,8 +769,7 @@ msgstr ""
 msgid "Job Title not found or disapproved"
 msgstr ""
 
-#: api\v1\job-titles.cshtml:60
-#: App_Code\RestPages\RestUserJobProfile.cs:30
+#: api\v1\job-titles.cshtml:60 App_Code\RestPages\RestUserJobProfile.cs:30
 #: api\v1\users\job-profile.cshtml:77
 msgid "Job Title not found."
 msgstr ""
@@ -797,8 +778,7 @@ msgstr ""
 msgid "Last Name must be fewer than 145 characters."
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:334
-#: api\v1\me\client-booking.cshtml:212
+#: api\v1\me\addresses.cshtml:334 api\v1\me\client-booking.cshtml:212
 #: api\v1\me\service-professional-booking.cshtml:104
 msgid "Latitude must be a number"
 msgstr ""
@@ -867,8 +847,7 @@ msgstr ""
 msgid "Loconomics marketing messages preference is required"
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:335
-#: api\v1\me\client-booking.cshtml:213
+#: api\v1\me\addresses.cshtml:335 api\v1\me\client-booking.cshtml:213
 #: api\v1\me\service-professional-booking.cshtml:105
 msgid "Longitude must be a number"
 msgstr ""
@@ -877,8 +856,7 @@ msgstr ""
 msgid "Marketing e-mails about Loconomics Service Providers preference is required"
 msgstr ""
 
-#: api\v1\me\profile-picture.cshtml:126
-#: api\v1\me\work-photos.cshtml:119
+#: api\v1\me\profile-picture.cshtml:126 api\v1\me\work-photos.cshtml:119
 msgid "Maximum request length exceeded"
 msgstr ""
 
@@ -890,10 +868,8 @@ msgstr ""
 msgid "Method not allowed"
 msgstr ""
 
-#: api\v1\me\client-booking.cshtml:163
-#: api\v1\me\client-booking.cshtml:175
-#: api\v1\me\events.cshtml:270
-#: api\v1\me\events.cshtml:283
+#: api\v1\me\client-booking.cshtml:163 api\v1\me\client-booking.cshtml:175
+#: api\v1\me\events.cshtml:270 api\v1\me\events.cshtml:283
 #: api\v1\me\events.cshtml:299
 #: api\v1\me\service-professional-booking.cshtml:259
 #: api\v1\me\service-professional-booking.cshtml:270
@@ -934,67 +910,43 @@ msgstr ""
 msgid "Not allowed"
 msgstr ""
 
-#: api\v1\search.cshtml:225
-#: App_Code\RestPages\RestUserJobProfile.cs:74
+#: api\v1\search.cshtml:225 App_Code\RestPages\RestUserJobProfile.cs:74
 #: App_Code\RestPages\RestUserJobProfile.cs:87
 #: App_Code\RestPages\RestUserJobProfile.cs:112
-#: App_Code\RestPages\RestUserJobProfile.cs:121
-#: api\v1\me\addresses.cshtml:229
-#: api\v1\me\addresses.cshtml:241
-#: api\v1\me\addresses.cshtml:328
-#: api\v1\me\addresses.cshtml:477
-#: api\v1\me\addresses.cshtml:518
-#: api\v1\me\addresses.cshtml:571
-#: api\v1\me\addresses.cshtml:621
-#: api\v1\me\calendar-syncing.cshtml:48
-#: api\v1\me\calendar-syncing.cshtml:77
+#: App_Code\RestPages\RestUserJobProfile.cs:121 api\v1\me\addresses.cshtml:229
+#: api\v1\me\addresses.cshtml:241 api\v1\me\addresses.cshtml:328
+#: api\v1\me\addresses.cshtml:477 api\v1\me\addresses.cshtml:518
+#: api\v1\me\addresses.cshtml:571 api\v1\me\addresses.cshtml:621
+#: api\v1\me\calendar-syncing.cshtml:48 api\v1\me\calendar-syncing.cshtml:77
 #: api\v1\me\marketplace-profile.cshtml:56
-#: api\v1\me\marketplace-profile.cshtml:65
-#: api\v1\me\messaging.cshtml:125
-#: api\v1\me\messaging.cshtml:144
-#: api\v1\me\messaging.cshtml:151
-#: api\v1\me\messaging.cshtml:167
-#: api\v1\me\messaging.cshtml:178
-#: api\v1\me\messaging.cshtml:263
-#: api\v1\me\messaging.cshtml:270
+#: api\v1\me\marketplace-profile.cshtml:65 api\v1\me\messaging.cshtml:125
+#: api\v1\me\messaging.cshtml:144 api\v1\me\messaging.cshtml:151
+#: api\v1\me\messaging.cshtml:167 api\v1\me\messaging.cshtml:178
+#: api\v1\me\messaging.cshtml:263 api\v1\me\messaging.cshtml:270
 #: api\v1\me\owner-acknowledgment.cshtml:29
-#: api\v1\me\owner-acknowledgment.cshtml:37
-#: api\v1\me\payment-account.cshtml:55
-#: api\v1\me\payment-account.cshtml:64
-#: api\v1\me\payment-plan.cshtml:57
-#: api\v1\me\payment-plan.cshtml:63
-#: api\v1\me\privacy-settings.cshtml:64
-#: api\v1\me\privacy-settings.cshtml:73
-#: api\v1\me\profile-picture.cshtml:182
-#: api\v1\me\profile.cshtml:99
-#: api\v1\me\profile.cshtml:135
-#: api\v1\me\profile.cshtml:141
-#: api\v1\me\profile.cshtml:148
+#: api\v1\me\owner-acknowledgment.cshtml:37 api\v1\me\payment-account.cshtml:55
+#: api\v1\me\payment-account.cshtml:64 api\v1\me\payment-plan.cshtml:57
+#: api\v1\me\payment-plan.cshtml:63 api\v1\me\privacy-settings.cshtml:64
+#: api\v1\me\privacy-settings.cshtml:73 api\v1\me\profile-picture.cshtml:182
+#: api\v1\me\profile.cshtml:99 api\v1\me\profile.cshtml:135
+#: api\v1\me\profile.cshtml:141 api\v1\me\profile.cshtml:148
 #: api\v1\me\scheduling-preferences.cshtml:42
 #: api\v1\me\scheduling-preferences.cshtml:51
 msgid "Not found"
 msgstr ""
 
-#: api\v1\job-titles.cshtml:63
-#: api\v1\postal-codes.cshtml:43
+#: api\v1\job-titles.cshtml:63 api\v1\postal-codes.cshtml:43
 #: App_Code\RestPages\RestUserJobProfile.cs:38
 #: App_Code\RestPages\RestUserJobProfile.cs:271
-#: api\v1\auth\change-password.cshtml:48
-#: api\v1\auth\login.cshtml:58
-#: api\v1\auth\signup.cshtml:102
-#: api\v1\me\client-booking.cshtml:111
-#: api\v1\me\client-booking.cshtml:122
-#: api\v1\me\client-booking.cshtml:147
-#: api\v1\me\clients.cshtml:97
-#: api\v1\me\clients.cshtml:145
-#: api\v1\me\clients.cshtml:194
-#: api\v1\me\education.cshtml:64
-#: api\v1\me\education.cshtml:112
-#: api\v1\me\education.cshtml:154
+#: api\v1\auth\change-password.cshtml:48 api\v1\auth\login.cshtml:58
+#: api\v1\auth\signup.cshtml:102 api\v1\me\client-booking.cshtml:111
+#: api\v1\me\client-booking.cshtml:122 api\v1\me\client-booking.cshtml:147
+#: api\v1\me\clients.cshtml:97 api\v1\me\clients.cshtml:145
+#: api\v1\me\clients.cshtml:194 api\v1\me\education.cshtml:64
+#: api\v1\me\education.cshtml:112 api\v1\me\education.cshtml:154
 #: api\v1\me\service-professional-booking.cshtml:238
 #: api\v1\me\service-professional-services.cshtml:160
-#: api\v1\me\weekly-schedule.cshtml:125
-#: api\v1\users\job-profile.cshtml:54
+#: api\v1\me\weekly-schedule.cshtml:125 api\v1\users\job-profile.cshtml:54
 #: api\v1\users\service-addresses.cshtml:74
 #: api\v1\users\service-professional-services.cshtml:74
 msgid "Not Found"
@@ -1017,8 +969,7 @@ msgstr ""
 msgid "Number of occurrences must be a number"
 msgstr ""
 
-#: App_Code\LcRessources.cs:13
-#: api\v1\me\profile.cshtml:131
+#: App_Code\LcRessources.cs:13 api\v1\me\profile.cshtml:131
 msgid "OK"
 msgstr ""
 
@@ -1203,8 +1154,7 @@ msgstr ""
 msgid "Second Last Name must be fewer than 145 characters."
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2365
-#: App_Code\LcRest\Booking.cs:2748
+#: App_Code\LcRest\Booking.cs:2365 App_Code\LcRest\Booking.cs:2748
 #: App_Code\LcRest\Booking.cs:2980
 msgid "Selected location is not valid."
 msgstr ""
@@ -1217,8 +1167,7 @@ msgstr ""
 msgid "Server Error: impossible to create the address at this time."
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:404
-#: api\v1\me\addresses.cshtml:460
+#: api\v1\me\addresses.cshtml:404 api\v1\me\addresses.cshtml:460
 msgid "Server Error: Invalid address Kind specified."
 msgstr ""
 
@@ -1263,8 +1212,7 @@ msgstr ""
 msgid "Something goes wrong"
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:340
-#: api\v1\me\client-booking.cshtml:211
+#: api\v1\me\addresses.cshtml:340 api\v1\me\client-booking.cshtml:211
 #: api\v1\me\service-professional-booking.cshtml:103
 msgid "Special instructions must be fewer than 1,000 characters."
 msgstr ""
@@ -1273,8 +1221,7 @@ msgstr ""
 msgid "Special instructions:"
 msgstr ""
 
-#: api\v1\me\client-booking.cshtml:258
-#: api\v1\me\client-booking.cshtml:334
+#: api\v1\me\client-booking.cshtml:258 api\v1\me\client-booking.cshtml:334
 msgid "Start date and time is not valid"
 msgstr ""
 
@@ -1332,8 +1279,7 @@ msgstr ""
 msgid "The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes"
 msgstr ""
 
-#: App_Code\LcAuthHelper.cs:353
-#: api\v1\lead-generation\newsletter.cshtml:70
+#: App_Code\LcAuthHelper.cs:353 api\v1\lead-generation\newsletter.cshtml:70
 #: api\v1\lead-generation\referral.cshtml:186
 #: api\v1\lead-generation\referral.cshtml:246
 msgid "The email is not valid."
@@ -1360,8 +1306,7 @@ msgid "The Job Title '%0' is not allowed."
 msgstr ""
 
 #: App_Code\RestPages\RestUserJobProfile.cs:34
-#: api\v1\users\job-profile.cshtml:51
-#: api\v1\users\service-addresses.cshtml:71
+#: api\v1\users\job-profile.cshtml:51 api\v1\users\service-addresses.cshtml:71
 #: api\v1\users\service-professional-services.cshtml:71
 msgid "The Job Title ID has bad format (must be an integer number)"
 msgstr ""
@@ -1439,12 +1384,12 @@ msgstr ""
 
 #. TRANSLATORS: do not escape speech mark
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:175
-msgid "Type the name of the consultation, e.g. \\"Initial consultation\\", \\"Introductory meeting\\"."
+msgid "Type the name of the consultation, e.g. \\\"Initial consultation\\\", \\\"Introductory meeting\\\"."
 msgstr "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\"."
 
 #. TRANSLATORS: do not escape speech mark
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:132
-msgid "Type the name of the estimate visit, e.g. \\"Work assessment visit\\", \\"Pricing estimate visit\\""
+msgid "Type the name of the estimate visit, e.g. \\\"Work assessment visit\\\", \\\"Pricing estimate visit\\\""
 msgstr "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\""
 
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:59
@@ -1459,24 +1404,18 @@ msgstr ""
 msgid "Type your full name as acknowlegment"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2546
-#: App_Code\LcRest\Booking.cs:2570
-#: App_Code\LcRest\Booking.cs:2842
-#: App_Code\LcRest\Booking.cs:2866
+#: App_Code\LcRest\Booking.cs:2546 App_Code\LcRest\Booking.cs:2570
+#: App_Code\LcRest\Booking.cs:2842 App_Code\LcRest\Booking.cs:2866
 msgid "Type:"
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2131
-#: App_Code\LcRest\Booking.cs:2258
-#: App_Code\LcRest\Booking.cs:2650
-#: App_Code\LcRest\Booking.cs:2919
+#: App_Code\LcRest\Booking.cs:2131 App_Code\LcRest\Booking.cs:2258
+#: App_Code\LcRest\Booking.cs:2650 App_Code\LcRest\Booking.cs:2919
 msgid "Unable to retrieve the client's info. Their profile may no longer exist."
 msgstr ""
 
-#: App_Code\LcRest\Booking.cs:2129
-#: App_Code\LcRest\Booking.cs:2256
-#: App_Code\LcRest\Booking.cs:2648
-#: App_Code\LcRest\Booking.cs:2917
+#: App_Code\LcRest\Booking.cs:2129 App_Code\LcRest\Booking.cs:2256
+#: App_Code\LcRest\Booking.cs:2648 App_Code\LcRest\Booking.cs:2917
 msgid "Unable to retrieve the service professional's info. Their profile may no longer exist."
 msgstr ""
 
@@ -1488,18 +1427,12 @@ msgstr ""
 msgid "User doesn't exists"
 msgstr ""
 
-#: api\v1\users\availability.cshtml:47
-#: api\v1\users\availability.cshtml:66
-#: api\v1\users\index.cshtml:46
-#: api\v1\users\index.cshtml:53
-#: api\v1\users\profile.cshtml:35
-#: api\v1\users\profile.cshtml:40
-#: api\v1\users\ratings.cshtml:43
-#: api\v1\users\ratings.cshtml:61
-#: api\v1\users\ratings.cshtml:67
-#: api\v1\users\reviews.cshtml:46
-#: api\v1\users\reviews.cshtml:57
-#: api\v1\users\service-attributes.cshtml:21
+#: api\v1\users\availability.cshtml:47 api\v1\users\availability.cshtml:66
+#: api\v1\users\index.cshtml:46 api\v1\users\index.cshtml:53
+#: api\v1\users\profile.cshtml:35 api\v1\users\profile.cshtml:40
+#: api\v1\users\ratings.cshtml:43 api\v1\users\ratings.cshtml:61
+#: api\v1\users\ratings.cshtml:67 api\v1\users\reviews.cshtml:46
+#: api\v1\users\reviews.cshtml:57 api\v1\users\service-attributes.cshtml:21
 #: api\v1\users\service-attributes.cshtml:29
 #: api\v1\users\verifications-summary.cshtml:62
 #: api\v1\users\verifications-summary.cshtml:81
@@ -1541,8 +1474,7 @@ msgstr ""
 msgid "We weren't able to process your payment, please review"
 msgstr ""
 
-#: api\v1\Test.cshtml:48
-#: api\v1\Test.cshtml:49
+#: api\v1\Test.cshtml:48 api\v1\Test.cshtml:49
 msgid "welcome %1, today is %0"
 msgstr ""
 
@@ -1616,8 +1548,7 @@ msgstr ""
 msgid "You must set your hourly rate"
 msgstr ""
 
-#: App_Code\LcAuthHelper.cs:66
-#: App_Code\LcAuthHelper.cs:370
+#: App_Code\LcAuthHelper.cs:66 App_Code\LcAuthHelper.cs:370
 msgid "You must specify a password."
 msgstr ""
 
@@ -1670,42 +1601,5 @@ msgid "Your password has been updated. Please log in again with your new passwor
 msgstr ""
 
 #: api\v1\me\weekly-schedule.cshtml:192
-msgid "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \\"all days/times\\"."
+msgid "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \\\"all days/times\\\"."
 msgstr ""
-
-#~ msgid "{0} days"
-#~ msgstr ""
-
-#~ msgid "{0} has a not valid value"
-#~ msgstr ""
-
-#~ msgid "{0} hours"
-#~ msgstr ""
-
-#~ msgid "{0} is required"
-#~ msgstr ""
-
-#~ msgid "{0} milliseconds"
-#~ msgstr ""
-
-#~ msgid "{0} minutes"
-#~ msgstr ""
-
-#~ msgid "{0} seconds"
-#~ msgstr ""
-
-#~ msgid "{0} services"
-#~ msgstr ""
-
-#~ msgid "Calendar Import error on UserID:{0} : Internal error processing iCalendar"
-#~ msgstr ""
-
-#~ msgid "Calendar Import error on UserID:{0} : URL is not valid '{1}'"
-#~ msgstr ""
-
-#~ msgid "Impossible to know transaction details, please contact support. BookingID #{0}"
-#~ msgstr ""
-
-#~ msgid "Instructions to reset your password have been sent to {0}. Please check your spam folder if you don't see it."
-#~ msgstr ""
-
