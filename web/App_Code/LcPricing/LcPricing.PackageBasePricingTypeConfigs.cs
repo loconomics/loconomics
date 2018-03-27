@@ -107,8 +107,8 @@ public static partial class LcPricingModel
                 SummaryFormat = "{0}", // leave as is for i18n (is processed by client)
                 // Left a white space to avoid the default SummaryFormat be used instead:
                 SummaryFormatNoDuration = " ",
-                NameAndSummaryFormat = "[[[{0}, {1}]]]", // leave as is for i18n (is processed by client)
-                NameAndSummaryFormatNoDuration = "{0}", // leave as is for i18n (is processed by client)
+                NameAndSummaryFormat = "{0}, {1}",
+                NameAndSummaryFormatNoDuration = "{0}",
 
                 IncludeServiceAttributes = false,
 
@@ -231,8 +231,8 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Service removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit services]]]",
 
-                SummaryFormat = "{0}", // leave as is for i18n (is processed by client)
-                NameAndSummaryFormat = "[[[{0}, {1}]]]", // leave as is for i18n (is processed by client)
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
 
                 IncludeServiceAttributes = true,
 
@@ -262,8 +262,8 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Service removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit pricing]]]",
 
-                SummaryFormat = "{0}", // leave as is for i18n (is processed by client)
-                NameAndSummaryFormat = "[[[{0}, {1}]]]", // leave as is for i18n (is processed by client)
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
 
                 IncludeServiceAttributes = true,
 
@@ -296,8 +296,8 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Service removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit pricing]]]",
 
-                SummaryFormat = "{0}", // leave as is for i18n (is processed by client)
-                NameAndSummaryFormat = "[[[{0}, {1}]]]", // leave as is for i18n (is processed by client)
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
 
                 IncludeServiceAttributes = true,
 
@@ -330,8 +330,8 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Service removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit pricing]]]",
 
-                SummaryFormat = "{0}", // leave as is for i18n (is processed by client)
-                NameAndSummaryFormat = "[[[{0}, {1}]]]", // leave as is for i18n (is processed by client)
+                SummaryFormat = "{0}",
+                NameAndSummaryFormat = "{0}, {1}",
 
                 IncludeServiceAttributes = true,
 
