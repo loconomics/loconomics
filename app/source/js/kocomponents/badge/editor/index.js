@@ -203,20 +203,22 @@ export default class BadgeEditor extends Komponent {
 
         // Convert badgr URL to v 2.0 and assign type based on URL
         let src = this.userBadge.badgeURL();
-        if(src && src.match(/^assertions.*$/)) {
+        if(src && src.match(/\/assertions\//i)) {
             src = src.replace(/\?v=.+$/, '?v=2_0');
             data.type = 'badge';
         }
-        else if (src && src.match(/^collections.*$/)) {
+        else if (src && src.match(/\/collections\//i)) {
             data.type = 'collection';
         }
         else {
+            this.isSaving(false);
             showError({
                 title: 'Invalid data',
                 error: 'Please enter a valid Badgr URL'
             });
+            return Promise.reject();
         }
-        data.badgeUrl = src;
+        data.badgeURL = src;
 
         return this.dataManager
         .save(data)
