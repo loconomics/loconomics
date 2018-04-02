@@ -7,7 +7,7 @@ Type varchar(25) NOT NULL,
 Category varchar(25) NOT NULL,
 ExpiryDate datetime,
 CreatedDate datetime NOT NULL,
-ModifiedDate datetime NOT NULL,
+UpdatedDate datetime NOT NULL,
 CreatedBy nvarchar(12) NOT NULL,
 Active bit DEFAULT 1 NOT NULL,
 PRIMARY KEY (UserBadgeID))

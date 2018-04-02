@@ -1175,6 +1175,32 @@
                 "jobTitleID": null,
                 "userExternalListingID": null
             }
+        },
+        "Badges (create)": {
+            "url": "/api/v1/en-US/me/badges",
+            "post": {
+                "solutionID": 1,
+                "badgeURL": "https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0",
+                "type": "badge"
+            }
+        },
+        "Badges (udpate and delete": {
+            "url": "/api/v1/en-US/me/badges/123",
+            "get": {},
+            "put": {
+                "solutionID": 1,
+                "badgeURL": "https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0",
+                "type": "badge"
+            },
+            "delete": {}
+        },
+        "Badges by listing": {
+            "url": "/api/v1/en-US/me/badges/by-listing/123",
+            "get": {}
+        },
+        "Badges by solution": {
+            "url": "/api/v1/en-US/me/badges/by-solution/123",
+            "get": {}
         }
     };
 

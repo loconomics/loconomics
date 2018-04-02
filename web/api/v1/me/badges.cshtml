@@ -1,0 +1,190 @@
+﻿@using WebMatrix.WebData;
+@*
+    Register and manage user badges.
+    List all badges in a user listing for the logged user.
+    List all badges in a solution for the logged user.
+
+    Options:
+
+    - GET /@userBadgeID: get a single entry
+
+    - POST: register a new entry
+
+    - PUT /@userBadgeID: Updates an entry
+
+    - DELETE /@userBadgeID: Deletes an entry
+
+    - GET /by-listing/@userListingID: list all badges in a user listing
+
+    - GET /by-solution/@solutionID: list all badges in a solution of the user
+
+    - @Result list or item of type LcRest.UserBadge
+
+    EXAMPLES {
+        "Badges (create)": {
+            "url": "/api/v1/en-US/me/badges",
+            "post": {
+                "solutionID": 1,
+                "badgeURL": "https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0",
+                "type": "badge"
+            }
+        },
+        "Badges (udpate and delete": {
+            "url": "/api/v1/en-US/me/badges/123",
+            "get": { },
+            "put": {
+                "solutionID": 1,
+                "badgeURL": "https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0",
+                "type": "badge"
+            },
+            "delete": { }
+        },
+        "Badges by listing": {
+            "url": "/api/v1/en-US/me/badges/by-listing/123",
+            "get": { }
+        },
+        "Badges by solution": {
+            "url": "/api/v1/en-US/me/badges/by-solution/123",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestUserBadges : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData[0] == "by-listing" && UrlData.Count == 2)
+            {
+                var locale = LcRest.Locale.Current;
+                var userListingID = UrlData[1].AsInt();
+                return LcRest.UserBadge.ListByListing(WebSecurity.CurrentUserId, userListingID, locale.languageID, locale.countryID);
+            }
+            if (UrlData[0] == "by-solution" && UrlData.Count <= 2)
+            {
+                var locale = LcRest.Locale.Current;
+                var solutionID = UrlData.Count == 1 ? null : (int?)UrlData[1].AsInt();
+                return LcRest.UserBadge.ListBySolution(WebSecurity.CurrentUserId, solutionID, locale.languageID, locale.countryID);
+            }
+            else if (UrlData[0].IsInt() && UrlData.Count == 1)
+            {
+                var userID = WebSecurity.CurrentUserId;
+                var itemID = UrlData[0].AsInt();
+                var locale = LcRest.Locale.Current;
+                var item = LcRest.UserBadge.Get(userID, itemID, locale.languageID, locale.countryID);
+                if (item != null)
+                {
+                    return item;
+                }
+                else
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+            }
+            return base.Get();
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 0)
+            {
+                var userID = WebSecurity.CurrentUserId;
+                // Create
+                return SetItem(userID);
+            }
+
+            return base.Post();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var userID = WebSecurity.CurrentUserId;
+                var itemID = UrlData[0].AsInt();
+
+                if (itemID > 0)
+                {
+                    return SetItem(userID, itemID);
+                }
+            }
+
+            // method not allowed
+            return base.Put();
+        }
+
+        public override dynamic Delete()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var userID = WebSecurity.CurrentUserId;
+                var itemID = UrlData[0].AsInt();
+                var locale = LcRest.Locale.Current;
+
+                // Get a copy before deletion to send later
+                var item = LcRest.UserBadge.Get(userID, itemID, locale.languageID, locale.countryID);
+
+                if (item == null)
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+
+                // Delete
+                LcRest.UserBadge.Delete(userID, itemID, locale.languageID, locale.countryID);
+
+                return item;
+            }
+
+            return base.Delete();
+        }
+
+        private bool IsValid()
+        {
+            Validation.RequireField("badgeURL", LcRessources.RequiredField("Badge URL"));
+            Validation.Add("badgeURL", Validator.Url(LcRessources.RequiredField("Badge URL")));
+            Validation.RequireField("solutionID", LcRessources.RequiredField("Solution"));
+            Validation.Add("solutionID", Validator.Integer(LcRessources.RequiredField("Solution")));
+            Validation.RequireField("type", LcRessources.RequiredField("Type"));
+            var type = Request.Form["type"];
+            if (type != "badge" && type != "collection")
+            {
+                ModelState.AddError("type", LcRessources.RequiredField("Type"));
+            }
+
+            return Validation.IsValid() && ModelState.IsValid;
+        }
+
+        private LcRest.UserBadge SetItem(int userID, int itemID = 0)
+        {
+            // Validation
+            if (!IsValid())
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            var item = GetItemFromForm();
+            item.userID = userID;
+            item.userBadgeID = itemID;
+            var locale = LcRest.Locale.Current;
+
+            item.userBadgeID = LcRest.UserBadge.Set(item, locale);
+
+            // Returns the updated client data
+            return LcRest.UserBadge.Get(userID, item.userBadgeID, locale.languageID, locale.countryID);
+        }
+
+        private LcRest.UserBadge GetItemFromForm()
+        {
+            return new LcRest.UserBadge
+            {
+                badgeURL = Request.Form["badgeURL"],
+                solutionID = Request.Form["solutionID"].AsInt(),
+                type = Request.Form["type"]
+            };
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestUserBadges().JsonResponse(this);
+}
