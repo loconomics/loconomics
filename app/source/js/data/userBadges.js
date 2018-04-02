@@ -2,9 +2,11 @@
  * Access lists of badges assigned to the logged user.
  */
 
+import * as badges from './badges';
 import CachedDataProvider from './helpers/CachedDataProvider';
 import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
 import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver';
+import flatArray from 'lodash/flatten';
 import rest from './drivers/restClient';
 
 const API_NAME_ITEM = 'me/badges';
@@ -59,4 +61,47 @@ export function byListing(userListingID) {
         remote: new RestSingleDataProviderDriver(rest, API_NAME_LISTING + '/' + userListingID),
         local: noCache
     });
+}
+
+/**
+ * @typedef {Object} UserBadgeAssertion
+ * @property {rest/UserBadge} userBadge
+ * @property {OpenBadgesV2/Assertion} assertion
+ */
+
+/**
+ * Given a user badge record, returns an array with all the information for the badge entry and its assertion(s)
+ * by loading the badgeURL content, as a pair of data with the userBadge and the
+ * OpenBadges assertion.
+ * @returns {Promise<Array<UserBadgeAssertion>>}
+ */
+export function expandUserBadge(userBadge) {
+    const userBadgeAndAssertion = (assertion) => ({
+        userBadge,
+        assertion
+    });
+
+    switch (userBadge.type) {
+        case 'badge':
+            return badges.getAssertion(userBadge.badgeURL).then(userBadgeAndAssertion);
+        case 'collection':
+            return badges
+              .getCollectionAssertions(userBadge.badgeURL)
+              .then((list) => list.map(userBadgeAndAssertion));
+        default:
+            throw new Error(`Unsupported user badge type ${userBadge.type}`);
+    }
+}
+
+/**
+ * Returns the list of OpenBadges assertions that are reference by the given
+ * user badges URLs, expanding collections and returning all as a flat array
+ * (that contains, each item, the pair of userBadge and OpenBadge assertion).
+ * @returns {Promise<Array<UserBadgeAssertion>>}
+ */
+export function expandUserBadges(userBadgesList) {
+    // Load all the assertions for the user badges, expanding collections
+    // as individual assertions, and the result as a flat array
+    const fetching = userBadgesList.map(expandUserBadge);
+    return Promise.all(fetching).then(flatArray);
 }

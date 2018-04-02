@@ -8,9 +8,8 @@
 
 import '../../kocomponents/badge/viewer';
 import * as activities from '../index';
-import * as badges from '../../data/badges';
 import Activity from '../../components/Activity';
-import flatArray from 'lodash/flatten';
+import { expandUserBadges } from '../../data/userBadges';
 import ko from 'knockout';
 import template from './template.html';
 
@@ -35,27 +34,6 @@ const dummyData = [
     }
 ];
 
-/**
- * @returns {Promise<Array<UserBadgeAssertion>>}
- */
-const expandUserBadges = (userBadge) => {
-    const userBadgeAndAssertion = (assertion) => ({
-        userBadge,
-        assertion
-    });
-
-    switch (userBadge.type) {
-        case 'badge':
-            return badges.getAssertion(userBadge.badgeURL).then(userBadgeAndAssertion);
-        case 'collection':
-            return badges
-              .getCollectionAssertions(userBadge.badgeURL)
-              .then((list) => list.map(userBadgeAndAssertion));
-        default:
-            throw new Error(`Unsupported user badge type ${userBadge.type}`);
-    }
-};
-
 export default class _TestBadgeActivity extends Activity {
 
     static get template() { return template; }
@@ -69,8 +47,7 @@ export default class _TestBadgeActivity extends Activity {
 
         // Load all the assertions for the user badges, expanding collections
         // as individual assertions, and the result as a flat array
-        const fetching = dummyData.map(expandUserBadges);
-        Promise.all(fetching).then(flatArray).then(this.userBadges);
+        expandUserBadges(dummyData).then(this.userBadges);
     }
 
     /**
