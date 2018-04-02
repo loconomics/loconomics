@@ -1,7 +1,7 @@
 /**
  * Allows the user to add an external listing.
  *
- * @module activities/badge-add
+ * @module activities/badge-view
 */
 import '../../kocomponents/badge/editor';
 import * as activities from '../index';
@@ -49,7 +49,7 @@ export default class BadgeViewActivity extends Activity {
         this.title = ko.pureComputed( () => 'Add badge(s) to ' + this.listingTitle() + ' listing');
 
         /**
-         * After data being saved, notice and go back to the 
+         * After data being saved, notice and go back to the
          * job title's listing editor
          */
         this.onSaved = () => {

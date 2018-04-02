@@ -346,4 +346,23 @@ function ViewModel(app) {
             return AlertLink.fromProfileAlert(profileAlert, { jobTitleID: jobTitleID });
         });
     }, this);
+
+    /**
+     * Returns a URL to where to edit the badge assigned to the user, with a return
+     * link to the listing editor.
+     * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
+     * @returns {string}
+     */
+    this.getBadgeEditURL = (userBadge) => {
+        if (userBadge.createdBy !== 'user') return null;
+        else return `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
+    };
+
+    /**
+     * Returns a URL to where to view details of the badge assigned to the user, with a return
+     * link to the listing editor.
+     * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
+     * @returns {string}
+     */
+    this.getBadgeDetailsURL = (userBadge) => `/badge-view/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
 }
