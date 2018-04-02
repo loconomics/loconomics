@@ -142,8 +142,6 @@
         {
             Validation.RequireField("badgeURL", LcRessources.RequiredField("Badge URL"));
             Validation.Add("badgeURL", Validator.Url(LcRessources.RequiredField("Badge URL")));
-            Validation.RequireField("solutionID", LcRessources.RequiredField("Solution"));
-            Validation.Add("solutionID", Validator.Integer(LcRessources.RequiredField("Solution")));
             Validation.RequireField("type", LcRessources.RequiredField("Type"));
             var type = Request.Form["type"];
             if (type != "badge" && type != "collection")
@@ -178,7 +176,7 @@
             return new LcRest.UserBadge
             {
                 badgeURL = Request.Form["badgeURL"],
-                solutionID = Request.Form["solutionID"].AsInt(),
+                solutionID = Request.Form["solutionID"].IsInt() ? (int?)Request.Form["solutionID"].AsInt() : null,
                 type = Request.Form["type"]
             };
         }
