@@ -35,7 +35,7 @@ export default class BadgeAddActivity extends Activity {
         /**
          * Creates a placeholder for the listing title populated with the ID
         */
-        this.listingTitle = ko.observable();
+        this.listingTitle = ko.observable('');
 
         /**
          * Title uses a pureComputed to ensure the listingTitle is updated.

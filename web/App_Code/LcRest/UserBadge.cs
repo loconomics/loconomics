@@ -19,6 +19,7 @@ namespace LcRest
         public string badgeURL;
         public string type;
         public string category;
+        public string createdBy;
         public DateTimeOffset? expiryDate;
         public DateTimeOffset createdDate;
         public DateTimeOffset updatedDate;
@@ -38,6 +39,7 @@ namespace LcRest
                 badgeURL = record.badgeURL,
                 type = record.type,
                 category = record.category,
+                createdBy = record.createdBy,
                 expiryDate = record.expiryDate,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
@@ -54,6 +56,7 @@ namespace LcRest
                 b.badgeURL,
                 b.type,
                 b.category,
+                b.createdBy,
                 b.expiryDate,
                 b.createdDate,
                 b.updatedDate

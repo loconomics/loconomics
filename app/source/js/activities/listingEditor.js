@@ -369,7 +369,7 @@ function ViewModel(app) {
      */
     this.getBadgeEditURL = (userBadge) => {
         if (userBadge.createdBy !== 'user') return null;
-        else return `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
+        else return `/badge-edit/${userBadge.userBadgeID}?jobTitleID=${this.jobTitleID()}&mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
     };
 
     // TODO: Implement badge-view and update the URL below from badge-edit to badge-view
@@ -379,5 +379,5 @@ function ViewModel(app) {
      * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
      * @returns {string}
      */
-    this.getBadgeDetailsURL = (userBadge) => `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
+    this.getBadgeDetailsURL = (userBadge) => `/badge-edit/${userBadge.userBadgeID}?jobTitleID=${this.jobTitleID()}&mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
 }
