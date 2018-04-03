@@ -8,11 +8,13 @@ import '../../client/list';
 import '../../utilities/icon-dec';
 import '../../input/duration';
 import '../../../utils/autofocusBindingHandler';
+import '../../../utils/pressEnterBindingHandler';
 import '../../input/date';
 import * as suggestedPlatformsList from '../../../data/suggestedPlatforms';
 import { ActionForValue } from '../../job-title-autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserEarningsEntry from '../../../models/UserEarningsEntry';
+import { item as clientsDataItem } from '../../../data/clients';
 import ko from 'knockout';
 import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
@@ -66,6 +68,13 @@ export default class EarningsEditor extends Komponent {
         });
 
         /**
+         * Keeps a timestamp of the loaded data, allowing to track when there
+         * are changes.
+         * @member {Date}
+         */
+        this.dataTimestamp = ko.observable(this.earningsEntry.model.dataTimestamp());
+
+        /**
          * Captures from the activity which "mode" the editor
          * component is to be used.
          * @member {EditorMode}
@@ -93,12 +102,14 @@ export default class EarningsEditor extends Komponent {
         /**
          * Holds a list of the user external listings, available to be selected
          * as the earnings entry listing.
+         * @member {KnockoutObservableArray<rest/UserExternalListing>}
          */
         this.userExternalListings = ko.observableArray([]);
 
         /**
          * Holds a list of the user listings at Loconomics, available to allow
          * quick selection of job title.
+         * @member {KnockoutObservableArray<rest/UserJobTitle>}
          */
         this.userListings = ko.observableArray([]);
 
@@ -106,6 +117,7 @@ export default class EarningsEditor extends Komponent {
          * Holds a list of suggested platforms, available to be selected
          * as the earnigns entry listing, but while is not a listing it will
          * create a listing for that platform automatically.
+         * @member {KnockoutObservableArray<rest/Platform>}
          */
         this.suggestedPlatforms = ko.observableArray([]);
 
@@ -114,6 +126,15 @@ export default class EarningsEditor extends Komponent {
         this.__setupStepsManagement(params.editorMode !== EditorMode.add);
 
         this.__setupStatusFlags();
+
+        /**
+         * Whether there are changes not saved.
+         * @member {KnockoutComputed<boolean>}
+         */
+        this.hasUnsavedChanges = ko.pureComputed(() => {
+            var c = this.earningsEntry;
+            return c && this.dataTimestamp() !== c.model.dataTimestamp();
+        });
 
         /**
          * Label text for the 'delete' button
@@ -129,8 +150,25 @@ export default class EarningsEditor extends Komponent {
          * @member {KnockoutComputed<string>}
          */
         this.saveButtonText = ko.pureComputed(() => {
-            var itIs = this.isSaving();
-            return itIs ? 'Submitting..' : 'Submit';
+            // Special case when we are copying an entry and it was not
+            // changed still, so looks like a duplicated entry
+            const isDuplicated = this.editorMode() === EditorMode.copy && !this.hasUnsavedChanges();
+            // Text depending on state:
+            const text = (
+                this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                'Submitting..' :
+                isDuplicated ?
+                'Unchanged' :
+                this.isNew() ?
+                'Submit' :
+                this.hasUnsavedChanges() ?
+                'Submit changes' :
+                // anything else:
+                'Submitted'
+            );
+            return text;
         });
 
         this.__setupDataOperations();
@@ -343,6 +381,30 @@ export default class EarningsEditor extends Komponent {
                     this.dataManager = userEarningsItem(0);
                 }
                 this.earningsEntry.model.updateWith(data);
+                this.dataTimestamp(this.earningsEntry.model.dataTimestamp());
+                // Load info about the client of this entry
+                // It's optional, so careful since can be null
+                if (data.clientUserID) {
+                    clientsDataItem(data.clientUserID)
+                    .onceLoaded()
+                    .then((client) => {
+                        // IMPORTANT: Be careful (again), because if something was slow
+                        // loading, user could have picked (edited/added) a new client
+                        // in the editor, and we do not want to replace that info,
+                        // check if there is no data, or that data has the same ID
+                        // that the one we have loaded
+                        if (!this.selectedClient() ||
+                            this.selectedClient().clientUserID === client.clientUserID) {
+                            this.selectedClient(client);
+                        }
+                    })
+                    .catch((error) => {
+                        showError({
+                            title: 'There was an error loading the client information at the entry',
+                            error
+                        });
+                    });
+                }
             })
             .catch((error) => {
                 this.isLoading(false);
@@ -356,12 +418,12 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * Makes given client current one selected.
-     * @param {Object} client
+     * @param {rest/Client} client
      * @method
      */
     selectClient(client) {
         // Updates edited entry with the client ID selected
-        this.earningsEntry.clientUserID(client.clientID);
+        this.earningsEntry.clientUserID(client.clientUserID);
         // Save a reference, to display name and other info
         this.selectedClient(client);
         this.goToSummary();
@@ -369,7 +431,7 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * Makes given listing the one selected
-     * @param {Object} listing
+     * @param {rest/UserExternalListing} listing
      * @method
      */
     selectListing(listing) {
@@ -381,14 +443,14 @@ export default class EarningsEditor extends Komponent {
     }
 
     /**
-     * Gets the job title from the given user listings and use it as the
+     * Gets the job title from the given user listing and use it as the
      * selected job title of the earnings entry
-     * @param {Object} listing
+     * @param {rest/UserJobTitle} listing
      * @method
      */
     selectListingJobTitle(listing) {
         this.earningsEntry.jobTitleID(listing.jobTitleID);
-        this.earningsEntry.jobTitleName(listing.jobTitleSingularName);
+        this.earningsEntry.jobTitleName(listing.title);
         this.goToSummary();
     }
 
@@ -446,6 +508,7 @@ export default class EarningsEditor extends Komponent {
             else {
                 // Use updated/created data
                 this.earningsEntry.model.updateWith(freshData);
+                this.dataTimestamp(this.earningsEntry.model.dataTimestamp());
             }
         })
         .catch((error) => {
@@ -484,6 +547,7 @@ export default class EarningsEditor extends Komponent {
                 // Reset to new item
                 this.earningsEntry.model.reset();
                 this.editorMode(EditorMode.add);
+                this.dataManager = userEarningsItem(0);
             }
         })
         .catch((error) => {

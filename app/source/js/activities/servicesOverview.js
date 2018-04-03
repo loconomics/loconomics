@@ -3,10 +3,11 @@
 **/
 'use strict';
 
+import UserJobTitle from '../models/UserJobTitle';
+import { item as userListingItem } from '../data/userListings';
+
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var jobTitles = require('../data/jobTitles');
-var userJobProfile = require('../data/userJobProfile');
 var serviceAttributes = require('../data/serviceAttributes');
 var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
 var DEFAULT_BACK_LINK = '/listingEditor';
@@ -26,74 +27,6 @@ var A = Activity.extend(function ServicesOverviewActivity() {
         backLink: DEFAULT_BACK_LINK,
         helpLink: this.viewModel.helpLink
     });
-
-    // On changing jobTitleID:
-    // - load job title name
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-
-            if (jobTitleID) {
-
-                ////////////
-                // Job Title
-                // Get data for the Job title ID
-                jobTitles.getJobTitle(jobTitleID)
-                .then(function(jobTitle) {
-
-                    // Fill in job title name
-                    this.viewModel.jobTitleName(jobTitle.singularName());
-                    this.updateNavBarState();
-                }.bind(this))
-                .catch(function(err) {
-                    showError({
-                        title: 'There was an error while loading the job title.',
-                        error: err
-                    });
-                });
-
-
-                // Services data
-                this.viewModel.isLoadingUserJobTitle(true);
-                Promise.all([
-                    userJobProfile.getUserJobTitle(jobTitleID),
-                    this.viewModel.serviceAttributesControl.load(jobTitleID),
-                    this.viewModel.jobTitleServiceAttributesControl.load(jobTitleID)
-                ])
-                .then(function(datas) {
-                    var userJobTitle = datas && datas[0];
-                    // we need the full record for the saving
-                    this.viewModel.userJobTitle(userJobTitle);
-                    // local copy of intro
-                    this.viewModel.intro(userJobTitle.intro());
-                    this.viewModel.isLoadingUserJobTitle(false);
-                }.bind(this))
-                .catch(function(err) {
-                    showError({
-                        title: 'There was an error while loading.',
-                        error: err
-                    });
-                    this.viewModel.isLoadingUserJobTitle(false);
-                });
-
-                // Fix URL
-                // If the URL didn't included the jobTitleID, or is different,
-                // we put it to avoid reload/resume problems
-                var found = /servicesOverview\/(\d+)/i.exec(window.location);
-                var urlID = found && found[1] |0;
-                if (urlID !== jobTitleID) {
-                    var url = '/servicesOverview/' + jobTitleID;
-                    this.app.shell.replaceState(null, null, url);
-                }
-            }
-            else {
-                this.viewModel.jobTitleName('Job Title');
-                this.viewModel.serviceAttributesControl.reset();
-                this.viewModel.jobTitleServiceAttributesControl.reset();
-                this.updateNavBarState();
-            }
-        }.bind(this)
-    });
 });
 
 exports.init = A.init;
@@ -104,7 +37,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     // end replacing it:
     var done = this.app.applyNavbarMustReturn(this.requestData);
     if (!done) {
-        var text = this.viewModel.jobTitleName() || DEFAULT_BACK_TEXT;
+        var text = this.viewModel.listingTitle() || DEFAULT_BACK_TEXT;
         var id = this.viewModel.jobTitleID();
         var link = id ? DEFAULT_BACK_LINK + '/' + id : DEFAULT_BACK_LINK;
         // Use job title name and ID for back link
@@ -116,20 +49,58 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(state) {
-    // Reset
-    this.viewModel.jobTitleID(null);
-    this.viewModel.intro(null);
-    this.viewModel.serviceAttributes.proposedServiceAttributes({});
 
     Activity.prototype.show.call(this, state);
 
     var params = state && state.route && state.route.segments;
-    var jid = params[0] |0;
-    this.viewModel.jobTitleID(jid);
+    var jobTitleID = params[0] |0;
 
-    if (!jid) {
-        // Load titles to display for selection
-        this.viewModel.jobTitles.sync();
+    // Reset
+    this.viewModel.jobTitleID(jobTitleID);
+    this.viewModel.intro(null);
+    this.viewModel.serviceAttributes.proposedServiceAttributes({});
+    this.viewModel.listingTitle('Job Title');
+    // nav bar depends on listingTitle
+    this.updateNavBarState();
+
+    if (jobTitleID) {
+        // Listing with user data
+        this.viewModel.isLoadingUserJobTitle(true);
+        userListingItem(jobTitleID).onceLoaded()
+        .then((listing) => {
+            // Direct copy of listing values
+            this.viewModel.listingTitle(listing.title);
+            // local copy of intro
+            this.viewModel.intro(listing.intro);
+            this.viewModel.isLoadingUserJobTitle(false);
+            // Save for use in the view
+            this.viewModel.userJobTitle(new UserJobTitle(listing));
+            this.viewModel.isLoadingUserJobTitle(false);
+            // nav bar depends on listingTitle
+            this.updateNavBarState();
+        })
+        .catch((error) => {
+            this.viewModel.isLoadingUserJobTitle(false);
+            showError({
+                title: 'There was an error while loading.',
+                error
+            });
+        });
+        // Additional data, available to be chosen/selected
+        Promise.all([
+            this.viewModel.serviceAttributesControl.load(jobTitleID),
+            this.viewModel.jobTitleServiceAttributesControl.load(jobTitleID)
+        ])
+        .catch((error) => {
+            showError({
+                title: 'There was an error while loading.',
+                error
+            });
+        });
+    }
+    else {
+        this.viewModel.serviceAttributesControl.reset();
+        this.viewModel.jobTitleServiceAttributesControl.reset();
     }
 };
 
@@ -142,16 +113,10 @@ function ViewModel(app) {
 
     this.isLoadingUserJobTitle = ko.observable(false);
     this.userJobTitle = ko.observable(null);
-    this.jobTitleName = ko.observable('Job Title');
+    this.listingTitle = ko.observable('Job Title');
 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/servicesOverview');
-    this.jobTitles.selectJobTitle = function(jobTitle) {
-
-        this.jobTitleID(jobTitle.jobTitleID());
-
-        return false;
-    }.bind(this);
 
     // Local copy of the intro, rather than use
     // it directly from the userJobTitle to avoid that gets saved
@@ -204,7 +169,7 @@ function ViewModel(app) {
 
             Promise.all([
                 this.serviceAttributesControl.save(),
-                userJobProfile.setUserJobTitle(plain)
+                userListingItem(this.jobTitleID()).save(plain)
             ])
             .then(function() {
                 this.isSaving(false);

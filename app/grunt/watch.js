@@ -40,10 +40,17 @@ TARGETS.APP = {
         }
     },
 
-    js: {
-        files: ['<%= eslint.app.src %>'],
+    jsLint: {
+        files: ['./source/js/**/*.js'],
         tasks: [
             'newer:eslint:app'
+        ]
+    },
+
+    js: {
+        files: ['./source/js/**/*.*'],
+        tasks: [
+            'browserify:appCommon'
         ]
     },
 
@@ -100,14 +107,18 @@ TARGETS.LANDING_PAGES = {
         }
     },
 
-    js: {
-        // All js source and bundle generation is shared with app/appCommon
-        files: ['<%= eslint.app.src %>'],
+    jsLint: {
+        files: ['./source/js/**/*.js'],
         tasks: [
             // Just lint updated files
             'newer:eslint:app'
-            // No browserify, the watchify-enabled task must be used
-            // No notification on completion, we just let errors to get notified
+        ]
+    },
+
+    js: {
+        files: ['./source/js/**/*.*'],
+        tasks: [
+            'browserify:appCommon'
         ]
     },
 

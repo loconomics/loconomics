@@ -15,6 +15,17 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceRoot}\\build\\app.html"
-        }
+        },
+        {
+            "name": "Debug Grunt",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/grunt-cli/bin/grunt",
+            "args": ["htmlmin:webapp"],
+            "cwd": "${workspaceRoot}/node_modules/grunt-cli/bin",
+            "env": {
+                "NODE_ENV": "development"
+            }
+        },
     ]
 }

@@ -14,12 +14,14 @@
     for model.serviceAdddresses for example.
 **/
 'use strict';
+
+import { item as getUserListing } from '../data/userListings';
+
 var ko = require('knockout');
 var Address = require('../models/Address');
 var Activity = require('../components/Activity');
 var PostalCodeVM = require('../viewmodels/PostalCode');
 var onboarding = require('../data/onboarding');
-var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
@@ -34,31 +36,6 @@ var A = Activity.extend(function AddressEditorActivity() {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
     this.title('Edit location');
-
-    // On changing jobTitleID:
-    // - load job title name
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-            if (jobTitleID) {
-                // Get data for the Job title ID
-                jobTitles.getJobTitle(jobTitleID)
-                .then(function(jobTitle) {
-                    // Fill in job title name
-                    this.viewModel.jobTitleName(jobTitle.singularName());
-                }.bind(this))
-                .catch(function (err) {
-                    showError({
-                        title: 'There was an error while loading.',
-                        error: err
-                    });
-                });
-            }
-            else {
-                this.viewModel.jobTitleName('Job Title');
-            }
-        }.bind(this)
-    });
 
     // Special treatment of the save operation
     this.viewModel.onSave = function(addressID) {
@@ -124,6 +101,20 @@ A.prototype.show = function show(options) {
     this.viewModel.clientUserID(clientUserID);
 
     this.updateNavBarState();
+
+    this.viewModel.listingTitle('Job Title');
+    if (jobTitleID) {
+        const listingDataProvider = getUserListing(jobTitleID);
+        this.subscribeTo(listingDataProvider.onData, (listing) => {
+            this.viewModel.listingTitle(listing.title);
+        });
+        this.subscribeTo(listingDataProvider.onDataError, (error) => {
+            showError({
+                title: 'There was an error while loading.',
+                error
+            });
+        });
+    }
 
     if (addressID) {
         // Get the address
@@ -214,7 +205,7 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);
     this.clientUserID = ko.observable(0);
-    this.jobTitleName = ko.observable('Job Title');
+    this.listingTitle = ko.observable('Job Title');
 
     this.addressVersion = ko.observable(null);
     this.address = ko.pureComputed(function() {

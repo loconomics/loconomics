@@ -4,10 +4,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var ko = require('knockout');
-var clients = require('../data/clients');
-var showError = require('../modals/error').show;
+import Activity from '../components/Activity';
+import { list as clientsList } from '../data/clients';
+import ko from 'knockout';
+import { show as showError } from'../modals/error';
 
 var A = Activity.extend(function CmsActivity() {
 
@@ -27,8 +27,10 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Keep data updated:
-    clients.sync()
-    .catch(function(err) {
+    this.subscribeTo(clientsList.onData, (data) => {
+        this.viewModel.totalClients(data.length);
+    });
+    this.subscribeTo(clientsList.onDataError, (err) => {
         showError({
             title: 'Error loading the clients list',
             error: err
@@ -40,16 +42,15 @@ var numeral = require('numeral');
 
 function ViewModel() {
 
-    this.clients = clients.list;
+    this.totalClients = ko.observable(0);
 
     this.clientsCount = ko.pureComputed(function() {
-        var cs = this.clients();
-
+        var cs = this.totalClients();
         if (cs <= 0)
             return '0 clients';
         else if (cs === 1)
             return '1 client';
         else
-            return numeral(cs.length |0).format('0,0') + ' clients';
+            return numeral(cs |0).format('0,0') + ' clients';
     }, this);
 }

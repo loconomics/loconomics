@@ -4,6 +4,8 @@
 **/
 'use strict';
 
+import moment from 'moment';
+
 var ko = require('knockout');
 var EventEmitter = require('events').EventEmitter;
 var ValidatedPasswordViewModel = require('./ValidatedPassword');
@@ -155,7 +157,7 @@ function SignupVM() {
     this.institutionID = new Field();
     /**
      * ID from FieldOfStudy table.
-     * Required for isCccMember==true
+     * Required for isCccMember==true and cccUserType=='student'
      * @member {KnockoutObservable<number>}
      */
     this.fieldOfStudyID = new Field();
@@ -166,6 +168,24 @@ function SignupVM() {
      * @member {KnockoutObservable<string>}
      */
     this.cccUserType = new Field();
+    /**
+     * ID of gender.
+     * Required for isCccMember==true and cccUserType=='student'
+     * @member {KnockoutObservable<number>}
+     */
+    this.genderID = new Field();
+    /**
+     * User birth date.
+     * Required for isCccMember==true and cccUserType=='student'
+     * @member {KnockoutObservable<Date>}
+     */
+    this.birthDate = new Field();
+
+    /**
+     * Whether the current CCC user type is 'student' or not
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.isStudent = ko.pureComputed(() => this.cccUserType() === 'student');
 
     this.reset = function() {
         this.atBooking(false);
@@ -189,6 +209,8 @@ function SignupVM() {
         this.institutionID('');
         this.fieldOfStudyID('');
         this.cccUserType('');
+        this.genderID(null);
+        this.birthDate(null);
     };
 
     this.submitText = ko.pureComputed(function() {
@@ -210,6 +232,39 @@ function SignupVM() {
         }
     }, this);
 
+    /**
+     * Gets a Date object given a value that is usually a string, but may
+     * be in the ISO date format or in the user locale format. If is a Date
+     * object already, just return the same value.
+     * It's optional, so a falsy value return null, while a bad format throws
+     * error. Other given types not parseable, throws error.
+     * @param {(string|Date)} date
+     * @returns {Date}
+     * @throws
+     */
+    const getParsedBirthDate = (date) => {
+        if (!date) {
+            return null;
+        }
+        else if (typeof date === 'string') {
+            // First format is standard for input[type=date], second and third the two user locale formats for date-only
+            // The check is strict (last parameter === true)
+            const m = moment(date, ['YYYY-MM-DD', 'L', 'l'], true);
+            if (!m.isValid()) {
+                throw new Error('Invalid birth date');
+            }
+            else {
+                return m.toDate();
+            }
+        }
+        else if (date instanceof Date) {
+            return date;
+        }
+        else {
+            throw new Error('Unrecognized type for birth date');
+        }
+    };
+
     this.performSignup = function performSignup() {
 
         this.isSigningUp(true);
@@ -217,6 +272,19 @@ function SignupVM() {
         // Clear previous error so makes clear we
         // are attempting
         this.signupError('');
+
+        let birthDate = null;
+        try {
+            birthDate = getParsedBirthDate(this.birthDate());
+        }
+        catch (ex) {
+            this.signupError(ex.message);
+            showError({
+                title: 'There was an error signing-up',
+                error: ex.message
+            });
+            return Promise.resolve();
+        }
 
         var plainData = {
             confirmationCode: this.confirmationCode(),
@@ -235,7 +303,9 @@ function SignupVM() {
             isCccMember: this.isCccMember(),
             institutionID: this.institutionID(),
             fieldOfStudyID: this.fieldOfStudyID(),
-            cccUserType: this.cccUserType()
+            cccUserType: this.cccUserType(),
+            genderID: this.genderID(),
+            birthDate
         };
 
         return auth.signup(plainData)

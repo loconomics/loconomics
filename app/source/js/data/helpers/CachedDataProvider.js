@@ -395,6 +395,17 @@ export default class CachedDataProvider {
             // or local data must be revalidated:
             // enforces a remote load and wait for it
             return this.refresh();
+        })
+        .catch((err) => {
+            // In case of error with local cache (that must happens only on
+            // implementation bugs, NOT by design --if there is no cache, must
+            // success with empty info), we register it
+            console.error('localCache.fetch error', err);
+            // and AUTORECOVER by requesting remote data,
+            // this way the user don't get stucked without being able to get
+            // data because the cache is corrupt or the implementation (mostly
+            // fault of the driver containing a bug)
+            return this.refresh();
         });
     }
 
@@ -419,6 +430,27 @@ export default class CachedDataProvider {
     }
 
     /**
+     * Request to store in the cache the given data and notify the onSaved event
+     * when finished.
+     * This is used automatically by the 'save' method so no need to call it after it.
+     * Use cases: more advanced managements as when using specialized remote
+     * methods that perform data changes and the updated data must be locally
+     * cached and notified as 'saved' (because is saved in the remote, even if
+     * the common 'save' way of doing the task was not used).
+     * @param {any} data Copy of the data
+     * @returns {Promise<any, Error>} Returns the same given data as was stored
+     * locally
+     */
+    pushSavedData(data) {
+        return this.__localCache.push(data)
+        // Notify it was saved, providing a copy of the data and returning it
+        .then((cache) => {
+            this.onSaved.emit(cache.data);
+            return cache.data;
+        });
+    }
+
+    /**
      * Save data in remote and locally.
      * It get's stored locally only if was saved succesffully at remote, notifying
      * after that with/returning data as sent back by the server.
@@ -431,9 +463,7 @@ export default class CachedDataProvider {
         return this.__remote.push(data)
         // Store the returning data locally with cache info
         // (remote must send the data back, updating any server calculated value)
-        .then((data) => this.__localCache.push(data))
-        // Notify it was saved, providing a copy of the data and returning it
-        .then((cache) => this.onSaved.emit(cache.data) && cache.data);
+        .then(this.pushSavedData.bind(this));
     }
 
     /**
@@ -451,7 +481,10 @@ export default class CachedDataProvider {
         .then((remoteResultOrCopy) => this.__localCache.delete()
             // Notify it was deleted,
             // providing the result given by the remote and return that result
-            .then(() => this.onDeleted.emit(remoteResultOrCopy) && remoteResultOrCopy)
+            .then(() => {
+                this.onDeleted.emit(remoteResultOrCopy);
+                return remoteResultOrCopy;
+            })
         );
     }
 

@@ -297,7 +297,7 @@ public class LcMessaging
         #region Static Utils
         static string GetBookingThreadSubject(LcEmailTemplate.BookingEmailInfo info)
         {
-            return info.userJobTitle.jobTitleSingularName + " " +
+            return info.userJobTitle.title + " " +
                 info.booking.serviceDate.startTime.ToString("D") + ", " +
                 info.booking.serviceDate.startTime.ToString("t") + " to " +
                 info.booking.serviceDate.endTime.ToString("t");

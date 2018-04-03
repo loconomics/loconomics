@@ -4,7 +4,7 @@
     LcHelpers.NotFoundOnInvalidLocaleURL();
     Layout = "../Tests/_TestLayout.cshtml";
     if (IsPost) {
-        if (LcAuth.Login(Request["username"], Request["pwd"])) {
+        if (LcAuth.Login(Request["username"], Request["pwd"]) != null) {
             Response.Redirect(Request["redirect"] ?? "/");
         }
     }
