@@ -375,8 +375,8 @@ function ViewModel(app) {
     /**
      * Returns a URL to where to view details of the badge assigned to the user, with a return
      * link to the listing editor.
-     * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
+     * @param {OpenBadgesV2/Assertion} assertion data for an assertion
      * @returns {string}
      */
-    this.getBadgeDetailsURL = (userBadge) => `/badge-view/${encodeURIComponent(userBadge.badgeURL)}?mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
+    this.getBadgeDetailsURL = (assertion) => `/badge-view/${encodeURIComponent(assertion.id)}?mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
 }
