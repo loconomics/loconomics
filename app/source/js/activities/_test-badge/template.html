@@ -1,0 +1,12 @@
+<div class="container-fluid">
+    <h2>List of user badges in Badge Viewer</h2>
+    <ul data-bind="foreach: $root.userBadges" class="list-unstyled">
+        <li>
+            <badge-viewer params="
+                assertionData: assertion,
+                viewMode: 'card',
+                editURL: $parent.getBadgeEditURL(userBadge),
+                detailsURL: $parent.getBadgeDetailsURL(userBadge)"></badge-viewer>
+        </li>
+    </ul>
+</div>
