@@ -152,7 +152,9 @@
             <section id="listing-editor-credentials-verifications" class="row" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials and verifications</h2>
-                    <a data-bind="attr: { href: '/credentials-add/' + $root.jobTitleID() + '/' + $root.returnLinkJobTitleActivity(), 'aria-label': 'Add '+ title() + ' credentials and general verifications' }" class="btn btn-default pull-right">Add/Edit</a>
+                    <a data-bind="attr: {
+                        href: '/credentials-add/' + $root.returnLinkJobTitleActivity(),
+                        'aria-label': 'Add '+ title() + ' credentials and general verifications' }" class="btn btn-default pull-right">Add/Edit</a>
                 </div>
                 <div class="col-xs-12 col-sm-12" data-bind="with: selectedJobTitle">
                     <div class="col-xs-12">
@@ -165,8 +167,8 @@
                             <badge-viewer params="
                                 assertionData: assertion,
                                 viewMode: 'card',
-                                editURL: $parent.getBadgeEditURL(userBadge),
-                                detailsURL: $parent.getBadgeDetailsURL(userBadge)"></badge-viewer>
+                                editURL: $root.getBadgeEditURL(userBadge),
+                                detailsURL: $root.getBadgeDetailsURL(userBadge)"></badge-viewer>
                         </li>
                     </ul>
                 </div>

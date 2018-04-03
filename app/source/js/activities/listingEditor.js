@@ -5,6 +5,7 @@
 **/
 'use strict';
 
+import { byListing as badgesByListing, expandUserBadges } from '../data/userBadges';
 import UserJobTitle from '../models/UserJobTitle';
 import { item as userListingItem } from '../data/userListings';
 
@@ -72,6 +73,11 @@ A.prototype.loadData = function(jobTitleID) {
                     // Fill the job title record
                     this.viewModel.listingTitle(listing.title);
                     this.viewModel.userJobTitle(new UserJobTitle(listing));
+                    // Load badges
+                    return badgesByListing(listing.userListingID)
+                    .onceLoaded()
+                    .then(expandUserBadges)
+                    .then(this.viewModel.userBadges);
                 })
                 .catch(function(error) {
                     showError({
@@ -92,6 +98,8 @@ A.prototype.loadData = function(jobTitleID) {
                         error: err
                     });
                 });
+                ////////////
+                // Active title
                 this.viewModel.user().selectedJobTitleID(jobTitleID);
             }
         }.bind(this))
@@ -143,8 +151,14 @@ function ViewModel(app) {
         return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
 
+    /**
+     * Generates the final path to link a jobTitleID based URL, adding parameters
+     * for the 'return back' link so points to this activity with proper labeling.
+     * @member {KnockoutComputed<string>}
+     */
     this.returnLinkJobTitleActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+        const jobTitleID = this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID();
+        return jobTitleID ? `${jobTitleID}?mustReturn=listingEditor/${jobTitleID}&returnText=${encodeURIComponent('Edit listing')}` : '';
     }, this);
 
      /// Related models information
@@ -358,11 +372,12 @@ function ViewModel(app) {
         else return `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
     };
 
+    // TODO: Implement badge-view and update the URL below from badge-edit to badge-view
     /**
      * Returns a URL to where to view details of the badge assigned to the user, with a return
      * link to the listing editor.
      * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
      * @returns {string}
      */
-    this.getBadgeDetailsURL = (userBadge) => `/badge-view/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
+    this.getBadgeDetailsURL = (userBadge) => `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
 }
