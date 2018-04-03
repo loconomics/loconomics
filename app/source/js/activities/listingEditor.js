@@ -372,12 +372,11 @@ function ViewModel(app) {
         else return `/badge-edit/${userBadge.userBadgeID}?jobTitleID=${this.jobTitleID()}&mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
     };
 
-    // TODO: Implement badge-view and update the URL below from badge-edit to badge-view
     /**
      * Returns a URL to where to view details of the badge assigned to the user, with a return
      * link to the listing editor.
      * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
      * @returns {string}
      */
-    this.getBadgeDetailsURL = (userBadge) => `/badge-edit/${userBadge.userBadgeID}?jobTitleID=${this.jobTitleID()}&mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
+    this.getBadgeDetailsURL = (userBadge) => `/badge-view/${encodeURIComponent(userBadge.badgeURL)}?mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
 }
