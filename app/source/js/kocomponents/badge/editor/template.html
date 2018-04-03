@@ -1,9 +1,6 @@
 <form id="badgeEntryForm" aria-describedby="badgeEntryFormInstructions"
     data-bind="event: { submit: save }">
-    <p id="badgeEntryFormInstructions" class="help-block">
-        Sign into your <a href="https://badgr.io/auth/login">Badgr account</a>
-        to find badges or collections. Make them public, and then click "Share" to find the URL to paste below.
-    </p>
+    <p id="badgeEntryFormInstructions" class="help-block">Sign into your <a href="https://badgr.io/auth/login">Badgr account</a> to find badges or collections. Make them public, and then click "Share" to find the URL to paste below.</p>
     <fieldset data-bind="with: userBadge">
         <div class="col-xs-12">
             <legend>Badge or collection</legend>
@@ -14,31 +11,24 @@
                     type="url"
                     placeholder="https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0"
                     data-bind="
-                        textInput: badgeURL,
+                        value: badgeURL,
                         disable: $component.isWorking
                     " />
             </div>
-
-            <!-- ko if:type -->
             <label for="type">Type</label>
             <div class="form-group">
                 <span class="form-control-static" data-bind="text: type"></span>
             </div>
-            <!-- /ko -->
-
-            <!-- Cannot be implemented until user-solutions is ready:
             <label for="type">Solution</label>
             <div class="form-group">
                 <span class="form-control-static" data-bind="text: solution"></span>
             </div>
-            -->
-
             <button type="submit" class="btn btn-secondary btn-block btn-lg"
                 data-bind="text: $component.saveButtonLabel, disable: $component.isWorking"></button>
             <button type="button" class="btn btn-danger btn-link"
-                data-bind="click: $component.confirmDelete.bind($component), text: $component.deleteButtonLabel,
+                data-bind="click: $component.deleteListing.bind($component), text: $component.deleteButtonLabel,
                 disable: $component.isWorking,
-                visible: !$component.isNew()"></button>
+                visible: $component.badgeURL"></button>
         </div>
     </fieldset>
 </form>

@@ -4,7 +4,7 @@
         <div class="SubSectionNavBar hidden-xs hidden-sm">
             <ul>
                 <li>
-                    <a data-bind="attr: { href: '/listingEditor/' + jobTitleID() }">
+                    <a href="/listingEditor/ + jobTitleID()">
                         <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Listing Editor
                     </a>
                 </li>
@@ -13,26 +13,21 @@
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
             <div class="col-xs-12 SectionHeading">
-                <h3>Professional licenses and certifications</h3>
-                <a data-bind="attr: {
-                    href: addCertificationURL,
-                    'aria-label': 'Add '+ listingTitle() + ' professional credentials' }"
-                    class="btn btn-default pull-right">Add</a>
+                <h3>Professional licenses and certifications</h3><a data-bind="attr: { href: '/licensesCertifications/' + jobTitleID() + '/' + '?mustReturn=credentials-add/' + jobTitleID() + '&returnText=Add Credentials','aria-label': 'Add '+ listingTitle() + ' professional credentials' }" class="btn btn-default pull-right">Add</a>
             </div>
-            <div class="col-xs-12">
+            <div class="col-xs-12">           
                 <em>List any <span data-bind="text: listingTitle()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active.</em>
                 <!-- <span data-bind="visible: !serviceAddresses().length"><a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span> -->
             </div>
             <div class="col-xs-12 SectionHeading">
                 <h3>Education credentials</h3>
-                <a aria-label="Add education" data-bind="attr: { href: addEducationURL }" class="btn btn-default pull-right">Add</a>
+                <a aria-label="Add education" data-bind="attr: { href: '/education/' + '?mustReturn=credentials-add/' + jobTitleID() + '&returnText=Add Credentials' }" class="btn btn-default pull-right">Add</a>
             </div>
             <div class="col-xs-12 SectionHeading">
                 <h3>Digital badges</h3>
                 <a data-bind="
                     attr: {
-                        href: addBadgeURL,
-                        'aria-label': 'Add badge or badge collection to your ' + listingTitle() + ' listing'
+                        href: '/badge-add/' + '?mustReturn=credentials-add/' + jobTitleID() + '&returnText=Add Credentials','aria-label': 'Add badge or badge collection to your ' + listingTitle() + ' listing' 
                     }" class="btn btn-default pull-right">Add</a>
             </div>
         </div>

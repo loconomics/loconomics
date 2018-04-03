@@ -21,7 +21,41 @@ var showError = require('../modals/error').show;
 var showNotification = require('../modals/notification').show;
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var AlertLink = require('../viewmodels/AlertLink');
+require('../kocomponents/badge/collection');
+require('../kocomponents/badge/view');
 require('../kocomponents/badge/viewer');
+
+const dummyData =
+[
+  {
+    'userBadgeID': 2,
+    'solutionID': 275,
+    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'type': 'badge',
+    'createdBy': 'user'
+  },
+  {
+    'userBadgeID': 3,
+    'solutionID': 275,
+    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'type': 'badge',
+    'createdBy': 'user'
+  },
+  {
+    'userBadgeID': 4,
+    'solutionID': 275,
+    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'type': 'badge',
+    'createdBy': 'user'
+  },
+  {
+    'userBadgeID': 5,
+    'solutionID': 275,
+    'badgeURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'type': 'badge',
+    'createdBy': 'staff'
+  }
+];
 
 var A = Activity.extend(function ListingEditorActivity() {
 
@@ -138,7 +172,7 @@ function ViewModel(app) {
     this.user = ko.observable(null);
     this.jobTitleID = ko.observable(0);
     this.userJobTitle = ko.observable(null);
-    this.userBadges = ko.observableArray([]);
+    this.userBadges =  ko.observable(dummyData);
 
     this.listingTitle = ko.observable();
 

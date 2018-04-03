@@ -491,6 +491,7 @@ var appInit = function appInit() {
             // Now we are ready with values in place
             // Resume onboarding
             // Set-up onboarding and current step, if any
+            onboarding.init(app);
             onboarding.setup({
                 isServiceProfessional: user.isServiceProfessional(),
                 jobTitleID: jobTitleID,

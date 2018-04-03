@@ -170,9 +170,8 @@ export default class LocalForageIndexedListDataProviderDriver {
          */
         this.delete = function() {
             // Get the index
-            return readIndex()
-            .then((cached) => {
-                const index = cached && cached.data;
+            return localforage.getItem(listIndexKey)
+            .then(({ data: index } = {}) => {
                 if (index) {
                     // Remove all local items found in the array
                     return Promise.all(index.map((id) => localforage.removeItem(itemKey(id))));

@@ -1,7 +1,7 @@
 /**
- * Allows the user to edit a badge.
+ * Allows the user to add an external listing.
  *
- * @module activities/badge-edit
+ * @module activities/badge-add
 */
 import '../../kocomponents/badge/editor';
 import * as activities from '../index';
@@ -9,7 +9,6 @@ import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
 import template from './template.html';
-import { item as userListing } from '../../data/userListings';
 
 const ROUTE_NAME = 'badge-edit';
 
@@ -26,9 +25,10 @@ export default class BadgeEditActivity extends Activity {
         this.navBar = Activity.createSubsectionNavBar(null);
 
         /**
-         * Creates a placeholder for the entry ID
+         * Creates a placeholder for an "out" parameter to be
+         * populated by the component.
         */
-       this.userBadgeID = ko.observable();
+        this.jobTitleName = ko.observable('');
 
         /**
          * Creates a placeholder for the jobTitle ID to be
@@ -37,7 +37,8 @@ export default class BadgeEditActivity extends Activity {
         this.jobTitleID = ko.observable();
 
         /**
-         * Creates a placeholder for the listing title populated with the ID
+         * Creates a placeholder for the jobTitle ID to be
+         * populated using the show(state) method below.
         */
         this.listingTitle = ko.observable();
 
@@ -48,22 +49,11 @@ export default class BadgeEditActivity extends Activity {
         this.title = ko.pureComputed( () => 'Add badge(s) to ' + this.listingTitle() + ' listing');
 
         /**
-         * After data being saved, notice and go back to the
-         * listing editor
+         * After data being saved, notice and go back to the 
+         * job title's listing editor
          */
         this.onSaved = () => {
             app.successSave({
-                link: '/listingEditor/' + this.jobTitleID()
-            });
-        };
-
-        /**
-         * After data being deleted, notice and go back to the
-         * listing editor
-         */
-        this.onDeleted = () => {
-            app.successSave({
-                message: 'Successfully deleted',
                 link: '/listingEditor/' + this.jobTitleID()
             });
         };
@@ -77,17 +67,16 @@ export default class BadgeEditActivity extends Activity {
         var params = state.route && state.route.segments;
 
         /**
-         * The ID is the first segment in the activity URL
+         * jobTitleID is the first segment in the activity
+         * URL
          */
-        this.userBadgeID(params[0] || 0);
+        this.jobTitleID(params[0] || -1);
 
         /**
-         * In the query, the jobTitleID so we can link the listing
+         * listingTitle is the second segment in the activity
+         * URL
          */
-        this.jobTitleID(state.route.query.jobTitleID);
-
-        const provider = userListing(this.jobTitleID());
-        this.subscribeTo(provider.onData, (listing) => this.listingTitle(listing.title));
+        this.listingTitle(params[1] || '');
     }
 }
 

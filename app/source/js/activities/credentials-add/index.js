@@ -11,7 +11,6 @@ import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
 import template from './template.html';
-import { item as userListing } from '../../data/userListings';
 
 const ROUTE_NAME = 'credentials-add';
 
@@ -26,40 +25,16 @@ export default class CredentialsAddActivity extends Activity {
         this.accessLevel = UserType.serviceProfessional;
 
         this.navBar = Activity.createSubsectionNavBar(null);
-
+        
         this.jobTitleID = ko.observable();
-
+        
         this.listingTitle = ko.observable();
-
+     
         /**
          * Title uses a pureComputed to ensure the platformName
          * is updated.
          */
-        this.title = ko.pureComputed(() => 'Add ' + this.listingTitle() + ' credentials');
-
-        /**
-         * Dynamic URL for the 'add badge' link
-         */
-        this.addBadgeURL = ko.pureComputed(() => {
-            const jobTitleID = this.jobTitleID();
-            return `/badge-add?jobTitleID=${jobTitleID}&mustReturn=credentials-add/${jobTitleID}&returnText=${encodeURIComponent('Add Credentials')}`;
-        });
-
-        /**
-         * Dynamic URL for the 'add education' link
-         */
-        this.addEducationURL = ko.pureComputed(() => {
-            const jobTitleID = this.jobTitleID();
-            return `/education?mustReturn=credentials-add/${jobTitleID}&returnText=${encodeURIComponent('Add Credentials')}`;
-        });
-
-        /**
-         * Dynamic URL for the 'add license/certifiation' link
-         */
-        this.addCertificationURL = ko.pureComputed(() => {
-            const jobTitleID = this.jobTitleID();
-            return `/licensesCertifications/${jobTitleID}?mustReturn=credentials-add/${jobTitleID}&returnText=${encodeURIComponent('Add Credentials')}`;
-        });
+        this.title = ko.pureComputed( () => 'Add ' + this.listingTitle() + ' credentials');
     }
 
     /**
@@ -67,14 +42,19 @@ export default class CredentialsAddActivity extends Activity {
      */
     show(state) {
         super.show(state);
+        var params = state.route && state.route.segments;
 
         /**
-         * The jobTitleID we are adding credentials, from the first URL segment
+         * jobTitleID is the first segment in the activity 
+         * URL.
          */
-        this.jobTitleID(state.route.segments[0]);
+        this.jobTitleID(params[0] |0);
 
-        const provider = userListing(this.jobTitleID());
-        this.subscribeTo(provider.onData, (listing) => this.listingTitle(listing.title));
+        /**
+         * listingTitle is the second segment in the activity 
+         * URL.
+         */
+        this.listingTitle(params[1] |0);
     }
 }
 

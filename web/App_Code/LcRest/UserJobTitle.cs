@@ -111,10 +111,9 @@ namespace LcRest
             foreach(UserJobTitle userJobTitle in userJobTitles)
             {
                 userJobTitle.BindAlerts(alerts);
-                // We must return each item from the loop, rather than return userJobTitles after, because the
-                // generated list will be different and so, the changes here attaching the alerts will be lost
-                yield return userJobTitle;
             }
+
+            return userJobTitles;
         }
 
         /// <summary>

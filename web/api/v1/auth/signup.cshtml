@@ -162,14 +162,8 @@
             if (Request["isCccMember"].AsBool(false))
             {
                 Validation.RequireField("institutionID", "You must select an institution.");
+                Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
                 Validation.RequireField("cccUserType", "You must select user type.");
-                var isStudent = Request["cccUserType"] == "student";
-                if (isStudent)
-                {
-                    Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
-                    Validation.RequireField("genderID", "You must select a gender.");
-                    Validation.RequireField("birthDate", "You must denote your birh date.");
-                }
             }
         }
 
@@ -181,7 +175,6 @@
                 try
                 {
                     ResetTrialEndDate(db, login.userID);
-                    InsertExtraUserInfo(db, login.userID);
                     InsertCccUser(db, login.userID);
                     InsertUserEducation(db, login.userID);
                     InsertCccPaymentPlan(db, login.userID);
@@ -197,31 +190,10 @@
         {
             db.Execute("UPDATE users SET TrialEndDate=null WHERE UserID=@0", userID);
         }
-        private void InsertExtraUserInfo(LcDatabase db, int userID)
-        {
-            var genderID = Request.Form["genderID"].AsInt(-1);
-            var birthDate = DateTimeOffsetFromISO(Request.Form["birthDate"]);
-            int? day = null, month = null, year = null;
-            if (birthDate.HasValue)
-            {
-                day = birthDate.Value.Day;
-                month = birthDate.Value.Month;
-                year = birthDate.Value.Year;
-            }
-
-            db.Execute(@"
-                UPDATE Users SET
-                    GenderID = @1,
-                    BirthMonthDay = @2,
-                    BirthMonth = @3,
-                    BirthYear = @4
-                WHERE UserID = @0
-            ", userID, genderID, day, month, year);
-        }
         private void InsertCccUser(LcDatabase db, int userID)
         {
             var institutionID = Request["institutionID"].AsInt();
-            var fieldOfStudyID = Request["fieldOfStudyID"].IsInt() ? (int?)Request["fieldOfStudyID"].AsInt() : null;
+            var fieldOfStudyID = Request["fieldOfStudyID"].AsInt();
             var cccUserType = Request["cccUserType"];
             // PlanExpirationDate to 180 days from signUp date #761
             var expiration = DateTime.Today.AddDays(180);
