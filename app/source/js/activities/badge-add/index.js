@@ -24,6 +24,7 @@ export default class BadgeAddActivity extends Activity {
         this.accessLevel = UserType.serviceProfessional;
 
         this.navBar = Activity.createSubsectionNavBar(null);
+        this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
 
         /**
          * Creates a placeholder for the jobTitle ID to be
@@ -50,6 +51,27 @@ export default class BadgeAddActivity extends Activity {
                 link: '/listingEditor/' + this.jobTitleID()
             });
         };
+
+        this.__setupNavbar();
+    }
+
+    __setupNavbar() {
+        // Use listing title and link to ID when both available
+        this.observeChanges(() => {
+            const text = this.listingTitle();
+            const id = this.jobTitleID();
+            let settings = this.defaultNavBarSettings;
+            if (text && id) {
+                settings = Object.assign({}, settings, {
+                    leftAction: {
+                        text: `${text} Listing`,
+                        link: `/listingEditor/${id}?mustReturn=listings&returnText=Listings`,
+                        isShell: false
+                    }
+                });
+            }
+            this.navBar.model.updateWith(settings, true);
+        });
     }
 
     /**
