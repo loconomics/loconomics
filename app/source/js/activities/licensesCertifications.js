@@ -3,11 +3,12 @@
 **/
 'use strict';
 
+import { item as getUserListing } from '../data/userListings';
+
 var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
-var jobTitles = require('../data/jobTitles');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
 var DEFAULT_BACK_LINK = '/listingEditor';
@@ -36,22 +37,6 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
         handler: function(jobTitleID) {
 
             if (jobTitleID) {
-
-                ////////////
-                // Job Title
-                // Get data for the Job title ID
-                jobTitles.getJobTitle(jobTitleID)
-                .then(function(jobTitle) {
-                    // Fill in job title name
-                    this.viewModel.jobTitleName(jobTitle.singularName());
-                    this.updateNavBarState();
-                }.bind(this))
-                .catch(function(err) {
-                    showError({
-                        title: 'Unable to load listing details.',
-                        error: err
-                    });
-                });
 
                 // Get data for the Job title ID
                 userLicensesCertifications.getList(jobTitleID)
@@ -84,19 +69,8 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                         error: err
                     });
                 });
-
-                // Fix URL
-                // If the URL didn't included the jobTitleID, or is different,
-                // we put it to avoid reload/resume problems
-                var found = /licensesCertifications\/(\d+)/i.exec(window.location);
-                var urlID = found && found[1] |0;
-                if (urlID !== jobTitleID) {
-                    var url = '/licensesCertifications/' + jobTitleID;
-                    this.app.shell.replaceState(null, null, url);
-                }
             }
             else {
-                this.viewModel.jobTitleName('Job Title');
                 this.viewModel.submittedUserLicensesCertifications([]);
                 this.viewModel.jobTitleApplicableLicences(null);
                 this.updateNavBarState();
@@ -111,7 +85,7 @@ A.prototype.useJobTitleInNavBar = function() {
     this.navBar.model.updateWith(this.defaultNavBar, true);
 
     // Apply job title name and link
-    var text = this.viewModel.jobTitleName() || DEFAULT_BACK_TEXT;
+    var text = this.viewModel.listingTitle() || DEFAULT_BACK_TEXT;
     var id = this.viewModel.jobTitleID();
     var link = id ? DEFAULT_BACK_LINK + '/' + id : DEFAULT_BACK_LINK;
     // Use job title name and ID for back link
@@ -134,7 +108,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(options) {
-    // Reset
+    // Reset of ID, because of registerHandler
     this.viewModel.jobTitleID(0);
 
     Activity.prototype.show.call(this, options);
@@ -143,8 +117,24 @@ A.prototype.show = function show(options) {
 
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
+
+    // Resets
     this.viewModel.jobTitleID(jobTitleID);
-    if (!jobTitleID) {
+    this.viewModel.listingTitle('Job Title');
+    // Data for listing
+    if (jobTitleID) {
+        const listingDataProvider = getUserListing(jobTitleID);
+        this.subscribeTo(listingDataProvider.onData, (listing) => {
+            this.viewModel.listingTitle(listing.title);
+        });
+        this.subscribeTo(listingDataProvider.onDataError, (error) => {
+            showError({
+                title: 'Unable to load listing details.',
+                error
+            });
+        });
+    }
+    else {
         // Load titles to display for selection
         this.viewModel.jobTitles.sync();
     }
@@ -161,19 +151,54 @@ function ViewModel(app) {
     this.submittedUserLicensesCertifications = ko.observableArray([]);
     //is an object that happens to have arrays
     this.jobTitleApplicableLicences = ko.observable(null);
-    this.jobTitleName = ko.observable('Job Title');
+    this.listingTitle = ko.observable('Job Title');
 
     this.isSyncing = userLicensesCertifications.state.isSyncing();
     this.isLoading = userLicensesCertifications.state.isLoading();
 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/licensesCertifications');
-    this.jobTitles.selectJobTitle = function(jobTitle) {
 
-        this.jobTitleID(jobTitle.jobTitleID());
+    /**
+     * Special license ID that indicates a required license
+     * @const {boolean}
+     */
+    this.REQUIRED_LICENSE_SPECIAL_ID = -1;
+    /**
+     * Special license ID that indicates an optional license
+     * @const {boolean}
+     */
+    this.OPTIONAL_LICENSE_SPECIAL_ID = 0;
 
-        return false;
-    }.bind(this);
+    /**
+     * Whether there are required licenses for this user and job title.
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.hasRequiredLicenses = ko.pureComputed(() => {
+        var applicable = this.jobTitleApplicableLicences();
+        if (applicable && applicable.country && applicable.country()) {
+            return !!applicable.country().some((item) => item.licenseCertificationID() === this.REQUIRED_LICENSE_SPECIAL_ID);
+        }
+        else {
+            return false;
+        }
+    });
+
+    /**
+     * Whether there are explicitly optional licenses for this user and job title.
+     * NOTE: is not enough to check the opposite of hasRequiredLicenses because that one
+     * is false too when no records, and a explicit record for 'optional' must exist.
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.hasOptionalLicenses = ko.pureComputed(() => {
+        var applicable = this.jobTitleApplicableLicences();
+        if (applicable && applicable.country && applicable.country()) {
+            return !!applicable.country().some((item) => item.licenseCertificationID() === this.OPTIONAL_LICENSE_SPECIAL_ID);
+        }
+        else {
+            return false;
+        }
+    });
 
     this.addNew = function(item) {
         var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID();

@@ -3,7 +3,7 @@
     job title and the main data attached to that relation for
     public access (internal fields avoided) and additional
     useful job title info (shortcut to job title names for convenience).
-    
+
     The model has optional properties that link
     to other model information related to a specific jobTitle
     for convenience when querying a wider set of information
@@ -25,18 +25,18 @@ var UserLicenseCertification = require('./UserLicenseCertification');
 var UserCancellationPolicy = require('./CancellationPolicy');
 
 function PublicUserJobTitle(values) {
-    
+
     Model(this);
-    
+
     this.model.defProperties({
+        userListingID: 0,
         userID: 0,
         jobTitleID: 0,
+        title: '',
         intro: null,
         cancellationPolicyID: 0,
         instantBooking: false,
         isActive: false,
-        jobTitleSingularName: '',
-        jobTitlePluralName: '',
 
         rating: { Model: PublicUserRating },
         verificationsSummary: { Model: PublicUserVerificationsSummary },
@@ -66,8 +66,8 @@ function PublicUserJobTitle(values) {
         cancellationPolicy: { Model: UserCancellationPolicy }
     }, values);
 
-    this.model.defID(['userID', 'jobTitleID']);
-    
+    this.model.defID(['userID', 'jobTitleID']); // Will be userListingID
+
     var findMinValue = function(services) {
         var s = services;
         var maxValue = { price: Number.MAX_VALUE };
@@ -113,7 +113,7 @@ function PublicUserJobTitle(values) {
     };
 
     /**
-     * @returns true if there are any service attributes with this job title 
+     * @returns true if there are any service attributes with this job title
      */
     this.hasServiceAttributes = function() {
         return !!(this.serviceAttributes() && this.serviceAttributes().hasAttributes());

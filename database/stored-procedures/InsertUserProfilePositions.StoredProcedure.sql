@@ -12,7 +12,8 @@ CREATE PROC [dbo].[InsertUserProfilePositions]
 @CancellationPolicyID int,
 @Intro varchar(400) = '',
 @InstantBooking bit = 0,
-@collectPaymentAtBookMeButton bit = 0
+@collectPaymentAtBookMeButton bit = 0,
+@title nvarchar(50)
 
 AS
 
@@ -22,10 +23,10 @@ BEGIN TRY
 
 	INSERT INTO userprofilepositions (
 		UserID, PositionID, LanguageID, CountryID, CreateDate, UpdatedDate, ModifiedBy, Active, StatusID, PositionIntro, CancellationPolicyID, InstantBooking,
-		collectPaymentAtBookMeButton
+		collectPaymentAtBookMeButton, Title
 	) VALUES(
 		@UserID,@PositionID,@LanguageID,@CountryID, GETDATE(), GETDATE(), 'sys', 1, 2, @Intro, @CancellationPolicyID, @InstantBooking,
-		@collectPaymentAtBookMeButton
+		@collectPaymentAtBookMeButton, @title
 	)
 	
 	-- Check alerts for the position to get its state updated
