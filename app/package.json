@@ -11,6 +11,7 @@
   "phonegapbuildId": 1266913,
   "main": "build/app.html",
   "scripts": {
+    "start": "grunt atwork",
     "test": "grunt test",
     "watch": "grunt watch",
     "build": "grunt",
