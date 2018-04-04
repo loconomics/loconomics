@@ -916,6 +916,19 @@ public class LcMessaging
                 { "UserID", userID }
         }), "Loconomics Marketplace <automated@loconomics.com>");
     }
+    /// <summary>
+    /// Sended when scheduled task indicates the professional must be reminded to enter its earnings
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="userEmail"></param>
+    public static void SendEarningsEntryReminder(int userID, string userEmail)
+    {
+        SendMail(userEmail, "[Action Required] Reminder to enter your earnings",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/EarningsEntryReminder/",
+            new Dictionary<string, object> {
+                { "UserID", userID }
+        }), "Loconomics Cooperative <automated@loconomics.com>");
+    }
     #endregion
 
     #region Type:Admin/Internal Notifications to Loconomics Stuff/Support
