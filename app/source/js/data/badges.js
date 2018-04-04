@@ -27,7 +27,15 @@ const urlVersionExp = /\?v=.+$/;
  * @param {string} url
  * @returns {string} The URL fixed
  */
-const fixUrlVersion = (url) => url.replace(urlVersionExp, '?v=2_0');
+const fixUrlVersion = (url) => {
+    if (urlVersionExp.test(url)) {
+        return url.replace(urlVersionExp, '?v=2_0');
+    }
+    else {
+        url += ~url.indexOf('?') ? '&' : '?';
+        return url + 'v=2_0';
+    }
+};
 
 /**
  * Fetchs a JSON from the given URL, expected to have info about a badge assigned to
