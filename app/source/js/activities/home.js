@@ -8,7 +8,6 @@ var $ = require('jquery');
 var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
 var Activity = require('../components/Activity');
 var snapPoints = require('../utils/snapPoints');
-var showAnnouncement = require('../modals/announcement').show;
 var user = require('../data/userProfile').data;
 //var ActionForValue = require('../kocomponents/home/search-box').ActionForValue;
 var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
@@ -91,23 +90,6 @@ A.prototype.show = function show(state) {
     if (!this._notFirstShow) {
         this._registerSnapPoints();
         this._notFirstShow = true;
-
-        // Check if pop-up was displayed already to don't bother users
-        // And of course we must not attempt that ones that are already users :-)
-        var showIt = !localStorage.sanFranciscoLaunchPopup && user.isAnonymous();
-        if (showIt) {
-            showAnnouncement({
-                message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland. Click below to learn more.',
-                primaryButtonText: 'I\'m a service professional',
-                primaryButtonLink: '#!/learnMoreProfessionals',
-                secondaryButtonText: 'I\'m a potential client',
-                secondaryButtonLink: '#!/'
-            })
-            .then(function() {
-                // Once closed (from clicking everywhere, close button or clicking main buttons)
-                localStorage.sanFranciscoLaunchPopup = true;
-            });
-        }
     }
     this.viewModel.searchTerm('');
 };
