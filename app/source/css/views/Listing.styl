@@ -6,6 +6,10 @@ Listing
     > * ul {
         padding-left: 2em;
         list-style: none;
+
+        :nth-child(odd) {
+            clear: left;
+        }
     }
     .Listing-editorHeader {
         background-color: $brand-primary;
@@ -47,7 +51,7 @@ Listing
                     top: 0.3em;
                     bottom: 0.3em;
                 }
-            }   
+            }
         }
         .AlertItem {
             background-color: $brand-primary;
@@ -85,7 +89,7 @@ Listing
                     width: 50%;
                 }
             }
-        }     
+        }
     }
    .Listing-userText {
         white-space: pre-line;

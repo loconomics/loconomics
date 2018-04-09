@@ -109,15 +109,15 @@
                 <ul data-bind="template: { name: 'offering-card-edit-template', foreach: publicServices() }"></ul>
             </section>
             <section id="listing-editor-photos" class="row" data-bind="with: selectedJobTitle" title="">
-                <div class="col-xs-12 col-sm-12 SectionHeading">
+                <div class="container-fluid  SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
                     <a data-bind="visible: $root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the photos of your '+ title() + ' work' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !$root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add photos your '+ title() + ' work' }" class="btn btn-default pull-right">Add</a>
                 </div>
-                <div class="col-xs-12 col-sm-12">
+                <div class="container-fluid ">
                     <em data-bind="visible: !$root.workPhotos().length" class="text-muted">Upload here some photos you think clients will want to see pertaining to your <span data-bind="text: title()"></span> work.</em>
                 </div>
-                <div class="row" data-bind="foreach: $root.workPhotos">
+                <div class="container-fluid" data-bind="foreach: $root.workPhotos">
                     <figure class="col-xs-12 col-sm-6">
                         <img class="display-block" data-bind="attr: { src: url}">
                         <figcaption class="text-center" data-bind="text: caption"></figcaption>
@@ -150,20 +150,20 @@
                 <ul data-bind="template: { name: 'location-card-edit-template', foreach: $root.serviceAddresses() }"></ul>
             </section>
             <section id="listing-editor-credentials-verifications" class="row" title="">
-                <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="with: selectedJobTitle">
+                <div class="container-fluid SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials and verifications</h2>
                     <a data-bind="attr: {
                         href: '/credentials-add/' + $root.returnLinkJobTitleActivity(),
                         'aria-label': 'Add '+ title() + ' credentials and general verifications' }" class="btn btn-default pull-right">Add/Edit</a>
                 </div>
-                <div class="col-xs-12 col-sm-12" data-bind="with: selectedJobTitle">
-                    <div class="col-xs-12">
+                <div class="container-fluid" data-bind="with: selectedJobTitle">
+                    <div class="container-fluid">
                         <em>
                             Upload professional licenses, certifications, training, digital badges, and education you've obtained related to your <span data-bind="text: title()"></span> work. Depending on your profession, we may need to verify credentials for your listing to become active.
                         </em>
                     </div>
-                    <ul data-bind="foreach: $root.userBadges" class="list-unstyled">
-                        <li>
+                    <ul class="list-unstyled row" data-bind="foreach: $root.userBadges" class="list-unstyled">
+                        <li class="col-sm-6">
                             <badge-viewer params="
                                 assertionData: assertion,
                                 viewMode: 'card',
@@ -172,11 +172,11 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-xs-12 col-sm-12">
-                    <div class="col-xs-12 SectionHeading">
+                <div class="container-fluid">
+                    <div class="SectionHeading">
                         <h3>Education credentials</h3>
                     </div>
-                    <ul data-bind="template: { name: 'education-card-edit-template', foreach: education }"></ul>
+                    <ul class="list-unstyled row" data-bind="template: { name: 'education-card-edit-template', foreach: education }"></ul>
                 </div>
             </section>
             <section id="listing-editor-booking-policies" class="row" data-bind="with: selectedJobTitle" title="">
