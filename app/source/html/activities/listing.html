@@ -105,15 +105,19 @@
                     </div>
                 </div>
             </section>
-            <section id="listing-photos" class="row" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
-                <div class="col-xs-12 col-sm-12 SectionHeading">
+            <section id="listing-photos" class="row Listing-photos" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
+                <div class="container-fluid SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
                 </div>
-                <div class="row" data-bind="foreach: $root.workPhotos">
-                    <figure class="col-xs-12 col-sm-6">
-                        <img class="display-block" data-bind="attr: { src: url}">
-                        <figcaption class="text-center" data-bind="text: caption"></figcaption>
-                    </figure>
+                <div class="container-fluid">
+                    <ul class="list-unstyled row" data-bind="foreach: $root.workPhotos">
+                        <li class="col-sm-6">
+                            <figure>
+                                <img class="display-block" data-bind="attr: { src: url}">
+                                <figcaption class="text-center" data-bind="text: caption"></figcaption>
+                            </figure>
+                        </li>
+                    </ul>
                 </div>
                 <div class="col-xs-12 col-sm-12 text-center" data-bind="visible: $root.viewMoreWorkPhotosLabel()">
                     <button class="btn btn-primary" data-bind="text: $root.viewMoreWorkPhotosLabel, click: $root.viewAllPhotos"></button>

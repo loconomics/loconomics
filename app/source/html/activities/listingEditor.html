@@ -110,20 +110,24 @@
                     <ul class="list-unstyled row" data-bind="template: { name: 'offering-card-edit-template', foreach: publicServices() }"></ul>
                 </div>
             </section>
-            <section id="listing-editor-photos" class="row" data-bind="with: selectedJobTitle" title="">
+            <section id="listing-editor-photos" class="row Listing-photos" data-bind="with: selectedJobTitle" title="">
                 <div class="container-fluid  SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
                     <a data-bind="visible: $root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the photos of your '+ title() + ' work' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !$root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add photos your '+ title() + ' work' }" class="btn btn-default pull-right">Add</a>
                 </div>
-                <div class="container-fluid ">
+                <div class="container-fluid">
                     <em data-bind="visible: !$root.workPhotos().length" class="text-muted">Upload here some photos you think clients will want to see pertaining to your <span data-bind="text: title()"></span> work.</em>
                 </div>
-                <div class="container-fluid" data-bind="foreach: $root.workPhotos">
-                    <figure class="col-xs-12 col-sm-6">
-                        <img class="display-block" data-bind="attr: { src: url}">
-                        <figcaption class="text-center" data-bind="text: caption"></figcaption>
-                    </figure>
+                <div class="container-fluid">
+                    <ul class="list-unstyled row" data-bind="foreach: $root.workPhotos">
+                        <li class="col-sm-6">
+                            <figure>
+                                <img class="display-block" data-bind="attr: { src: url}">
+                                <figcaption class="text-center" data-bind="text: caption"></figcaption>
+                            </figure>
+                        </li>
+                    </ul>
                 </div>
                 <div class="col-xs-12 col-sm-12 text-center" data-bind="visible: $root.viewMoreWorkPhotosLabel()">
                     <button class="btn btn-primary" data-bind="text: $root.viewMoreWorkPhotosLabel, click: $root.viewAllPhotos"></button>
