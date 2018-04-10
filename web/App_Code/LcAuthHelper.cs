@@ -16,6 +16,7 @@ using WebMatrix.Data;
 using WebMatrix.Security;
 using WebMatrix.WebData;
 using System.Web.Security;
+using System.Configuration;
 
 public static class LcAuthHelper
 {
@@ -369,6 +370,7 @@ public static class LcAuthHelper
         var facebookAccessToken = Request.Form["facebookAccessToken"];
         var email = Request.Form["email"];
         var atBooking = Request.Form["atBooking"].AsBool();
+        var signupMessageEmail = ConfigurationManager.AppSettings["SignupMessageEmail"];
 
         //
         // Conditional validations
@@ -480,10 +482,9 @@ public static class LcAuthHelper
 
                     StartOnboardingForUser(userID);
                 }
-
-                // TODO: i18n set email from config
+                
                 // SIGNUP
-                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Sign-up", String.Format(@"
+                LcMessaging.SendMail(signupMessageEmail, "Sign-up", String.Format(@"
                     <html><body><h3>Sign-up.</h3>
                     <strong>This user was already in the database, is re-registering itself again!</strong><br/>
                     <dl>

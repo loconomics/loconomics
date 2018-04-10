@@ -482,7 +482,7 @@ public static partial class LcPayment
     #endregion
 
     #region Marketplace
-    //TODO i18n make fee config value
+    //TODO: i18n make fee config value
     public const string MarketplaceProviderFee = "2.9% plus $0.30";
 
     #region Provider information

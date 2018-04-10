@@ -6,6 +6,7 @@
 @using WebMatrix.WebData;
 @using WebMatrix.Data;
 @using System.Security.Cryptography;
+@using System.Configuration;
 @using System.Web.WebPages.Scope;
 @using System.Text.RegularExpressions;
 
@@ -967,10 +968,9 @@
     </div>
 }
 @functions {
-    // TODO: i18n US string from config
     public static string GetLocationForGoogleMaps(dynamic data)
     {
-        return JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+        return JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, ConfigurationManager.AppSettings["GMapsCountry"]);
     }
     public static string GetOneLineAddress(LcData.Address address, bool withSpecialInstructions = false)
     {

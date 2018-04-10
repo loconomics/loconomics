@@ -7,6 +7,7 @@ using System.Web.Helpers;
 using ASP;
 using System.Net;
 using System.Web.Caching;
+using System.Configuration;
 
 /// <summary>
 /// Descripción breve de LcMessaging
@@ -364,6 +365,7 @@ public class LcMessaging
         string toEmail = "";
         string fromEmail = "";
         string subject = "";
+        string automatedEmail = ConfigurationManager.AppSettings["AutomatedEmail"];
         LcEmailTemplate.BookingEmailInfo info;
         JobTitleMessagingFlags flags;
         #endregion
@@ -392,15 +394,13 @@ public class LcMessaging
             this.info = info;
             flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
         }
-        // TODO: i18n set email from config
         protected virtual string getSenderForClient()
         {
-            return info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+            return string.Format("{0} {1} <{2}>", info.serviceProfessional.firstName, info.serviceProfessional.lastName, automatedEmail);
         }
-        // TODO: i18n set email from config
         protected virtual string getSenderForServiceProfessional()
         {
-            return "Loconomics Scheduler <automated@loconomics.com>";
+            return string.Format("Loconomics Scheduler <{0}>", automatedEmail);
         }
         void sendToClient(string tplName)
         {
@@ -577,14 +577,13 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
-            // TODO: set email from config
             protected override string getSenderForClient()
             {
-                return "Loconomics <automated@loconomics.com>";
+                return string.Format("Loconomics <{0}>", automatedEmail);
             }
             protected override string getSenderForServiceProfessional()
             {
-                return "Loconomics Marketplace <automated@loconomics.com>";
+                return string.Format("Loconomics Marketplace <{0}>", automatedEmail);
             }
             // TODO: i18n make string set from service 
             public override void BookingCancelledByClient()

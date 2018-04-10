@@ -3,6 +3,7 @@ using CalendarDll.Data;
 using Ical.Net;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using WebMatrix.Data;
@@ -71,9 +72,8 @@ public static partial class LcCalendar
         /// </summary>
         Transparent = 4
     }
-
-    // TODO: i18n make server timezone based on app region
-    public const string serverTimeZoneID = "America/Los_Angeles";
+    
+    public static string serverTimeZoneID = ConfigurationManager.AppSettings["ServerTimeZoneID"];
 
      #region NEW
     /// <summary>

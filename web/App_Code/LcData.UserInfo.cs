@@ -855,8 +855,7 @@ public static partial class LcData
                 return r;
             }
         }
-
-        // TODO: i18n 
+        
         public static string GetFormatedUserResponseTime(dynamic ResponseTimeMinutes)
         {
             var responseTime = "N/A";
