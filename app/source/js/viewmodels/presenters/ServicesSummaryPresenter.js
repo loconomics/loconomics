@@ -63,8 +63,9 @@ ServicesSummaryPresenter.prototype.serviceTypeSummaries = function() {
 ServicesSummaryPresenter.summaries = function(listings, services, pricingTypes) {
     var listingsByID = mapBy(listings, function(t) { return t.jobTitleID; });
     var servicesByJobTitleID = groupBy(services, function(s) { return s.jobTitleID(); }, Object.keys(listingsByID));
-
-    return Object.keys(servicesByJobTitleID).map(function(jobTitleID) {
+    // Iterate all enabled job title IDs per given listings (rather than iterate
+    // by servicesByJobTitleID that caused bug #856)
+    return Object.keys(listingsByID).map(function(jobTitleID) {
         return new ServicesSummaryPresenter(listingsByID[jobTitleID], servicesByJobTitleID[jobTitleID], pricingTypes);
     });
 };

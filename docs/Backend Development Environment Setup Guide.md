@@ -1,4 +1,6 @@
 # Backend Development Environment Setup Guide
+**Important:** A new back-end is on the works, focused on being cross platform, under Nodejs; more details at [issue 775](https://github.com/loconomics/loconomics/issues/775); help is welcome :-)
+
 Our backend is an ASP.NET WebPages2 website with MS-SQL Server database.
 
 ## Minimum software requirements
