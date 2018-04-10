@@ -1,15 +1,17 @@
 
 <script type="text/html" id="offering-card-template">
-    <li class="col-xs-11 col-sm-5 OfferingCard" data-bind="attr: { id: 'offering' + id() }">
-        <div class="Card-heading">
-            <div class="Card-title">
-                <h5 data-bind="text: name"></h5>
-                <p data-bind="text: displayedDurationAndPrice"></p>
+    <li class="col-sm-6" data-bind="attr: { id: 'offering' + id() }">
+        <div class="OfferingCard">
+            <div class="Card-heading">
+                <div class="Card-title">
+                    <h5 data-bind="text: name"></h5>
+                    <p data-bind="text: displayedDurationAndPrice"></p>
+                </div>
             </div>
-        </div>
-        <div data-bind="visible: description" class="Card-description">
-            <hr>
-            <p data-bind="text: description"></p>
+            <div data-bind="visible: description" class="Card-description">
+                <hr>
+                <p data-bind="text: description"></p>
+            </div>
         </div>
     </li>
 </script>

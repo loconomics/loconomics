@@ -85,7 +85,7 @@ Listing
                     width: 50%;
                 }
                 button {
-                    width: 50%;
+                    min-width: 50%;
                 }
             }
         }
@@ -105,9 +105,6 @@ Listing
     .Listing-hours {
         display: table;
         padding: 0em;
-        @media $mediaMinMd {
-            padding-left: 2em;
-        }
         > li {
             display: table-row;
         }
@@ -122,9 +119,9 @@ Listing
                 margin-left: 3em;
             }
             .Listing-hoursDayClosed {
-            display: block;
-            text-align: center;
-            margin-left: 3em;
+                display: block;
+                text-align: center;
+                margin-left: 3em;
             }
         }
     }
