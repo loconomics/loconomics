@@ -263,7 +263,7 @@ namespace LcRest
                       -- Special case when the jobtitle/position requested is zero
                       -- just dont let make the relation to avoid bad results
                       -- because of internally reused addressID.
-                      ON @2 > -1 AND L.AddressID = SA.AddressID
+                      ON @2 <> -1 AND L.AddressID = SA.AddressID
             WHERE   L.Active = 1
         ";
         private const string sqlAndUserID = @" AND L.UserID = @1 ";

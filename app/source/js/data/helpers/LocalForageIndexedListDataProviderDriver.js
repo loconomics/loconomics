@@ -123,7 +123,15 @@ export default class LocalForageIndexedListDataProviderDriver {
                     return Promise.all(index.map((id) => localforage.getItem(itemKey(id))))
                     // We must return a new CachedData-like object, including the
                     // original cache metadata but with data being an array of all items
-                    .then((all) => (Object.assign({}, cache, { data: all.map((item) => item.data) })));
+                    .then((all) => (Object.assign({}, cache, {
+                        // We filter by checking if there is cached data for the item
+                        // (this prevents from throwing on cases where there is a desynchronization
+                        // between records and index, as a non notified deletion of an item,
+                        // letting us protect better from corrupted data and bugs)
+                        // and map the content data from the cache as the item to hold
+                        // in the returning list.
+                        data: all.filter((item) => !!(item && item.data)).map((item) => item.data)
+                    })));
                 }
                 else {
                     return undefined;
@@ -162,8 +170,9 @@ export default class LocalForageIndexedListDataProviderDriver {
          */
         this.delete = function() {
             // Get the index
-            return localforage.getItem(listIndexKey)
-            .then(({ data: index } = {}) => {
+            return readIndex()
+            .then((cached) => {
+                const index = cached && cached.data;
                 if (index) {
                     // Remove all local items found in the array
                     return Promise.all(index.map((id) => localforage.removeItem(itemKey(id))));

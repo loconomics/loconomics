@@ -54,7 +54,12 @@
         },
         "Earnings Report (queries)": {
             "url": "/api/v1/en-US/me/earnings/report",
-            "get": { }
+            "get": {
+                "fromDate": "2018-01-01 00:00:00+0100",
+                "toDate": "2019-01-01 00:00:00+0100",
+                "jobTitleID": null,
+                "userExternalListingID": null
+            }
         }
     }
 *@
@@ -81,7 +86,15 @@
             }
             else if (UrlData[0] == "report" && UrlData.Count == 1)
             {
-                return LcRest.UserEarningsReport.Query(WebSecurity.CurrentUserId);
+                // Get Filters
+                var filter = new LcRest.UserEarningsReport.EarningsFilterValues
+                {
+                    fromDate = DateTimeOffsetFromISO(Request["fromDate"]),
+                    toDate = DateTimeOffsetFromISO(Request["toDate"]),
+                    jobTitleID = Request["jobTitleID"].IsInt() ? (int?)Request["jobTitleID"].AsInt() : null,
+                    userExternalListingID = Request["userExternalListingID"].IsInt() ? (int?)Request["userExternalListingID"].AsInt() : null
+                };
+                return LcRest.UserEarningsReport.Query(WebSecurity.CurrentUserId, filter);
             }
             else if (UrlData[0].IsInt() && UrlData.Count == 1)
             {

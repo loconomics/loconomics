@@ -31,8 +31,8 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Service removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit pricing]]]",
 
-                SummaryFormat = "{0}",
-                NameAndSummaryFormat = "{0}, {1}",
+                SummaryFormat = "{0}", // leave as is for i18n (is processed by client)
+                NameAndSummaryFormat = "[[[{0}, {1}///TRANSLATORS: format is client based]]]", // leave as is for i18n (is processed by client)
 
                 IncludeServiceAttributes = true,
 
@@ -70,10 +70,10 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Package removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit packages]]]",
 
-                SummaryFormat = "{0}",
-                SummaryFormatMultipleSessions = "[[[{1} appointments - {0} each]]]",
-                NameAndSummaryFormat = "{0}, {1}",
-                NameAndSummaryFormatMultipleSessions = "[[[{0}, {2} appointments - {1} each]]]",
+                SummaryFormat = "{0}", // leave as is for i18n (is processed by client)
+                SummaryFormatMultipleSessions = "[[[{1} appointments - {0} each///TRANSLATORS: format is client based]]]", // leave as is for i18n (is processed by client)
+                NameAndSummaryFormat = "[[[{0}, {1}]]]", // leave as is for i18n (is processed by client)
+                NameAndSummaryFormatMultipleSessions = "[[[{0}, {2} appointments - {1} each///TRANSLATORS: format is client based]]]", // leave as is for i18n (is processed by client)
 
                 IncludeServiceAttributes = true,
 
@@ -104,7 +104,7 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Add-on removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit add-ons]]]",
 
-                SummaryFormat = "{0}",
+                SummaryFormat = "{0}", // leave as is for i18n (is processed by client)
                 // Left a white space to avoid the default SummaryFormat be used instead:
                 SummaryFormatNoDuration = " ",
                 NameAndSummaryFormat = "{0}, {1}",
@@ -129,7 +129,7 @@ public static partial class LcPricingModel
                 PriceCalculation = LcEnum.PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
-                NamePlaceHolder = "[[[Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"]]]",
+                NamePlaceHolder = "[[[Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"///TRANSLATORS: do not escape speech mark]]]",
                 DurationLabel = "[[[Approximate length of visit:]]]",
                 RequireDuration = true,
                 PriceLabel = "[[[Price for estimate:]]]",
@@ -146,8 +146,8 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Estimate removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit estimates]]]",
 
-                SummaryFormat = "[[[{0} ({2} estimate)]]]",
-                NameAndSummaryFormat = "[[[{0}, {1} ({3} estimation)]]]",
+                SummaryFormat = "[[[{0} ({2} estimate)///TRANSLATORS: format is client based]]]", // leave as is for i18n (is processed by client)
+                NameAndSummaryFormat = "[[[{0}, {1} ({3} estimation)///TRANSLATORS: format is client based]]]", // leave as is for i18n (is processed by client)
 
                 LearnMoreLabel = "[[[Learn more about estimate pricing]]]",
                 LearnMoreText =  "[[[Here you can discuss with clients your services and assess an accurate price estimate for their individual needs. You and your client will then determine next steps together (we're currently working on ways to help you out with this).]]]",
@@ -172,7 +172,7 @@ public static partial class LcPricingModel
                 PriceCalculation = LcEnum.PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
-                NamePlaceHolder = "[[[Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".]]]",
+                NamePlaceHolder = "[[[Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".///TRANSLATORS: do not escape speech mark]]]",
                 DurationLabel = "[[[Approx. length of consultation:]]]",
                 RequireDuration = true,
                 PriceLabel = "[[[Price for consultation:]]]",
@@ -193,8 +193,8 @@ public static partial class LcPricingModel
                 SuccessOnDelete = "[[[Consultation removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit consultations]]]",
 
-                SummaryFormat = "[[[{0} ({2} consultation)]]]",
-                NameAndSummaryFormat = "[[[{0}, {1} ({3} consultation)]]]",
+                SummaryFormat = "[[[{0} ({2} consultation)///TRANSLATORS: format is client based]]]", // leave as is for i18n (is processed by client)
+                NameAndSummaryFormat = "[[[{0}, {1} ({3} consultation)///TRANSLATORS: format is client based]]]", // leave as is for i18n (is processed by client)
 
                 LearnMoreLabel = "[[[Learn more about consultation pricing]]]",
                 LearnMoreText = "[[[Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this).]]]",

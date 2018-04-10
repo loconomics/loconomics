@@ -10,7 +10,6 @@ import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver
 import localforage from './drivers/localforage';
 import marketplaceProfile from './marketplaceProfile';
 import rest from './drivers/restClient';
-import userJobProfile from './userJobProfile';
 import { list as userListingsList } from './userListings';
 
 const API_NAME = 'me/external-listings';
@@ -24,7 +23,7 @@ const localListDriver = new LocalForageIndexedListDataProviderDriver(localforage
  * @returns {CachedDataProvider<Array<rest/UserExternalListing>>}
  * Usage:
  * - list.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - list.onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - list.onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export const list = new CachedDataProvider({
     // 1 minute
@@ -39,7 +38,7 @@ export const list = new CachedDataProvider({
  * @returns {CachedDataProvider<rest/UserExternalListing>}
  * Usage:
  * - item(platformID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - item(platformID).onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - item(platformID).onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export function item(id) {
     const localItemDriver = new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME);
@@ -114,7 +113,6 @@ export function item(id) {
 // we must invalidate the listings data since some job titles could have
 // being added automatically as of being included in an external listing.
 const invalidateListings = () => {
-    userJobProfile.invalidateCache();
     marketplaceProfile.invalidateCache();
     userListingsList.invalidateCache();
 };

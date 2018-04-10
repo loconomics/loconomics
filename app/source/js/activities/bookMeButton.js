@@ -3,12 +3,14 @@
 **/
 'use strict';
 
+import UserJobTitle from '../models/UserJobTitle';
+import { item as userListingItem } from '../data/userListings';
+
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var $ = require('jquery');
 var clipboard = require('../utils/clipboard');
 var marketplaceProfile = require('../data/marketplaceProfile');
-var userJobProfile = require('../data/userJobProfile');
 var showError = require('../modals/error').show;
 
 var A = Activity.extend(function BookMeButtonActivity() {
@@ -48,35 +50,6 @@ var A = Activity.extend(function BookMeButtonActivity() {
             });
         }.bind(this)
     });
-
-    // On changing jobTitleID:
-    // - load job title name
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-            if (jobTitleID) {
-                // User Job Title
-                // Get data for the Job Title and User Profile
-                userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
-                //jobTitles.getJobTitle(jobTitleID)
-                .then(function(job) {
-                    this.viewModel.userJobTitle(job.userJobTitle);
-                    // Fill in job title name
-                    this.viewModel.jobTitleName(job.jobTitle.singularName());
-                }.bind(this))
-                .catch(function (err) {
-                    showError({
-                        title: 'There was an error while loading.',
-                        error: err
-                    });
-                }.bind(this));
-            }
-            else {
-                this.viewModel.jobTitleName('Job Title');
-                this.viewModel.userJobTitle(null);
-            }
-        }.bind(this)
-    });
 });
 
 exports.init = A.init;
@@ -91,15 +64,35 @@ A.prototype.show = function show(state) {
     marketplaceProfile.sync();
 
     // Set the job title
-    var jobID = state.route.segments[0] |0;
-    this.viewModel.jobTitleID(jobID);
+    var jobTitleID = state.route.segments[0] |0;
+
+    // Resets
     this.viewModel.copyText('Copy');
+    this.viewModel.jobTitleID(jobTitleID);
+    this.viewModel.listingTitle('Job Title');
+    this.viewModel.userJobTitle(null);
+    // Load data by the listing job title
+    if (jobTitleID) {
+        const listingDataProvider = userListingItem(jobTitleID);
+        this.subscribeTo(listingDataProvider.onData, (listing) => {
+            // Direct copy of listing values
+            this.viewModel.listingTitle(listing.title);
+            // Save for use in the view
+            this.viewModel.userJobTitle(new UserJobTitle(listing));
+        });
+        this.subscribeTo(listingDataProvider.onDataError, (error) => {
+            showError({
+                title: 'There was an error while loading booking policies.',
+                error
+            });
+        });
+    }
 };
 
 function ViewModel() {
     this.helpLink = '/help/relatedArticles/201959943-add-scheduling-to-your-website';
 
-    this.jobTitleName = ko.observable('Job Title');
+    this.listingTitle = ko.observable('Job Title');
 
     // Actual data for the form:
 
@@ -211,7 +204,8 @@ function ViewModel() {
             var plain = ujt.model.toPlainObject();
             plain.collectPaymentAtBookMeButton = ujt.collectPaymentAtBookMeButton();
 
-            userJobProfile.setUserJobTitle(plain)
+            userListingItem(this.jobTitleID())
+            .save(plain)
             .then(function() {
                 //this.isSaving(false);
                 //app.successSave();

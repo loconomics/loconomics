@@ -7,6 +7,7 @@ using System.Web.Helpers;
 using ASP;
 using System.Net;
 using System.Web.Caching;
+using System.Configuration;
 
 /// <summary>
 /// Descripción breve de LcMessaging
@@ -297,7 +298,7 @@ public class LcMessaging
         #region Static Utils
         static string GetBookingThreadSubject(LcEmailTemplate.BookingEmailInfo info)
         {
-            return info.userJobTitle.jobTitleSingularName + " " +
+            return info.userJobTitle.title + " " +
                 info.booking.serviceDate.startTime.ToString("D") + ", " +
                 info.booking.serviceDate.startTime.ToString("t") + " to " +
                 info.booking.serviceDate.endTime.ToString("t");
@@ -364,6 +365,7 @@ public class LcMessaging
         string toEmail = "";
         string fromEmail = "";
         string subject = "";
+        string automatedEmail = ConfigurationManager.AppSettings["AutomatedEmail"];
         LcEmailTemplate.BookingEmailInfo info;
         JobTitleMessagingFlags flags;
         #endregion
@@ -394,11 +396,11 @@ public class LcMessaging
         }
         protected virtual string getSenderForClient()
         {
-            return info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+            return string.Format("{0} {1} <{2}>", info.serviceProfessional.firstName, info.serviceProfessional.lastName, automatedEmail);
         }
         protected virtual string getSenderForServiceProfessional()
         {
-            return "Loconomics Scheduler <automated@loconomics.com>";
+            return string.Format("Loconomics Scheduler <{0}>", automatedEmail);
         }
         void sendToClient(string tplName)
         {
@@ -489,6 +491,8 @@ public class LcMessaging
                 prepareData(info);
                 return this;
             }
+
+            // TODO: i18n make string set from service 
             public override void BookingCancelledByClient()
             {
                 var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
@@ -575,12 +579,13 @@ public class LcMessaging
             }
             protected override string getSenderForClient()
             {
-                return "Loconomics <automated@loconomics.com>";
+                return string.Format("Loconomics <{0}>", automatedEmail);
             }
             protected override string getSenderForServiceProfessional()
             {
-                return "Loconomics Marketplace <automated@loconomics.com>";
+                return string.Format("Loconomics Marketplace <{0}>", automatedEmail);
             }
+            // TODO: i18n make string set from service 
             public override void BookingCancelledByClient()
             {
                 var neutralSubject = String.Format("Appointment cancelled by {0}", info.client.firstName);
@@ -915,6 +920,19 @@ public class LcMessaging
             new Dictionary<string, object> {
                 { "UserID", userID }
         }), "Loconomics Marketplace <automated@loconomics.com>");
+    }
+    /// <summary>
+    /// Sended when scheduled task indicates the professional must be reminded to enter its earnings
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="userEmail"></param>
+    public static void SendEarningsEntryReminder(int userID, string userEmail)
+    {
+        SendMail(userEmail, "[Action Required] Reminder to enter your earnings",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/EarningsEntryReminder/",
+            new Dictionary<string, object> {
+                { "UserID", userID }
+        }), "Loconomics Cooperative <automated@loconomics.com>");
     }
     #endregion
 

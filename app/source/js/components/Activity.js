@@ -52,6 +52,15 @@ function Activity($activity, app) {
      */
     this.title = ko.observable('');
 
+    /**
+     * Holds a list of objects with a 'dispose' method or functions that
+     * need to be called when disposing a cycle of the activity, freeing up ressources
+     * that don't do it automatically (see `_disposeCycle` method).
+     * @member {Array<(Function,IDisposable)>}
+     * @private
+     */
+    this._cycleDisposables = [];
+
     // Knockout binding of viewModel delayed to first show
     // to avoid problems with subclasses replacing the viewModel property
 }
@@ -125,6 +134,8 @@ Activity.prototype.show = function show(options) {
             container: this.$activity.get(0)
         });
     }
+
+    this._disposeCycle();
 
     options = options || {};
     this.requestData = options;
@@ -212,8 +223,41 @@ Activity.prototype.hide = function hide() {
 
         this._handlersAreConnected = false;
     }
+    this._disposeCycle();
 
     this.isShown(false);
+};
+
+/**
+ * Dispose any ressources that cannot be done automatically, between 'cycles'.
+ * An activity cycle matches a routing event, where the activity is required
+ * to be displayed ('show' method is executed as the beggining of the cycle) and
+ * another routing happens (going to another activity, it leads to execution
+ * of the 'hide' method, or an internal route, that is another URL that is
+ * managed by the same activity -a 'hide' didn't happens, but 'show'/'route'
+ * run again).
+ * For that reason, this must be called both at hide and (beggining of) show
+ * methods.
+ */
+Activity.prototype._disposeCycle = function() {
+    this._cycleDisposables.forEach(function(value) {
+        try {
+            if (value && value.dispose) {
+                value.dispose();
+            }
+            else if (typeof(value) === 'function') {
+                value();
+            }
+            else {
+                throw new Error('Invalid disposable', value);
+            }
+        }
+        catch(ex) {
+            console.error('Error at activity _disposeCycle(), running an individual disposable', ex);
+        }
+    });
+    // Reset list
+    this._cycleDisposables = [];
 };
 
 /**
@@ -227,6 +271,7 @@ Activity.prototype.dispose = function() {
     if (this.__styleElement) {
         this.__styleElement.parentNode.removeChild(this.__styleElement);
     }
+    this._disposeCycle();
 };
 
 /**
@@ -261,6 +306,48 @@ Activity.prototype.registerHandler = function registerHandler(settings) {
     this._handlers = this._handlers || [];
 
     this._handlers.push(settings);
+};
+
+/**
+ * It creates a Knockout Computed with the given function that will be
+ * automatically disposed at the end of a cycle of the activity (see _disposeCycle).
+ * The context of the function will be the activity instance.
+ * @param {function} task Function that will read some observables and perform
+ * a task with their values, repeating at every data change
+ * @returns {KnockoutComputed} The computed generated, that can be extended
+ * as usual.
+ */
+Activity.prototype.observeChanges = function(task) {
+    var computed = ko.computed(task, this);
+    this._cycleDisposables.push(computed);
+    return computed;
+};
+
+/**
+ * It subscribes to the given object and automatically disposes the
+ * subscription at the end of a cycle of the activity (see _disposeCycle).
+ * @param {ISubscribable} subscribable An object implementing the `subscribe`
+ * method, that lets to subscribe to notifications received in the callback
+ * and lets `dispose` that subscription to prevent memory leaks.
+ * Common used objects here are SingleEvents and Knockout Observables (as alternative to
+ * observeChanges when just one observable is watched and don't want a first
+ * time execution of the callback when connecting).
+ * @param {function} callback Function executed every time the subscribable
+ * notifies including data in the parameters.
+ * @returns {IDisposable} Returns back the subscription that allows disposal.
+ * Remember that manual disposal is not needed, except disposal before
+ * the end of cycle of the activity is wanted.
+ */
+Activity.prototype.subscribeTo = function(subscribable, callback) {
+    if (!subscribable || typeof(subscribable.subscribe) !== 'function') {
+        throw new Error('Given object is not subscribable', subscribable);
+    }
+    var disposable = subscribable.subscribe(callback);
+    if (!disposable || typeof(disposable.dispose) !== 'function') {
+        throw new Error('Given subscribable does not allows disposal', subscribable, disposable);
+    }
+    this._cycleDisposables.push(disposable);
+    return disposable;
 };
 
 /**

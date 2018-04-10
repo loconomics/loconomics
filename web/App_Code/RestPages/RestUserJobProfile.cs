@@ -27,15 +27,15 @@ public class RestUserJobProfile : RestWebPage
                 return item;
             }
 
-            throw new HttpException(404, "Job Title not found.");
+            throw new HttpException(404, "[[[Job Title not found.]]]");
         }
         else if (UrlData.Count == 1)
         {
-            throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+            throw new HttpException(400, "[[[The Job Title ID has bad format (must be an integer number)]]]");
         }
         else if (UrlData.Count > 1)
         {
-            throw new HttpException(404, "Not Found");
+            throw new HttpException(404, "[[[Not Found]]]");
         }
 
         return LcRest.UserJobTitle.GetAllByUser(userId);
@@ -71,7 +71,7 @@ public class RestUserJobProfile : RestWebPage
                         // It cannot be done if record not exists, notify:
                         if (!done)
                         {
-                            throw new HttpException(404, "Not found");
+                            throw new HttpException(404, "[[[Not found]]]");
                         }
                         else
                         {
@@ -84,7 +84,7 @@ public class RestUserJobProfile : RestWebPage
                         // Double check if item exists
                         if (LcRest.UserJobTitle.GetItem(userID, jobTitleID) == null)
                         {
-                            throw new HttpException(404, "Not found");
+                            throw new HttpException(404, "[[[Not found]]]");
                         }
                         else
                         {
@@ -97,7 +97,7 @@ public class RestUserJobProfile : RestWebPage
                                 // be that constraints for 'active profile' were not
                                 // fullfilled to allow manual activation.
                                 // Notify about pending steps:
-                                var alertsMsg = "You must complete another {0} steps to activate this profile.";
+                                var alertsMsg = "[[[You must complete another %0 steps to activate this profile.|||{0}]]]";
                                 var alerts = LcRest.Alert.GetActiveRequiredCount(userID, jobTitleID);
                                 throw new HttpException(400, String.Format(alertsMsg, alerts));
                             }
@@ -109,16 +109,16 @@ public class RestUserJobProfile : RestWebPage
                         }
 
                     default:
-                        throw new HttpException(404, "Not found");
+                        throw new HttpException(404, "[[[Not found]]]");
                 }
             }
             else
             {
-                throw new HttpException(400, "Invalid Job Title ID");
+                throw new HttpException(400, "[[[Invalid Job Title ID]]]");
             }
         }
 
-        throw new HttpException(404, "Not found");
+        throw new HttpException(404, "[[[Not found]]]");
     }
 
     /// <summary>
@@ -158,8 +158,9 @@ public class RestUserJobProfile : RestWebPage
     }
 
     /// <summary>
-    /// Process a request to create a user job title given a jobTitleID or as
-    /// fallback a validated and sanitized jobTitleName (pass in GetValidatedJobTitleName result).
+    /// Process a request to create a user job title given a jobTitleID with
+    /// a validated and sanitized jobTitleName (pass in GetValidatedJobTitleName result)
+    /// as a custom listing title.
     /// </summary>
     /// <param name="userID"></param>
     /// <param name="jobTitleID"></param>
@@ -167,81 +168,72 @@ public class RestUserJobProfile : RestWebPage
     /// <returns></returns>
     public dynamic Create(int userID, int jobTitleID, string jobTitleName)
     {
-        var jobTitleExists = false;
-
-        if (jobTitleID == 0)
+        if (jobTitleID == 0 || jobTitleID == LcRest.UserJobTitle.UserGeneratedJobTitleID)
         {
-            // Look-up/new-job-title version: it's possible that the user wrotes a 
-            // job title name without pick-up one from the list, we look-up for that in database
-            // for a jobTitleID,
-            // and may not exists, so we try to create a new one with a template.
+            // new-job-title version: it's possible that the user wrotes a 
+            // job title name without pick-up one from the list, on that case
+            // the user generated job title is assigned and the given title name is
+            // used as listing title
 
             // Name for the job title is required
-            if (String.IsNullOrEmpty(jobTitleName))
+            if (String.IsNullOrWhiteSpace(jobTitleName))
             {
-                throw new HttpException(400, "A Job Title is required");
+                throw new HttpException(400, "[[[A Job Title is required]]]");
             }
 
-            // Search
-            var jobTitle = LcRest.JobTitleSearchResult.SearchBySearchTerm(jobTitleName,
-                LcRest.Search.DEFAULT_LOCATION_LAT, 
-                LcRest.Search.DEFAULT_LOCATION_LNG,
-                LcRest.Search.DEFAULT_LOCATION_SEARCH_DISTANCE,
-                LcRest.Locale.Current).FirstOrDefault();
-            if (jobTitle != null)
+            // Search: we try an exact match, just in case we have already the job title (singular or plural) and
+            // user didn't select it from the list
+            var locale = LcRest.Locale.Current;
+            var jobTitle = LcRest.JobTitle.FindExactName(jobTitleName, locale.languageID, locale.countryID);
+            if (jobTitle.HasValue)
             {
                 // Use the first one
-                jobTitleID = jobTitle.jobTitleID;
-                jobTitleExists = true;
+                jobTitleID = jobTitle.Value;
             }
             else
             {
                 //  Create a new job-title based on the given name #650
-                jobTitleID = LcRest.JobTitle.CreateByName(jobTitleName, LcRest.Locale.Current.languageID, LcRest.Locale.Current.countryID, userID);
-                // Check well know custom error codes
-                if (jobTitleID == -1)
-                {
-                    throw new HttpException(400, String.Format("The Job Title '{0}' is not allowed.", jobTitleName));
-                }
-                LcMessaging.NotifyNewJobTitle(jobTitleName, jobTitleID);
-                jobTitleExists = true;
+                jobTitleID = LcRest.UserJobTitle.UserGeneratedJobTitleID;
             }
         }
+        // Double check that the job title exists
         else
         {
-            // Double check that the job title exists
-            jobTitleExists = LcRest.PublicJobTitle.Get(jobTitleID, LcRest.Locale.Current) != null;
-        }
-
-        if (jobTitleID > 0 && jobTitleExists)
-        {
-            // Read data; It stops on not valid:
-            var data = GetValidatedItemBodyInput();
-
-            LcRest.UserJobTitle.Create(new LcRest.UserJobTitle
+            var existentTitle = LcRest.PublicJobTitle.Get(jobTitleID, LcRest.Locale.Current);
+            if (existentTitle == null)
             {
-                userID = userID,
-                jobTitleID = jobTitleID,
-                intro = data.intro,
-                cancellationPolicyID = data.policyID,
-                collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton,
-                instantBooking = data.instantBooking
-            });
-
-            // If user is just a client, needs to become a professional
-            var user = LcRest.UserProfile.Get(userID);
-            if (!user.isServiceProfessional)
+                throw new HttpException(404, "Job Title not found or disapproved");
+            }
+            // If exists, we use the user given title, with fallback to the one we have for the given jobTitleID
+            else if (String.IsNullOrWhiteSpace(jobTitleName))
             {
-                LcAuth.BecomeProvider(userID);
-                // Set onboarding step as done for 'add job title' to avoid display that screen again to the user:
-                LcData.UserInfo.SetOnboardingStep(userID, "addJobTitle");
-                // Send email as provider
-                LcMessaging.SendWelcomeProvider(userID, WebSecurity.CurrentUserName);
+                jobTitleName = existentTitle.singularName;
             }
         }
-        else
+
+        // Read data; It stops on not valid:
+        var data = GetValidatedItemBodyInput();
+
+        LcRest.UserJobTitle.Create(new LcRest.UserJobTitle
         {
-            throw new HttpException(404, "Job Title not found or disapproved");
+            userID = userID,
+            jobTitleID = jobTitleID,
+            title = jobTitleName,
+            intro = data.intro,
+            cancellationPolicyID = data.policyID,
+            collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton,
+            instantBooking = data.instantBooking
+        });
+
+        // If user is just a client, needs to become a professional
+        var user = LcRest.UserProfile.Get(userID);
+        if (!user.isServiceProfessional)
+        {
+            LcAuth.BecomeProvider(userID);
+            // Set onboarding step as done for 'add job title' to avoid display that screen again to the user:
+            LcData.UserInfo.SetOnboardingStep(userID, "addJobTitle");
+            // Send email as provider
+            LcMessaging.SendWelcomeProvider(userID, WebSecurity.CurrentUserName);
         }
 
         return LcRest.UserJobTitle.GetItem(userID, jobTitleID);
@@ -264,17 +256,17 @@ public class RestUserJobProfile : RestWebPage
         }
         else if (UrlData.Count == 1)
         {
-            throw new HttpException(400, "Invalid Job Title ID");
+            throw new HttpException(400, "[[[Invalid Job Title ID]]]");
         }
         else
         {
-            throw new HttpException(404, "Not Found");
+            throw new HttpException(404, "[[[Not Found]]]");
         }
         int userID = WebSecurity.CurrentUserId;
         // Check that the item exists
         if (LcRest.UserJobTitle.GetItem(userID, itemID) == null)
         {
-            throw new HttpException(404, "Job Title not found");
+            throw new HttpException(404, "[[[Job Title not found]]]");
         }
 
         return itemID;
@@ -289,11 +281,11 @@ public class RestUserJobProfile : RestWebPage
     private dynamic GetValidatedItemBodyInput()
     {
         // Validation rules
-        Validation.Add("intro", Validator.StringLength(2000, 0, "Job title introduction must be fewer than 2000 characters"));
-        Validation.Add("cancellationPolicyID", Validator.Integer("Invalid cancellation policy"));
+        Validation.Add("intro", Validator.StringLength(2000, 0, "[[[Job title introduction must be fewer than 2000 characters]]]"));
+        Validation.Add("cancellationPolicyID", Validator.Integer("[[[Invalid cancellation policy]]]"));
         if (!Request["instantBooking"].IsEmpty() && !Request["instantBooking"].IsBool())
         {
-            ModelState.AddError("instantBooking", "The scheduling option must be a boolean (true for instant booking)");
+            ModelState.AddError("instantBooking", "[[[The scheduling option must be a boolean (true for instant booking)]]]");
         }
 
         if (!Validation.IsValid() || !ModelState.IsValid)

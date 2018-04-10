@@ -16,6 +16,7 @@ using WebMatrix.Data;
 using WebMatrix.Security;
 using WebMatrix.WebData;
 using System.Web.Security;
+using System.Configuration;
 
 public static class LcAuthHelper
 {
@@ -55,6 +56,11 @@ public static class LcAuthHelper
         /// that we need now for the secure session-less REST calls
         /// </summary>
         public string authKey;
+        /// <summary>
+        /// Authorization token, used as value for header `Authorization: Bearer authToken`
+        /// </summary>
+        public string authToken;
+        //public LcAuth.UserAuthorization authorization;
         public LcRest.UserProfile profile;
         public string onboardingStep;
         public int onboardingJobTitleID;
@@ -86,30 +92,33 @@ public static class LcAuthHelper
         // TODO: RE-ENABLE AFTER BETA
         //if (!allowUnconfirmed)
         //    checkAccountIsConfirmed(username);
-            
-        if (LcAuth.Login(username, password, rememberMe)) {
-            
-            var userId = WebSecurity.GetUserId(username);
-            return GetLoginResultForID(userId, returnProfile);
+
+        var auth = LcAuth.Login(username, password, rememberMe);
+        if (auth != null)
+        {
+            return GetLoginResultForID(auth, returnProfile);
         }
-        else {
-            throw new HttpException(400, "[[[Incorrect username or password.]]]");
+        else
+        {
+            throw new HttpException(400, "Incorrect username or password.");
         }
     }
 
-    private static LoginResult GetLoginResultForID(int userID, bool returnProfile)
+    private static LoginResult GetLoginResultForID(LcAuth.UserAuthorization authorization, bool returnProfile)
     {
-        var authKey = LcAuth.GetAutologinKey(userID);
+        var authKey = LcAuth.GetAutologinKey(authorization.userID);
         LcRest.UserProfile profile = null;
             
         if (returnProfile) {
-            profile = LcRest.UserProfile.Get(userID);
+            profile = LcRest.UserProfile.Get(authorization.userID);
         }
 
         return new LoginResult {
-            redirectUrl = getRedirectUrl(userID),
-            userID = userID,
+            redirectUrl = getRedirectUrl(authorization.userID),
+            userID = authorization.userID,
             authKey = authKey,
+            authToken = authorization.token,
+            //authorization = authorization,
             profile = profile,
             onboardingStep = profile == null ? null : profile.onboardingStep
         };
@@ -118,6 +127,7 @@ public static class LcAuthHelper
 
     #region Logout
     public static void Logout() {
+        LcAuth.RemovesCurrentUserAuthorization();
         // Log out of the current user context
         WebSecurity.Logout();
         Session.Clear();
@@ -232,13 +242,13 @@ public static class LcAuthHelper
     }
     const string UserIsServiceProfessionalClientMessage = @"
         [[[We see one of our service professionals has already scheduled services for you in the past.
-        We've just sent an invitation to create your account to {0}.
-        Please follow its instructions. We can't wait to get you on board!]]]
+        We've just sent an invitation to create your account to %0.
+        Please follow its instructions. We can't wait to get you on board!|||{0}]]]
     ";
     const string UserIsSubscriberMessage = @"
         [[[We see you have subscribed previously to our newsletter or referrenced a service professional.
-        We've just sent an invitation to create your account to {0}.
-        Please follow its instructions. We can't wait to get you on board!]]]
+        We've just sent an invitation to create your account to %0.
+        Please follow its instructions. We can't wait to get you on board!|||{0}]]]
     ";
     /// <summary>
     /// Convert a user record with 'Not Enabled Account' into a standard enabled account. See IsUserButNotEnabledAccount
@@ -360,6 +370,7 @@ public static class LcAuthHelper
         var facebookAccessToken = Request.Form["facebookAccessToken"];
         var email = Request.Form["email"];
         var atBooking = Request.Form["atBooking"].AsBool();
+        var signupMessageEmail = ConfigurationManager.AppSettings["SignupMessageEmail"];
 
         //
         // Conditional validations
@@ -471,9 +482,9 @@ public static class LcAuthHelper
 
                     StartOnboardingForUser(userID);
                 }
-
+                
                 // SIGNUP
-                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Sign-up", String.Format(@"
+                LcMessaging.SendMail(signupMessageEmail, "Sign-up", String.Format(@"
                     <html><body><h3>Sign-up.</h3>
                     <strong>This user was already in the database, is re-registering itself again!</strong><br/>
                     <dl>
@@ -582,7 +593,11 @@ public static class LcAuthHelper
 
             // Performs system login, using the autologin info since
             // there is no password here.
-            var ret = GetLoginResultForID(user.UserID, returnProfile);
+            var ret = GetLoginResultForID(new LcAuth.UserAuthorization
+            {
+                userID = user.UserID,
+                token = LcAuth.RegisterAuthorizationForUser(user.UserID)
+            }, returnProfile);
             LcAuth.Autologin(ret.userID.ToString(), ret.authKey);
             return ret;
         }

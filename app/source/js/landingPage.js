@@ -56,7 +56,6 @@ var appInit = function appInit() {
 
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
-    //require('./utils/pressEnterBindingHandler').plugIn(ko);
 
     // Scroll to element when clicking a usual fragment link (not a page link)
     var scrollToElement = require('./utils/scrollToElement');
@@ -110,11 +109,12 @@ var appInit = function appInit() {
         .show({ route: {} });
     };
 
-    // Try to restore a user session ('remember login')
-    var session = require('./data/session');
-    session.restore()
-    .then(launchPage)
-    .catch(alertError);
+    try {
+        launchPage();
+    }
+    catch (ex) {
+        alertError(ex);
+    }
 
     // DEBUG
     window.app = app;

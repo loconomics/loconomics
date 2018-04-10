@@ -171,6 +171,22 @@ app.successSave = function successSave(settings) {
         this.performsNavBarBack({ silentMode: true });
 };
 
+/**
+ * Placeholder for some clean-up tasks executed before the app runs, general,
+ * like data changes, local storage
+ */
+function cleanUpBeforeRun() {
+    try {
+        // As of #587, announcement for first-time users was removed. Remove the
+        // local data about that too
+        // TODO: To be removed after had this code for a while in the wild
+        delete localStorage.sanFranciscoLaunchPopup;
+    }
+    catch (ex) {
+        // do not bother with errors here, it doesn't matters
+    }
+}
+
 /** App Init **/
 var appInit = function appInit() {
     /* eslint max-statements:"off", complexity:"off" */
@@ -239,7 +255,6 @@ var appInit = function appInit() {
 
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
-    require('./utils/pressEnterBindingHandler').plugIn(ko);
 
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -492,7 +507,6 @@ var appInit = function appInit() {
             // Now we are ready with values in place
             // Resume onboarding
             // Set-up onboarding and current step, if any
-            onboarding.init(app);
             onboarding.setup({
                 isServiceProfessional: user.isServiceProfessional(),
                 jobTitleID: jobTitleID,
@@ -565,15 +579,40 @@ var appInit = function appInit() {
         });
     };
 
+    cleanUpBeforeRun();
+
+    // keep track if a login was requested
+    var loginRequired = false;
     // Try to restore a user session ('remember login')
     var session = require('./data/session');
     session.restore()
     .then(preloadUserProfile)
     .then(setupOnboarding)
+    .catch((exception) => {
+        // There are known exceptions from session.restore, that prevents loading profile
+        // and onboarding:
+        // The exception can be of type BadAuthorization or NotFound.
+        // There is no problem with NotFound, is just anonymous user:
+        if (exception.name === 'NotFound') {
+            // recover from error just continuing
+            return;
+        }
+        else if (exception.name === 'BadAuthorization') {
+            // BadAuthorization means that there was a saved authorization but is
+            // invalid in format, requiring to re-login the user
+            loginRequired = true;
+            // Code after initialization will redirect to login
+        }
+    })
     .then(app.shell.run.bind(app.shell))
     .then(connectUserNavbar)
     .then(resumeOnboarding)
     .then(setAppAsReady)
+    .then(() => {
+        if (loginRequired) {
+            app.shell.go('/login');
+        }
+    })
     .catch(alertError);
 
     // DEBUG

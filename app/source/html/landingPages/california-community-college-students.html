@@ -1,20 +1,30 @@
 @render('../parts/landingPageHead.html')
 <div id="landingPage" data-activity="california-community-college-students" class="LandingPage">
     <div role="main">
-        <div class="landingpage-background">
+        <div class="landingpage-background ccc-partner-background">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-7 col-sm-reset landingpage-copy">
-                        <div class="landingpage-brand"></div>
-                        <div class="landingpage-copyBackground">
-                            <h1 class="landingpage-title">Welcome, California Community Colleges</h1>
-                            <p class="landingpage-tagline">Find clients, community, tools and resources. Grow and manage your business on your terms.</p>
-                        </div>
+                    <div class="col-md-7 col-sm-reset landingpage-copy-partners">
+                        <div class="landingpage-brand ccc-logo"></div>
+                        <h1 class="landingpage-title">Find work, grow your skills</h1>
+                        <p class="landingpage-tagline">Clients, community, tools and resources. Grow and manage your business on your terms.</p>
+                        <p class="landingpage-tagline landingpage-poweredby">Powered by:</p>
+                        <div class="landingpage-brand logo-small"></div>
                     </div>
                     <div class="col-md-5">
                         <app-signup params="isCountryVisible: false, onSignedUp: redirect, profile: profile, isCccMember: true">
                             <h2 class="sr-only">Sign up for Loconomics</h2>
-                            <h5 class="SignupLogin-prompt">Which community college are you attending?</h5>
+                            <h5 class="SignupLogin-prompt">I'm a:</h5>
+                            <div class="form-group">
+                                <select class="form-control" data-bind="value: cccUserType">
+                                    <option value="student">Student</option>
+                                    <option value="professor">Professor</option>
+                                    <option value="administrator">Administrator</option>
+                                </select>
+                                <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                            </div>
+
+                            <h5 class="SignupLogin-prompt">At which college?</h5>
                             <div class="form-group">
                                 <select class="form-control" data-bind="value: institutionID">
                                     <option selected disabled value="">Choose one</option>
@@ -46,6 +56,7 @@
                                 </select>
                                 <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                             </div>
+                            <!-- ko if: isStudent -->
                             <h5 class="SignupLogin-prompt">What is your primary field of study?</h5>
                             <div class="form-group">
                                 <select class="form-control" data-bind="value: fieldOfStudyID">
@@ -230,36 +241,43 @@
                                 </select>
                                 <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                             </div>
-                            <h5 class="SignupLogin-prompt">I'm a:</h5>
+                            <h5 class="SignupLogin-prompt">Gender:</h5>
                             <div class="form-group">
-                                <select class="form-control" data-bind="value: cccUserType">
-                                    <option value="student">Student</option>
-                                    <option value="professor">Professor</option>
-                                    <option value="administrator">Administrator</option>
+                                <select class="form-control" data-bind="value: genderID">
+                                    <option selected disabled value="">Choose one</option>
+                                    <option value="1">Female</option>
+                                    <option value="2">Male</option>
+                                    <option value="3">Non-binary</option>
                                 </select>
                                 <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                             </div>
+                            <h5 class="SignupLogin-prompt">Date of Birth:</h5>
+                            <div class="form-group">
+                                <input type="date" class="form-control" data-bind="value: birthDate">
+                                <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                            </div>
+                            <!-- /ko -->
                         </app-signup>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="landingpage-hiw">
+        <div class="landingpage-hiw hiw-ccc">
             <h2 class="landingpage-title">How it works:</h2>
             <div class="container landingpage-hiw-list">
                 <ul class="row list-unstyled">
                     <li class="col-sm-4">
-                        <i aria-hidden="true" class="fa ion ion-ios-list-outline"></i>
+                        <i aria-hidden="true" class="fa ion ion-ios-list-outline hiw-ccc"></i>
                         <h3>Create free listing</h3>
                         <p>It takes five minutes. Show off your skills. Invite your network.</p>
                     </li>
                     <li class="col-sm-4">
-                        <i aria-hidden="true" class="fa ion ion-ios-chatboxes-outline"></i>
+                        <i aria-hidden="true" class="fa ion ion-ios-chatboxes-outline hiw-ccc"></i>
                         <h3>Join the conversation</h3>
                         <p>We host regular, casual meetups & online forums. Build your network in a way that fits your personality.</p>
                     </li>
                     <li class="col-sm-4">
-                        <i aria-hidden="true" class="fa ion ion-arrow-graph-up-right"></i>
+                        <i aria-hidden="true" class="fa ion ion-arrow-graph-up-right hiw-ccc"></i>
                         <h3>Grow your business</h3>
                         <p>Attract and manage clients. Stay organized with our tools. Succeed.</p>
                     </li>
@@ -338,6 +356,7 @@
                 <a class="pressLogo pressLogo-FT" href="https://www.ft.com/content/beb85bdc-1f8e-11e7-b7d3-163f5a7f229c" target="_blank">
                 </a>
         </div>
+        <div class="landingpage-dwm-logo"></div>
     </div>
 </div>
 @render('../parts/landingPageFoot.html')

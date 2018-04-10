@@ -32,7 +32,7 @@ public static class LcAuth
         return "aQ1$" + Membership.GeneratePassword(10, 5);
     }
 
-    public static string AccountLockedErrorMessage = @"Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password";
+    public static string AccountLockedErrorMessage = @"[[[Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password]]]";
     public class RegisteredUser
     {
         public string Email;
@@ -81,6 +81,7 @@ public static class LcAuth
             // with operations done by WebSecurity calls, the first step must
             // be protected manually.
             string token = null;
+            int userid = 0;
 
             try
             {
@@ -90,10 +91,15 @@ public static class LcAuth
                 // Create and associate a new entry in the membership database (is connected automatically
                 // with the previous record created using the automatic UserID generated for it).
                 token = WebSecurity.CreateAccount(email, password, true);
+                userid = WebSecurity.GetUserId(email);
             }
             catch (Exception ex)
             {
                 // Manual rollback previous operation:
+                if (userid > 0)
+                {
+                    RemoveUserAuthorizations(userid);
+                }
                 // If CreateAccount failed, nothing was persisted there so nothing require rollback,
                 // only the UserProfile record
                 db.Execute("DELETE FROM UserProfile WHERE Email like @0", email);
@@ -103,8 +109,6 @@ public static class LcAuth
             }
 
             // Create Loconomics Customer user
-            int userid = WebSecurity.GetUserId(email);
-
             try
             {
                 // Automatic transaction can be used now:
@@ -183,6 +187,7 @@ public static class LcAuth
         {
             throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
+        var userID = WebSecurity.GetUserIdFromPasswordResetToken(token);
         return WebSecurity.ResetPassword(token, password);
     }
 
@@ -193,6 +198,7 @@ public static class LcAuth
         {
             throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
+        var userID = WebSecurity.GetUserId(email);
         return WebSecurity.ChangePassword(email, currentPassword, newPassword);
     }
 
@@ -293,7 +299,7 @@ public static class LcAuth
         return WebSecurity.IsAccountLockedOut(email, 4, 5 * 60);
     }
 
-    public static bool Login(string email, string password, bool persistCookie = false)
+    public static UserAuthorization Login(string email, string password, bool persistCookie = false)
     {
         if (IsAccountLockedOut(email))
             throw new ConstraintException(AccountLockedErrorMessage);
@@ -302,11 +308,19 @@ public static class LcAuth
 
         if (logged)
         {
-            LcData.UserInfo.RegisterLastLoginTime(0, email);
+            var userID = WebSecurity.GetUserId(email);
+            var token = RegisterAuthorizationForUser(userID);
+            LcData.UserInfo.RegisterLastLoginTime(userID, email);
 
             // mark the user as logged in via a normal account,
             // as opposed to via an OAuth or OpenID provider.
             System.Web.HttpContext.Current.Session["OAuthLoggedIn"] = false;
+
+            return new UserAuthorization
+            {
+                userID = userID,
+                token = token
+            };
         }
         else
         {
@@ -321,10 +335,10 @@ public static class LcAuth
                 // and avoiding misperception of 6 allowed attempts).
                 throw new ConstraintException(AccountLockedErrorMessage);
             }
+            return null;
         }
-
-        return logged;
     }
+
     /// <summary>
     /// Check a user autologinkey to performs the automatic login if
     /// match.
@@ -417,29 +431,39 @@ public static class LcAuth
         var auth = Request.Headers["Authorization"];
         if (!String.IsNullOrEmpty(auth))
         {
-            var m = System.Text.RegularExpressions.Regex.Match(auth, "^LC alu=([^,]+),alk=(.+)$");
-            if (m.Success)
+            // First: support standard authorization
+            if (!StartSessionWithAuthorizationHeader(auth))
             {
-                var alu = m.Groups[1].Value;
-                var alk = m.Groups[2].Value;
-                LcAuth.Autologin(alu, alk);
+                // Legacy 'header based on autologin scheme' feature as fallback (to be removed as soon as Apps using it are updated)
+                var m = System.Text.RegularExpressions.Regex.Match(auth, "^LC alu=([^,]+),alk=(.+)$");
+                if (m.Success)
+                {
+                    var alu = m.Groups[1].Value;
+                    var alk = m.Groups[2].Value;
+                    LcAuth.Autologin(alu, alk);
+                }
             }
         }
         else
         {
-            // Using custom headers first, best for security using the REST API.
             var Q = Request.QueryString;
-            var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
-            var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
-
-            // Autologin feature for anonymous sessions with autologin parameters on request
-            if (!Request.IsAuthenticated
-                && alk != null
-                && alu != null)
+            // First: support standard authorization
+            if (!StartSessionWithAuthorizationQueryString(Q))
             {
-                // 'alk' url parameter stands for 'Auto Login Key'
-                // 'alu' url parameter stands for 'Auto Login UserID'
-                LcAuth.Autologin(alu, alk);
+                // Legacy 'autologin' feature as fallback (to be removed as soon as Apps and emails using it are updated)
+                // Using custom headers first, best for security using the REST API.
+                var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
+                var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
+
+                // Autologin feature for anonymous sessions with autologin parameters on request
+                if (!Request.IsAuthenticated
+                    && alk != null
+                    && alu != null)
+                {
+                    // 'alk' url parameter stands for 'Auto Login Key'
+                    // 'alu' url parameter stands for 'Auto Login UserID'
+                    LcAuth.Autologin(alu, alk);
+                }
             }
         }
     }
@@ -522,4 +546,245 @@ public static class LcAuth
             return db.QueryValue("SELECT userid FROM webpages_Membership WHERE userid = @0", userID) != null;
         }
     }
+
+    #region Token based Auth #827
+    public static int? GetUserIdByAuthorizationToken(string token)
+    {
+        using (var db = new LcDatabase())
+        {
+            return (int?)db.QueryValue("SELECT UserID FROM authorizations WHERE DeletedDate is null AND token like @0", token);
+        }
+    }
+
+    /// <summary>
+    /// Starts an asp.net FormsAuthentication session for the given userID,
+    /// if exists with email (fail silently) and is not locked out.
+    /// Throws on account locked out.
+    /// Register last login time when valid
+    /// </summary>
+    /// <param name="userID"></param>
+    static bool StartSessionAsUser(int userID)
+    {
+        string userEmail;
+
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get user email by userid
+            userEmail = db.QueryValue(@"
+                SELECT  email
+                FROM    userprofile
+                WHERE   userid = @0
+            ", userID);
+        }
+
+        // Invalid ID? Out
+        if (String.IsNullOrEmpty(userEmail))
+            return false;
+
+        if (IsAccountLockedOut(userEmail))
+            throw new ConstraintException(AccountLockedErrorMessage);
+
+        // Clear current session to avoid conflicts:
+        if (HttpContext.Current.Session != null)
+        {
+            HttpContext.Current.Session.Clear();
+        }
+
+        // New authentication cookie: Logged!
+        System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
+        LcData.UserInfo.RegisterLastLoginTime(userID, userEmail);
+        return true;
+    }
+
+    public class UserAuthorization
+    {
+        public int userID;
+        public string token;
+    }
+
+    static UserAuthorization GetUserAuthorizationFromHeader(string authorizationHeaderValue)
+    {
+        if (String.IsNullOrWhiteSpace(authorizationHeaderValue)) return null;
+
+        var tokenMatch = System.Text.RegularExpressions.Regex.Match(authorizationHeaderValue, "^Bearer (.+)$");
+        if (tokenMatch.Success)
+        {
+            var token = tokenMatch.Groups[1].Value;
+            var userID = LcAuth.GetUserIdByAuthorizationToken(token);
+            if (userID.HasValue)
+            {
+                return new UserAuthorization
+                {
+                    userID = userID.Value,
+                    token = token
+                };
+            }
+        }
+        return null;
+    }
+
+    static UserAuthorization GetUserAuthorizationFromQueryString(System.Collections.Specialized.NameValueCollection queryString)
+    {
+        // #827 Simple token Authorization header
+        var token = queryString["access_token"];
+        if (!String.IsNullOrEmpty(token))
+        {
+            var userID = LcAuth.GetUserIdByAuthorizationToken(token);
+            if (userID.HasValue)
+            {
+                return new UserAuthorization
+                {
+                    userID = userID.Value,
+                    token = token
+                };
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Validate the given bearer authorization value (the value as is in the Authorization header, including the
+    /// Bearer type) and start a session for the user
+    /// As of #827
+    /// </summary>
+    /// <param name="authorizationHeaderValue"></param>
+    /// <returns></returns>
+    static bool StartSessionWithAuthorizationHeader(string authorizationHeaderValue)
+    {
+        // #827 Simple token Authorization header
+        var auth = GetUserAuthorizationFromHeader(authorizationHeaderValue);
+        if (auth != null)
+        {
+            return StartSessionAsUser(auth.userID);
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Validate a bearer token authorization value as part of the given query string, and start a session for the user.
+    /// Supported query string key is access_token
+    /// As of #827
+    /// </summary>
+    /// <param name="authorizationHeaderValue"></param>
+    /// <returns></returns>
+    static bool StartSessionWithAuthorizationQueryString(System.Collections.Specialized.NameValueCollection queryString)
+    {
+        var auth = GetUserAuthorizationFromQueryString(queryString);
+        if (auth != null)
+        {
+            return StartSessionAsUser(auth.userID);
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Remove all current authorization tokens for the user
+    /// </summary>
+    /// <param name="userID"></param>
+    static void RemoveUserAuthorizations(int userID)
+    {
+        using (var db = new LcDatabase())
+        {
+            db.Execute("UPDATE authorizations SET DeletedDate=@1 WHERE UserID=@0", userID, DateTimeOffset.Now);
+        }
+    }
+
+    /// <summary>
+    /// Removes the given authorization token
+    /// </summary>
+    /// <param name="auth"></param>
+    static void RemoveUserAuthorization(UserAuthorization auth)
+    {
+        using (var db = new LcDatabase())
+        {
+            db.Execute("UPDATE authorizations SET DeletedDate=@0 WHERE UserID=@1 AND Token=@2", DateTimeOffset.Now, auth.userID, auth.token);
+        }
+    }
+
+    /// <summary>
+    /// Gets the user and authorization from current web context/request
+    /// </summary>
+    static UserAuthorization GetCurrentUserAuthorization()
+    {
+        var Request = HttpContext.Current.Request;
+        var header = Request.Headers["Authorization"];
+        var auth = GetUserAuthorizationFromHeader(header);
+        return auth ?? GetUserAuthorizationFromQueryString(Request.QueryString);
+    }
+
+    /// <summary>
+    /// Removes the user authorization from current web context/request
+    /// </summary>
+    public static void RemovesCurrentUserAuthorization()
+    {
+        var auth = GetCurrentUserAuthorization();
+        if (auth != null)
+        {
+            RemoveUserAuthorization(auth);
+        }
+    }
+
+    /// <summary>
+    /// Creates an authorization record for the given userID using the current
+    /// token generator.
+    /// </summary>
+    /// <param name="userID"></param>
+    public static string RegisterAuthorizationForUser(int userID)
+    {
+        RemovesCurrentUserAuthorization();
+        var token = CreateUserGuidToken(userID);
+        var userAgent = HttpContext.Current.Request.UserAgent;
+        var userAddress = HttpContext.Current.Request.UserHostAddress;
+        using (var db = new LcDatabase())
+        {
+            db.Execute(@"INSERT INTO authorizations
+                (Token, UserID, Scope, CreatedDate, ClientAddress, UserAgent)
+                VALUES (@0, @1, @2, @3, @4, @5)",
+                token, userID, "", DateTimeOffset.Now, userAddress, userAgent);
+        }
+        return token;
+    }
+
+    /// <summary>
+    /// Creates a unique authorization token for a user using its ID and password.
+    /// #827
+    /// The internal generation of the token is based on the original Autologin, using encryption
+    /// of the (already) encrypted password made suitable for use in URL, but on this case it
+    /// includes the userID along the password as the text to encrypt and adapt.
+    /// Length of the result is ever 216 ASCII characters.
+    /// </summary>
+    /// <param name="userid"></param>
+    /// <returns></returns>
+    public static string CreateTokenFromUserPassword(int userID)
+    {
+        try
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var p = db.QueryValue(@"
+                    SELECT  Password
+                    FROM    webpages_Membership
+                    WHERE   UserId=@0
+                ", userID);
+                return LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(userID.ToString() + "::::" + p));
+            }
+        }
+        catch { }
+        return null;
+    }
+
+    /// <summary>
+    /// Creates a token based on a new GUID and the userID.
+    /// Benefit from CreateTokenFromUserPassword, this is different any time is generated.
+    /// Note: using GUID should not require adding the userID, even maybe don't use an encryption and
+    /// sanitization for URL, but just reusing that until be sure
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns></returns>
+    public static string CreateUserGuidToken(int userID)
+    {
+        var guid = Guid.NewGuid();
+        return LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(userID.ToString() + "::::" + guid));
+    }
+    #endregion
 }

@@ -4,6 +4,14 @@ var UserJobTitle = require('../../js/models/UserJobTitle');
 var ProfileAlert = require('../../js/models/ProfileAlert');
 
 describe('models/UserJobTitle', function() {
+    describe('userListingID', function() {
+        it('should be a model field', function() {
+            var j = new UserJobTitle({ userListingID: 42 });
+
+            expect(j.userListingID()).to.equal(42);
+        });
+    });
+
     describe('userID', function() {
         it('should be a model field', function() {
             var j = new UserJobTitle({ userID: 42 });
