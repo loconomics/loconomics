@@ -28,8 +28,10 @@
     </div>
 </div>
 <div class="BadgeViewer-details" data-bind="visible: viewMode() === 'fullDetails', if: viewMode() === 'fullDetails'">
-    <img data-bind="attr: { src: image }" aria-hidden="true">
-    <h2><span data-bind="text: badgeName"></span></h2>
+    <div class="SectionHeading">
+        <img data-bind="attr: { src: image }" aria-hidden="true">
+        <h2><span data-bind="text: badgeName"></span></h2>
+    </div>
     <h3>Evidence</h3>
     <p data-bind="text: narrative"></p>
     <ul data-bind="foreach: evidence">

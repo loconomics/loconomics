@@ -14,15 +14,29 @@
         }
         margin-right: 0;
     }
-    .BadgeViewer-viewDetails {
+    .BadgeViewer-details {
         .SectionHeading {
-            >img {
-                display: table-cell;
-                width: 20%;
-                height: 10em;
+            > img {
+                padding: 0 20% 12px;
+                width: 100%;
             }
-            >h2 {
-                width: 80%;
+
+            > h2 {
+                display: table-row !important;
+            }
+
+            @media screen and (min-width: 420px) {
+                > img {
+                    display: table-cell;
+                    margin: 0 15px 0 0;
+                    padding: 0;
+                    max-width: 100px;
+                    width: auto;
+                }
+                > h2 {
+                    width: 80%;
+                    display: table-cell !important;
+                }
             }
         }
 
