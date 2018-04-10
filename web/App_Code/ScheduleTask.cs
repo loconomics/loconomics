@@ -655,6 +655,13 @@ public class ScheduleTask
             Tasks.UserPaymentPlanSubscriptionUpdatesTask.Run(logger);
         }
 
+        // Earnings reminder are sent only two times a month, so we check the day and the hour
+        // (the hour to make it just once at the matched day, since the task executes every hour)
+        if ((DateTime.Now.Day == 1 || DateTime.Now.Day == 15) && DateTime.Now.Hour == 7)
+        {
+            Tasks.EarningsEntryReminderTask.Run(logger);
+        }
+
         /*
          * Task Ended
          */
