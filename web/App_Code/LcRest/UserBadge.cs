@@ -82,6 +82,9 @@ namespace LcRest
         " + sqlWhere + @"
                 and b.solutionID = @3
         ";
+        const string sqlAndPublicOnly = @"
+                AND (b.expiryDate is null OR b.expiryDate > getdate())
+        ";
         public static UserBadge Get(int userID, int userBadgeID, int languageID, int countryID)
         {
             using (var db = new LcDatabase())
@@ -97,12 +100,13 @@ namespace LcRest
         /// <param name="userListingID"></param>
         /// <param name="languageID"></param>
         /// <param name="countryID"></param>
+        /// <param name="onlyPublicOnes">Request only badges that can be displayed publicly</param>
         /// <returns></returns>
-        public static IEnumerable<UserBadge> ListByListing(int userID, int userListingID, int languageID, int countryID)
+        public static IEnumerable<UserBadge> ListByListing(int userID, int userListingID, int languageID, int countryID, bool onlyPublicOnes = false)
         {
             using (var db = new LcDatabase())
             {
-                var sql = sqlSelect + sqlByListing;
+                var sql = sqlSelect + sqlByListing + (onlyPublicOnes ? sqlAndPublicOnly : "");
                 return db.Query(sql, userID, languageID, countryID, userListingID).Select(FromDB);
             }
         }
