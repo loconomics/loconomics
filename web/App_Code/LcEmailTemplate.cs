@@ -503,6 +503,16 @@ public static class LcEmailTemplate
                 return LcUrl.AppUrl + "becomeOwner";
             }
         }
+        /// <summary>
+        /// Brings the professional to enter earnings.
+        /// </summary>
+        public string viewEnterEarningsURL
+        {
+            get
+            {
+                return LcUrl.AppUrl + "earnings-add";
+            }
+        }
         #endregion
     }
 

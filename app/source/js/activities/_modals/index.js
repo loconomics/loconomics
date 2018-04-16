@@ -8,7 +8,6 @@
 import * as activities from '../index';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
-import { show as showAnnouncement } from '../../modals/announcement';
 import { show as showConfirm } from '../../modals/confirm';
 import { show as showError } from '../../modals/error';
 import { show as showNotification } from '../../modals/notification';
@@ -26,22 +25,6 @@ export default class _ModalsActivity extends Activity {
         super($activity, app);
         this.accessLevel = UserType.loggedUser;
         this.title = 'Testing Modals';
-    }
-
-    /// ANNOUNCEMENT
-    announcement1() {
-        showAnnouncement();
-    }
-
-    announcement2() {
-        // Content from home.js San Francisco Launch Popup
-        showAnnouncement({
-            message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland. Click below to learn more.',
-            primaryButtonText: 'I\'m a service professional',
-            primaryButtonLink: '#!/learnMoreProfessionals',
-            secondaryButtonText: 'I\'m a potential client',
-            secondaryButtonLink: '#!/'
-        });
     }
 
     /// CONFIRM
