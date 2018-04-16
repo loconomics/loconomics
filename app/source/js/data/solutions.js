@@ -4763,3 +4763,14 @@ export function item(id) {
       local: new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME)
   });
 }
+
+var textSearch = require('../utils/textSearch');
+/**
+ * Retrieves information for a job title search
+ * @param {string} searchTerm job title search term to retrieve
+ * @returns {Promise}
+ */
+exports.solutionsAutocomplete = function(searchTerm) {
+    const doSearch = textSearch.searchFor(searchTerm);
+    return Promise.resolve(DUMMY_DATA_SOLUTIONS.filter((item) => doSearch.allAtWords(item.name)));
+};
