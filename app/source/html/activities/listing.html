@@ -153,10 +153,17 @@
                         <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials and verifications</h2>
                     </div>
                 </div>
-                <div class="container-fluid" data-bind="visible: selectedJobTitle() && selectedJobTitle().licensesCertifications().length">
+                <div class="container-fluid" data-bind="visible: $root.userBadges().length">
                     <h3>Professional credentials</h3>
                     <p>These are verified according to our <a href="#!terms/background-check-policy" target="_blank">Background Check and License Verification policy</a>.</p>
-                    <ul data-bind="template: { name: 'license-card-template', foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications }"></ul>
+                    <ul class="list-unstyled row" data-bind="foreach: $root.userBadges">
+                        <li class="col-sm-6">
+                            <badge-viewer params="
+                                assertionData: assertion,
+                                viewMode: 'card',
+                                detailsURL: $root.getBadgeDetailsURL(assertion)"></badge-viewer>
+                        </li>
+                    </ul>
                 </div>
                 <div class="container-fluid" data-bind="visible: education().length">
                     <div class="SectionHeading"><h3>Education credentials</h3></div>
