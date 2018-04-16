@@ -46,7 +46,7 @@ A.prototype.loadData = function(userID, jobTitleID) {
     this.viewModel.reset();
     if (userID) {
         this.viewModel.isLoading(true);
-        users.getUser(userID, { includeFullJobTitleID: -1 })
+        users.getUser(userID, { includeFullJobTitleID: jobTitleID })
         .then(function(data) {
             var pu = new PublicUser(data);
             this.viewModel.user(pu);
