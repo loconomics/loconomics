@@ -1369,7 +1369,7 @@ namespace CalendarDll
         public DateTimeOffset DateTimeOffsetFromCalDateTime(IDateTime time)
         {
             var utc = new DateTimeOffset(time.AsUtc, TimeSpan.Zero);
-            var zone = GetTimeZone(time.TimeZoneName);
+            var zone = String.IsNullOrEmpty(time.TimeZoneName) ? null : GetTimeZone(time.TimeZoneName);
             if (zone == null)
             {
                 return utc;
@@ -2105,12 +2105,13 @@ namespace CalendarDll
                             //// Convert the whole event to our System Time Zone before being inserted.
                             //UpdateEventDatesToSystemTimeZone(currEvent);
 
+                            var startTime = DateTimeOffsetFromCalDateTime(currEvent.Start);
+
                             // Calculate the end date basing in the real End date set or the Start date
                             // plus the event Duration. For case of error (no dates) gets as default
                             // the minimum date (and will be discarded)
-                            var calculatedEndDate = currEvent.End.HasDate ? currEvent.End.Value :
-                                currEvent.Start.HasDate ? currEvent.Start.Value.Add(currEvent.Duration) :
-                                DateTime.MinValue;
+                            var calculatedEndDate = currEvent.End.HasDate ? DateTimeOffsetFromCalDateTime(currEvent.End) :
+                                startTime.Add(currEvent.Duration);
 
                             // Check if this is a past event that doesn't need to be imported (only non recurrent ones)
                             if (calculatedEndDate < DateTime.Now
@@ -2127,11 +2128,11 @@ namespace CalendarDll
                                 CreatedDate = DateTimeOffset.Now,
                                 UID = currEvent.Uid,
                                 UserId = user.Id,
-                                StartTime = currEvent.Start.Date.Year != 1 ? currEvent.Start.Date.Add(currEvent.Start.Value.TimeOfDay) : DateTimeOffset.Now,
+                                StartTime = startTime,
                                 // IagoSRL @Loconomics: Added TimeZone based on the StartTime TZID (we suppose endtime use the same, is the most common,
                                 // and our back-end calendar doesn't support one timezone per start-end date)
                                 TimeZone = currEvent.Start.TzId,
-                                EndTime = calculatedEndDate, // currEvent.End.Date.Year != 1 ? currEvent.End.Date.Add(currEvent.End.TimeOfDay) : DateTime.Now,
+                                EndTime = calculatedEndDate,
                                 Organizer = (currEvent.Organizer != null) ? currEvent.Organizer.CommonName : string.Empty,
                                 CalendarAvailabilityTypeID = getAvailabilityId(currEvent),
                                 Transparency = getTransparency((int)currEvent.Status),
@@ -2184,12 +2185,13 @@ namespace CalendarDll
                                 {
                                     ientry++;
 
+                                    var startTime = DateTimeOffsetFromCalDateTime(fbentry.StartTime);
+
                                     // Calculate the end date basing in the real End date set or the Start date
                                     // plus the entry Duration. For case of error (no dates) gets as default
                                     // the minimum date (and will be discarded)
-                                    var calculatedEndDate = fbentry.EndTime.HasDate ? fbentry.EndTime.Value :
-                                        fbentry.StartTime.HasDate ? fbentry.StartTime.Value.Add(fbentry.Duration) :
-                                        DateTime.MinValue;
+                                    var calculatedEndDate = fbentry.EndTime.HasDate ? DateTimeOffsetFromCalDateTime(fbentry.EndTime) :
+                                        startTime.Add(fbentry.Duration);
 
                                     // Check if this is a past entry that doesn't need to be imported
                                     if (calculatedEndDate < DateTime.Now)
@@ -2214,9 +2216,9 @@ namespace CalendarDll
                                         ModifyBy = "importer",
                                         UID = fb.Uid + "_freebusyentry:" + ientry.ToString(),
                                         UserId = user.Id,
-                                        StartTime = fbentry.StartTime.Value,
+                                        StartTime = startTime,
                                         TimeZone = fbentry.StartTime.TzId,
-                                        EndTime = calculatedEndDate, // (fbentry.EndTime != null ? fbentry.EndTime.Value : fbentry.StartTime.Value.Add(fbentry.Duration)),
+                                        EndTime = calculatedEndDate,
                                         Organizer = (fb.Organizer != null) ? fb.Organizer.CommonName : string.Empty,
                                         CalendarAvailabilityTypeID = (int)availID,
                                         Transparency = false,
