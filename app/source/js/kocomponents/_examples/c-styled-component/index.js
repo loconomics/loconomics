@@ -22,7 +22,7 @@ import template from './template.html';
 // to import them from here, like
 // import '../another/component';
 
-const className = 'ComponentExample';
+const cssClass = 'ComponentExample';
 const TAG_NAME = 'component-example';
 
 /**
@@ -38,14 +38,14 @@ export default class ComponentExample extends Komponent {
     // be attached to the element tag, not just to the content; you
     // can set a class name directly on the template, but that applies only to
     // content, not to the element like
-    // <component-example><p class="ClassName"></p></component-example>
+    // <component-example><p class="CssClass"></p></component-example>
     // while you may need it in the element, like
-    // <component-example class="ClassName"><p></p></component-example>
+    // <component-example class="CssClass"><p></p></component-example>
     // This is what this property does.
     // Sometimes is not needed, though, depends on how is styled but remember
     // that custom-elements without explicit styles behave by default
     // as 'display:inline' because of browsers engines defaults.
-    static get className() { return className; }
+    static get cssClass() { return cssClass; }
 
     static get template() { return template; }
 

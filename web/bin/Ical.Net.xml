@@ -42,6 +42,26 @@
             A class that represents an RFC 5545 VJOURNAL component.
             </summary>
         </member>
+        <member name="M:Ical.Net.Journal.#ctor">
+            <summary>
+            Constructs an Journal object, with an iCalObject
+            (usually an iCalendar object) as its parent.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.VTimeZoneInfo.TimeZoneName">
+            <summary>
+            Returns the name of the current Time Zone.
+            <example>
+                The following are examples:
+                <list type="bullet">
+                    <item>EST</item>
+                    <item>EDT</item>
+                    <item>MST</item>
+                    <item>MDT</item>
+                </list>
+            </example>
+            </summary>
+        </member>
         <member name="T:Ical.Net.DataTypes.Attachment">
             <summary>
             Attachments represent the ATTACH element that can be associated with Alarms, Journals, Todos, and Events. There are two kinds of attachments:
@@ -169,9 +189,6 @@
             class handles time zone differences, and integrates seamlessly into the iCalendar framework.
             </remarks>
             </summary>
-        </member>
-        <member name="M:Ical.Net.DataTypes.CalDateTime.Equals(System.Object)">
-            <summary>Equality is determined by the unambiguous UTC representation of the time. Time zone string values are ignored.</summary>
         </member>
         <member name="P:Ical.Net.DataTypes.CalDateTime.AsSystemLocal">
             <summary>
@@ -882,6 +899,194 @@
             Adds a parameter to the iCalendar object.
             </summary>
         </member>
+        <member name="P:Ical.Net.Interfaces.Components.IAlarmContainer.Alarms">
+            <summary>
+            A list of <see cref="!:Components.Alarm"/>s for this recurring component.
+            </summary>
+        </member>
+        <member name="M:Ical.Net.Interfaces.Components.IAlarmContainer.PollAlarms(Ical.Net.Interfaces.DataTypes.IDateTime,Ical.Net.Interfaces.DataTypes.IDateTime)">
+             <summary>
+             Polls <see cref="T:Ical.Net.Alarm"/>s for occurrences within the <see cref="!:Evaluate"/>d
+             time frame of this <see cref="T:Ical.Net.RecurringComponent"/>.  For each evaluated
+             occurrence if this component, each <see cref="T:Ical.Net.Alarm"/> is polled for its
+             corresponding alarm occurrences.
+             <para>
+             <example>
+             The following is an example of polling alarms for an event.
+             <code>
+             IICalendar iCal = iCalendar.LoadFromUri(new Uri("http://somesite.com/calendar.ics"));
+             IEvent evt = iCal.Events.First();
+            
+             // Poll the alarms on the event
+             List<AlarmOccurrence> alarms = evt.PollAlarms();
+             
+             // Here, you would eliminate alarms that the user has already dismissed.
+             // This information should be stored somewhere outside of the .ics file.
+             // You can use the component's UID, and the AlarmOccurence date/time 
+             // as the primary key for each alarm occurrence.
+             
+             foreach(AlarmOccurrence alarm in alarms)
+                 MessageBox.Show(alarm.Component.Summary + "\n" + alarm.DateTime);</AlarmOccurrence>
+             </code>
+             </example>
+             </para>
+             </summary>
+            <param name="startTime">The earliest allowable alarm occurrence to poll, or <c>null</c>.</param>
+            <param name="endTime"></param>
+            <returns>A List of <see cref="T:Ical.Net.DataTypes.AlarmOccurrence"/> objects, one for each occurrence of the <see cref="T:Ical.Net.Alarm"/>.</returns>
+        </member>
+        <member name="M:Ical.Net.Interfaces.Components.IAlarm.GetOccurrences(Ical.Net.Interfaces.Components.IRecurringComponent,Ical.Net.Interfaces.DataTypes.IDateTime,Ical.Net.Interfaces.DataTypes.IDateTime)">
+            <summary>
+            Gets a list of alarm occurrences for the given recurring component, <paramref name="rc"/>
+            that occur between <paramref name="fromDate"/> and <paramref name="toDate"/>.
+            </summary>
+        </member>
+        <member name="M:Ical.Net.Interfaces.Components.IAlarm.Poll(Ical.Net.Interfaces.DataTypes.IDateTime,Ical.Net.Interfaces.DataTypes.IDateTime)">
+            <summary>
+            Polls the <see cref="!:Components.Alarm"/> component for alarms that have been triggered
+            since the provided <paramref name="fromDate"/> date/time.  If <paramref name="fromDate"/>
+            is null, all triggered alarms will be returned.
+            </summary>
+            <param name="fromDate">The earliest date/time to poll trigerred alarms for.</param>
+            <param name="toDate">The latest date/time to poll trigerred alarms for.</param>
+            <returns>A list of <see cref="T:Ical.Net.DataTypes.AlarmOccurrence"/> objects, each containing a triggered alarm.</returns>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.DtEnd">
+            <summary>
+            The end date/time of the event.
+            <note>
+            If the duration has not been set, but
+            the start/end time of the event is available,
+            the duration is automatically determined.
+            Likewise, if an end time and duration are available,
+            but a start time has not been set, the start time
+            will be extrapolated.
+            </note>
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.Duration">
+            <summary>
+            The duration of the event.
+            <note>
+            If a start time and duration is available,
+            the end time is automatically determined.
+            Likewise, if the end time and duration is
+            available, but a start time is not determined,
+            the start time will be extrapolated from
+            available information.
+            </note>
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.End">
+            <summary>
+            An alias to the DTEnd field (i.e. end date/time).
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.IsAllDay">
+            <summary>
+            Returns true if the event is an all-day event.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.GeographicLocation">
+            <summary>
+            The geographic location (lat/long) of the event.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.Location">
+            <summary>
+            The location of the event.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.Resources">
+            <summary>
+            Resources that will be used during the event.
+            <example>Conference room #2</example>
+            <example>Projector</example>
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.Status">
+            <summary>
+            The status of the event.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.IEvent.Transparency">
+            <summary>
+            The transparency of the event.  In other words,
+            whether or not the period of time this event
+            occupies can contain other events (transparent),
+            or if the time cannot be scheduled for anything
+            else (opaque).
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.ITodo.Completed">
+            <summary>
+            The date/time the todo was completed.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.ITodo.Due">
+            <summary>
+            The due date of the todo item.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.ITodo.Duration">
+            <summary>
+            The duration of the todo item.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.ITodo.GeographicLocation">
+            <summary>
+            The geographic location (lat/long) of the todo item.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.ITodo.Location">
+            <summary>
+            The location of the todo item.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.ITodo.PercentComplete">
+            <summary>
+            A number between 0 and 100 that represents
+            the percentage of completion of this item.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.ITodo.Resources">
+            <summary>
+            A list of resources associated with this todo item.
+            </summary>
+        </member>
+        <member name="P:Ical.Net.Interfaces.Components.ITodo.Status">
+            <summary>
+            The current status of the todo item.
+            </summary>
+        </member>
+        <member name="M:Ical.Net.Interfaces.Components.ITodo.IsCompleted(Ical.Net.Interfaces.DataTypes.IDateTime)">
+            <summary>
+            Use this method to determine if a todo item has been completed.
+            This takes into account recurrence items and the previous date
+            of completion, if any.        
+            <note>
+            This method evaluates the recurrence pattern for this TODO
+            as necessary to ensure all relevant information is taken
+            into account to give the most accurate result possible.
+            </note>
+            </summary>
+            <param name="currDt">The date and time to test.</param>
+            <returns>True if the todo item has been completed</returns>
+        </member>
+        <member name="M:Ical.Net.Interfaces.Components.ITodo.IsActive(Ical.Net.Interfaces.DataTypes.IDateTime)">
+            <summary>
+            Returns 'True' if the todo item is Active as of <paramref name="currDt"/>.
+            An item is Active if it requires action of some sort.
+            </summary>
+            <param name="currDt">The date and time to test.</param>
+            <returns>True if the item is Active as of <paramref name="currDt"/>, False otherwise.</returns>
+        </member>
+        <member name="M:Ical.Net.Interfaces.Components.ITodo.IsCancelled">
+            <summary>
+            Returns True if the todo item was cancelled.
+            </summary>
+            <returns>True if the todo was cancelled, False otherwise.</returns>
+        </member>
         <member name="P:Ical.Net.Interfaces.DataTypes.IDateTime.AsSystemLocal">
             <summary>
             Converts the date/time to this computer's local date/time.
@@ -1125,194 +1330,6 @@
             Gets/sets the start date/time of the component.
             </summary>
         </member>
-        <member name="P:Ical.Net.Interfaces.Components.IAlarmContainer.Alarms">
-            <summary>
-            A list of <see cref="!:Components.Alarm"/>s for this recurring component.
-            </summary>
-        </member>
-        <member name="M:Ical.Net.Interfaces.Components.IAlarmContainer.PollAlarms(Ical.Net.Interfaces.DataTypes.IDateTime,Ical.Net.Interfaces.DataTypes.IDateTime)">
-             <summary>
-             Polls <see cref="T:Ical.Net.Alarm"/>s for occurrences within the <see cref="!:Evaluate"/>d
-             time frame of this <see cref="T:Ical.Net.RecurringComponent"/>.  For each evaluated
-             occurrence if this component, each <see cref="T:Ical.Net.Alarm"/> is polled for its
-             corresponding alarm occurrences.
-             <para>
-             <example>
-             The following is an example of polling alarms for an event.
-             <code>
-             IICalendar iCal = iCalendar.LoadFromUri(new Uri("http://somesite.com/calendar.ics"));
-             IEvent evt = iCal.Events.First();
-            
-             // Poll the alarms on the event
-             List<AlarmOccurrence> alarms = evt.PollAlarms();
-             
-             // Here, you would eliminate alarms that the user has already dismissed.
-             // This information should be stored somewhere outside of the .ics file.
-             // You can use the component's UID, and the AlarmOccurence date/time 
-             // as the primary key for each alarm occurrence.
-             
-             foreach(AlarmOccurrence alarm in alarms)
-                 MessageBox.Show(alarm.Component.Summary + "\n" + alarm.DateTime);</AlarmOccurrence>
-             </code>
-             </example>
-             </para>
-             </summary>
-            <param name="startTime">The earliest allowable alarm occurrence to poll, or <c>null</c>.</param>
-            <param name="endTime"></param>
-            <returns>A List of <see cref="T:Ical.Net.DataTypes.AlarmOccurrence"/> objects, one for each occurrence of the <see cref="T:Ical.Net.Alarm"/>.</returns>
-        </member>
-        <member name="M:Ical.Net.Interfaces.Components.IAlarm.GetOccurrences(Ical.Net.Interfaces.Components.IRecurringComponent,Ical.Net.Interfaces.DataTypes.IDateTime,Ical.Net.Interfaces.DataTypes.IDateTime)">
-            <summary>
-            Gets a list of alarm occurrences for the given recurring component, <paramref name="rc"/>
-            that occur between <paramref name="fromDate"/> and <paramref name="toDate"/>.
-            </summary>
-        </member>
-        <member name="M:Ical.Net.Interfaces.Components.IAlarm.Poll(Ical.Net.Interfaces.DataTypes.IDateTime,Ical.Net.Interfaces.DataTypes.IDateTime)">
-            <summary>
-            Polls the <see cref="!:Components.Alarm"/> component for alarms that have been triggered
-            since the provided <paramref name="fromDate"/> date/time.  If <paramref name="fromDate"/>
-            is null, all triggered alarms will be returned.
-            </summary>
-            <param name="fromDate">The earliest date/time to poll trigerred alarms for.</param>
-            <param name="toDate">The latest date/time to poll trigerred alarms for.</param>
-            <returns>A list of <see cref="T:Ical.Net.DataTypes.AlarmOccurrence"/> objects, each containing a triggered alarm.</returns>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.DtEnd">
-            <summary>
-            The end date/time of the event.
-            <note>
-            If the duration has not been set, but
-            the start/end time of the event is available,
-            the duration is automatically determined.
-            Likewise, if an end time and duration are available,
-            but a start time has not been set, the start time
-            will be extrapolated.
-            </note>
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.Duration">
-            <summary>
-            The duration of the event.
-            <note>
-            If a start time and duration is available,
-            the end time is automatically determined.
-            Likewise, if the end time and duration is
-            available, but a start time is not determined,
-            the start time will be extrapolated from
-            available information.
-            </note>
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.End">
-            <summary>
-            An alias to the DTEnd field (i.e. end date/time).
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.IsAllDay">
-            <summary>
-            Returns true if the event is an all-day event.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.GeographicLocation">
-            <summary>
-            The geographic location (lat/long) of the event.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.Location">
-            <summary>
-            The location of the event.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.Resources">
-            <summary>
-            Resources that will be used during the event.
-            <example>Conference room #2</example>
-            <example>Projector</example>
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.Status">
-            <summary>
-            The status of the event.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.IEvent.Transparency">
-            <summary>
-            The transparency of the event.  In other words,
-            whether or not the period of time this event
-            occupies can contain other events (transparent),
-            or if the time cannot be scheduled for anything
-            else (opaque).
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.ITodo.Completed">
-            <summary>
-            The date/time the todo was completed.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.ITodo.Due">
-            <summary>
-            The due date of the todo item.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.ITodo.Duration">
-            <summary>
-            The duration of the todo item.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.ITodo.GeographicLocation">
-            <summary>
-            The geographic location (lat/long) of the todo item.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.ITodo.Location">
-            <summary>
-            The location of the todo item.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.ITodo.PercentComplete">
-            <summary>
-            A number between 0 and 100 that represents
-            the percentage of completion of this item.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.ITodo.Resources">
-            <summary>
-            A list of resources associated with this todo item.
-            </summary>
-        </member>
-        <member name="P:Ical.Net.Interfaces.Components.ITodo.Status">
-            <summary>
-            The current status of the todo item.
-            </summary>
-        </member>
-        <member name="M:Ical.Net.Interfaces.Components.ITodo.IsCompleted(Ical.Net.Interfaces.DataTypes.IDateTime)">
-            <summary>
-            Use this method to determine if a todo item has been completed.
-            This takes into account recurrence items and the previous date
-            of completion, if any.        
-            <note>
-            This method evaluates the recurrence pattern for this TODO
-            as necessary to ensure all relevant information is taken
-            into account to give the most accurate result possible.
-            </note>
-            </summary>
-            <param name="currDt">The date and time to test.</param>
-            <returns>True if the todo item has been completed</returns>
-        </member>
-        <member name="M:Ical.Net.Interfaces.Components.ITodo.IsActive(Ical.Net.Interfaces.DataTypes.IDateTime)">
-            <summary>
-            Returns 'True' if the todo item is Active as of <paramref name="currDt"/>.
-            An item is Active if it requires action of some sort.
-            </summary>
-            <param name="currDt">The date and time to test.</param>
-            <returns>True if the item is Active as of <paramref name="currDt"/>, False otherwise.</returns>
-        </member>
-        <member name="M:Ical.Net.Interfaces.Components.ITodo.IsCancelled">
-            <summary>
-            Returns True if the todo item was cancelled.
-            </summary>
-            <returns>True if the todo was cancelled, False otherwise.</returns>
-        </member>
         <member name="P:Ical.Net.Interfaces.General.ICalendarObject.Name">
             <summary>
             The name of the calendar object.
@@ -1527,6 +1544,15 @@
             A collection of <see cref="F:Ical.Net.Components.Todo"/> components in the iCalendar.
             </summary>
         </member>
+        <member name="M:Ical.Net.Calendar.AddTimeZone(System.TimeZoneInfo)">
+            <summary>
+            Adds a system time zone to the iCalendar.  This time zone may
+            then be used in date/time objects contained in the 
+            calendar.
+            </summary>
+            <param name="tzi">A System.TimeZoneInfo object to add to the calendar.</param>
+            <returns>The time zone added to the calendar.</returns>
+        </member>
         <member name="M:Ical.Net.Calendar.AddTimeZone(Ical.Net.Interfaces.Components.ITimeZone)">
             <summary>
             Adds a time zone to the iCalendar.  This time zone may
@@ -1624,6 +1650,12 @@
             <summary>
             A list of iCalendars.
             </summary>
+        </member>
+        <member name="M:Ical.Net.Utility.CollectionHelpers.GetHashCode``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary> Commutative, stable, order-independent hashing for collections of collections. </summary>
+        </member>
+        <member name="M:Ical.Net.Utility.CollectionHelpers.GetHashCodeForNestedCollection``1(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{``0}})">
+            <summary> Commutative, stable, order-independent hashing for collections of collections. </summary>
         </member>
         <member name="M:Ical.Net.Utility.TextUtil.FoldLines(System.String)">
             <summary> Folds lines at 75 characters, and prepends the next line with a space per RFC https://tools.ietf.org/html/rfc5545#section-3.1 </summary>
