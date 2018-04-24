@@ -21,11 +21,11 @@
                 </div>
             </form>
             <div class="PaddedBox-xs" data-bind="view: 'edit'">
-                <a data-bind="attr: { href: '/admin-user-badges/' + userID() }">Back to badges list</a>
+                <a class="btn btn-link" data-bind="attr: { href: '/admin-user-badges/' + userID() }">Back to badges list</a>
                 <badge-editor params="userBadgeID: userBadgeID"></badge-editor>
             </div>
             <div class="PaddedBox-xs container-fluid" data-bind="view: 'list'">
-                <a href="/admin-user-badges/">Change user</a>
+                <a class="btn btn-link" href="/admin-user-badges/">Change user</a>
                 <ul class="list-unstyled row" data-bind="foreach: userBadges">
                     <li class="col-sm-6">
                         <badge-viewer params="
