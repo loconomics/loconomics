@@ -1,0 +1,39 @@
+﻿@using WebMatrix.WebData;
+@*
+    Admin access to users badges.
+
+    Options:
+    
+    - GET /
+      List all non removed user badges
+
+    - POST /
+      Insert or update an user badge
+
+    EXAMPLES {
+        "Admin user badges": {
+            "url": "/api/v1/en-US/admin/users/141",
+            "get": {}
+        }
+    }
+*@
+@functions{
+    public class RestUserProfile : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+
+            var locale = LcRest.Locale.Current;
+            return LcRest.UserBadge.ListAllByUser(userID, locale.languageID, locale.countryID);
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.Admin);
+    new RestUserProfile().JsonResponse(this);
+}

@@ -126,6 +126,21 @@ namespace LcRest
                 return db.Query(sql, userID, languageID, countryID, solutionID).Select(FromDB);
             }
         }
+        /// <summary>
+        /// List all (non deleted) user badges, for internal, admin, usage.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserBadge> ListAllByUser(int userID, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                var sql = sqlSelect + sqlWhere;
+                return db.Query(sql, userID, languageID, countryID).Select(FromDB);
+            }
+        }
         #endregion
 
         #region Delete
