@@ -4,9 +4,15 @@
  * @module activities/admin-user-badges
  */
 
+import '../../utils/activeViewBindingHandler';
 import * as activities from '../index';
+import { Route, RouteMatcher } from '../../utils/Router';
+import { getBadges, setBadge } from '../../data/adminUsers';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
+import ko from 'knockout';
+import shell from '../../app.shell';
+import { show as showError } from '../../modals/error';
 import template from './template.html';
 
 const ROUTE_NAME = 'admin-user-badges';
@@ -23,6 +29,79 @@ export default class AdminUserBadgesActivity extends Activity {
             backLink: '/admin'
         });
         this.title = 'Manage user badges';
+
+        this.userID = ko.observable();
+        this.loadedUserID = ko.observable();
+        this.userBadgeID = ko.observable();
+        this.isLoading = ko.observable(false);
+
+        this.routes = {
+            index: new Route('/'),
+            list: new Route('/:userID'),
+            edit: new Route('/:userID/:userBadgeID'),
+        };
+
+        this.view = ko.pureComputed(() => {
+            if (this.userBadgeID()) {
+                return 'edit';
+            }
+            else if (this.loadedUserID()) {
+                return 'list';
+            }
+            else {
+                return 'index';
+            }
+        });
+
+        this.userBadges = ko.observableArray();
+
+        /**
+         * Returns a URL to where to edit the badge assigned to the user.
+         * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
+         * @returns {string}
+         */
+        this.getBadgeEditURL = (userBadge) => `/admin-user-badges/${this.userID()}/${userBadge.userBadgeID}`;
+
+        /**
+         * Returns a URL to where to view details of the badge assigned to the user, with a return
+         * link to the listing editor.
+         * @param {OpenBadgesV2/Assertion} assertion data for an assertion
+         * @returns {string}
+         */
+        this.getBadgeDetailsURL = (assertion) => `/badge-view/${encodeURIComponent(assertion.id)}?mustReturn=admin-user-badges/${this.userID()}&returnText=${encodeURIComponent('Admin user badges')}`;
+    }
+
+    __loadUserBadges(userID) {
+        this.isLoading(true);
+        return getBadges(userID)
+        .then(this.userBadges)
+        .then(() => this.loadedUserID(userID))
+        .catch((error) => {
+            showError({
+                title: 'Error loading badges',
+                error
+            });
+        })
+        .then(() => this.isLoading(false));
+    }
+
+    parseRoute(url) {
+        var paramsDefaults = {
+            userID: null,
+            userBadgeID: null
+        };
+        var matcher = new RouteMatcher([
+            this.routes.index,
+            this.routes.list,
+            this.routes.edit,
+        ], paramsDefaults);
+
+        return matcher.match(url) || paramsDefaults;
+    }
+
+    replaceUrlAs(routeName, values) {
+        const url = '/' + this.requestData.route.name + this.routes[routeName].reverse(values);
+        shell.replaceState(undefined, undefined, url);
     }
 
     /**
@@ -30,7 +109,25 @@ export default class AdminUserBadgesActivity extends Activity {
      */
     show(state) {
         super.show(state);
-        // Check other examples for some code using 'state'
+
+        const params = this.parseRoute(state.route.path);
+        this.userID(params.userID);
+        this.userBadgeID(params.userBadgeID);
+        this.loadedUserID(null);
+
+        if (params.userID && !params.userBadgeID) {
+            this.__loadUserBadges(params.userID);
+        }
+    }
+
+    load() {
+        this.__loadUserBadges(this.userID())
+        .then(() => this.replaceUrlAs('list', { userID: this.userID() }));
+    }
+
+    save() {
+        // TODO
+        setBadge();
     }
 }
 

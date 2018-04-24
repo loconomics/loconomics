@@ -1,8 +1,41 @@
 <div class="Boxes-sm">
     <div class="container">
         <h1 data-bind="text: title"></h1>
-        <div class="Box-sm">
-
+        <div class="Boxes" data-bind="activeView: view">
+            <form class="PaddedBox-xs" data-bind="view: 'index', submit: load, css: { 'is-loading': isLoading }">
+                <h2>Check badges for the user</h2>
+                <div class="form-group">
+                    <label class="form-label" for="admin-user-badge-user">User ID</label>
+                    <span class="input-group">
+                        <input class="form-control" id="admin-user-badge-user" data-bind="textInput: userID" />
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">
+                                <span class="fa ion ion-ios-search"></span>
+                                <span class="sr-only">Search</span>
+                            </button>
+                        </span>
+                    </span>
+                </div>
+                <div class="loadingSpinner loadingSpinner--row loadingSpinner--xl">
+                    <span class="icon fa ion ion-load-c"></span>
+                </div>
+            </form>
+            <div class="PaddedBox-xs" data-bind="view: 'edit'">
+                <a data-bind="attr: { href: '/admin-user-badges/' + userID() }">Back to badges list</a>
+                <badge-editor params="userBadgeID: userBadgeID"></badge-editor>
+            </div>
+            <div class="PaddedBox-xs container-fluid" data-bind="view: 'list'">
+                <a href="/admin-user-badges/">Change user</a>
+                <ul class="list-unstyled row" data-bind="foreach: userBadges">
+                    <li class="col-sm-6">
+                        <badge-viewer params="
+                            assertionData: assertion,
+                            viewMode: 'card',
+                            editURL: $root.getBadgeEditURL(userBadge),
+                            detailsURL: $root.getBadgeDetailsURL(assertion)"></badge-viewer>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
