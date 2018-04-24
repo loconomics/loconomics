@@ -114,10 +114,11 @@ export default class AdminUserBadgesActivity extends Activity {
         const params = this.parseRoute(state.route.path);
         this.userID(params.userID);
         this.userBadgeID(params.userBadgeID);
-        this.loadedUserID(null);
-
-        if (params.userID && !params.userBadgeID) {
-            this.__loadUserBadges(params.userID);
+        if (this.loadedUserID() !== params.userID) {
+            this.loadedUserID(null);
+            if (params.userID && !params.userBadgeID) {
+                this.__loadUserBadges(params.userID);
+            }
         }
     }
 
