@@ -16,9 +16,9 @@ export default class UserBadge {
             badgeURL: '',
             type: '',
             category: '',
-            expiryDate: null,
-            createdDate: null,
-            updatedDate: null,
+            expiryDate: { isDate: true },
+            createdDate: { isDate: true },
+            updatedDate: { isDate: true },
             createdBy: null,
             modifiedBy: null
         }, values);

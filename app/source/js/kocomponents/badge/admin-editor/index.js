@@ -10,6 +10,7 @@ import '../../utilities/icon-dec.js';
 import { deleteBadge, getBadge, setBadge } from '../../../data/adminUsers';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserBadge from '../../../models/UserBadge';
+import { create as createEditableDate } from '../../../utils/inputEditableComputedDate';
 import ko from 'knockout';
 import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
@@ -46,6 +47,12 @@ export default class BadgeAdminEditor extends Komponent {
             userID: ko.unwrap(params.userID),
             userBadgeID: ko.unwrap(params.userBadgeID) || 0
         });
+
+        /**
+         * Editable version of the badge expiryDate field, bidirectional
+         * @member {KnockoutObservable<Date>}
+         */
+        this.editableExpiryDate = createEditableDate(this.userBadge.expiryDate);
 
         /**
          * Callback executed after a succesfully 'save' task, providing
