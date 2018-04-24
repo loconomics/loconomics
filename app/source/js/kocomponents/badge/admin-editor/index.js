@@ -1,34 +1,35 @@
 /**
- * Allows a professional to register or manage a badge.
+ * Allows an admin to register or manage a badge for a user.
  *
- * @module kocomponents/badge/editor
+ * Based on badge-editor
+ *
+ * @module kocomponents/badge/admin-editor
  */
 
 import '../../utilities/icon-dec.js';
+import { deleteBadge, getBadge, setBadge } from '../../../data/adminUsers';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserBadge from '../../../models/UserBadge';
-import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
-import { item as userBadgeItem } from '../../../data/userBadges';
 
-const TAG_NAME = 'badge-editor';
+const TAG_NAME = 'badge-admin-editor';
 
 /**
  * Component
  */
-export default class BadgeEditor extends Komponent {
+export default class BadgeAdminEditor extends Komponent {
 
     static get template() { return template; }
 
     /**
      * @param {object} params
-     * @param {(number|KnockoutObservable<number>)}
-     * [params.jobTitleID]
-     * @param {(number|KnockoutObservable<number>)}
-     * [params.userBadgeID]
+     * @param {(number|KnockoutObservable<number>)} params.userID The user for which to
+     * add or edit a badge
+     * @param {(number|KnockoutObservable<number>)} [params.userBadgeID] The badge
+     * to edit
      * @param {function} [params.onSaved] Callback triggered after succesfull save operation.
      * @param {function} [params.onDeleted] Callback triggered after succesfull delete operation.
      */
@@ -42,18 +43,9 @@ export default class BadgeEditor extends Komponent {
          * @member {UserBadge}
          */
         this.userBadge = new UserBadge({
+            userID: ko.unwrap(params.userID),
             userBadgeID: ko.unwrap(params.userBadgeID) || 0
         });
-
-        /**
-         * Holds the ID for the job title of the badge being
-         * added.
-         * NOTE: This happens indirectly, no jobTitleID field exist at the
-         * userBadge, but this is used to being able to display info about the
-         * listing where the user wants to add/edit this badge
-         * @member {KnockoutObservable<number>}
-         */
-        this.jobTitleID = getObservable(params.jobTitleID);
 
         /**
          * Callback executed after a succesfully 'save' task, providing
@@ -164,17 +156,11 @@ export default class BadgeEditor extends Komponent {
             });
         };
 
-        /**
-         * We create an item manager to operate on the data for the requested ID
-         * (allows to load, save, delete).
-         */
-        this.dataManager = userBadgeItem(this.userBadge.userBadgeID());
-
         // When we have an ID, we need to load it first
         if (this.userBadge.userBadgeID()) {
             this.isLoading(true);
 
-            this.dataManager.onceLoaded()
+            getBadge(this.userBadge.userID(), this.userBadge.userBadgeID())
             .then((data) => {
                 this.isLoading(false);
                 this.userBadge.model.updateWith(data);
@@ -222,8 +208,7 @@ export default class BadgeEditor extends Komponent {
         }
         data.badgeURL = src;
 
-        return this.dataManager
-        .save(data)
+        return setBadge(data)
         .then((freshData) => {
             this.isSaving(false);
             if (this.onSaved) {
@@ -261,7 +246,7 @@ export default class BadgeEditor extends Komponent {
             yes: 'Delete',
             no: 'Keep'
         })
-        .then(() =>  this.dataManager.delete())
+        .then(() =>  deleteBadge(this.userBadge.model.toPlainObject(true)))
         .then(() => {
             this.isDeleting(false);
             if (this.onDeleted) {
@@ -271,7 +256,6 @@ export default class BadgeEditor extends Komponent {
             else {
                 // Reset to new item
                 this.userBadge.model.reset();
-                this.dataManager = userBadgeItem(0);
             }
         })
         .catch((error) => {
@@ -286,4 +270,4 @@ export default class BadgeEditor extends Komponent {
     }
 }
 
-ko.components.register(TAG_NAME, BadgeEditor);
+ko.components.register(TAG_NAME, BadgeAdminEditor);

@@ -20,6 +20,7 @@ namespace LcRest
         public string type;
         public string category;
         public string createdBy;
+        public string modifiedBy;
         public DateTimeOffset? expiryDate;
         public DateTimeOffset createdDate;
         public DateTimeOffset updatedDate;
@@ -40,6 +41,7 @@ namespace LcRest
                 type = record.type,
                 category = record.category,
                 createdBy = record.createdBy,
+                modifiedBy = record.modifiedBy,
                 expiryDate = record.expiryDate,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
@@ -57,6 +59,7 @@ namespace LcRest
                 b.type,
                 b.category,
                 b.createdBy,
+                b.modifiedBy,
                 b.expiryDate,
                 b.createdDate,
                 b.updatedDate

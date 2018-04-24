@@ -3,17 +3,26 @@
     Admin access to users badges.
 
     Options:
-    
+
     - GET /
       List all non removed user badges
+
+    - GET /@userBadgeID
+      Get badge record by ID
 
     - POST /
       Insert or update an user badge
 
     EXAMPLES {
-        "Admin user badges": {
+        "Admin user badges (list and create)": {
             "url": "/api/v1/en-US/admin/users/141",
-            "get": {}
+            "get": {},
+            "post": {}
+        },
+        "Admin user badges (item)": {
+            "url": "/api/v1/en-US/admin/users/141/2",
+            "get": {},
+            "put": {}
         }
     }
 *@
@@ -29,7 +38,18 @@
             }
 
             var locale = LcRest.Locale.Current;
-            return LcRest.UserBadge.ListAllByUser(userID, locale.languageID, locale.countryID);
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                return LcRest.UserBadge.Get(userID, UrlData[0].AsInt(), locale.languageID, locale.countryID);
+            }
+            else if (UrlData.Count == 0)
+            {
+                return LcRest.UserBadge.ListAllByUser(userID, locale.languageID, locale.countryID);
+            }
+            else
+            {
+                return base.Get();
+            }
         }
     }
 }

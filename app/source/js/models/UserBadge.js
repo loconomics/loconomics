@@ -18,7 +18,9 @@ export default class UserBadge {
             category: '',
             expiryDate: null,
             createdDate: null,
-            updatedDate: null
+            updatedDate: null,
+            createdBy: null,
+            modifiedBy: null
         }, values);
     }
 }

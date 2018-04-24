@@ -5,6 +5,7 @@
  */
 
 import '../../utils/activeViewBindingHandler';
+import '../../kocomponents/badge/admin-editor';
 import * as activities from '../index';
 import { Route, RouteMatcher } from '../../utils/Router';
 import { getBadges, setBadge } from '../../data/adminUsers';
