@@ -2,7 +2,7 @@
     <div class="container">
         <h1 data-bind="text: title"></h1>
         <div class="Boxes" data-bind="activeView: view">
-            <form class="PaddedBox-xs" data-bind="view: 'index', submit: load, css: { 'is-loading': isLoading }">
+            <form class="PaddedBox-xs" data-bind="view: 'index', submit: load">
                 <h2>Check badges for the user</h2>
                 <div class="form-group">
                     <label class="form-label" for="admin-user-badge-user">User ID</label>
@@ -16,20 +16,20 @@
                         </span>
                     </span>
                 </div>
-                <div class="loadingSpinner loadingSpinner--row loadingSpinner--xl">
-                    <span class="icon fa ion ion-load-c"></span>
-                </div>
             </form>
             <div class="PaddedBox-xs" data-bind="view: 'edit'">
                 <a class="btn btn-link" data-bind="attr: { href: '/admin-user-badges/' + userID() }">Back to badges list</a>
                 <badge-admin-editor params="userID: userID, userBadgeID: userBadgeID, onSaved: onSaved.bind($root), onDeleted: onDeleted.bind($root)"></badge-admin-editor>
             </div>
-            <div class="PaddedBox-xs container-fluid" data-bind="view: 'list'">
+            <div class="PaddedBox-xs container-fluid" data-bind="view: 'list', css: { 'is-loading': isLoading }">
                 <div class="isolated">
                     <a class="btn btn-link" href="/admin-user-badges/">Change user</a>
                     <a class="btn btn-default" data-bind="attr: { href: getBadgeEditURL({ userBadgeID: 0 }) }">Add badge</a>
                 </div>
-                <ul class="list-unstyled row" data-bind="foreach: userBadges">
+                <div class="loadingSpinner loadingSpinner--row loadingSpinner--xl">
+                    <span class="icon fa ion ion-load-c"></span>
+                </div>
+                <ul class="list-unstyled row" data-bind="foreach: userBadges, visible: !isLoading()">
                     <li class="col-sm-6">
                         <badge-viewer params="
                             assertionData: assertion,

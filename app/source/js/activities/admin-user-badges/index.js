@@ -46,7 +46,7 @@ export default class AdminUserBadgesActivity extends Activity {
             if (this.userBadgeID()) {
                 return 'edit';
             }
-            else if (this.loadedUserID()) {
+            else if (this.isLoading() || this.loadedUserID()) {
                 return 'list';
             }
             else {
@@ -159,8 +159,8 @@ export default class AdminUserBadgesActivity extends Activity {
      * Load the list of user badges for the selected user
      */
     load() {
-        this.__loadUserBadges(this.userID())
-        .then(() => this.replaceUrlAs('list', { userID: this.userID() }));
+        this.replaceUrlAs('list', { userID: this.userID() });
+        this.__loadUserBadges(this.userID());
     }
 
 }
