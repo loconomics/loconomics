@@ -1201,6 +1201,28 @@
         "Badges by solution": {
             "url": "/api/v1/en-US/me/badges/by-solution/123",
             "get": {}
+        },
+        "Admin user badges (list and create)": {
+            "url": "/api/v1/en-US/admin/users/141",
+            "get": {},
+            "post": {
+                "badgeURL": "https://badgr.io/assertions/asdf?v=2",
+                "type": "badge",
+                "category": "general",
+                "solutionID": null,
+                "expiryDate": "2020-01-01T01:01:01Z"
+            }
+        },
+        "Admin user badges (item by userBadgeID)": {
+            "url": "/api/v1/en-US/admin/users/141/2",
+            "get": {},
+            "put": {
+                "badgeURL": "https://badgr.io/assertions/asdf?v=2",
+                "type": "badge",
+                "category": "general",
+                "solutionID": null,
+                "expiryDate": "2020-01-01T01:01:01Z"
+            }
         }
     };
 

@@ -18,9 +18,9 @@ namespace LcRest
         public int? solutionID;
         public string badgeURL;
         public string type;
-        public string category;
-        public string createdBy;
-        public string modifiedBy;
+        public string category = "general";
+        public string createdBy = "user";
+        public string modifiedBy = "user";
         public DateTimeOffset? expiryDate;
         public DateTimeOffset createdDate;
         public DateTimeOffset updatedDate;
@@ -179,10 +179,12 @@ namespace LcRest
                     ,badgeURL = @3
                     ,type = @4
                     ,category = @5
+                    ,expiryDate = @6
                     ,updatedDate = getdate()
-                    ,ModifiedBy = 'user'
+                    ,ModifiedBy = @10
                 WHERE UserID = @userID
-                    AND CreatedBy like 'user'
+                    -- The user can only edit if was created by himself
+                    AND (@9 not like 'user' OR CreatedBy like 'user')
                     AND userBadgeID = @userBadgeID
                     AND Active = 1
             ELSE BEGIN
@@ -192,6 +194,7 @@ namespace LcRest
                     ,badgeURL
                     ,type
                     ,category
+                    ,expiryDate
                     ,languageID
                     ,countryID
                     ,CreatedDate
@@ -207,10 +210,11 @@ namespace LcRest
                     ,@5
                     ,@6
                     ,@7
+                    ,@8
                     ,getdate()
                     ,getdate()
-                    ,'user'
-                    ,'user'
+                    ,@9
+                    ,@10
                     ,1
                 )
             END
@@ -227,10 +231,12 @@ namespace LcRest
                     entry.solutionID,
                     entry.badgeURL,
                     entry.type,
-                    // all user entries have the same, fixed, category:
-                    "general", //entry.category,
+                    entry.category,
+                    entry.expiryDate,
                     locale.languageID,
-                    locale.countryID
+                    locale.countryID,
+                    entry.createdBy,
+                    entry.modifiedBy
                 );
             }
         }
