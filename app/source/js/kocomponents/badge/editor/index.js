@@ -138,7 +138,7 @@ export default class BadgeEditor extends Komponent {
          * operations.
          * @member {KnockoutComputed<boolean>}
          */
-        this.isLocked = ko.pureComputed(() => this.isSaving() || this.isLoading() || this.isDeleting());
+        this.isWorking = ko.pureComputed(() => this.isSaving() || this.isLoading() || this.isDeleting());
 
         /**
          * Whether the item is a new record or is being edited.
