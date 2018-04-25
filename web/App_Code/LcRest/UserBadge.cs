@@ -150,20 +150,22 @@ namespace LcRest
         const string sqlDelete = @"
             UPDATE UserBadge
                 SET Active = 0
-            WHERE UserID = @0 AND CreatedBy like 'user'
+            WHERE UserID = @0
                 AND languageID = @1 AND countryID = @2
                 AND UserBadgeID = @3
         ";
+        const string sqlRestrictToUserCreated = " AND CreatedBy like 'user'";
         /// <summary>
         /// Delete an entry. Only if user generated
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="userBadgeID"></param>
-        public static void Delete(int userID, int userBadgeID, int languageID, int countryID)
+        public static void Delete(int userID, int userBadgeID, int languageID, int countryID, bool byAdmin = false)
         {
             using (var db = new LcDatabase())
             {
-                db.Execute(sqlDelete, userID, languageID, countryID, userBadgeID);
+                var sql = sqlDelete + (byAdmin ? "" : sqlRestrictToUserCreated);
+                db.Execute(sql, userID, languageID, countryID, userBadgeID);
             }
         }
         #endregion
