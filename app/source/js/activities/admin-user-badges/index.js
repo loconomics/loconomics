@@ -135,6 +135,27 @@ export default class AdminUserBadgesActivity extends Activity {
     }
 
     /**
+     * Update list with saved data and show list
+     * @param {rest/UserBadge} badgeData Copy of the badge added/edited
+     */
+    onSaved(badgeData) {
+        const old = this.userBadges().find((badge) => badge.userBadgeID === badgeData.userBadgeID);
+        if (old) {
+            this.userBadges.replace(old, badgeData);
+        }
+        this.backToList();
+    }
+
+    /**
+     * Update list with removed data and show list
+     * @param {rest/UserBadge} badgeData Copy of the badge deleted
+     */
+    onDeleted(badgeData) {
+        this.userBadges.remove(((badge) => badge.userBadgeID === badgeData.userBadgeID));
+        this.backToList();
+    }
+
+    /**
      * Load the list of user badges for the selected user
      */
     load() {

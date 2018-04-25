@@ -66,7 +66,7 @@ export default class BadgeAdminEditor extends Komponent {
         /**
          * Callback executed after a succesfully 'delete' task.
          * When there is no one, the current data and ID are cleared.
-         * @member {Function}
+         * @member {Function<rest/userBadge>}
          */
         this.onDeleted = ko.unwrap(params.onDeleted);
 
@@ -247,18 +247,20 @@ export default class BadgeAdminEditor extends Komponent {
 
         this.isDeleting(true);
 
+        const data = this.userBadge.model.toPlainObject(true);
+
         return showConfirm({
             title: 'Are you sure?',
             message: `Delete ${this.userBadge.type()}`,
             yes: 'Delete',
             no: 'Keep'
         })
-        .then(() =>  deleteBadge(this.userBadge.model.toPlainObject(true)))
+        .then(() =>  deleteBadge(data))
         .then(() => {
             this.isDeleting(false);
             if (this.onDeleted) {
                 // Notify
-                this.onDeleted();
+                this.onDeleted(data);
             }
             else {
                 // Reset to new item
