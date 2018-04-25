@@ -22,7 +22,7 @@
             </form>
             <div class="PaddedBox-xs" data-bind="view: 'edit'">
                 <a class="btn btn-link" data-bind="attr: { href: '/admin-user-badges/' + userID() }">Back to badges list</a>
-                <badge-admin-editor params="userID: userID, userBadgeID: userBadgeID"></badge-admin-editor>
+                <badge-admin-editor params="userID: userID, userBadgeID: userBadgeID, onSaved: backToList.bind($root), onDeleted: backToList.bind($root)"></badge-admin-editor>
             </div>
             <div class="PaddedBox-xs container-fluid" data-bind="view: 'list'">
                 <a class="btn btn-link" href="/admin-user-badges/">Change user</a>

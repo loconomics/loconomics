@@ -8,9 +8,9 @@ import '../../utils/activeViewBindingHandler';
 import '../../kocomponents/badge/admin-editor';
 import * as activities from '../index';
 import { Route, RouteMatcher } from '../../utils/Router';
-import { getBadges, setBadge } from '../../data/adminUsers';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
+import { getBadges } from '../../data/adminUsers';
 import ko from 'knockout';
 import shell from '../../app.shell';
 import { show as showError } from '../../modals/error';
@@ -105,6 +105,11 @@ export default class AdminUserBadgesActivity extends Activity {
         shell.replaceState(undefined, undefined, url);
     }
 
+    go(routeName, values) {
+        const url = '/' + this.requestData.route.name + this.routes[routeName].reverse(values);
+        shell.go(url);
+    }
+
     /**
      * @param {Object} state
      */
@@ -122,15 +127,21 @@ export default class AdminUserBadgesActivity extends Activity {
         }
     }
 
+    /**
+     * Redirect back to the list mode with already loaded data
+     */
+    backToList() {
+        this.go('list', { userID: this.userID() });
+    }
+
+    /**
+     * Load the list of user badges for the selected user
+     */
     load() {
         this.__loadUserBadges(this.userID())
         .then(() => this.replaceUrlAs('list', { userID: this.userID() }));
     }
 
-    save() {
-        // TODO
-        setBadge();
-    }
 }
 
 activities.register(ROUTE_NAME, AdminUserBadgesActivity);
