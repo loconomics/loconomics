@@ -45,7 +45,7 @@ export default class BadgeAdminEditor extends Komponent {
          */
         this.userBadge = new UserBadge({
             userID: ko.unwrap(params.userID),
-            userBadgeID: ko.unwrap(params.userBadgeID) || 0
+            userBadgeID: ko.unwrap(params.userBadgeID) |0
         });
 
         /**

@@ -25,7 +25,10 @@
                 <badge-admin-editor params="userID: userID, userBadgeID: userBadgeID, onSaved: backToList.bind($root), onDeleted: backToList.bind($root)"></badge-admin-editor>
             </div>
             <div class="PaddedBox-xs container-fluid" data-bind="view: 'list'">
-                <a class="btn btn-link" href="/admin-user-badges/">Change user</a>
+                <div class="isolated">
+                    <a class="btn btn-link" href="/admin-user-badges/">Change user</a>
+                    <a class="btn btn-default" data-bind="attr: { href: getBadgeEditURL({ userBadgeID: 0 }) }">Add badge</a>
+                </div>
                 <ul class="list-unstyled row" data-bind="foreach: userBadges">
                     <li class="col-sm-6">
                         <badge-viewer params="
