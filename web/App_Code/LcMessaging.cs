@@ -1146,7 +1146,7 @@ public class LcMessaging
             }
         }
     }
-    public static bool SendMail(string to, string subject, string body, string from = null)
+    public static bool SendMail(string to, string subject, string body, string from = null, string replyTo = null)
     {
         // No mails for local development.
         if (LcHelpers.Channel == "localdev") return false;
@@ -1154,11 +1154,11 @@ public class LcMessaging
         return SendMailNow(to, subject, body, from);
         //return ScheduleEmail(TimeSpan.FromMinutes(1), to, subject, body, from);
     }
-    private static bool SendMailNow(string to, string subject, string body, string from = null)
+    private static bool SendMailNow(string to, string subject, string body, string from = null, string replyTo = null)
     {
         try
         {
-            WebMail.Send(to, subject, body, from, contentEncoding: "utf-8");
+            WebMail.Send(to, subject, body, from, contentEncoding: "utf-8", replyTo: replyTo);
 
             if (LogSuccessSendMail)
             {
