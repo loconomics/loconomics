@@ -27,7 +27,9 @@ export default class _TestSolutionActivity extends Activity {
 
     selectSolution(text, solution) {
         this.selectedSolution(solution);
-        return ActionForValue.clear;
+        return {
+            value: ActionForValue.clear
+        };
     }
 }
 
