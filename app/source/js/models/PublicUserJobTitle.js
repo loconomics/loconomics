@@ -63,7 +63,10 @@ function PublicUserJobTitle(values) {
             Model: UserLicenseCertification,
             isArray: true
         },
-        cancellationPolicy: { Model: UserCancellationPolicy }
+        cancellationPolicy: { Model: UserCancellationPolicy },
+        badges: {
+            isArray: true
+        }
     }, values);
 
     this.model.defID(['userID', 'jobTitleID']); // Will be userListingID

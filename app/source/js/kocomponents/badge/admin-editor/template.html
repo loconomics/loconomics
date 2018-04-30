@@ -1,0 +1,85 @@
+<form id="badgeEntryForm" data-bind="event: { submit: save }">
+    <fieldset data-bind="with: userBadge">
+        <div class="col-xs-12">
+            <legend>Badge or collection</legend>
+            <div class="form-group">
+                <label for="badgeUser">User</label>
+                <input class="form-control"
+                    id="badgeUser"
+                    type="text"
+                    disabled="disabled"
+                    data-bind="value: userID" />
+            </div>
+            <div class="form-group">
+                <label for="badgeURL">URL</label>
+                <input class="form-control"
+                    id="badgeURL"
+                    type="url"
+                    placeholder="https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0"
+                    data-bind="
+                        textInput: badgeURL,
+                        disable: $component.isWorking
+                    " />
+            </div>
+            <div class="form-group">
+                <label for="badgeCategory">Category</label>
+                <input class="form-control"
+                    id="badgeCategory"
+                    type="text"
+                    placeholder="general"
+                    data-bind="
+                        textInput: category,
+                        disable: $component.isWorking
+                    " />
+            </div>
+            <div class="form-group">
+                <label for="badgeExpiryDate">Expiry Date</label>
+                <input class="form-control"
+                    id="badgeExpiryDate"
+                    type="date"
+                    data-bind="
+                        textInput: $component.editableExpiryDate,
+                        disable: $component.isWorking
+                    " />
+            </div>
+
+            <!-- ko if:type -->
+            <div class="form-group">
+                <label for="type">Type</label>
+                <span class="form-control-static" data-bind="text: type"></span>
+            </div>
+            <!-- /ko -->
+
+            <!-- Cannot be implemented until user-solutions is ready:
+            <div class="form-group">
+                <label for="type">Solution</label>
+                <span class="form-control-static" data-bind="text: solution"></span>
+            </div>
+            -->
+
+            <div class="form-group">
+                <label for="type">Created Date</label>
+                <span class="form-control-static" data-bind="text: createdDate, format: { type: 'datetime', format: 'L LT' }"></span>
+            </div>
+            <div class="form-group">
+                <label for="type">Updated Date</label>
+                <span class="form-control-static" data-bind="text: updatedDate, format: { type: 'datetime', format: 'L LT' }"></span>
+            </div>
+            <div class="form-group">
+                <label for="type">Created By</label>
+                <span class="form-control-static" data-bind="text: createdBy"></span>
+            </div>
+            <div class="form-group">
+                <label for="type">Modified By</label>
+                <span class="form-control-static" data-bind="text: modifiedBy"></span>
+            </div>
+
+            <button type="submit" class="btn btn-secondary btn-block btn-lg"
+                data-bind="text: $component.saveButtonLabel, disable: $component.isWorking"></button>
+            <button type="button" class="btn btn-danger btn-link"
+                data-bind="click: $component.confirmDelete.bind($component), text: $component.deleteButtonLabel,
+                disable: $component.isWorking,
+                visible: !$component.isNew()"></button>
+        </div>
+    </fieldset>
+</form>

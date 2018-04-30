@@ -5,6 +5,7 @@
 **/
 'use strict';
 
+import { byListing as badgesByListing, expandUserBadges } from '../data/userBadges';
 import UserJobTitle from '../models/UserJobTitle';
 import { item as userListingItem } from '../data/userListings';
 
@@ -20,6 +21,7 @@ var showError = require('../modals/error').show;
 var showNotification = require('../modals/notification').show;
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var AlertLink = require('../viewmodels/AlertLink');
+require('../kocomponents/badge/viewer');
 
 var A = Activity.extend(function ListingEditorActivity() {
 
@@ -71,6 +73,11 @@ A.prototype.loadData = function(jobTitleID) {
                     // Fill the job title record
                     this.viewModel.listingTitle(listing.title);
                     this.viewModel.userJobTitle(new UserJobTitle(listing));
+                    // Load badges
+                    return badgesByListing(listing.userListingID)
+                    .onceLoaded()
+                    .then(expandUserBadges)
+                    .then(this.viewModel.userBadges);
                 })
                 .catch(function(error) {
                     showError({
@@ -91,6 +98,8 @@ A.prototype.loadData = function(jobTitleID) {
                         error: err
                     });
                 });
+                ////////////
+                // Active title
                 this.viewModel.user().selectedJobTitleID(jobTitleID);
             }
         }.bind(this))
@@ -129,6 +138,7 @@ function ViewModel(app) {
     this.user = ko.observable(null);
     this.jobTitleID = ko.observable(0);
     this.userJobTitle = ko.observable(null);
+    this.userBadges = ko.observableArray([]);
 
     this.listingTitle = ko.observable();
 
@@ -141,8 +151,14 @@ function ViewModel(app) {
         return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
 
+    /**
+     * Generates the final path to link a jobTitleID based URL, adding parameters
+     * for the 'return back' link so points to this activity with proper labeling.
+     * @member {KnockoutComputed<string>}
+     */
     this.returnLinkJobTitleActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+        const jobTitleID = this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID();
+        return jobTitleID ? `${jobTitleID}?mustReturn=listingEditor/${jobTitleID}&returnText=${encodeURIComponent('Edit listing')}` : '';
     }, this);
 
      /// Related models information
@@ -344,4 +360,23 @@ function ViewModel(app) {
             return AlertLink.fromProfileAlert(profileAlert, { jobTitleID: jobTitleID });
         });
     }, this);
+
+    /**
+     * Returns a URL to where to edit the badge assigned to the user, with a return
+     * link to the listing editor.
+     * @param {rest/UserBadge} userBadge record for a badge assigned to a user (AKA 'assertion' in OpenBadges naming)
+     * @returns {string}
+     */
+    this.getBadgeEditURL = (userBadge) => {
+        if (userBadge.createdBy !== 'user') return null;
+        else return `/badge-edit/${userBadge.userBadgeID}?jobTitleID=${this.jobTitleID()}&mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
+    };
+
+    /**
+     * Returns a URL to where to view details of the badge assigned to the user, with a return
+     * link to the listing editor.
+     * @param {OpenBadgesV2/Assertion} assertion data for an assertion
+     * @returns {string}
+     */
+    this.getBadgeDetailsURL = (assertion) => `/badge-view/${encodeURIComponent(assertion.id)}?mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
 }
