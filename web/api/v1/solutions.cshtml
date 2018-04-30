@@ -1,0 +1,36 @@
+﻿@*
+    Reading and searching solutions.
+
+    Options:
+
+    - GET /
+        @searchTerm
+
+    EXAMPLES {
+        "Solutions search": {
+            "url": "/api/v1/en-US/solutions",
+            "get": {
+                "searchTerm": "wedding"
+            }
+        }
+    }
+*@
+@functions{
+    public class RestSolutions : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 0)
+            {
+                var term = Request.QueryString["searchTerm"];
+                var locale = LcRest.Locale.Current;
+                return LcRest.Solution.Search(term, locale.languageID, locale.countryID);
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{
+    new RestSolutions().JsonResponse(this);
+}
