@@ -1,0 +1,22 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a data-bind="attr: { href: navBar.leftAction().link }">
+                        <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                        <span data-bind="text: navBar.leftAction().text"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <h1 data-bind="text: title"></h1>
+        <div class="col-md-7 col-sm-reset" data-bind="if: assertionURL">
+            <badge-viewer params="assertionURL: assertionURL, viewMode: 'fullDetails'"></badge-viewer>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'credentials'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>

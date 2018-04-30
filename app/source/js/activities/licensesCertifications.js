@@ -27,6 +27,8 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
         backLink: DEFAULT_BACK_LINK, helpLink: this.viewModel.helpLink
     });
     this.title('Professional credentials');
+    // Share navBar with desktop nav through viewModel
+    this.viewModel.navBar = this.navBar;
 
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 
