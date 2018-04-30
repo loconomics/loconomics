@@ -8,5 +8,7 @@
         Credential check required: <span data-bind="text: credentialCheckRequired"></span>
         <br/>
         Background check required: <span data-bind="text: backgroundCheckRequired"></span>
+        <br/>
+        <button type="button" class="btn btn-default" data-bind="click: $root.refreshData.bind($root), disable: $root.isReloading">Refresh data</button>
     </div>
 </div>

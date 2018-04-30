@@ -6,7 +6,7 @@
 import CachedDataProvider from './helpers/CachedDataProvider';
 import LocalForageItemDataProviderDriver from './helpers/LocalForageItemDataProviderDriver';
 import LocalForageSingleDataProviderDriver from './helpers/LocalForageSingleDataProviderDriver';
-//import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
+import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
 import localforage from './drivers/localforage';
 import rest from './drivers/restClient';
 
@@ -4697,37 +4697,6 @@ const remoteGroupDriver = (id) => ({
   }
 });
 
-// Dummy driver for individual indexed items
-const remoteItemDriver = (id) => ({
-  fetch: () => {
-      if (SOLUTIONS_INDEX.hasOwnProperty(id)) {
-          return Promise.resolve(SOLUTIONS_INDEX[id]);
-      }
-      else {
-          return Promise.reject('Not Found');
-      }
-  },
-  push: (data) => {
-      if (SOLUTIONS_INDEX.hasOwnProperty(id)) {
-        SOLUTIONS_INDEX[id] = data;
-          return Promise.resolve(SOLUTIONS_INDEX[id]);
-      }
-      else {
-          return Promise.reject('Not Found');
-      }
-  },
-  delete: () => {
-      if (SOLUTIONS_INDEX.hasOwnProperty(id)) {
-          const deletedCopy = SOLUTIONS_INDEX[id];
-          delete SOLUTIONS_INDEX[id];
-          return Promise.resolve(deletedCopy);
-      }
-      else {
-          return Promise.reject('Not Found');
-      }
-  }
-});
-
 /**
  * Provides an API to fetch all solutions under a searchSubCategoryID.
  * @param {number} id The searchCategoryID
@@ -4759,7 +4728,7 @@ export function item(id) {
   return new CachedDataProvider({
       // 1 minutes
       ttl: 1 * 60 * 1000,
-      remote: remoteItemDriver(id),
+      remote: new RestItemDataProviderDriver(rest, API_NAME, id),
       local: new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME)
   });
 }
