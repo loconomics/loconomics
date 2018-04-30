@@ -12,6 +12,10 @@
             "get": {
                 "searchTerm": "wedding"
             }
+        },
+        "Solutions - Get item": {
+            "url": "/api/v1/en-US/solutions/1",
+            "get": { }
         }
     }
 *@
@@ -24,7 +28,20 @@
             {
                 var term = Request.QueryString["searchTerm"];
                 var locale = LcRest.Locale.Current;
-                return LcRest.Solution.Search(term, locale.languageID, locale.countryID);
+                if (String.IsNullOrEmpty(term))
+                {
+                    return LcRest.Solution.List(locale.languageID, locale.countryID);
+                }
+                else
+                {
+                    return LcRest.Solution.Search(term, locale.languageID, locale.countryID);
+                }
+            }
+            else if (UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt();
+                var locale = LcRest.Locale.Current;
+                return LcRest.Solution.Get(id, locale.languageID, locale.countryID);
             }
 
             throw new HttpException(404, "Not Found");

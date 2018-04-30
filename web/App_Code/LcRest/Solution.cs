@@ -79,6 +79,9 @@ namespace LcRest
         const string sqlSearchConditions = @"
                  AND name like '%' + @2 + '%'
         ";
+        const string sqlAndId = @"
+                 AND solutionID = @2
+        ";
         #endregion
 
         /// <summary>
@@ -100,6 +103,14 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return db.Query(sqlLimitedSelect + sqlGetList + sqlSearchConditions, languageID, countryID, searchText).Select(FromDB);
+            }
+        }
+
+        public static Solution Get(int solutionID, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle("SELECT TOP 1 " + sqlGetList + sqlAndId, languageID, countryID, solutionID));
             }
         }
         #endregion
