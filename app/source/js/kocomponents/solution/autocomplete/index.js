@@ -4,7 +4,7 @@
  * @module kocomponents/solution/autocomplete
  *
  */
-import '../../input-autocomplete';
+export { ActionForValue } from '../../input-autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -59,12 +59,14 @@ export default class SolutionAutocomplete extends Komponent {
                 this.suggestions([]);
                 return;
             }
+            console.info('Solution search', searchTerm);
             searching = true;
             solutionsAutocomplete(searchTerm)
             .then((result) => {
                 this.suggestions(result);
                 if (nextSearchTerm) {
-                    doSearch();
+                    doSearch(nextSearchTerm);
+                    nextSearchTerm = null;
                 }
                 else {
                     searching = false;
@@ -74,7 +76,6 @@ export default class SolutionAutocomplete extends Komponent {
 
         this.observeChanges(() => {
             const val = this.value();
-            console.info('Solution search', val);
             if (searching) {
                 // Schedule next term, will auto-run when current search ends
                 nextSearchTerm = val;
