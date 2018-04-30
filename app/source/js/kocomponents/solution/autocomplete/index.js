@@ -22,14 +22,18 @@ export default class SolutionAutocomplete extends Komponent {
 
     /**
      * @param {object} params
+     * @param {(string|KnockoutObservable<string>)} params.id ID for the input element (important to keep in sync with an external
+     * label)
      * @param {(string|KnockoutObservable<string>)} params.value Default input value
      * @param {function} params.onSelect
      */
     constructor(params) {
         super();
 
+        /**
+         * @member {KnockoutObservable<string>}
+         */
         this.id = getObservable(params.id);
-
         /**
          * User text input, allows a default value
          * @member {KnockoutObservable<string>}
@@ -49,17 +53,34 @@ export default class SolutionAutocomplete extends Komponent {
     }
 
     /**
-     * Connect component with data and user interactions
+     * Connect component with data and user interactions.
+     *
+     * General strategy on requesting results:
+     * - Let any started request to finish and to show it's results
+     * - New request while one is loading just registers itself for later (delayed)
+     * - It's delayed to be run just after the current active, not after a previously delayed
+     * - In other words, there is no queue of pending request, only one (last registered) will execute
+     * - This prevents from running too much request, most of them would be obsolete at the moment of start,
+     *   getting a fast feedback and fast last results (when user stops typing).
      */
     __connectData() {
+        // Keeps track if a search is running, so we later know if we must delay next attempt or run immediately
         let searching = false;
+        // Keeps track of delayed search to perform (just one, latest user input)
         let nextSearchTerm = null;
+        /**
+         * Request to perform a search for the term and fill in the suggestions.
+         * If no term, will empty the suggestions.
+         * Recursive: once the requests ends, call itself in case there is a delayed search term (using that
+         * term rather than the original).
+         * @param {string} searchTerm
+         * @private
+         */
         const doSearch = (searchTerm) => {
             if (!searchTerm) {
                 this.suggestions([]);
                 return;
             }
-            console.info('Solution search', searchTerm);
             searching = true;
             solutionsAutocomplete(searchTerm)
             .then((result) => {
@@ -74,6 +95,7 @@ export default class SolutionAutocomplete extends Komponent {
             });
         };
 
+        // Compute automatically whether user input happens ('value' changes)
         this.observeChanges(() => {
             const val = this.value();
             if (searching) {
