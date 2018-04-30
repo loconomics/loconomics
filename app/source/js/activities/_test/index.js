@@ -7,8 +7,10 @@
  */
 'use strict';
 
+import '../../kocomponents/solution/autocomplete';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
+import ko from 'knockout';
 import template from './template.html';
 
 const ROUTE_NAME = '_test';
@@ -21,6 +23,8 @@ export default class _TestActivity extends Activity {
         super($activity, app);
         this.accessLevel = null;
         this.title = 'Testing area';
+
+        this.selectedSolution = ko.observable(null);
     }
 }
 

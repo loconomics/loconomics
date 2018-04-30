@@ -8,9 +8,9 @@ import LocalForageItemDataProviderDriver from './helpers/LocalForageItemDataProv
 import LocalForageSingleDataProviderDriver from './helpers/LocalForageSingleDataProviderDriver';
 //import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
 import localforage from './drivers/localforage';
-//import rest from './drivers/restClient';
+import rest from './drivers/restClient';
 
-//const API_NAME = 'solutions';
+const API_NAME = 'solutions';
 const LOCAL_KEY = 'solutions';
 const ID_PROPERTY_NAME = 'solutionID';
 const BY_SUB_CATEGORY_LOCAL_KEY = 'searchSubCategoriesSolutions';
@@ -4764,13 +4764,11 @@ export function item(id) {
   });
 }
 
-var textSearch = require('../utils/textSearch');
 /**
  * Retrieves information for a job title search
  * @param {string} searchTerm job title search term to retrieve
  * @returns {Promise}
  */
-exports.solutionsAutocomplete = function(searchTerm) {
-    const doSearch = textSearch.searchFor(searchTerm);
-    return Promise.resolve(DUMMY_DATA_SOLUTIONS.filter((item) => doSearch.allAtWords(item.name)));
-};
+export function solutionsAutocomplete(searchTerm) {
+    return rest.get(API_NAME, { searchTerm });
+}

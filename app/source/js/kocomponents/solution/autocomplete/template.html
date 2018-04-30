@@ -1,5 +1,17 @@
-<p>
-    Hello
-    <span data-bind="text: name"></span>
-    <span data-bind="ifnot: name">World</span>
-</p>
+<input-autocomplete params="
+    id: id,
+    name: 'solution',
+    icon: 'glyphicon glyphicon-search',
+    size: 'lg',
+    value: value,
+    suggestions: suggestions,
+    onSelect: onSelect
+    ">
+    <template slot="suggestions">
+        <ul data-bind="foreach: suggestions" class="list-unstyled">
+            <li class="Result" data-input-autocomplete-suggestion
+                data-bind="attr: { id: $parent.id() + '-suggestion-' + $index() }, text: name">
+            </li>
+        </ul>
+    </template>
+</input-autocomplete>

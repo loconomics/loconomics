@@ -4,9 +4,11 @@
  * @module kocomponents/solution/autocomplete
  *
  */
-import './input-autocomplete';
+import '../../input-autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
+import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
+import { solutionsAutocomplete } from '../../../data/solutions';
 import template from './template.html';
 
 const TAG_NAME = 'solution-autocomplete';
@@ -25,6 +27,8 @@ export default class SolutionAutocomplete extends Komponent {
      */
     constructor(params) {
         super();
+
+        this.id = getObservable(params.id);
 
         /**
          * User text input, allows a default value
@@ -48,9 +52,36 @@ export default class SolutionAutocomplete extends Komponent {
      * Connect component with data and user interactions
      */
     __connectData() {
+        let searching = false;
+        let nextSearchTerm = null;
+        const doSearch = (searchTerm) => {
+            if (!searchTerm) {
+                this.suggestions([]);
+                return;
+            }
+            searching = true;
+            solutionsAutocomplete(searchTerm)
+            .then((result) => {
+                this.suggestions(result);
+                if (nextSearchTerm) {
+                    doSearch();
+                }
+                else {
+                    searching = false;
+                }
+            });
+        };
+
         this.observeChanges(() => {
             const val = this.value();
-            //..
+            console.info('Solution search', val);
+            if (searching) {
+                // Schedule next term, will auto-run when current search ends
+                nextSearchTerm = val;
+            }
+            else {
+                doSearch(val);
+            }
         });
     }
 }
