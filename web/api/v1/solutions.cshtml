@@ -6,6 +6,10 @@
     - GET /
         @searchTerm
 
+    - GET /@solutionID
+
+    - GET /search-subcategory/@searchSubcategoryID
+
     EXAMPLES {
         "Solutions search": {
             "url": "/api/v1/en-US/solutions",
@@ -15,6 +19,10 @@
         },
         "Solutions - Get item": {
             "url": "/api/v1/en-US/solutions/1",
+            "get": { }
+        },
+        "Solutions - By Search SubCategory": {
+            "url": "/api/v1/en-US/solutions/search-subcategory/1",
             "get": { }
         }
     }
@@ -36,6 +44,12 @@
                 {
                     return LcRest.Solution.Search(term, locale.languageID, locale.countryID);
                 }
+            }
+            else if (UrlData.Count == 2 && UrlData[0] == "search-subcategory")
+            {
+                var id = UrlData[1].AsInt();
+                var locale = LcRest.Locale.Current;
+                return LcRest.Solution.BySearchSubcategory(id, locale.languageID, locale.countryID);
             }
             else if (UrlData[0].IsInt())
             {

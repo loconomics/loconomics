@@ -56,31 +56,43 @@ namespace LcRest
         /// </summary>
         const string sqlLimitedSelect = @"SELECT TOP 20";
         const string sqlSelect = "SELECT";
-        const string sqlGetList = @"
-                solutionID,
-                languageID,
-                countryID,
-                name,
-                credentialCheckRequired,
-                backgroundCheckRequired,
-                isHipaa,
-                taxActivityID,
-                postingTemplateID,
-                image,
-                createdDate,
-                updatedDate
-            FROM
-                Solution
-            WHERE
-                Active = 1
-                 AND languageID = @0
-                 AND countryID = @1
+        const string sqlFields = @"
+                S.solutionID,
+                S.languageID,
+                S.countryID,
+                S.name,
+                S.credentialCheckRequired,
+                S.backgroundCheckRequired,
+                S.isHipaa,
+                S.taxActivityID,
+                S.postingTemplateID,
+                S.image,
+                S.createdDate,
+                S.updatedDate
         ";
+        const string sqlFrom = "FROM Solution AS S";
+        const string sqlCommonOrder = "ORDER BY S.name";
+        const string sqlCommonWhere = @"
+            WHERE
+                S.Active = 1
+                 AND S.languageID = @0
+                 AND S.countryID = @1
+        ";
+        const string sqlGetList = sqlFields + sqlFrom + sqlCommonWhere;
         const string sqlSearchConditions = @"
-                 AND name like '%' + @2 + '%'
+                 AND S.name like '%' + @2 + '%'
         ";
         const string sqlAndId = @"
-                 AND solutionID = @2
+                 AND S.solutionID = @2
+        ";
+        const string sqlBySearchSubcategoryID = sqlSelect + sqlFields + sqlFrom + @"
+                INNER JOIN SearchSubCategorySolution As C
+                 ON C.solutionID = S.solutionID
+                 AND C.languageID = S.languageID
+                 AND C.countryID = S.countryID
+        " + sqlCommonWhere + @"
+                 AND C.searchSubcategoryID = @2
+                ORDER BY C.displayRank, S.name
         ";
         #endregion
 
@@ -94,7 +106,15 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlSelect + sqlGetList, languageID, countryID).Select(FromDB);
+                return db.Query(sqlSelect + sqlGetList + sqlCommonOrder, languageID, countryID).Select(FromDB);
+            }
+        }
+
+        public static IEnumerable<Solution> BySearchSubcategory(int searchSubcategoryID, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlBySearchSubcategoryID, languageID, countryID, searchSubcategoryID).Select(FromDB);
             }
         }
 
@@ -102,7 +122,8 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlLimitedSelect + sqlGetList + sqlSearchConditions, languageID, countryID, searchText).Select(FromDB);
+                var sql = sqlLimitedSelect + sqlGetList + sqlSearchConditions + sqlCommonOrder;
+                return db.Query(sql, languageID, countryID, searchText).Select(FromDB);
             }
         }
 
