@@ -25,7 +25,7 @@ const BY_SUB_CATEGORY_LOCAL_KEY = 'searchSubCategoriesSolutions';
  * - dataProvider.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
  * - dataProvider.onLoadError.subscribe(fn) to get notified of errors happening as of onData
  */
-export function bySubCategoryID(id) {
+export function bySearchSubcategoryID(id) {
   return new CachedDataProvider({
       // 1 minutes
       ttl: 1 * 60 * 1000,

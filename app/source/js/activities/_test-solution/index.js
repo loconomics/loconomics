@@ -6,10 +6,11 @@
 'use strict';
 
 import * as activities from '../index';
+import { bySearchSubcategoryID, item as solutionItem } from '../../data/solutions';
 import { ActionForValue } from '../../kocomponents/solution/autocomplete';
 import Activity from '../../components/Activity';
 import ko from 'knockout';
-import { item as solutionItem } from '../../data/solutions';
+import { show as showError } from '../../modals/error';
 import template from './template.html';
 
 const ROUTE_NAME = '_test-solution';
@@ -25,6 +26,36 @@ export default class _TestSolutionActivity extends Activity {
 
         this.selectedSolution = ko.observable(null);
         this.isReloading = ko.observable(false);
+
+        this.searchSubcategoryID = ko.observable(null);
+        this.solutions = ko.observableArray([]);
+    }
+
+    __connectData() {
+        let dataHandler = null;
+        let errorHandler = null;
+        this.observeChanges(() => {
+            const catID = this.searchSubcategoryID();
+            if (dataHandler) dataHandler.dispose();
+            if (errorHandler) errorHandler.dispose();
+
+            if (catID) {
+                const cat = bySearchSubcategoryID(catID);
+                dataHandler = this.subscribeTo(cat.onData, this.solutions);
+                errorHandler = this.subscribeTo(cat.onDataError, (error) => {
+                    showError({
+                        title: 'An error happened',
+                        error
+                    });
+                });
+            }
+        });
+    }
+
+    show(state) {
+        super.show(state);
+
+        this.__connectData();
     }
 
     /**
