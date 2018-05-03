@@ -11,9 +11,9 @@
             </button>
         </div>
     </fieldset>
-    <fieldset data-bind="visible: suggestedSolutions, if: jobTitleID">
+    <fieldset data-bind="visible: filteredSuggestions().length, if: jobTitleID">
         <legend>Suggested for you to add</legend>
-        <div data-bind="foreach: suggestedSolutions">
+        <div data-bind="foreach: filteredSuggestions">
             <button type="button" data-bind="click: $component.selectItem.bind($component), disable: $component.isLocked" class="btn btn-default">
                 <icon-dec params="icon: 'ion-plus'"></icon-dec>
                 <span data-bind="text: name"></span>

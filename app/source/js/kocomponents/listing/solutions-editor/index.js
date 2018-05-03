@@ -56,6 +56,16 @@ export default class ListingSolutionsEditor extends Komponent {
         this.suggestedSolutions = ko.observableArray([]);
 
         /**
+         * Filter the loaded suggestions to don't include ones already in the listing
+         * @member {KnockoutComputed<Array<rest/Solution>>}
+         */
+        this.filteredSuggestions = ko.pureComputed(() => {
+            const included = this.listingSolutions();
+            const suggestions = this.suggestedSolutions();
+            return suggestions.filter((a) => !included.find((b) => a.solutionID === b.solutionID));
+        });
+
+        /**
          * Callback executed when the form is saved successfully, giving
          * a copy of the server data
          * @member {function}
