@@ -1,0 +1,25 @@
+<form data-bind="event: { submit: save }">
+    <fieldset>
+        <legend>Categories you're already listed in</legend>
+        <div data-bind="foreach: listingSolutions">
+            <button type="button" data-bind="click: $component.unselectItem.bind($component)" class="btn btn-default">
+                <icon-dec params="icon: 'ion-close'"></icon-dec>
+                <span data-bind="text: name"></span>
+            </button>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Suggested for you to add</legend>
+        <div data-bind="foreach: suggestedSolutions">
+            <button type="button" data-bind="click: $component.selectItem.bind($component)" class="btn btn-default">
+                <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                <span data-bind="text: name"></span>
+            </button>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Search for categories to add</legend>
+        <solution-autocomplete params="onSelect: fromAutocomplete.bind($component)"></solution-autocomplete>
+    </fieldset>
+    <button type="submit" class="btn btn-primary btn-block btn-lg" data-bind="disable: isLocked, text: saveButtonText"></button>
+</form>

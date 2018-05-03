@@ -3,14 +3,12 @@
  * @module kocomponents/earnings/editor
  *
  */
-import '../list';
-//DISABLED DUE NOT-IMPLEMENTED STILL import '../suggestions-list';
-//DISABLED DUE NOT-IMPLEMENTED STILL import '../../../solutions/autocomplete';
-import '../../../utilities/icon-dec';
-import '../../../../utils/autofocusBindingHandler';
-import Komponent from '../../../helpers/KnockoutComponent';
+import '../../solution/autocomplete';
+import '../../utilities/icon-dec';
+import Komponent from '../../helpers/KnockoutComponent';
+import { byUserListing } from '../../../data/userSolutions';
 import ko from 'knockout';
-import { show as showError } from '../../../../modals/error';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
 
 const TAG_NAME = 'listing-solutions-editor';
@@ -27,18 +25,22 @@ export default class ListingSolutionsEditor extends Komponent {
      * and keeps constant internally. If is an observable, any change from outside is
      * not read.
      * @param {object} params
-     * @param {(number|KnockoutObservable<number>)} [params.jobTitleID] Input only ID to be edited or copied, or zero for new.
+     * @param {(number|KnockoutObservable<number>)} params.userListingID
      * @param {function} [params.onSaved] Callback to notify after save the item, with the updated data included
      */
     constructor(params) {
         super();
 
          /**
-         * Captures the jobTitleID to identify 
+         * Captures the jobTitleID to identify
          * which listing's categories to edit.
-         * @member {jobTitleID}
+         * @member {number}
          */
-        this.jobTitleID = ko.observable(ko.unwrap(params.jobTitleID));
+        this.userListingID = ko.unwrap(params.userListingID);
+
+        this.listingSolutions = ko.observableArray([]);
+
+        this.suggestedSolutions = ko.observableArray([]);
 
         /**
          * Callback executed when the form is saved successfully, giving
@@ -58,7 +60,7 @@ export default class ListingSolutionsEditor extends Komponent {
             return itIs ? 'Submitting..' : 'Submit';
         });
 
-        this.__setupDataOperations();
+        this.__connectData();
     }
 
     /**
@@ -86,18 +88,44 @@ export default class ListingSolutionsEditor extends Komponent {
         this.isLocked = ko.pureComputed(() => this.isSaving() || this.isLoading());
     }
 
+    __connectData() {
+        const dataProvider = byUserListing(this.userListingID);
+        this.subscribeTo(dataProvider.onData, this.listingSolutions);
+        this.subscribeTo(dataProvider.onDataError, (error) => {
+            showError({
+                title: 'There was an error loading your search categories',
+                error
+            });
+        });
+    }
+
+    unselectItem(solution) {
+        this.listingSolutions.remove(solution);
+    }
+
+    selectItem(solution) {
+        this.listingSolutions.push(solution);
+    }
+
+    fromAutocomplete(name, solution) {
+        this.selectItem(solution);
+    }
+
     /**
      * Save data in the server
-     * @returns {Promise<object>}
+     * @returns {Promise}
      */
     save() {
         if (this.isSaving()) return Promise.reject();
 
         this.isSaving(true);
 
-        const data = this.earningsEntry.model.toPlainObject(true);
+        const dataProvider = byUserListing(this.userListingID);
+        const data = {
+            solutions: this.listingSolutions().map((solution) => solution.solutionID)
+        };
 
-        return this.dataManager
+        return dataProvider
         .save(data)
         .then((freshData) => {
             this.isSaving(false);
@@ -106,14 +134,14 @@ export default class ListingSolutionsEditor extends Komponent {
                 this.onSaved(freshData);
             }
             else {
-                // Use updated/created data
-                this.earningsEntry.model.updateWith(freshData);
+                // Use updated data
+                this.listingSolutions(freshData);
             }
         })
         .catch((error) => {
             this.isSaving(false);
             showError({
-                title: 'There was an error saving the earnings entry',
+                title: 'There was an error saving your search categories',
                 error
             });
         });

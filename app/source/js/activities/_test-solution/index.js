@@ -5,6 +5,7 @@
  */
 'use strict';
 
+import '../../kocomponents/listing/solutions-editor';
 import * as activities from '../index';
 import { bySearchSubcategoryID, item as solutionItem } from '../../data/solutions';
 import { ActionForValue } from '../../kocomponents/solution/autocomplete';
