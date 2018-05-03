@@ -3,8 +3,8 @@
  * @module kocomponents/listing/solutions-editor
  *
  */
-import '../../solution/autocomplete';
 import '../../utilities/icon-dec';
+import { ActionForValue } from '../../solution/autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import { byJobTitleID } from '../../../data/solutions';
 import { byUserListing } from '../../../data/userSolutions';
@@ -133,11 +133,16 @@ export default class ListingSolutionsEditor extends Komponent {
     }
 
     selectItem(solution) {
-        this.listingSolutions.push(solution);
+        if (!this.listingSolutions().find((sol) => sol.solutionID === solution.solutionID)) {
+            this.listingSolutions.push(solution);
+        }
     }
 
     fromAutocomplete(name, solution) {
         this.selectItem(solution);
+        return {
+            value: ActionForValue.clear
+        };
     }
 
     /**
