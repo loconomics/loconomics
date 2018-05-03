@@ -22,6 +22,7 @@ namespace LcRest
                         AND U.countryID = S.countryID
                     WHERE
                         S.Active = 1
+                         AND U.Active = 1
                          AND U.userID = @0
                          AND U.userListingID = @1
                          AND S.languageID = @2
