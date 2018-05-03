@@ -5,7 +5,7 @@
  *
  */
 
-import '../../kocomponents/listing/solutions/editor';
+import '../../kocomponents/listing/solutions-editor';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';

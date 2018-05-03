@@ -1,6 +1,6 @@
 /**
- * Used for adding, editing, and copying earnings entries.
- * @module kocomponents/earnings/editor
+ * Let's edit the solutions attached to a specific user listing.
+ * @module kocomponents/listing/solutions-editor
  *
  */
 import '../../solution/autocomplete';
@@ -22,9 +22,7 @@ export default class ListingSolutionsEditor extends Komponent {
     static get template() { return template; }
 
     /**
-     * Parameters allowed are 'input only' when the value given is read at constructor
-     * and keeps constant internally. If is an observable, any change from outside is
-     * not read.
+     * Both ID parameters are input only, immutable for the component instance.
      * @param {object} params
      * @param {(number|KnockoutObservable<number>)} params.userListingID
      * @param {(number|KnockoutObservable<number>)} [params.jobTitleID] The job title assigned to the given listing,
@@ -45,8 +43,16 @@ export default class ListingSolutionsEditor extends Komponent {
          */
         this.jobTitleID = ko.unwrap(params.jobTitleID);
 
+        /**
+         * List of solutions attached to the user listing
+         * @member {KnockoutObservableArray<rest/Solution>}
+         */
         this.listingSolutions = ko.observableArray([]);
 
+        /**
+         * List of solutions suggested for the job title
+         * @member {KnockoutObservableArray<rest/Solution>}
+         */
         this.suggestedSolutions = ko.observableArray([]);
 
         /**
