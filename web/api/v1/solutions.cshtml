@@ -24,6 +24,10 @@
         "Solutions - By Search SubCategory": {
             "url": "/api/v1/en-US/solutions/search-subcategory/1",
             "get": { }
+        },
+        "Solutions - By Job Title": {
+            "url": "/api/v1/en-US/solutions/job-title/106",
+            "get": { }
         }
     }
 *@
@@ -50,6 +54,12 @@
                 var id = UrlData[1].AsInt();
                 var locale = LcRest.Locale.Current;
                 return LcRest.Solution.BySearchSubcategory(id, locale.languageID, locale.countryID);
+            }
+            else if (UrlData.Count == 2 && UrlData[0] == "job-title")
+            {
+                var id = UrlData[1].AsInt();
+                var locale = LcRest.Locale.Current;
+                return LcRest.Solution.ByJobTitle(id, locale.languageID, locale.countryID);
             }
             else if (UrlData[0].IsInt())
             {

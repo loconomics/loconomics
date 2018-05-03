@@ -94,6 +94,15 @@ namespace LcRest
                  AND C.searchSubcategoryID = @2
                 ORDER BY C.displayRank, S.name
         ";
+        const string sqlByJobTitleID = sqlSelect + sqlFields + sqlFrom + @"
+                INNER JOIN JobTitleSolution As C
+                 ON C.solutionID = S.solutionID
+                 AND C.languageID = S.languageID
+                 AND C.countryID = S.countryID
+        " + sqlCommonWhere + @"
+                 AND C.jobTitleID = @2
+                ORDER BY C.displayRank, S.name
+        ";
         #endregion
 
         /// <summary>
@@ -115,6 +124,14 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return db.Query(sqlBySearchSubcategoryID, languageID, countryID, searchSubcategoryID).Select(FromDB);
+            }
+        }
+
+        public static IEnumerable<Solution> ByJobTitle(int jobTitleID, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlByJobTitleID, languageID, countryID, jobTitleID).Select(FromDB);
             }
         }
 
