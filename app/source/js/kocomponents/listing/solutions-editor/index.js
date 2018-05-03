@@ -6,6 +6,7 @@
 import '../../solution/autocomplete';
 import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
+import { byJobTitleID } from '../../../data/solutions';
 import { byUserListing } from '../../../data/userSolutions';
 import ko from 'knockout';
 import { show as showError } from '../../../modals/error';
@@ -26,17 +27,23 @@ export default class ListingSolutionsEditor extends Komponent {
      * not read.
      * @param {object} params
      * @param {(number|KnockoutObservable<number>)} params.userListingID
+     * @param {(number|KnockoutObservable<number>)} [params.jobTitleID] The job title assigned to the given listing,
+     * used to load suggestions of solutions (is optional, not giving it just disables visualization
+     * of suggestions)
      * @param {function} [params.onSaved] Callback to notify after save the item, with the updated data included
      */
     constructor(params) {
         super();
 
          /**
-         * Captures the jobTitleID to identify
-         * which listing's categories to edit.
          * @member {number}
          */
         this.userListingID = ko.unwrap(params.userListingID);
+
+         /**
+         * @member {number}
+         */
+        this.jobTitleID = ko.unwrap(params.jobTitleID);
 
         this.listingSolutions = ko.observableArray([]);
 
@@ -94,6 +101,15 @@ export default class ListingSolutionsEditor extends Komponent {
         this.subscribeTo(dataProvider.onDataError, (error) => {
             showError({
                 title: 'There was an error loading your search categories',
+                error
+            });
+        });
+
+        const suggestionsProvider = byJobTitleID(this.jobTitleID);
+        this.subscribeTo(suggestionsProvider.onData, this.suggestedSolutions);
+        this.subscribeTo(suggestionsProvider.onDataError, (error) => {
+            showError({
+                title: 'There was an error loading suggestions for your listing',
                 error
             });
         });

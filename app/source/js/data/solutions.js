@@ -15,13 +15,15 @@ const LOCAL_KEY = 'solutions';
 const ID_PROPERTY_NAME = 'solutionID';
 const BY_SUB_CATEGORY_API_NAME = API_NAME + '/search-subcategory';
 const BY_SUB_CATEGORY_LOCAL_KEY = 'searchSubCategoriesSolutions';
+const BY_JOB_TITLE_API_NAME = API_NAME + '/job-title';
+const BY_JOB_TITLE_LOCAL_KEY = 'jobTitleSolutions';
 
 /**
  * Provides an API to fetch all solutions under a searchSubCategoryID.
  * @param {number} id The searchCategoryID
  * @returns {CachedDataProvider<Array<rest/Solution>>}
  * Usage:
- * - const dataProvider = byCategoryID(searchCategoryID);
+ * - const dataProvider = bySearchSubcategoryID(searchCategoryID);
  * - dataProvider.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
  * - dataProvider.onLoadError.subscribe(fn) to get notified of errors happening as of onData
  */
@@ -32,6 +34,24 @@ export function bySearchSubcategoryID(id) {
       remote: new RestItemDataProviderDriver(rest, BY_SUB_CATEGORY_API_NAME, id),
       local: new LocalForageSingleDataProviderDriver(localforage, BY_SUB_CATEGORY_LOCAL_KEY + '/' + id)
   });
+}
+
+/**
+ * Provides an API to fetch all solutions suggested for a job title.
+ * @param {number} id The jobTitleID
+ * @returns {CachedDataProvider<Array<rest/Solution>>}
+ * Usage:
+ * - const dataProvider = byJobTitleID(jobTitleID);
+ * - dataProvider.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
+ * - dataProvider.onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ */
+export function byJobTitleID(id) {
+    return new CachedDataProvider({
+        // 1 minutes
+        ttl: 1 * 60 * 1000,
+        remote: new RestItemDataProviderDriver(rest, BY_JOB_TITLE_API_NAME, id),
+        local: new LocalForageSingleDataProviderDriver(localforage, BY_JOB_TITLE_LOCAL_KEY + '/' + id)
+    });
 }
 
 /**
