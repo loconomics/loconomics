@@ -56,7 +56,7 @@ namespace LcRest
         /// </summary>
         const string sqlLimitedSelect = @"SELECT TOP 20";
         const string sqlSelect = "SELECT";
-        const string sqlFields = @"
+        public const string sqlFields = @"
                 S.solutionID,
                 S.languageID,
                 S.countryID,
@@ -70,7 +70,7 @@ namespace LcRest
                 S.createdDate,
                 S.updatedDate
         ";
-        const string sqlFrom = "FROM Solution AS S";
+        public const string sqlFrom = "FROM Solution AS S";
         const string sqlCommonOrder = "ORDER BY S.name";
         const string sqlCommonWhere = @"
             WHERE
