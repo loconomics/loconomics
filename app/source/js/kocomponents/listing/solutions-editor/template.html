@@ -1,8 +1,11 @@
-<form data-bind="event: { submit: save }">
+<form data-bind="event: { submit: save }, css: { 'is-loading': isLoading }">
+    <div class="loadingSpinner loadingSpinner--floating loadingSpinner--2x">
+        <span class="icon fa ion ion-load-c"></span>
+    </div>
     <fieldset>
         <legend>Categories you're already listed in</legend>
         <div data-bind="foreach: listingSolutions">
-            <button type="button" data-bind="click: $component.unselectItem.bind($component)" class="btn btn-default">
+            <button type="button" data-bind="click: $component.unselectItem.bind($component), disable: $component.isLocked" class="btn btn-default">
                 <icon-dec params="icon: 'ion-close'"></icon-dec>
                 <span data-bind="text: name"></span>
             </button>
@@ -11,7 +14,7 @@
     <fieldset data-bind="visible: suggestedSolutions, if: jobTitleID">
         <legend>Suggested for you to add</legend>
         <div data-bind="foreach: suggestedSolutions">
-            <button type="button" data-bind="click: $component.selectItem.bind($component)" class="btn btn-default">
+            <button type="button" data-bind="click: $component.selectItem.bind($component), disable: $component.isLocked" class="btn btn-default">
                 <icon-dec params="icon: 'ion-plus'"></icon-dec>
                 <span data-bind="text: name"></span>
             </button>
@@ -19,7 +22,7 @@
     </fieldset>
     <fieldset>
         <legend>Search for categories to add</legend>
-        <solution-autocomplete params="onSelect: fromAutocomplete.bind($component)"></solution-autocomplete>
+        <solution-autocomplete params="onSelect: fromAutocomplete.bind($component), isDisabled: $component.isLocked"></solution-autocomplete>
     </fieldset>
     <div class="isolated">
         <button type="submit" class="btn btn-primary btn-block btn-lg" data-bind="disable: isLocked, text: saveButtonText"></button>

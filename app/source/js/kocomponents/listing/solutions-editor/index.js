@@ -102,9 +102,16 @@ export default class ListingSolutionsEditor extends Komponent {
     }
 
     __connectData() {
-        const dataProvider = byUserListing(this.userListingID);
-        this.subscribeTo(dataProvider.onData, this.listingSolutions);
-        this.subscribeTo(dataProvider.onDataError, (error) => {
+
+        this.isLoading(true);
+        byUserListing(this.userListingID)
+        .onceLoaded()
+        .then((data) => {
+            this.isLoading(false);
+            this.listingSolutions(data);
+        })
+        .catch((error) => {
+            this.isLoading(false);
             showError({
                 title: 'There was an error loading your search categories',
                 error

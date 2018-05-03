@@ -25,6 +25,7 @@ export default class SolutionAutocomplete extends Komponent {
      * @param {(string|KnockoutObservable<string>)} params.id ID for the input element (important to keep in sync with an external
      * label)
      * @param {(string|KnockoutObservable<string>)} params.value Default input value
+     * @param {(string|KnockoutObservable<string>)} [params.isDisabled] Let's set when input is not allowed
      * @param {function} params.onSelect
      */
     constructor(params) {
@@ -39,6 +40,10 @@ export default class SolutionAutocomplete extends Komponent {
          * @member {KnockoutObservable<string>}
          */
         this.value = ko.observable(ko.unwrap(params.value));
+        /**
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isDisabled = getObservable(params.isDisabled);
         /**
          * Loaded suggestions based on user input
          * @member {KnockoutObservableArray<rest/Solution>}
