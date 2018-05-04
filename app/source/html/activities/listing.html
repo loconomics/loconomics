@@ -48,6 +48,18 @@
             </div>
         </section>
         <div class="container">
+            <section id="listing-categories" class="row" data-bind="visible: selectedJobTitle() && selectedJobTitle().solutions().length, with: selectedJobTitle">
+                <div class="col-xs-12 col-sm-12 SectionHeading" >
+                    <h2><icon-dec params="icon: 'ion-ios-cart-outline'"></icon-dec> Marketplace categories</h2>
+                </div>
+                <div class="col-xs-12 col-sm-12">
+                    <ul data-bind="foreach: solutions">
+                        <li class="btn btn-info">
+                            <span data-bind="text: name"></span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
             <section id="listing-services-overview" class="row" data-bind="visible: $root.hasServicesOverview, with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading" >
                     <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview of services</h2>

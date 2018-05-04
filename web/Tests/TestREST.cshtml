@@ -1223,6 +1223,31 @@
                 "solutionID": null,
                 "expiryDate": "2020-01-01T01:01:01Z"
             }
+        },
+        "Solutions search": {
+            "url": "/api/v1/en-US/solutions",
+            "get": {
+                "searchTerm": "wedding"
+            }
+        },
+        "Solutions - Get item": {
+            "url": "/api/v1/en-US/solutions/1",
+            "get": {}
+        },
+        "Solutions - By Search SubCategory": {
+            "url": "/api/v1/en-US/solutions/search-subcategory/1",
+            "get": {}
+        },
+        "Solutions by user listing": {
+            "url": "/api/v1/en-US/me/solutions/listing/1",
+            "get": { },
+            "put": {
+                "solutions": [1,2,5,3]
+            }
+        },
+        "Solutions - By Job Title": {
+            "url": "/api/v1/en-US/solutions/job-title/106",
+            "get": { }
         }
     };
 

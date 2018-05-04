@@ -1,0 +1,15 @@
+CREATE TABLE dbo.SearchCategory
+(SearchCategoryID int NOT NULL,
+LanguageID int NOT NULL,
+CountryID int NOT NULL,
+Name nvarchar(20) NOT NULL,
+ShortDescription nvarchar(100),
+LongDescription nvarchar(300),
+SmallImage nvarchar(255),
+BannerImage nvarchar(255),
+DisplayRank int,
+CreatedDate datetimeoffset NOT NULL,
+UpdatedDate datetimeoffset NOT NULL,
+ModifiedBy nvarchar(4) DEFAULT 'sys' NOT NULL,
+Active bit DEFAULT 1 NOT NULL,
+PRIMARY KEY (SearchCategoryID, LanguageID, CountryID));
