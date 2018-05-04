@@ -5,6 +5,7 @@
 **/
 'use strict';
 
+import '../kocomponents/listing/solutions-list';
 import { byListing as badgesByListing, expandUserBadges } from '../data/userBadges';
 import UserJobTitle from '../models/UserJobTitle';
 import { item as userListingItem } from '../data/userListings';

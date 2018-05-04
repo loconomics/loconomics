@@ -14,7 +14,7 @@
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
             <!-- ko if:userListingID() && jobTitleID() -->
-            <listing-solutions-editor params="userListingID: userListingID, jobTitleID: jobTitleID"></listing-solutions-editor>
+            <listing-solutions-editor params="userListingID: userListingID, jobTitleID: jobTitleID, onSaved: onSaved"></listing-solutions-editor>
             <!-- /ko -->
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

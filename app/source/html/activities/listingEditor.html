@@ -72,16 +72,21 @@
             </div>
         </section>
         <div class="container">
-            <!--<section id="listing-editor-categories" class="row" data-bind="" title="">
+            <section id="listing-editor-categories" class="row" data-bind="if: $parent.userJobTitle() && $parent.userJobTitle().userListingID()" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading" >
                     <h2><icon-dec params="icon: 'ion-ios-cart-outline'"></icon-dec> Marketplace categories</h2>
-                    <a data-bind=" attr: {href: '/listing-categories-edit/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the marketplace categories where your services show up' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="attr: {
+                        href: '/listing-categories-edit/' + $root.returnLinkJobTitleActivity(),
+                        'aria-label': 'Edit the marketplace categories where your services show up' }"
+                        class="btn btn-default pull-right">
+                        Edit
+                    </a>
                 </div>
                 <div class="col-xs-12 col-sm-12">
                     <em class="text-muted">These are the categories where clients find your <span data-bind="text: $root.listingTitle()"></span> services in the marketplace.</em>
-                    <listing-solutions-list></listing-solutions-list>
+                    <listing-solutions-list class="isolated" params="userListingID: $parent.userJobTitle() && $parent.userJobTitle().userListingID()"></listing-solutions-list>
                 </div>
-            </section>-->
+            </section>
             <section id="listing-editor-services-overview" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="container-fluid SectionHeading" >
                     <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview</h2>
