@@ -315,6 +315,15 @@ namespace LcRest
                         throw new Exception("We're sorry, there was an error creating your listing: " + message);
                     }
                 }
+                else
+                {
+                    // Additional data for the new listing:
+                    // Needs the default solutions
+                    if ((int)results.userListingID > 0)
+                    {
+                        UserSolution.SetDefaultSolutionsForListing((int)results.userListingID);
+                    }
+                }
             }
         }
 

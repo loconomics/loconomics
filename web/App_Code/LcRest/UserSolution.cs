@@ -121,6 +121,38 @@ namespace LcRest
                 db.Execute("COMMIT TRANSACTION");
             }
         }
+
+        /// <summary>
+        /// Assign to the given user listing all the solutions that exist as the 'default' ones for the
+        /// listing job title
+        /// </summary>
+        /// <param name="userListingID"></param>
+        public static void SetDefaultSolutionsForListing(int userListingID)
+        {
+            using (var db = new LcDatabase())
+            {
+                var listing = db.QuerySingle(@"
+                    SELECT TOP 1 userID, positionID as jobTitleID, languageID, countryID
+                    FROM userprofilepositions WHERE userListingID=@0",
+                    userListingID);
+                if (listing != null)
+                {
+                    var defaultSolutions = db.Query(@"
+                        SELECT solutionID, displayRank
+                        FROM JobTitleSolution
+                        WHERE DefaultSelected = 1
+                            AND jobTitleID=@0 AND languageID=@1 AND countryID=@2",
+                        listing.jobTitleID, listing.languageID, listing.countryID);
+                    var locale = Locale.From(listing.languageID, listing.countryID);
+                    db.Execute("BEGIN TRANSACTION");
+                    foreach (var solution in defaultSolutions)
+                    {
+                        Set(listing.userID, userListingID, solution.solutionID, solution.displayRank, locale, db);
+                    }
+                    db.Execute("COMMIT TRANSACTION");
+                }
+            }
+        }
         #endregion
     }
 }
