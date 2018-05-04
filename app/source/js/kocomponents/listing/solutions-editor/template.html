@@ -5,7 +5,7 @@
     <fieldset>
         <legend>Categories you're already listed in</legend>
         <div data-bind="foreach: listingSolutions">
-            <button type="button" data-bind="click: $component.unselectItem.bind($component), disable: $component.isLocked" class="btn btn-default">
+            <button type="button" data-bind="click: $component.unselectItem.bind($component), disable: $component.isLocked" class="btn btn-info">
                 <icon-dec params="icon: 'ion-close'"></icon-dec>
                 <span data-bind="text: name"></span>
             </button>
