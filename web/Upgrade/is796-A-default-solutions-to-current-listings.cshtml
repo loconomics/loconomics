@@ -1,0 +1,18 @@
+﻿@{
+    using (var db = new LcDatabase())
+    {
+        var allListings = db.Query("SELECT userListingID FROM userprofilepositions");
+        foreach(var listing in allListings)
+        {
+            try
+            {
+                LcRest.UserSolution.SetDefaultSolutionsForListing(listing.userListingID);
+                Response.Write("OK " + listing.userListingID.ToString() + "\n<br/>");
+            }
+            catch
+            {
+                Response.Write("Failed " + listing.userListingID.ToString() + "\n<br/>");
+            }
+        }
+    }
+}

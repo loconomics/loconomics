@@ -1,0 +1,45 @@
+<!-- ko if: isReady -->
+<div class="BadgeViewer-card" data-bind="visible: viewMode() === 'card', attr: { href: id }">
+    <div class="Card-heading">
+        <div class="Card-image">
+            <img data-bind="attr: { src: image, alt: narrative }" aria-hidden="true">
+        </div>
+        <div class="Card-title">
+            <h5 data-bind="text: badgeName"></h5>
+        </div>
+        <div class="Card-action" data-bind="visible: editURL, if: editURL">
+            <a class="btn btn-icon-link" data-bind="attr: {
+                href: editURL,
+                'aria-label': 'Edit ' + badgeName() + ' badge'
+            }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+        </div>
+    </div>
+    <div class="Card-description">
+        <hr/>
+        <p data-bind="text: narrative"></p>
+        <a class="btn btn-link btn-default" data-bind="
+            visible: detailsURL,
+            attr: {
+                href: detailsURL,
+                'aria-label': 'View ' + badgeName() + ' badge'
+            }">
+            View details
+        </a>
+    </div>
+</div>
+<div class="BadgeViewer-details" data-bind="visible: viewMode() === 'fullDetails', if: viewMode() === 'fullDetails'">
+    <div class="SectionHeading">
+        <img data-bind="attr: { src: image }" aria-hidden="true">
+        <h2><span data-bind="text: badgeName"></span></h2>
+    </div>
+    <h3>Evidence</h3>
+    <p data-bind="text: narrative"></p>
+    <ul data-bind="foreach: evidence">
+        <li>
+            <a data-bind="text: narrative, attr: { href: id }" target="_blank"></a>
+        </li>
+    </ul>
+    <h3>Description of <span data-bind="text: badgeName"></span></h3>
+    <p data-bind="text: badgeDescription"></p>
+</div>
+<!-- /ko -->

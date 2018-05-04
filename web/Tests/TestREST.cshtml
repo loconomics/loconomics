@@ -1175,6 +1175,79 @@
                 "jobTitleID": null,
                 "userExternalListingID": null
             }
+        },
+        "Badges (create)": {
+            "url": "/api/v1/en-US/me/badges",
+            "post": {
+                "solutionID": 1,
+                "badgeURL": "https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0",
+                "type": "badge"
+            }
+        },
+        "Badges (udpate and delete": {
+            "url": "/api/v1/en-US/me/badges/123",
+            "get": {},
+            "put": {
+                "solutionID": 1,
+                "badgeURL": "https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0",
+                "type": "badge"
+            },
+            "delete": {}
+        },
+        "Badges by listing": {
+            "url": "/api/v1/en-US/me/badges/by-listing/123",
+            "get": {}
+        },
+        "Badges by solution": {
+            "url": "/api/v1/en-US/me/badges/by-solution/123",
+            "get": {}
+        },
+        "Admin user badges (list and create)": {
+            "url": "/api/v1/en-US/admin/users/141",
+            "get": {},
+            "post": {
+                "badgeURL": "https://badgr.io/assertions/asdf?v=2",
+                "type": "badge",
+                "category": "general",
+                "solutionID": null,
+                "expiryDate": "2020-01-01T01:01:01Z"
+            }
+        },
+        "Admin user badges (item by userBadgeID)": {
+            "url": "/api/v1/en-US/admin/users/141/2",
+            "get": {},
+            "put": {
+                "badgeURL": "https://badgr.io/assertions/asdf?v=2",
+                "type": "badge",
+                "category": "general",
+                "solutionID": null,
+                "expiryDate": "2020-01-01T01:01:01Z"
+            }
+        },
+        "Solutions search": {
+            "url": "/api/v1/en-US/solutions",
+            "get": {
+                "searchTerm": "wedding"
+            }
+        },
+        "Solutions - Get item": {
+            "url": "/api/v1/en-US/solutions/1",
+            "get": {}
+        },
+        "Solutions - By Search SubCategory": {
+            "url": "/api/v1/en-US/solutions/search-subcategory/1",
+            "get": {}
+        },
+        "Solutions by user listing": {
+            "url": "/api/v1/en-US/me/solutions/listing/1",
+            "get": { },
+            "put": {
+                "solutions": [1,2,5,3]
+            }
+        },
+        "Solutions - By Job Title": {
+            "url": "/api/v1/en-US/solutions/job-title/106",
+            "get": { }
         }
     };
 

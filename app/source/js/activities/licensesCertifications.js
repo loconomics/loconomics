@@ -27,6 +27,8 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
         backLink: DEFAULT_BACK_LINK, helpLink: this.viewModel.helpLink
     });
     this.title('Professional credentials');
+    // Share navBar with desktop nav through viewModel
+    this.viewModel.navBar = this.navBar;
 
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 
@@ -158,6 +160,47 @@ function ViewModel(app) {
 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/licensesCertifications');
+
+    /**
+     * Special license ID that indicates a required license
+     * @const {boolean}
+     */
+    this.REQUIRED_LICENSE_SPECIAL_ID = -1;
+    /**
+     * Special license ID that indicates an optional license
+     * @const {boolean}
+     */
+    this.OPTIONAL_LICENSE_SPECIAL_ID = 0;
+
+    /**
+     * Whether there are required licenses for this user and job title.
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.hasRequiredLicenses = ko.pureComputed(() => {
+        var applicable = this.jobTitleApplicableLicences();
+        if (applicable && applicable.country && applicable.country()) {
+            return !!applicable.country().some((item) => item.licenseCertificationID() === this.REQUIRED_LICENSE_SPECIAL_ID);
+        }
+        else {
+            return false;
+        }
+    });
+
+    /**
+     * Whether there are explicitly optional licenses for this user and job title.
+     * NOTE: is not enough to check the opposite of hasRequiredLicenses because that one
+     * is false too when no records, and a explicit record for 'optional' must exist.
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.hasOptionalLicenses = ko.pureComputed(() => {
+        var applicable = this.jobTitleApplicableLicences();
+        if (applicable && applicable.country && applicable.country()) {
+            return !!applicable.country().some((item) => item.licenseCertificationID() === this.OPTIONAL_LICENSE_SPECIAL_ID);
+        }
+        else {
+            return false;
+        }
+    });
 
     this.addNew = function(item) {
         var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID();

@@ -34,11 +34,11 @@ function TimeSlotViewModel(params) {
             clickAction = '. Click to add a new booking or calendar block.';
             labelSummary = this.summary();
         }
-        else if (apt.id() > 0 && apt.sourceBooking().isRequest()) {
+        else if (apt.id() > 0 && apt.sourceBooking() && apt.sourceBooking().isRequest()) {
             clickAction = '. Click to respond to request.';
             labelSummary = this.summary() + ', with total price of ' + this.price();
         }
-        else if (apt.id() > 0 && apt.sourceBooking().isConfirmed()) {
+        else if (apt.id() > 0 && apt.sourceBooking() && apt.sourceBooking().isConfirmed()) {
             clickAction = '. Click to view booking details.';
             labelSummary = this.summary() + ', with total price of ' + this.price();
         }
