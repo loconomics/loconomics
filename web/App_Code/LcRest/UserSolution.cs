@@ -11,6 +11,14 @@ namespace LcRest
     public class UserSolution
     {
         #region Fetch solutions
+        /// <summary>
+        /// Fetch all active (non deleted) solutions of a user listing,
+        /// for both public and private usage
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="userListingID"></param>
+        /// <param name="locale"></param>
+        /// <returns></returns>
         public static IEnumerable<Solution> GetSolutionsByListing(int userID, int userListingID, Locale locale)
         {
             using (var db = new LcDatabase())

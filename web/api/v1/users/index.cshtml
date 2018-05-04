@@ -13,7 +13,7 @@
     not using the trailing '/index'.
 
     Options:
-    
+
     - GET /
         - includeFullJobTitleID:int (Optional) Set a jobTitleID to get it's object under jobProfile expanded with
             all the public data related: services, serviceAddresses, serviceAttributes, workPhotos (as usually displayed in the profile page)
@@ -23,9 +23,12 @@
             profile: {}, // like /users/{userID}/profile
             rating: {}, // like /users/{userID}/rating
             verificationsSummary: {}, // like /users/{userID}/verifications-summary
+            verifications: [],
             jobProfile: [{}], // like /users/{userID}/jobProfile BUT extended with rating and verificationsSummary
             stats: {},
-            education: [{}]
+            education: [{}],
+            weeklySchedule: {},
+            schedulingPreferences: {}
         }
 
     EXAMPLES {
@@ -66,7 +69,8 @@
                 var full = includeFullJobTitleID == x.jobTitleID || includeFullJobTitleID == -1;
                 var servicesVisibility = WebSecurity.IsAuthenticated ? LcRest.ServiceProfessionalService.Visibility.BookableByClient(WebSecurity.CurrentUserId)
                                                                      : LcRest.ServiceProfessionalService.Visibility.BookableByPublic();
-                return new {
+                return new
+                {
                     userID = x.userID,
                     jobTitleID = x.jobTitleID,
                     title = x.title,
@@ -84,11 +88,13 @@
                     workPhotos = full ? LcData.Photo.GetUserWorkPhotos(userID, x.jobTitleID) : null,
                     verifications = full ? LcRest.PublicUserVerification.GetList(userID, x.jobTitleID) : null,
                     licensesCertifications = full ? LcRest.PublicUserLicenseCertification.GetList(userID, x.jobTitleID, locale.languageID) : null,
-                    badges = full ? LcRest.UserBadge.ListByListing(userID, x.jobTitleID, locale.languageID, locale.countryID, true) : null
+                    badges = full ? LcRest.UserBadge.ListByListing(userID, x.jobTitleID, locale.languageID, locale.countryID, true) : null,
+                    solutions = full ? LcRest.UserSolution.GetSolutionsByListing(userID, x.userListingID, locale) : null
                 };
             });
 
-            return new {
+            return new
+            {
                 profile = profile,
                 rating = rating,
                 verificationsSummary = verificationsSummary,
@@ -102,8 +108,8 @@
         }
 
         /// <summary>
-        /// Fetches list of public user job titles for the service professional. 
-        /// 
+        /// Fetches list of public user job titles for the service professional.
+        ///
         /// If the ID of the caller matches the service professional, then it will
         /// return all job titles, even those that aren't publicly active.
         /// </summary>

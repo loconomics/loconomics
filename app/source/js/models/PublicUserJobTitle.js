@@ -66,6 +66,9 @@ function PublicUserJobTitle(values) {
         cancellationPolicy: { Model: UserCancellationPolicy },
         badges: {
             isArray: true
+        },
+        solutions: {
+            isArray: true
         }
     }, values);
 
