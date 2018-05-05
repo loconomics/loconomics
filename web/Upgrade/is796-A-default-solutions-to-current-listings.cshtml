@@ -1,18 +1,47 @@
 ﻿@{
     using (var db = new LcDatabase())
     {
-        var allListings = db.Query("SELECT userListingID FROM userprofilepositions");
+        var last = getLastID();
+        var allListings = db.Query("SELECT userListingID FROM userprofilepositions WHERE userListingID > @0 ORDER BY userListingID ASC", last);
         foreach(var listing in allListings)
         {
             try
             {
                 LcRest.UserSolution.SetDefaultSolutionsForListing(listing.userListingID);
                 Response.Write("OK " + listing.userListingID.ToString() + "\n<br/>");
+                lastID(listing.userListingID.ToString());
             }
             catch
             {
                 Response.Write("Failed " + listing.userListingID.ToString() + "\n<br/>");
             }
+        }
+    }
+}
+@functions{
+    void lastID(string userListingID)
+    {
+        string path = "_logs/lastUserListingID.txt";
+        if (HttpContext.Current != null)
+            path = HttpContext.Current.Server.MapPath(LcUrl.RenderAppPath + path);
+        try
+        {
+            System.IO.File.Delete(path);
+        }
+        catch { }
+        System.IO.File.AppendAllText(path, userListingID);
+    }
+    int getLastID()
+    {
+        try {
+            string path = "_logs/lastUserListingID.txt";
+            if (HttpContext.Current != null)
+                path = HttpContext.Current.Server.MapPath(LcUrl.RenderAppPath + path);
+            return System.IO.File.ReadAllText(path).AsInt(0);
+        }
+        catch
+        {
+            return 0;
         }
     }
 }
