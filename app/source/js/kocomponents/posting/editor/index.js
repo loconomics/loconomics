@@ -3,23 +3,16 @@
  * @module kocomponents/posting/editor
  *
  */
-import '../../client/editor';
-import '../../client/list';
 import '../../utilities/icon-dec';
-import '../../input/duration';
 import '../../../utils/autofocusBindingHandler';
-import '../../input/date';
-import * as suggestedPlatformsList from '../../../data/suggestedPlatforms';
-import { ActionForValue } from '../../job-title-autocomplete';
+import { ActionForValue } from '../../solution/autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
-import UserEarningsEntry from '../../../models/UserEarningsEntry';
+import UserPosting from '../../../models/UserPosting';
 import ko from 'knockout';
 import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
-import { item as userEarningsItem } from '../../../data/userEarnings';
-import { list as userExternalListingsList } from '../../../data/userExternalListings';
-import { list as userListingsList } from '../../../data/userListings';
+import { item as userPosting } from '../../../data/userPostings';
 
 const TAG_NAME = 'posting-editor';
 
@@ -45,10 +38,8 @@ export default class PostingEditor extends Komponent {
      * not read.
      * @param {object} params
      * @param {KnockoutObservable<EditorMode>} [params.editorMode] Input only value setting-up the mode in use
-     * @param {(number|KnockoutObservable<number>)} [params.earningsEntryID] Input only ID to be edited or copied, or zero for new.
-     * @param {(number|KnockoutObservable<number>)} [params.userExternalListingID] Input only ID to preset the external listing,
+     * @param {(number|KnockoutObservable<number>)} [params.userPostingID] Input only ID to be edited or copied, or zero for new.
      * this let's add an earning from a listing component as a shortcut.
-     * @param {KnockoutObservable<integer>} [params.startAtStep] Input only value setting-up the initial step for the component.
      * @param {function} [params.onSaved] Callback to notify after save the item, with the updated data included
      * @param {function} [params.onDeleted] Callback to notify after delete the item
      */
@@ -56,13 +47,12 @@ export default class PostingEditor extends Komponent {
         super();
 
         /**
-         * Editable earnings entry. Same instance is used all the time, just
+         * Editable user posting. Same instance is used all the time, just
          * updating content, simplifying working with the form and summary.
-         * @member {UserEarningsEntry}
+         * @member {UserPosting}
          */
-        this.earningsEntry = new UserEarningsEntry({
-            earningsEntryID: ko.unwrap(params.earningsEntryID) || 0,
-            userExternalListingID: ko.unwrap(params.userExternalListingID)
+        this.data = new UserPosting({
+            userPostingID: ko.unwrap(params.userPostingID) || 0
         });
 
         /**
@@ -73,9 +63,9 @@ export default class PostingEditor extends Komponent {
         this.editorMode = ko.observable(ko.unwrap(params.editorMode));
 
         /**
-         * @member {KnockoutObservable<object>}
+         * @member {KnockoutObservable<rest/Solution>}
          */
-        this.selectedClient = ko.observable(null);
+        this.selectedSolution = ko.observable(null);
 
         /**
          * Callback executed when the form is saved successfully, giving
@@ -89,25 +79,6 @@ export default class PostingEditor extends Komponent {
          * @member {function}
          */
         this.onDeleted = params.onDeleted;
-
-        /**
-         * Holds a list of the user external listings, available to be selected
-         * as the earnings entry listing.
-         */
-        this.userExternalListings = ko.observableArray([]);
-
-        /**
-         * Holds a list of the user listings at Loconomics, available to allow
-         * quick selection of job title.
-         */
-        this.userListings = ko.observableArray([]);
-
-        /**
-         * Holds a list of suggested platforms, available to be selected
-         * as the earnigns entry listing, but while is not a listing it will
-         * create a listing for that platform automatically.
-         */
-        this.suggestedPlatforms = ko.observableArray([]);
 
         // Starts in review mode when we are editing or copying an entry,
         // so anything else but 'add'
@@ -133,7 +104,7 @@ export default class PostingEditor extends Komponent {
             return itIs ? 'Submitting..' : 'Submit';
         });
 
-        this.__setupDataOperations();
+        this.__connectData();
     }
 
     /**
@@ -275,60 +246,15 @@ export default class PostingEditor extends Komponent {
      * and start any initial request for data
      * @private
      */
-    __setupDataOperations() {
+    __connectData() {
         /**
          * We create an item manager to operate on the data for the requested ID
          * (allows to load, save, delete).
          */
-        this.dataManager = userEarningsItem(this.earningsEntry.earningsEntryID());
-
-        /**
-         * Suscribe to data coming for the list and put them in our
-         * userListings propery.
-         */
-        this.subscribeTo(userListingsList.onData, this.userListings);
-
-        /**
-         * Notify data load errors
-         */
-        this.subscribeTo(userListingsList.onDataError, (err) => {
-            showError({
-                title: 'There was an error loading your listings',
-                error: err
-            });
-        });
-
-        /**
-         * Suscribe to data coming for the list and put them in our
-         * userExternalListings propery.
-         */
-        this.subscribeTo(userExternalListingsList.onData, this.userExternalListings);
-
-        /**
-         * Notify data load errors
-         */
-        this.subscribeTo(userExternalListingsList.onDataError, (err) => {
-            showError({
-                title: 'There was an error loading your external listings',
-                error: err
-            });
-        });
-
-        /**
-         * Load suggestions.
-         */
-        this.subscribeTo(suggestedPlatformsList.onData, this.suggestedPlatforms);
-
-        /// Notify data load errors
-        this.subscribeTo(suggestedPlatformsList.onDataError, (err) => {
-            showError({
-                title: 'There was an error loading the platforms',
-                error: err
-            });
-        });
+        this.dataManager = userPosting(this.data.userPostingID());
 
         // When we have an ID, we need to load it first
-        if (this.earningsEntry.earningsEntryID()) {
+        if (this.data.userPostingID()) {
 
             this.isLoading(true);
 
@@ -339,89 +265,19 @@ export default class PostingEditor extends Komponent {
                     // On copy mode, we need to reset the ID and dataManager
                     // so it forces to create a new entry (otherwise it will
                     // actually update the original one)
-                    data.earningsEntryID = 0;
-                    this.dataManager = userEarningsItem(0);
+                    data.userPostingID = 0;
+                    this.dataManager = userPosting(0);
                 }
                 this.earningsEntry.model.updateWith(data);
             })
             .catch((error) => {
                 this.isLoading(false);
                 showError({
-                    title: 'There was an error loading the earnings entry',
+                    title: 'There was an error loading your posting',
                     error
                 });
             });
         }
-    }
-
-    /**
-     * Makes given client current one selected.
-     * @param {Object} client
-     * @method
-     */
-    selectClient(client) {
-        // Updates edited entry with the client ID selected
-        this.earningsEntry.clientUserID(client.clientID);
-        // Save a reference, to display name and other info
-        this.selectedClient(client);
-        this.goToSummary();
-    }
-
-    /**
-     * Makes given listing the one selected
-     * @param {Object} listing
-     * @method
-     */
-    selectListing(listing) {
-        this.earningsEntry.userExternalListingID(listing.userExternalListingID);
-        this.earningsEntry.listingTitle(listing.title);
-        // for integrity, makes platform matches listing (not needed to save the data)
-        this.earningsEntry.platformID(listing.platformID);
-        this.saveStep();
-    }
-
-    /**
-     * Gets the job title from the given user listings and use it as the
-     * selected job title of the earnings entry
-     * @param {Object} listing
-     * @method
-     */
-    selectListingJobTitle(listing) {
-        this.earningsEntry.jobTitleID(listing.jobTitleID);
-        this.earningsEntry.jobTitleName(listing.jobTitleSingularName);
-        this.goToSummary();
-    }
-
-    /**
-     * Gets the job title from a job title selected from the autocomplete
-     * and use it as the selected job title of the earnings entry
-     * @param {string} textValue User input text searching a job title
-     * @param {models/JobTitle} data Selected job title model
-     */
-    selectJobTitle(textValue, data) {
-        if (!data || !data.jobTitleID) return;
-
-        const id = data.jobTitleID();
-        this.earningsEntry.jobTitleID(id);
-        this.earningsEntry.jobTitleName(data.singularName());
-        this.goToSummary();
-        return {
-            value: ActionForValue.clear
-        };
-    }
-
-    /**
-     * Makes given platform as the selected listing, which means a listing
-     * will be created for that platform
-     * @param {rest/Platform} platform
-     */
-    selectPlatform(platform) {
-        this.earningsEntry.platformID(platform.platformID);
-        // resets listingID or will not take effect
-        this.earningsEntry.userExternalListingID(null);
-        // Something to display to the user
-        this.earningsEntry.listingTitle(`My ${platform.name} listing`);
-        this.saveStep();
     }
 
     /**
@@ -433,7 +289,7 @@ export default class PostingEditor extends Komponent {
 
         this.isSaving(true);
 
-        const data = this.earningsEntry.model.toPlainObject(true);
+        const data = this.data.model.toPlainObject(true);
 
         return this.dataManager
         .save(data)
@@ -445,13 +301,13 @@ export default class PostingEditor extends Komponent {
             }
             else {
                 // Use updated/created data
-                this.earningsEntry.model.updateWith(freshData);
+                this.data.model.updateWith(freshData);
             }
         })
         .catch((error) => {
             this.isSaving(false);
             showError({
-                title: 'There was an error saving the earnings entry',
+                title: 'There was an error saving your posting',
                 error
             });
         });
@@ -465,11 +321,11 @@ export default class PostingEditor extends Komponent {
         if (this.isDeleting()) return Promise.reject();
 
         this.isDeleting(true);
-        const id = this.earningsEntry.earningsEntryID();
+        const id = this.data.userPostingID();
 
         return showConfirm({
             title: 'Are you sure?',
-            message: 'Delete ernings entry #' + id,
+            message: 'Delete posting entry #' + id,
             yes: 'Delete',
             no: 'Keep'
         })
@@ -482,7 +338,7 @@ export default class PostingEditor extends Komponent {
             }
             else {
                 // Reset to new item
-                this.earningsEntry.model.reset();
+                this.data.model.reset();
                 this.editorMode(EditorMode.add);
             }
         })
@@ -490,11 +346,25 @@ export default class PostingEditor extends Komponent {
             this.isDeleting(false);
             if (error) {
                 showError({
-                    title: 'There was an error deleting the earnings entry',
+                    title: 'There was an error deleting your posting',
                     error
                 });
             }
         });
+    }
+
+    /**
+     * Pick a solution from the autocomplete.
+     * @param {string} text Suggested text
+     * @param {rest/Solution} solution Suggested Solution object
+     */
+    pickSolution(text, solution) {
+        this.selectedSolution(solution);
+        this.data.solutionID(solution.solutionID);
+        this.saveStep();
+        return {
+            value: ActionForValue.copy
+        };
     }
 }
 

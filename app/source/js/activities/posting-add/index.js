@@ -5,7 +5,7 @@
  *
  */
 
-import '../../kocomponents/earnings/editor';
+import '../../kocomponents/posting/editor';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
@@ -26,7 +26,7 @@ export default class PostingAddActivity extends Activity {
         this.navBar = Activity.createSubsectionNavBar(null);
         this.title = 'Add posting';
         /**
-         * Creates a placeholder for the external listing ID
+         * Creates a placeholder for the ID
          * to be populated using the show(state) method below.
          */
         this.userPostingID = ko.observable(null);

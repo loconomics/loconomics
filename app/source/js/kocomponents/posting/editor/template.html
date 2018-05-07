@@ -1,159 +1,108 @@
 <form data-bind="event: { submit: save }">
-        <script type="text/template" id="posting-editor-back-step">
-            <!-- Expected data: { step:1, context:$data } -->
-            <a href="#back" class="btn-block text-center" data-bind="
-                click: context.goToStep.bind($data, step),
-                visible: !context.isAtReview()">
-                Go back to previous step
-            </a>
-            <a href="#back" class="btn-block text-center" data-bind="
-                click: context.goToSummary,
-                visible: context.isAtReview">
-                Go back to summary
-            </a>
-        </script>
-        <fieldset data-bind="
-                visible: isAtStep(5),
-                autofocus: isAtStep(5)
-            ">
-            <div class="col-xs-12">
-                <legend>GENERAL INFORMATION</legend>
-                <h2>What would you like done?</h2>
-                <solution-autocomplete class="isolated" params="suggestionButtonText: 'Select',
-                    target: 'professionals',
-                    onSelect: $component.selectSolution.bind($component),
-                    label: 'Search for a solution',
-                    isDisabled: $component.isLocked,
-                    id: 'postingEditorSelectSolution'">
-                </solution-autocomplete>
-                <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-                <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 4 } }"></p>
+    <script type="text/template" id="posting-editor-back-step">
+        <!-- Expected data: { step:1, context:$data } -->
+        <a href="#back" class="btn-block text-center" data-bind="
+            click: context.goToStep.bind($data, step),
+            visible: !context.isAtReview()">
+            Go back to previous step
+        </a>
+        <a href="#back" class="btn-block text-center" data-bind="
+            click: context.goToSummary,
+            visible: context.isAtReview">
+            Go back to summary
+        </a>
+    </script>
+    <fieldset data-bind="
+            visible: isAtStep(1),
+            autofocus: isAtStep(1)
+        ">
+        <div class="col-xs-12">
+            <legend>GENERAL INFORMATION</legend>
+            <h2>What would you like done?</h2>
+            <solution-autocomplete class="isolated" params="
+                onSelect: $component.pickSolution.bind($component),
+                label: 'Search for a solution',
+                isDisabled: $component.isLocked,
+                id: 'postingEditorSelectSolution'">
+            </solution-autocomplete>
+        </div>
+    </fieldset>
+    <fieldset data-bind="
+            visible: isAtStep(2),
+            autofocus: isAtStep(2)
+        ">
+        <div class="col-xs-12">
+            <legend>POSTING INFORMATION</legend>
+            <h2>Give you posting a title</h2>
+            <label for="postingEditor-title">Title</label>
+            <div class="form-group">
+                <input type="text" class="form-control"
+                    id="postingEditor-title"
+                    placeholder=""
+                    data-bind="
+                        textInput: data.title
+                    "/>
             </div>
-        </fieldset>
-        <fieldset data-bind="
-                visible: isAtStep(6),
-                autofocus: isAtStep(6)
-            ">
-            <div class="col-xs-12">
-                <legend>POSTING INFORMATION</legend>
-                <h2>Give you posting a title</h2>
-                <label for="postingEditor-title">Notes</label>
-                <div class="form-group">
-                    <textarea class="form-control"
-                        id="postingEditor-title"
-                        rows="5"
-                        placeholder=""
-                        data-bind="
-                            textInput: earningsEntry.notes
-                        "></textarea>
-                </div>
-                <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
-                <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 5 } }"></p>
-            </div>
-        </fieldset>
-        <fieldset data-bind="
-                visible: isAtStep(6),
-                autofocus: isAtStep(6)
-            ">
-            <div class="col-xs-12">
-                <legend>POSTING DESCRIPTION</legend>
-                <h2>Describe what exactly you'd like done</h2>
-                <label for="postingEditor-title">Notes</label>
-                <div class="form-group">
-                    <textarea class="form-control"
-                        id="postingEditor-description"
-                        rows="5"
-                        placeholder="Define as best you can any requirements. You and your professional can iron out the detials in a consultation."
-                        data-bind="
-                            textInput: postingEntry.description
-                        "></textarea>
-                </div>
-                <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
-                <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 5 } }"></p>
-            </div>
-        </fieldset>
-        <div data-bind="
-                visible: isAtStep(0),
-                autofocus: isAtStep(0),
-                with: postingEntry
-            ">
-            <div class="SectionHeading SectionHeading--full">
-                <h2>Posting Title</h2>
-                <button type="button" data-bind="click: $parent.goToStep.bind($data, 3), disable: $component.isLocked" aria-label='Edit date paid' class="btn btn-icon-link pull-right">
-                    <span>
-                        <icon-dec data-bind="visible: title" params="icon: 'ion-edit'"></icon-dec>
-                        <icon-dec data-bind="visible: !title()"  params="icon: 'ion-plus'"></icon-dec>
-                    </span>
-                </button>
-            </div>
-            <p data-bind="text: title"></p>
-    
-            <div class="SectionHeading SectionHeading--full">
-                <h2>Solution Needed</h2>
-                <button type="button" data-bind="click: $parent.goToStep.bind($data, 1), disable: $component.isLocked" aria-label='Edit total' class="btn btn-icon-link pull-right">
-                    <span>
-                        <icon-dec data-bind="visible: solution" params="icon: 'ion-edit'"></icon-dec>
-                        <icon-dec data-bind="visible: !solution()"  params="icon: 'ion-plus'"></icon-dec>
-                    </span>
-                </button>
-            </div>
-            <solution params="id: id"></solution>
-    
-            <div class="SectionHeading SectionHeading--full">
-                <h2>Specializations Required</h2>
-                <button type="button" data-bind="click: $parent.goToStep.bind($data, 2), disable: $component.isLocked" aria-label='Edit the time you worked' class="btn btn-icon-link pull-right">
-                    <span>
-                        <icon-dec data-bind="visible: durationMinutes" params="icon: 'ion-edit'"></icon-dec>
-                        <icon-dec data-bind="visible: !durationMinutes()"  params="icon: 'ion-plus'"></icon-dec>
-                    </span>
-                </button>
-            </div>
-            <ul data-bind="foreach: specializationsRequired">
-                <li data-bind="attr: {id: id}">
-                    <specilization params="id: id"></specilization>
-                </li>
-            </ul>
-    
-            <div class="SectionHeading SectionHeading--full">
-                <h2>Specializations Desired</h2>
-                <button type="button" data-bind="click: $parent.goToStep.bind($data, 2), disable: $component.isLocked" aria-label='Edit the time you worked' class="btn btn-icon-link pull-right">
-                    <span>
-                        <icon-dec data-bind="visible: durationMinutes" params="icon: 'ion-edit'"></icon-dec>
-                        <icon-dec data-bind="visible: !durationMinutes()"  params="icon: 'ion-plus'"></icon-dec>
-                    </span>
-                </button>
-            </div>
-            <ul data-bind="foreach: specializationsRequired">
-                <li data-bind="attr: {id: id}">
-                    <specilization params="id: id"></specilization>
-                </li>
-            </ul>
-            
-    
-            <!--<div class="SectionHeading SectionHeading--full">
-                <h2>Client</h2>
-                <button type="button" data-bind="click: $parent.goToStep.bind($data, 6), disable: $component.isLocked" aria-label= 'Edit the client' class="btn btn-icon-link pull-right">
-                    <span>
-                        <icon-dec data-bind="visible: clientUserID" params="icon: 'ion-edit'"></icon-dec>
-                        <icon-dec data-bind="visible: !clientUserID()"  params="icon: 'ion-plus'"></icon-dec>
-                    </span>
-                </button>
-            </div>
-            <p data-bind="if: $component.client">
-                <span data-bind="text: $component.client().firstName"></span>
-                <span data-bind="text: $component.client().lastName"></span>
-            </p>-->
-    
-            <div class="SectionHeading SectionHeading--full">
-                <h2>Notes</h2>
-                <button type="button" data-bind="click: $parent.goToStep.bind($data, 6), disable: $component.isLocked" aria-label='Edit the notes about your earnings' class="btn btn-icon-link pull-right">
-                    <span>
-                        <icon-dec data-bind="visible: notes" params="icon: 'ion-edit'"></icon-dec>
-                        <icon-dec data-bind="visible: !notes()"  params="icon: 'ion-plus'"></icon-dec>
-                    </span>
-                </button>
-            </div>
-            <p data-bind="text: notes" style="white-space: pre;"></p>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
+            <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 1 } }"></p>
+        </div>
+    </fieldset>
+    <div data-bind="
+            visible: isAtStep(0),
+            autofocus: isAtStep(0),
+            with: data
+        ">
+        <div class="SectionHeading SectionHeading--full">
+            <h2>Posting Title</h2>
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 2), disable: $component.isLocked" aria-label='Edit title' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: title" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !title()"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="text: title"></p>
+
+        <div class="SectionHeading SectionHeading--full">
+            <h2>Solution Needed</h2>
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 1), disable: $component.isLocked" aria-label='Edit solution needed' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: solutionID" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !solutionID()"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="text: $component.selectedSolution() && $component.selectedSolution().name"></p>
+
+        <!--
+        <div class="SectionHeading SectionHeading--full">
+            <h2>Specializations Required</h2>
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 2), disable: $component.isLocked" aria-label='Edit the specializations required' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: specializationsRequired().length" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !specializationsRequired().length"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <ul data-bind="foreach: specializationsRequired">
+            <li data-bind="text: name"></li>
+        </ul>
+
+        <div class="SectionHeading SectionHeading--full">
+            <h2>Specializations Desired</h2>
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 2), disable: $component.isLocked" aria-label='Edit the specializations desired' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: specializationsDesired().length" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !specializationsDesired().length"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <ul data-bind="foreach: specializationsDesired">
+            <li data-bind="text: name"></li>
+        </ul>
+        -->
+
+        <div class="isolated">
             <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked, text: $component.saveButtonText"></button>
             <p class="help-block isolated">Please review carefully before submitting.</p>
             <p class="isolated" data-bind="visible: !$component.isNew()">
@@ -163,5 +112,5 @@
                     click: $component.confirmDelete.bind($component)"></button>
             </p>
         </div>
-    </form>
-    
+    </div>
+</form>

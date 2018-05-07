@@ -4742,7 +4742,7 @@ export function bySubCategoryID(id) {
       // 1 minutes
       ttl: 1 * 60 * 1000,
       remote: remoteGroupDriver(id),
-      local: new LocalForageSingleDataProviderDriver(localforage, BY_SUB_CATEGORY_LOCAL_KEY + '/' + id)
+      local: new LocalForageSingleDataProviderDriver(localforage, BY_POSTING_TEMPLATE_LOCAL_KEY + '/' + id)
   });
 }
 
