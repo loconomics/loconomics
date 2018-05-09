@@ -88,8 +88,8 @@
                     solutionID = solutionID,
                     title = title
                 };
-                record.neededSpecializationIDs = LcRest.UserPosting.ValidateIncomingSpecializations(neededSpecializations, solutionID, locale);
-                record.desiredSpecializationIDs = LcRest.UserPosting.ValidateIncomingSpecializations(desiredSpecializations, solutionID, locale);
+                record.neededSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(neededSpecializations, solutionID, locale);
+                record.desiredSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(desiredSpecializations, solutionID, locale);
                 // Insert and return with db generated data
                 record.userPostingID = LcRest.UserPosting.Set(record, locale);
                 return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
@@ -122,8 +122,8 @@
                 record.title = Request.Form["title"];
                 var neededSpecializations = Request.Form.GetValues("neededSpecializations[]") ?? new string[] { };
                 var desiredSpecializations = Request.Form.GetValues("desiredSpecializations[]") ?? new string[] { };
-                record.neededSpecializationIDs = LcRest.UserPosting.ValidateIncomingSpecializations(neededSpecializations, record.solutionID, locale);
-                record.desiredSpecializationIDs = LcRest.UserPosting.ValidateIncomingSpecializations(desiredSpecializations, record.solutionID, locale);
+                record.neededSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(neededSpecializations, record.solutionID, locale);
+                record.desiredSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(desiredSpecializations, record.solutionID, locale);
 
                 // Update and return with db generated data
                 LcRest.UserPosting.Set(record, locale);

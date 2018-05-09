@@ -91,55 +91,6 @@ namespace LcRest
             list = list.Trim('[', ']');
             return list.Split(',').Select((sid) => sid.AsInt()).ToList();
         }
-
-        const string sqlCheckSpecializations = @"
-            SELECT count(*) as c
-            FROM Specialization
-            WHERE specializationID IN (@0)
-                AND languageID = @1
-                AND countryID = @2
-                AND solutionID = @3
-        ";
-
-        /// <summary>
-        /// Validates that external list of IDs as text are valid numbers and exists on DB
-        /// for the given solutionID and locale
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="solutionID"></param>
-        /// <param name="locale"></param>
-        /// <returns>Formatted text for storage with the specializations IDs</returns>
-        public static List<int> ValidateIncomingSpecializations(IEnumerable<string> list, int solutionID, Locale locale)
-        {
-            var sanitizedList = new List<int>();
-            foreach (var sid in list)
-            {
-                if (!sid.IsInt())
-                {
-                    throw new ConstraintException("Invalid specialization ID");
-                }
-                sanitizedList.Add(sid.AsInt());
-            }
-            // Quick return: when no values
-            if (sanitizedList.Count == 0)
-            {
-                return sanitizedList;
-            }
-
-            using (var db = new LcDatabase())
-            {
-                var sql = db.UseListInSqlParameter(sqlCheckSpecializations, 0, sanitizedList, "-1");
-                if (sanitizedList.Count == (int)db.QueryValue(sql, null, locale.languageID, locale.countryID, solutionID))
-                {
-                    // valid
-                    return sanitizedList;
-                }
-                else
-                {
-                    throw new ConstraintException("Some specializations are not valid");
-                }
-            }
-        }
         #endregion
 
         #region Fetch
@@ -302,55 +253,6 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 db.Execute("UPDATE UserPosting SET StatusID = @1 WHERE UserPostingID = @0", userPostingID, (short)status);
-            }
-        }
-        #endregion
-    }
-
-    /// <summary>
-    /// A simplified structure for Specializations, just with data needed to attach to a UserPosting
-    /// (id, name)
-    /// </summary>
-    public class UserPostingSpecialization
-    {
-        #region Fields
-        public int specializationID;
-        public string name;
-        #endregion
-
-        #region Instances
-        public UserPostingSpecialization() { }
-
-        public static UserPostingSpecialization FromDB(dynamic record)
-        {
-            if (record == null) return null;
-            return new UserPostingSpecialization
-            {
-                specializationID = record.specializationID,
-                name = record.name
-            };
-        }
-        #endregion
-
-        #region Fetch
-        const string sqlGetSpecializationsByIds = @"
-            SELECT specializationID, name
-            FROM Specialization
-            WHERE specializationID IN (@0)
-                AND languageID = @1
-                AND countryID = @2
-        ";
-        public static IEnumerable<UserPostingSpecialization> ListBy(IEnumerable<int> ids, int languageID, int countryID)
-        {
-            // Quick return
-            if (ids.Count() == 0)
-            {
-                return new List<UserPostingSpecialization> { };
-            }
-            using (var db = new LcDatabase())
-            {
-                var sql = db.UseListInSqlParameter(sqlGetSpecializationsByIds, 0, ids, "-1");
-                return db.Query(sql, null, languageID, countryID).Select(FromDB);
             }
         }
         #endregion
