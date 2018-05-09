@@ -1,0 +1,38 @@
+﻿@*
+    Searching specializations.
+
+    Options:
+
+    - GET /
+        @searchTerm
+
+    - @Result LcRest.UserPostingSpecialization
+
+    EXAMPLES {
+        "Specializations search (autocomplete)": {
+            "url": "/api/v1/en-US/specializations",
+            "get": {
+                "searchTerm": "cleaning"
+            }
+        }
+    }
+*@
+@functions{
+    public class RestSpecializations : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 0)
+            {
+                var term = Request.QueryString["searchTerm"];
+                var locale = LcRest.Locale.Current;
+                return LcRest.Specialization.AutocompleteSearch(term, locale.languageID, locale.countryID);
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{
+    new RestSpecializations().JsonResponse(this);
+}

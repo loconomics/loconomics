@@ -162,5 +162,35 @@ namespace LcRest
             }
         }
         #endregion
+
+        #region Fetch
+        const string sqlAutocomplete = @"
+            SELECT TOP 20
+                specializationID,
+                name
+            FROM specialization
+            WHERE Approved <> 0
+                AND languageID = @0
+                AND countryID = @1
+                AND name like '%' + @2 + '%'
+            ORDER BY DisplayRank, name
+        ";
+        /// <summary>
+        /// It performs a limited search of specializations for the autocomplete, just with the
+        /// subset of fields needed (matches UserPostingSpecialization type).
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserPostingSpecialization> AutocompleteSearch(string searchText, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                var sql = sqlAutocomplete;
+                return db.Query(sql, languageID, countryID, searchText).Select(UserPostingSpecialization.FromDB);
+            }
+        }
+        #endregion
     }
 }
