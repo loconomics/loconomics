@@ -1251,23 +1251,27 @@
         },
         "GIG Postings made by the user (or create one)": {
             "url": "/api/v1/en-US/me/postings",
-            "get": { },
+            "get": {},
             "post": {
                 "solutionID": 1,
                 "title": "Concise work description",
-                "neededSpecializations": [1, 20, 5],
-                "desiredSpecializations": [2, 4]
+                "neededSpecializationIDs": [1, 20, 5],
+                "proposedNeededSpecializations": ["Some new specialization", "that doesn't exists still"],
+                "desiredSpecializationIDs": [2, 4],
+                "proposedDesiredSpecializations": ["This would be great to have"]
             }
         },
         "GIG Posting made by the user (fetch, update, delete)": {
             "url": "/api/v1/en-US/me/postings/1",
-            "get": { },
+            "get": {},
             "put": {
                 "title": "Concise work description",
-                "neededSpecializations": [1, 20, 5],
-                "desiredSpecializations": [2, 4]
+                "neededSpecializationIDs": [1, 20, 5],
+                "proposedNeededSpecializations": ["Some new specialization", "that doesn't exists still"],
+                "desiredSpecializationIDs": [2, 4],
+                "proposedDesiredSpecializations": ["This would be great to have"]
             },
-            "delete": { }
+            "delete": {}
         }
     };
 

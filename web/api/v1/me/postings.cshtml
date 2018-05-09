@@ -28,8 +28,10 @@
             "post": {
                 "solutionID": 1,
                 "title": "Concise work description",
-                "neededSpecializations": [1, 20, 5],
-                "desiredSpecializations": [2, 4]
+                "neededSpecializationIDs": [1, 20, 5],
+                "proposedNeededSpecializations": ["Some new specialization", "that doesn't exists still"],
+                "desiredSpecializationIDs": [2, 4],
+                "proposedDesiredSpecializations": ["This would be great to have"]
             }
         },
         "GIG Posting made by the user (fetch, update, delete)": {
@@ -37,15 +39,17 @@
             "get": { },
             "put": {
                 "title": "Concise work description",
-                "neededSpecializations": [1, 20, 5],
-                "desiredSpecializations": [2, 4]
+                "neededSpecializationIDs": [1, 20, 5],
+                "proposedNeededSpecializations": ["Some new specialization", "that doesn't exists still"],
+                "desiredSpecializationIDs": [2, 4],
+                "proposedDesiredSpecializations": ["This would be great to have"]
             },
             "delete": { }
         }
     }
 *@
 @functions{
-    public class RestMePostings: RestWebPage
+    public class RestMePostings : RestWebPage
     {
         public override dynamic Get()
         {
@@ -79,17 +83,24 @@
                 var userID = WebSecurity.CurrentUserId;
                 var title = Request.Form["title"];
                 var solutionID = Request.Form["solutionID"].AsInt();
-                var neededSpecializations = Request.Form.GetValues("neededSpecializations[]") ?? new string[] {};
-                var desiredSpecializations = Request.Form.GetValues("desiredSpecializations[]") ?? new string[] { };
-                // ?? postingTemplateID
+                var neededSpecializationsIDs = Request.Form.GetValues("neededSpecializationIDs[]") ?? new string[] { };
+                var desiredSpecializationsIDs = Request.Form.GetValues("desiredSpecializationIDs[]") ?? new string[] { };
+                var proposedNeededSpecializations = Request.Form.GetValues("proposedNeededSpecializations[]") ?? new string[] { };
+                var proposedDesiredSpecializations = Request.Form.GetValues("proposedDesiredSpecializations[]") ?? new string[] { };
                 var record = new LcRest.UserPosting
                 {
                     userID = userID,
                     solutionID = solutionID,
                     title = title
                 };
-                record.neededSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(neededSpecializations, solutionID, locale);
-                record.desiredSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(desiredSpecializations, solutionID, locale);
+                // User selected specializations
+                record.neededSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(neededSpecializationsIDs, solutionID, locale);
+                record.desiredSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(desiredSpecializationsIDs, solutionID, locale);
+                // User proposed specializations -> create user generated records
+                var userNeededSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedNeededSpecializations, solutionID, locale, userID);
+                var userDesiredSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedDesiredSpecializations, solutionID, locale, userID);
+                ((List<int>)record.neededSpecializationIDs).AddRange(userNeededSpecializationIDs);
+                ((List<int>)record.desiredSpecializationIDs).AddRange(userDesiredSpecializationIDs);
                 // Insert and return with db generated data
                 record.userPostingID = LcRest.UserPosting.Set(record, locale);
                 return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
@@ -120,10 +131,18 @@
 
                 // Updatable fields
                 record.title = Request.Form["title"];
-                var neededSpecializations = Request.Form.GetValues("neededSpecializations[]") ?? new string[] { };
-                var desiredSpecializations = Request.Form.GetValues("desiredSpecializations[]") ?? new string[] { };
+                // User selected specializations
+                var neededSpecializations = Request.Form.GetValues("neededSpecializationIDs[]") ?? new string[] { };
+                var desiredSpecializations = Request.Form.GetValues("desiredSpecializationIDs[]") ?? new string[] { };
                 record.neededSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(neededSpecializations, record.solutionID, locale);
                 record.desiredSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(desiredSpecializations, record.solutionID, locale);
+                // User proposed specializations -> create user generated records
+                var proposedNeededSpecializations = Request.Form.GetValues("proposedNeededSpecializations[]") ?? new string[] { };
+                var proposedDesiredSpecializations = Request.Form.GetValues("proposedDesiredSpecializations[]") ?? new string[] { };
+                var userNeededSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedNeededSpecializations, record.solutionID, locale, userID);
+                var userDesiredSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedDesiredSpecializations, record.solutionID, locale, userID);
+                ((List<int>)record.neededSpecializationIDs).AddRange(userNeededSpecializationIDs);
+                ((List<int>)record.desiredSpecializationIDs).AddRange(userDesiredSpecializationIDs);
 
                 // Update and return with db generated data
                 LcRest.UserPosting.Set(record, locale);
