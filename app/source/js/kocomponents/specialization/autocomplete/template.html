@@ -1,0 +1,18 @@
+<input-autocomplete params="
+    id: id,
+    name: 'solution',
+    icon: 'glyphicon glyphicon-search',
+    size: 'lg',
+    value: value,
+    suggestions: suggestions,
+    onSelect: onSelect,
+    isDisabled: isDisabled
+    ">
+    <template slot="suggestions">
+        <ul data-bind="foreach: suggestions" class="list-unstyled">
+            <li class="Result" data-input-autocomplete-suggestion
+                data-bind="attr: { id: $parent.id() + '-specialization-suggestion-' + $index() }, text: name">
+            </li>
+        </ul>
+    </template>
+</input-autocomplete>
