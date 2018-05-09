@@ -1,7 +1,5 @@
 /**
  * Acccess available solutions, by searchSubCategoryID or by solutionID.
- *
- * IMPORTANT: Using DUMMY DATA rather than connected to the REST API for now
  */
 import CachedDataProvider from './helpers/CachedDataProvider';
 import LocalForageItemDataProviderDriver from './helpers/LocalForageItemDataProviderDriver';
@@ -73,8 +71,8 @@ export function item(id) {
 }
 
 /**
- * Retrieves information for a job title search
- * @param {string} searchTerm job title search term to retrieve
+ * Retrieves solutions given a search optimized for autocomplete
+ * @param {string} searchTerm Partial or full name
  * @returns {Promise}
  */
 export function solutionsAutocomplete(searchTerm) {
