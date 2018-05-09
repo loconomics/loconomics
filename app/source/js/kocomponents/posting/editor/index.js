@@ -269,7 +269,7 @@ export default class PostingEditor extends Komponent {
                     data.userPostingID = 0;
                     this.dataManager = userPosting(0);
                 }
-                this.earningsEntry.model.updateWith(data);
+                this.data.model.updateWith(data);
             })
             .catch((error) => {
                 this.isLoading(false);
@@ -292,7 +292,23 @@ export default class PostingEditor extends Komponent {
 
         // Prepare data to submit
         const data = this.data.model.toPlainObject(true);
-
+        // Specializations are split in two (every of the two scopes) based
+        // on ones with ID and ones without ('proposed user generated'), and
+        // the model equivalent property gets removed
+        data.neededSpecializationIDs = data.neededSpecializations
+        .map((s) => s.specializationID)
+        .filter((s) => s > 0);
+        data.proposedNeededSpecializations = data.neededSpecializations
+        .filter((s) => s.specializationID === 0)
+        .map((s) => s.name);
+        delete data.neededSpecializations;
+        data.desiredSpecializationIDs = data.desiredSpecializations
+        .map((s) => s.specializationID)
+        .filter((s) => s > 0);
+        data.proposedDesiredSpecializations = data.desiredSpecializations
+        .filter((s) => s.specializationID === 0)
+        .map((s) => s.name);
+        delete data.desiredSpecializations;
 
         return this.dataManager
         .save(data)

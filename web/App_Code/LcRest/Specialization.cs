@@ -169,7 +169,7 @@ namespace LcRest
                 specializationID,
                 name
             FROM specialization
-            WHERE Approved <> 0
+            WHERE (Approved = 1 OR Approved is null)
                 AND languageID = @0
                 AND countryID = @1
                 AND name like '%' + @2 + '%'

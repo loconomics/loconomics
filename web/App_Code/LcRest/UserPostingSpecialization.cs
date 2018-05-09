@@ -37,7 +37,7 @@ namespace LcRest
             WHERE specializationID IN (@0)
                 AND languageID = @1
                 AND countryID = @2
-                AND Approved <> 0
+                AND (Approved = 1 OR Approved is null)
         ";
         public static IEnumerable<UserPostingSpecialization> ListBy(IEnumerable<int> ids, int languageID, int countryID)
         {
