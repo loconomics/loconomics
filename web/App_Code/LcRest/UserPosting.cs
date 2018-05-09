@@ -21,7 +21,7 @@ namespace LcRest
         /// </summary>
         public string solutionName;
         public int postingTemplateID;
-        public LcEnum.UserPostingStatus statusID = LcEnum.UserPostingStatus.open;
+        public LcEnum.UserPostingStatus statusID = LcEnum.UserPostingStatus.active;
         public string title;
         [JsonIgnore]
         public IEnumerable<int> neededSpecializationIDs;
