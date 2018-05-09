@@ -6,70 +6,20 @@
 import CachedDataProvider from './helpers/CachedDataProvider';
 import LocalForageIndexedListDataProviderDriver from './helpers/LocalForageIndexedListDataProviderDriver';
 import LocalForageItemDataProviderDriver from './helpers/LocalForageItemDataProviderDriver';
-//import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
-//import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver';
+import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
+import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver';
 import localforage from './drivers/localforage';
-//import rest from './drivers/restClient';
+import rest from './drivers/restClient';
 
-//const API_NAME = 'me/postings';
+const API_NAME = 'me/postings';
 const LOCAL_KEY = 'userPostings';
 const ID_PROPERTY_NAME = 'userPostingID';
 
 const localListDriver = new LocalForageIndexedListDataProviderDriver(localforage, LOCAL_KEY, ID_PROPERTY_NAME);
 
-/// DUMMY DATA
-// Note: more data can be added, keeping the IDs consecutive
-const DUMMY_DATA_LIST = [{
-    userPostingID: 1,
-    solution: 'I dont remember the columns/properties'
-}, {
-    userPostingID: 2,
-    solution: 'I dont remember the columns/properties'
-}];
-// Dummy driver for the whole list
-const remoteListDriver = {
-    fetch: () =>  Promise.resolve(DUMMY_DATA_LIST),
-    /* The whole list cannot be replaced, only item by item */
-    push: (/*data*/) => Promise.resolve(),
-    /* The whole list cannot be removed, only item by item */
-    delete: () => Promise.resolve()
-};
-// Dummy driver for items by id
-const remoteItemDriver = (id) => ({
-    fetch: () => {
-        if (DUMMY_DATA_LIST.length < id) {
-            return Promise.resolve(DUMMY_DATA_LIST[id - 1]);
-        }
-        else {
-            return Promise.reject('Not Found');
-        }
-    },
-    push: (data) => {
-        if (DUMMY_DATA_LIST.length < id) {
-            DUMMY_DATA_LIST[id - 1] = data;
-            return Promise.resolve(DUMMY_DATA_LIST[id - 1]);
-        }
-        else {
-            return Promise.reject('Not Found');
-        }
-    },
-    delete: () => {
-        if (DUMMY_DATA_LIST.length < id) {
-            const deletedCopy = DUMMY_DATA_LIST[id - 1];
-            DUMMY_DATA_LIST.splice(id - 1, 1);
-            return Promise.resolve(deletedCopy);
-        }
-        else {
-            return Promise.reject('Not Found');
-        }
-    }
-});
-
-/// Public API
-
 /**
- * Provides access to the list of all external listings.
- * @returns {CachedDataProvider<Array<rest/UserExternalListing>>}
+ * Provides access to the list of user postings.
+ * @returns {CachedDataProvider<Array<rest/UserPosting>>}
  * Usage:
  * - list.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
  * - list.onLoadError.subscribe(fn) to get notified of errors happening as of onData
@@ -77,7 +27,7 @@ const remoteItemDriver = (id) => ({
 export const list = new CachedDataProvider({
     // 1 minute
     ttl: 1 * 60 * 1000,
-    remote: remoteListDriver,
+    remote: new RestSingleDataProviderDriver(rest, API_NAME),
     local: localListDriver
 });
 
@@ -86,15 +36,16 @@ export const list = new CachedDataProvider({
  * @param {number} id The userExternalListingID
  * @returns {CachedDataProvider<rest/UserExternalListing>}
  * Usage:
- * - item(platformID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - item(platformID).onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - const dataProvider = item(userPostingID);
+ * - dataProvider.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
+ * - dataProvider.onLoadError.subscribe(fn) to get notified of errors happening as of onData
  */
 export function item(id) {
     const localItemDriver = new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME);
     const itemProvider = new CachedDataProvider({
         // 1 minutes
         ttl: 1 * 60 * 1000,
-        remote: remoteItemDriver(id),
+        remote: new RestItemDataProviderDriver(rest, API_NAME, id),
         local: localItemDriver
     });
     // List is dirty once an item is updated on cache directly. We can not

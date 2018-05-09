@@ -5,6 +5,7 @@
  */
 import '../../utilities/icon-dec';
 import '../../../utils/autofocusBindingHandler';
+import '../../specialization/autocomplete';
 import { ActionForValue } from '../../solution/autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserPosting from '../../../models/UserPosting';
@@ -289,7 +290,9 @@ export default class PostingEditor extends Komponent {
 
         this.isSaving(true);
 
+        // Prepare data to submit
         const data = this.data.model.toPlainObject(true);
+
 
         return this.dataManager
         .save(data)
@@ -364,6 +367,30 @@ export default class PostingEditor extends Komponent {
         this.saveStep();
         return {
             value: ActionForValue.copy
+        };
+    }
+
+    /**
+     * Pick a specialization from the autocomplete, for the scope of 'needed'.
+     * @param {string} text
+     * @param {rest/Specialization} specialization
+     */
+    pickNeededSpecialization(text, specialization) {
+        this.data.neededSpecializations.push(specialization);
+        return {
+            value: ActionForValue.clear
+        };
+    }
+
+    /**
+     * Pick a specialization from the autocomplete, for the scope of 'desired'.
+     * @param {string} text
+     * @param {rest/Specialization} specialization
+     */
+    pickDesiredSpecialization(text, specialization) {
+        this.data.desiredSpecializations.push(specialization);
+        return {
+            value: ActionForValue.clear
         };
     }
 }
