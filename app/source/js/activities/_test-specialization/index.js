@@ -21,6 +21,7 @@ export default class _TestSpecializationActivity extends Activity {
         this.accessLevel = null;
         this.title = 'Testing area';
 
+        this.solutionID = ko.observable(null);
         this.list = ko.observableArray([]);
     }
 
@@ -29,6 +30,12 @@ export default class _TestSpecializationActivity extends Activity {
         return {
             value: ActionForValue.clear
         };
+    }
+
+    show(state) {
+        super.show(state);
+
+        this.solutionID(state.route.segments[0]);
     }
 }
 

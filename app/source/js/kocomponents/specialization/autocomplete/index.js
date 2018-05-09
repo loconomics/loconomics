@@ -24,7 +24,9 @@ export default class SpecializationAutocomplete extends Komponent {
      * @param {object} params
      * @param {(string|KnockoutObservable<string>)} params.id ID for the input element (important to keep in sync with an external
      * label)
-     * @param {(string|KnockoutObservable<string>)} params.value Default input value
+     * @param {(string|KnockoutObservable<string>)} [params.value] Default input value
+     * @param {(number|KnockoutObservable<number>)} [params.solutionID] Filter specializations only to ones available for a specific
+     * solution, or any if null/undefined/0
      * @param {(string|KnockoutObservable<string>)} [params.isDisabled] Let's set when input is not allowed
      * @param {function} params.onSelect
      * @param {(boolean|KnockoutObservable<boolean>} [params.allowUserEntry] Whether the user
@@ -62,6 +64,11 @@ export default class SpecializationAutocomplete extends Komponent {
          * @member {KnockoutObservable<boolean>}
          */
         this.allowUserEntry = getObservable(params.allowUserEntry || false);
+        /**
+         * Filter specializations by this solution, or any if no value.
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.solutionID = getObservable(params.solutionID);
         /**
          * List of suggestions to display. Uses the allowUserEntry option to
          * increase by one the available suggestions from the list of loaded
@@ -105,7 +112,7 @@ export default class SpecializationAutocomplete extends Komponent {
         // Keeps track if a search is running, so we later know if we must delay next attempt or run immediately
         let searching = false;
         // Keeps track of delayed search to perform (just one, latest user input)
-        let nextSearchTerm = null;
+        let nextSearchValues = null;
         /**
          * Request to perform a search for the term and fill in the suggestions.
          * If no term, will empty the suggestions.
@@ -114,18 +121,18 @@ export default class SpecializationAutocomplete extends Komponent {
          * @param {string} searchTerm
          * @private
          */
-        const doSearch = (searchTerm) => {
+        const doSearch = (searchTerm, solutionID) => {
             if (!searchTerm) {
                 this.loadedSuggestions([]);
                 return;
             }
             searching = true;
-            specializationsAutocomplete(searchTerm)
+            specializationsAutocomplete(searchTerm, solutionID)
             .then((result) => {
                 this.loadedSuggestions(result);
-                if (nextSearchTerm) {
-                    doSearch(nextSearchTerm);
-                    nextSearchTerm = null;
+                if (nextSearchValues) {
+                    doSearch.apply(null, nextSearchValues);
+                    nextSearchValues = null;
                 }
                 else {
                     searching = false;
@@ -136,12 +143,13 @@ export default class SpecializationAutocomplete extends Komponent {
         // Compute automatically whether user input happens ('value' changes)
         this.observeChanges(() => {
             const val = this.value();
+            const solutionID = this.solutionID();
             if (searching) {
                 // Schedule next term, will auto-run when current search ends
-                nextSearchTerm = val;
+                nextSearchValues = [val, solutionID];
             }
             else {
-                doSearch(val);
+                doSearch(val, solutionID);
             }
         });
     }

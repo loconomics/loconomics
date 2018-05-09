@@ -5,6 +5,7 @@
 
     - GET /
         @searchTerm
+        @solutionID
 
     - @Result LcRest.UserPostingSpecialization
 
@@ -12,7 +13,8 @@
         "Specializations search (autocomplete)": {
             "url": "/api/v1/en-US/specializations",
             "get": {
-                "searchTerm": "cleaning"
+                "searchTerm": "cleaning",
+                "solutionID": 153
             }
         }
     }
@@ -25,8 +27,9 @@
             if (UrlData.Count == 0)
             {
                 var term = Request.QueryString["searchTerm"];
+                var solutionID = Request.QueryString["solutionID"].AsInt(0);
                 var locale = LcRest.Locale.Current;
-                return LcRest.Specialization.AutocompleteSearch(term, locale.languageID, locale.countryID);
+                return LcRest.Specialization.AutocompleteSearch(term, solutionID, locale.languageID, locale.countryID);
             }
 
             throw new HttpException(404, "Not Found");

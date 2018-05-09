@@ -173,6 +173,7 @@ namespace LcRest
                 AND languageID = @0
                 AND countryID = @1
                 AND name like '%' + @2 + '%'
+                AND (@3 = 0 OR @3 = solutionID)
             ORDER BY DisplayRank, name
         ";
         /// <summary>
@@ -183,12 +184,13 @@ namespace LcRest
         /// <param name="languageID"></param>
         /// <param name="countryID"></param>
         /// <returns></returns>
-        public static IEnumerable<UserPostingSpecialization> AutocompleteSearch(string searchText, int languageID, int countryID)
+        public static IEnumerable<UserPostingSpecialization> AutocompleteSearch(
+            string searchText, int solutionID, int languageID, int countryID)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlAutocomplete;
-                return db.Query(sql, languageID, countryID, searchText).Select(UserPostingSpecialization.FromDB);
+                return db.Query(sql, languageID, countryID, searchText, solutionID).Select(UserPostingSpecialization.FromDB);
             }
         }
         #endregion
