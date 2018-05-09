@@ -1,0 +1,158 @@
+﻿@using WebMatrix.WebData;
+@*
+    Get and set GIG Postings of the logged user.
+
+    Options:
+
+    - GET /
+      Get the list of postings made by the user
+
+    - GET /@userPostingID
+      Gets a GIG posting made by the user
+
+    - POST /
+      Create a new GIG posting
+
+    - PUT /@userPostingID
+      Updates a GIG posting
+
+    - DELETE /@userPostingID
+      Deletes a GIG posting
+
+    - @Result Item or List of LcRest.UserPosting
+
+    EXAMPLE {
+        "GIG Postings made by the user (or create one)": {
+            "url": "/api/v1/en-US/me/postings",
+            "get": { },
+            "post": {
+                "solutionID": 1,
+                "title": "Concise work description",
+                "neededSpecializations": [1, 20, 5],
+                "desiredSpecializations": [2, 4]
+            }
+        },
+        "GIG Posting made by the user (fetch, update, delete)": {
+            "url": "/api/v1/en-US/me/postings/1",
+            "get": { },
+            "put": {
+                "title": "Concise work description",
+                "neededSpecializations": [1, 20, 5],
+                "desiredSpecializations": [2, 4]
+            },
+            "delete": { }
+        }
+    }
+*@
+@functions{
+    public class RestMePostings: RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var locale = LcRest.Locale.Current;
+            var userID = WebSecurity.CurrentUserId;
+            if (UrlData.Count == 0)
+            {
+                return LcRest.UserPosting.List(userID, locale.languageID, locale.countryID, true);
+            }
+            else if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt(0);
+                return LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+            }
+            return base.Get();
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 0)
+            {
+                Validation.RequireField("title", LcRessources.RequiredField("Title"));
+                Validation.RequireField("solutionID", LcRessources.RequiredField("Solution"));
+
+                if (!ModelState.IsValid)
+                {
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
+
+                var locale = LcRest.Locale.Current;
+                var userID = WebSecurity.CurrentUserId;
+                var title = Request.Form["title"];
+                var solutionID = Request.Form["solutionID"].AsInt();
+                var neededSpecializations = Request.Form.GetValues("neededSpecializations[]") ?? new string[] {};
+                var desiredSpecializations = Request.Form.GetValues("desiredSpecializations[]") ?? new string[] { };
+                // ?? postingTemplateID
+                var record = new LcRest.UserPosting
+                {
+                    userID = userID,
+                    solutionID = solutionID,
+                    title = title
+                };
+                record.neededSpecializationIDs = LcRest.UserPosting.ValidateIncomingSpecializations(neededSpecializations, solutionID, locale);
+                record.desiredSpecializationIDs = LcRest.UserPosting.ValidateIncomingSpecializations(desiredSpecializations, solutionID, locale);
+                // Insert and return with db generated data
+                record.userPostingID = LcRest.UserPosting.Set(record, locale);
+                return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
+            }
+            return base.Post();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                Validation.RequireField("title", LcRessources.RequiredField("Title"));
+
+                if (!ModelState.IsValid)
+                {
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
+
+                var id = UrlData[0].AsInt(0);
+                var locale = LcRest.Locale.Current;
+                var userID = WebSecurity.CurrentUserId;
+
+                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, false);
+                if (record == null)
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+
+                // Updatable fields
+                record.title = Request.Form["title"];
+                var neededSpecializations = Request.Form.GetValues("neededSpecializations[]") ?? new string[] { };
+                var desiredSpecializations = Request.Form.GetValues("desiredSpecializations[]") ?? new string[] { };
+                record.neededSpecializationIDs = LcRest.UserPosting.ValidateIncomingSpecializations(neededSpecializations, record.solutionID, locale);
+                record.desiredSpecializationIDs = LcRest.UserPosting.ValidateIncomingSpecializations(desiredSpecializations, record.solutionID, locale);
+
+                // Update and return with db generated data
+                LcRest.UserPosting.Set(record, locale);
+                return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
+            }
+            return base.Put();
+        }
+
+        public override dynamic Delete()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt(0);
+                var locale = LcRest.Locale.Current;
+                var userID = WebSecurity.CurrentUserId;
+                // Get copy
+                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+                if (record == null)
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+                LcRest.UserPosting.Delete(userID, id, locale.languageID, locale.countryID);
+                return record;
+            }
+            return base.Delete();
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.LoggedUser);
+    new RestMePostings().JsonResponse(this);
+}

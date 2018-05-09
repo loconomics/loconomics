@@ -1248,6 +1248,26 @@
         "Solutions - By Job Title": {
             "url": "/api/v1/en-US/solutions/job-title/106",
             "get": { }
+        },
+        "GIG Postings made by the user (or create one)": {
+            "url": "/api/v1/en-US/me/postings",
+            "get": { },
+            "post": {
+                "solutionID": 1,
+                "title": "Concise work description",
+                "neededSpecializations": [1, 20, 5],
+                "desiredSpecializations": [2, 4]
+            }
+        },
+        "GIG Posting made by the user (fetch, update, delete)": {
+            "url": "/api/v1/en-US/me/postings/1",
+            "get": { },
+            "put": {
+                "title": "Concise work description",
+                "neededSpecializations": [1, 20, 5],
+                "desiredSpecializations": [2, 4]
+            },
+            "delete": { }
         }
     };
 
