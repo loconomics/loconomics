@@ -71,7 +71,12 @@
                 id: 'postingEditorSelectNeededSpecialization'">
             </specialization-autocomplete>
             <ul class="TilesList isolated" data-bind="foreach: data.neededSpecializations">
-                <li class="LineTile" data-bind="text: name"></li>
+                <li>
+                    <button type="button" data-bind="click: $component.removeNeededSpecialization.bind($component), disable: $component.isLocked" class="LineTile">
+                        <icon-dec params="icon: 'ion-close'"></icon-dec>
+                        <span data-bind="text: name"></span>
+                    </button>
+                </li>
             </ul>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
             <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 2 } }"></p>
@@ -93,7 +98,12 @@
                 id: 'postingEditorSelectDesiredSpecialization'">
             </specialization-autocomplete>
             <ul class="TilesList isolated" data-bind="foreach: data.desiredSpecializations">
-                <li class="LineTile" data-bind="text: name"></li>
+                <li>
+                    <button type="button" data-bind="click: $component.removeDesiredSpecialization.bind($component), disable: $component.isLocked" class="LineTile">
+                        <icon-dec params="icon: 'ion-close'"></icon-dec>
+                        <span data-bind="text: name"></span>
+                    </button>
+                </li>
             </ul>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
             <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 3 } }"></p>

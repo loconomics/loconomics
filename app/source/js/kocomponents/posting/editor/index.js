@@ -411,6 +411,22 @@ export default class PostingEditor extends Komponent {
             value: ActionForValue.clear
         };
     }
+
+    /**
+     * Removes the given specialization from the list
+     * @param {rest/Specialization} specialization
+     */
+    removeNeededSpecialization(specialization) {
+        this.data.neededSpecializations.remove(specialization);
+    }
+
+    /**
+     * Removes the given specialization from the list
+     * @param {rest/Specialization} specialization
+     */
+    removeDesiredSpecialization(specialization) {
+        this.data.desiredSpecializations.remove(specialization);
+    }
 }
 
 ko.components.register(TAG_NAME, PostingEditor);
