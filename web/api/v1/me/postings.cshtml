@@ -49,6 +49,10 @@
         "GIG Posting: close posting made by the user": {
             "url": "/api/v1/en-US/me/postings/1/close",
             "post": { }
+        },
+        "GIG Postings suggested to an user to apply for": {
+            "url": "/api/v1/en-US/me/postings/suggested",
+            "get": { }
         }
     }
 *@
@@ -67,6 +71,10 @@
             {
                 var id = UrlData[0].AsInt(0);
                 return LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+            }
+            else if (UrlData.Count == 1 && UrlData[0] == "suggested")
+            {
+                return LcRest.UserPosting.ListSuggestedPostings(userID, locale.languageID, locale.countryID, true);
             }
             return base.Get();
         }

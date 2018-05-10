@@ -149,6 +149,69 @@ namespace LcRest
         }
         #endregion
 
+        #region Suggested lists
+        const string sqlSelectSuggestedForUser = sqlSelect + @"
+                INNER JOIN UserSolution
+                 ON UserSolution.SolutionID = A.SolutionID
+                    AND UserSolution.Active = 1
+            WHERE a.userID <> @0
+                AND UserSolution.userID = @0
+                AND a.languageID = @1 AND a.countryID = @2
+                AND a.statusID = 1
+        " + sqlOrderByDate;
+        /// <summary>
+        /// Provides a list of postings suggested for that user to apply for.
+        /// It NEVER returns sugestions where the user is the creator on it, only active suggestions
+        /// and matches based on the solutionID and the user listings (maybe on needed specializations at some point)
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <param name="fillLinks"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserPosting> ListSuggestedPostings(int userID, int languageID, int countryID, bool fillLinks)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlSelectSuggestedForUser, userID, languageID, countryID).Select((r) => (UserPosting)FromDB(r, fillLinks));
+            }
+        }
+        const string sqlSelectSuggestedProfessionals = @"
+            SELECT
+                UserSolution.userID,
+                userprofile.email
+            FROM
+                UserPosting as A
+                INNER JOIN UserSolution
+                 ON UserSolution.SolutionID = A.SolutionID
+                    AND UserSolution.Active = 1
+                INNER JOIN userprofile
+                 ON userprofile.userId = UserSolution.userID
+                -- Only CCC students right now
+                INNER JOIN CCCUsers
+                 ON CCCUsers.userID = userprofile.userId
+                 AND CCCUsers.UserType like 'student'
+            WHERE a.userPostingID = @0
+                AND a.languageID = @1 AND a.countryID = @2
+                AND a.statusID = 1
+        " + sqlOrderByDate;
+        /// <summary>
+        /// Provides a list of service professionals suggested to apply to a given userPostingID
+        /// </summary>
+        /// <param name="userPostingID"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserEmail> ListSuggestedProfessionals(int userPostingID, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlSelectSuggestedProfessionals, userPostingID, languageID, countryID)
+                    .Select((r) => (UserEmail)FromDB(r));
+            }
+        }
+        #endregion
+
         #region Delete
         const string sqlDelete = @"
             DELETE FROM UserPosting
