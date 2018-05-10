@@ -183,6 +183,7 @@ namespace LcRest
                 ,ModifiedBy = @0
             WHERE UserID = @0
                 AND userPostingID = @1
+                AND StatusID < 2
         ";
         const string sqlInsert = @"
             INSERT INTO UserPosting (
@@ -249,11 +250,20 @@ namespace LcRest
                 }
             }
         }
-        public static void SetStatus(int userPostingID, LcEnum.UserPostingStatus status)
+        /// <summary>
+        /// Change a posting status, by the author, but only posible if status is editable (0:incomplete, 1:active)
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="userPostingID"></param>
+        /// <param name="status"></param>
+        public static void SetStatus(int userID, int userPostingID, LcEnum.UserPostingStatus status)
         {
             using (var db = new LcDatabase())
             {
-                db.Execute("UPDATE UserPosting SET StatusID = @1 WHERE UserPostingID = @0", userPostingID, (short)status);
+                db.Execute(@"UPDATE UserPosting
+                    SET StatusID = @2, updatedDate = getdate()
+                    WHERE UserPostingID = @0 AND userID = @1
+                        AND StatusID < 2", userPostingID, userID, (short)status);
             }
         }
         #endregion

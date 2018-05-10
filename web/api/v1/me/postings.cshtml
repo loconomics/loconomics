@@ -45,6 +45,10 @@
                 "proposedDesiredSpecializations": ["This would be great to have"]
             },
             "delete": { }
+        },
+        "GIG Posting: close posting made by the user": {
+            "url": "/api/v1/en-US/me/postings/1/close",
+            "post": { }
         }
     }
 *@
@@ -104,6 +108,23 @@
                 // Insert and return with db generated data
                 record.userPostingID = LcRest.UserPosting.Set(record, locale);
                 return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
+            }
+            else if (UrlData.Count == 2 && UrlData[0].IsInt() && UrlData[1] == "close")
+            {
+                var id = UrlData[0].AsInt();
+                var userID = WebSecurity.CurrentUserId;
+                var locale = LcRest.Locale.Current;
+                LcRest.UserPosting.SetStatus(userID, id, LcEnum.UserPostingStatus.closed);
+                this.StatusCode = 200;
+                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+                if (record == null)
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+                else
+                {
+                    return record;
+                }
             }
             return base.Post();
         }
