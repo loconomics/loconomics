@@ -12,11 +12,8 @@
             </ul>
         </div>
         <h1 data-bind="text: title"></h1>
-        <div class="col-md-7 col-sm-reset">
-            <form id="addPostingForm" aria-describedby="addPostingFormInstructions">
-                <p id="addPostingFormInstructions" class="help-block"></p>
-                <posting-editor params="editorMode: 'add', userPostingID: userPostingID, onSaved: onSaved, onDeleted: onDeleted, editorMode: editorMode"></posting-editor>
-            </form>
+        <div class="col-md-7 col-sm-reset" data-bind="with: currentRoute() && $data">
+            <posting-editor params="editorMode: 'add', userPostingID: userPostingID, onSaved: onSaved, onDeleted: onDeleted, editorMode: editorMode"></posting-editor>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'postings'"></app-inline-side-menu>
