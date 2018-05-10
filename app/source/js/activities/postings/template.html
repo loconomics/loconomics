@@ -1,7 +1,10 @@
 <div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <h1 data-bind="text: title"></h1>
+        <div class="SectionHeading">
+            <h1 data-bind="text: title"></h1>
+            <a class="btn btn-link btn-default pull-right" href="/posting">Add posting</a>
+        </div>
         <div class="col-md-7 col-sm-reset" data-bind="with: currentRoute() && $data">
             <posting-list params="onSelect: onSelect.bind($root)"></posting-list>
         </div>
