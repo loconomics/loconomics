@@ -56,17 +56,19 @@ export default class PostingEditor extends Komponent {
             userPostingID: ko.unwrap(params.userPostingID) || 0
         });
 
+        // Is allowed to request a 'copy' mode from outside if an ID is provided,
+        // on any other case, the mode is automatic depending whether a positive ID
+        // is given or not
+        let requestedEditorMode = ko.unwrap(params.editorMode);
+        if (requestedEditorMode !== EditorMode.copy || !this.data.userPostingID()) {
+            requestedEditorMode = this.data.userPostingID() ? EditorMode.edit : EditorMode.add;
+        }
         /**
          * Captures from the activity which "mode" the editor
          * component is to be used.
          * @member {EditorMode}
          */
-        this.editorMode = ko.observable(ko.unwrap(params.editorMode));
-
-        /**
-         * @member {KnockoutObservable<rest/Solution>}
-         */
-        this.selectedSolution = ko.observable(null);
+        this.editorMode = ko.observable(requestedEditorMode);
 
         /**
          * Callback executed when the form is saved successfully, giving
@@ -83,7 +85,7 @@ export default class PostingEditor extends Komponent {
 
         // Starts in review mode when we are editing or copying an entry,
         // so anything else but 'add'
-        this.__setupStepsManagement(params.editorMode !== EditorMode.add);
+        this.__setupStepsManagement(this.editorMode() !== EditorMode.add);
 
         this.__setupStatusFlags();
 
@@ -261,7 +263,6 @@ export default class PostingEditor extends Komponent {
 
             this.dataManager.onceLoaded()
             .then((data) => {
-                this.isLoading(false);
                 if (this.editorMode() === EditorMode.copy) {
                     // On copy mode, we need to reset the ID and dataManager
                     // so it forces to create a new entry (otherwise it will
@@ -270,6 +271,7 @@ export default class PostingEditor extends Komponent {
                     this.dataManager = userPosting(0);
                 }
                 this.data.model.updateWith(data);
+                this.isLoading(false);
             })
             .catch((error) => {
                 this.isLoading(false);
@@ -378,8 +380,8 @@ export default class PostingEditor extends Komponent {
      * @param {rest/Solution} solution Suggested Solution object
      */
     pickSolution(text, solution) {
-        this.selectedSolution(solution);
         this.data.solutionID(solution.solutionID);
+        this.data.solutionName(solution.name);
         this.saveStep();
         return {
             value: ActionForValue.copy

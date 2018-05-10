@@ -1,4 +1,4 @@
-<form data-bind="event: { submit: save }">
+<form data-bind="event: { submit: save }, if: !isLoading()">
     <script type="text/template" id="posting-editor-back-step">
         <!-- Expected data: { step:1, context:$data } -->
         <a href="#back" class="btn-block text-center" data-bind="
@@ -22,9 +22,17 @@
             <solution-autocomplete class="isolated" params="
                 onSelect: $component.pickSolution.bind($component),
                 label: 'Search for a solution',
-                isDisabled: $component.isLocked,
+                value: data.solutionName,
+                isDisabled: isLocked() || !isNew(),
                 id: 'postingEditorSelectSolution'">
             </solution-autocomplete>
+            <p class="isolated">
+                <a href="#back" class="btn-block text-center" data-bind="
+                    click: goToSummary,
+                    visible: isAtReview">
+                    Go back to summary
+                </a>
+            </p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -116,7 +124,7 @@
                 </span>
             </button>
         </div>
-        <p data-bind="text: $component.selectedSolution() && $component.selectedSolution().name"></p>
+        <p data-bind="text: solutionName()"></p>
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Specializations Required</h2>
