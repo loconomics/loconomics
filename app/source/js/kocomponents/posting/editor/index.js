@@ -394,10 +394,17 @@ export default class PostingEditor extends Komponent {
      * @param {rest/Specialization} specialization
      */
     pickNeededSpecialization(text, specialization) {
-        this.data.neededSpecializations.push(specialization);
-        return {
-            value: ActionForValue.clear
-        };
+        if (!findSpecializationIn(this.data.neededSpecializations(), specialization)) {
+            this.data.neededSpecializations.push(specialization);
+            return {
+                value: ActionForValue.clear
+            };
+        }
+        else {
+            return {
+                value: ActionForValue.keepUserInput
+            };
+        }
     }
 
     /**
@@ -406,10 +413,17 @@ export default class PostingEditor extends Komponent {
      * @param {rest/Specialization} specialization
      */
     pickDesiredSpecialization(text, specialization) {
-        this.data.desiredSpecializations.push(specialization);
-        return {
-            value: ActionForValue.clear
-        };
+        if (!findSpecializationIn(this.data.desiredSpecializations(), specialization)) {
+            this.data.desiredSpecializations.push(specialization);
+            return {
+                value: ActionForValue.clear
+            };
+        }
+        else {
+            return {
+                value: ActionForValue.keepUserInput
+            };
+        }
     }
 
     /**
@@ -431,3 +445,12 @@ export default class PostingEditor extends Komponent {
 
 ko.components.register(TAG_NAME, PostingEditor);
 
+/**
+ * General utility, to find a specialization by matching ID or name in a listg
+ * @param {Array<KnockoutObservable<rest/Specialization>>} list
+ * @param {rest/Specialization} specialization
+ * @returns {rest/Specialization} Or null if not found
+ */
+function findSpecializationIn(list, specialization) {
+    return list.find((s) => ko.unwrap(s.specializationID) === specialization.specializationID || ko.unwrap(s.name) === specialization.name );
+}
