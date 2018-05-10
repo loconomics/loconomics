@@ -6,6 +6,7 @@
  */
 import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
+import { getStatusNameFor } from '../../../models/UserPosting';
 import ko from 'knockout';
 import moment from 'moment';
 import { list as postingsList } from '../../../data/userPostings';
@@ -55,7 +56,7 @@ export default class PostingList extends Komponent {
          * @param {rest/UserPosting} item
          * @returns {string}
          */
-        this.firstLine = (item) => `${item.title} (${getStatusTextFor(item.statusID)})`;
+        this.firstLine = (item) => `${item.title} (${getStatusNameFor(item.statusID).toLowerCase()})`;
 
         /**
          * Text to display on the second line
@@ -71,16 +72,3 @@ export default class PostingList extends Komponent {
 
 ko.components.register(TAG_NAME, PostingList);
 
-/**
- * Gives the display name for the given user posting status ID.
- * @param {number} postingStatusID
- * @returns {string}
- */
-function getStatusTextFor(postingStatusID) {
-    switch (postingStatusID) {
-        case 0: return 'incomplete';
-        case 1: return 'active';
-        case 2: return 'expired';
-        case 3: return 'closed';
-    }
-}

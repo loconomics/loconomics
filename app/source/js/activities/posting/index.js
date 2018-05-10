@@ -26,7 +26,15 @@ export default class PostingActivity extends Activity {
         this.navBar = Activity.createSubsectionNavBar('Postings', {
             backLink: '/postings'
         });
-        this.title = 'Add posting';
+        this.title = ko.pureComputed(() => {
+            const id = this.userPostingID();
+            if (this.editorMode() === EditorMode.copy || !id) {
+                return 'Add Posting';
+            }
+            else {
+                return 'Edit Posting';
+            }
+        });
 
         /**
          * Creates a placeholder for the ID

@@ -125,6 +125,13 @@
         </div>
         <p data-bind="text: title"></p>
 
+        <!-- ko if:!$component.isNew() -->
+        <div class="SectionHeading SectionHeading--full">
+            <h2>Status</h2>
+        </div>
+        <p><span data-bind="text: statusName"></span> created on <span data-bind="text: createdDate, format: { type: 'datetime', format: 'LLL' }"></span></p>
+        <!-- /ko -->
+
         <div class="SectionHeading SectionHeading--full">
             <h2>Solution Needed</h2>
             <button type="button" data-bind="click: $parent.goToStep.bind($data, 1), disable: $component.isLocked" aria-label='Edit solution needed' class="btn btn-icon-link pull-right">
