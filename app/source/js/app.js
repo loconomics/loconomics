@@ -616,7 +616,10 @@ var appInit = function appInit() {
     .catch(alertError);
 
     // DEBUG
-    window.app = app;
+    window.debug = {
+        app,
+        ko
+    };
 };
 
 // App init on page ready and phonegap ready
