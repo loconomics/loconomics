@@ -1,0 +1,14 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="col-md-7 col-sm-reset">
+            <h1 data-bind="text: title"></h1>
+        </div>
+        <div class="col-md-7 col-sm-reset" data-bind="with: currentRoute() && $data">
+            <posting-list params="onSelect: onSelect.bind($root), data: list"></posting-list>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'postings'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>
