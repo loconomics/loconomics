@@ -48,6 +48,12 @@ export function item(id) {
         remote: new RestItemDataProviderDriver(rest, API_NAME, id),
         local: localItemDriver
     });
+    /**
+     * Close a posting so will not appear active and no accept messages.
+     * @returns {Promise<rest/UserPosting>}
+     */
+    itemProvider.close = () => rest.post(API_NAME + '/' + id + '/close').then(itemProvider.pushSavedData.bind(itemProvider));
+
     // List is dirty once an item is updated on cache directly. We can not
     // update the list correctly because of the list order or elements limits
     const invalidateList = list.invalidateCache.bind(list);

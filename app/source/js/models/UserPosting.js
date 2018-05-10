@@ -15,6 +15,13 @@ export class UserPostingSpecialization {
     }
 }
 
+export const UserPostingStatus = {
+    incomplete: 0,
+    active: 1,
+    expired: 2,
+    closed: 3
+};
+
 export default class UserPosting {
     constructor(values) {
         Model(this);
@@ -25,7 +32,7 @@ export default class UserPosting {
             solutionID: 0,
             solutionName: '',
             postingTemplateID: null,
-            statusID: 0,
+            statusID: UserPostingStatus.incomplete,
             title: '',
             neededSpecializations: {
                 isArray: true,
@@ -43,8 +50,14 @@ export default class UserPosting {
 
         /**
          * The display name for the status
+         * @member {KnockoutComputed<string>}
          */
         this.statusName = ko.pureComputed(() => getStatusNameFor(this.statusID()));
+        /**
+         * Whether the posting is editable per its status
+         * @member {KnockoutComputed<boolean>}
+         */
+        this.isEditable = ko.pureComputed(() => [UserPostingStatus.incomplete, UserPostingStatus.active].includes(this.statusID()));
     }
 }
 
@@ -55,10 +68,10 @@ export default class UserPosting {
  */
 export function getStatusNameFor(postingStatusID) {
     switch (postingStatusID) {
-        case 0: return 'Incomplete';
-        case 1: return 'Active';
-        case 2: return 'Expired';
-        case 3: return 'Closed';
+        case UserPostingStatus.incomplete: return 'Incomplete';
+        case UserPostingStatus.active: return 'Active';
+        case UserPostingStatus.expired: return 'Expired';
+        case UserPostingStatus.closed: return 'Closed';
         default: return '';
     }
 }

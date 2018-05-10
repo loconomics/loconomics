@@ -116,7 +116,10 @@
         ">
         <div class="SectionHeading SectionHeading--full">
             <h2>Posting Title</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 2), disable: $component.isLocked" aria-label='Edit title' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="
+                visible: isEditable,
+                click: $parent.goToStep.bind($data, 2),
+                disable: $component.isLocked" aria-label='Edit title' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: title" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !title()"  params="icon: 'ion-plus'"></icon-dec>
@@ -134,7 +137,10 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Solution Needed</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 1), disable: $component.isLocked" aria-label='Edit solution needed' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="
+                visible: isEditable,
+                click: $parent.goToStep.bind($data, 1),
+                disable: $component.isLocked" aria-label='Edit solution needed' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: solutionID" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !solutionID()"  params="icon: 'ion-plus'"></icon-dec>
@@ -145,7 +151,10 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Specializations Required</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 3), disable: $component.isLocked" aria-label='Edit the specializations required' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="
+                visible: isEditable,
+                click: $parent.goToStep.bind($data, 3),
+                disable: $component.isLocked" aria-label='Edit the specializations required' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: neededSpecializations().length" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !neededSpecializations().length"  params="icon: 'ion-plus'"></icon-dec>
@@ -158,7 +167,10 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Specializations Desired</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 4), disable: $component.isLocked" aria-label='Edit the specializations desired' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="
+                visible: isEditable,
+                click: $parent.goToStep.bind($data, 4),
+                disable: $component.isLocked" aria-label='Edit the specializations desired' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: desiredSpecializations().length" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !desiredSpecializations().length"  params="icon: 'ion-plus'"></icon-dec>
@@ -170,13 +182,17 @@
         </ul>
 
         <div class="isolated">
-            <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked, text: $component.saveButtonText"></button>
-            <p class="help-block isolated">Please review carefully before submitting.</p>
-            <p class="isolated" data-bind="visible: !$component.isNew()">
+            <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="visible: isEditable(), disable: $component.isLocked, text: $component.saveButtonText"></button>
+            <p class="help-block isolated" data-bind="visible: isEditable()">Please review carefully before submitting.</p>
+            <p class="isolated" data-bind="visible: !$component.isNew() && isEditable()">
                 <button type="button" class="btn btn-link" data-bind="
                     text: $component.deleteButtonText,
                     disable: $component.isLocked,
                     click: $component.confirmDelete.bind($component)"></button>
+                <button type="button" class="btn btn-link" data-bind="
+                    text: $component.closeButtonText,
+                    disable: $component.isLocked,
+                    click: $component.confirmClose.bind($component)"></button>
             </p>
         </div>
     </div>

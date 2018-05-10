@@ -95,7 +95,7 @@ export default class PostingEditor extends Komponent {
          */
         this.deleteButtonText = ko.pureComputed(() => {
             var itIs = this.isDeleting();
-            return itIs ? 'Deleting..' : 'Delete entry';
+            return itIs ? 'Deleting..' : 'Delete';
         });
 
         /**
@@ -105,6 +105,15 @@ export default class PostingEditor extends Komponent {
         this.saveButtonText = ko.pureComputed(() => {
             var itIs = this.isSaving();
             return itIs ? 'Submitting..' : 'Submit';
+        });
+
+        /**
+         * Label text for the 'delete' button
+         * @member {KnockoutComputed<string>}
+         */
+        this.closeButtonText = ko.pureComputed(() => {
+            var itIs = this.isClosing();
+            return itIs ? 'Closing..' : 'Close posting';
         });
 
         this.__connectData();
@@ -231,11 +240,17 @@ export default class PostingEditor extends Komponent {
         this.isDeleting = ko.observable(false);
 
         /**
+         * When a 'close' request it's on the works
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isClosing = ko.observable(false);
+
+        /**
          * When edition must be locked because of in progress
          * operations.
          * @member {KnockoutComputed<boolean>}
          */
-        this.isLocked = ko.pureComputed(() => this.isSaving() || this.isLoading() || this.isDeleting());
+        this.isLocked = ko.pureComputed(() => this.isSaving() || this.isLoading() || this.isDeleting() || this.isClosing());
 
         /**
          * Whether the item is a new record or is being edited.
@@ -345,11 +360,10 @@ export default class PostingEditor extends Komponent {
         if (this.isDeleting()) return Promise.reject();
 
         this.isDeleting(true);
-        const id = this.data.userPostingID();
 
         return showConfirm({
             title: 'Are you sure?',
-            message: 'Delete posting entry #' + id,
+            message: `Delete posting "${this.data.title}".`,
             yes: 'Delete',
             no: 'Keep'
         })
@@ -371,6 +385,38 @@ export default class PostingEditor extends Komponent {
             if (error) {
                 showError({
                     title: 'There was an error deleting your posting',
+                    error
+                });
+            }
+        });
+    }
+
+    /**
+     * Close the position being edited after confirmation
+     * @returns {Promise}
+     */
+    confirmClose() {
+        if (this.isClosing()) return Promise.reject();
+
+        this.isClosing(true);
+
+        return showConfirm({
+            title: 'Are you sure?',
+            message: `Close posting "${this.data.title()}".`,
+            yes: 'Close',
+            no: 'Keep active'
+        })
+        .then(() =>  this.dataManager.close())
+        .then((freshData) => {
+            this.isClosing(false);
+            // Use updated/created data
+            this.data.model.updateWith(freshData);
+        })
+        .catch((error) => {
+            this.isClosing(false);
+            if (error) {
+                showError({
+                    title: 'There was an error closing your posting',
                     error
                 });
             }
