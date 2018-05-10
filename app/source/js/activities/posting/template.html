@@ -4,8 +4,9 @@
         <div class="SubSectionNavBar hidden-xs hidden-sm">
             <ul>
                 <li>
-                    <a data-bind="attr: { href: '/postings'}">
-                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Postings
+                    <a data-bind="attr: { href: navBar.leftAction().link }">
+                        <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                        <span data-bind="text: navBar.leftAction().text"></span>
                     </a>
                 </li>
             </ul>
@@ -14,7 +15,7 @@
         <div class="col-md-7 col-sm-reset">
             <form id="addPostingForm" aria-describedby="addPostingFormInstructions">
                 <p id="addPostingFormInstructions" class="help-block"></p>
-                <posting-editor params="editorMode: 'add', userPostingID: userPostingID, onSaved: onSaved"></posting-editor>
+                <posting-editor params="editorMode: 'add', userPostingID: userPostingID, onSaved: onSaved, onDeleted: onDeleted, editorMode: editorMode"></posting-editor>
             </form>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

@@ -20,7 +20,7 @@ const TAG_NAME = 'posting-editor';
 /**
  * @enum {string} Supported displaying modes
  */
-const EditorMode = {
+export const EditorMode = {
     add: 'add',
     edit: 'edit',
     copy: 'copy'
