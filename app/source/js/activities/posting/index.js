@@ -1,7 +1,7 @@
 /**
- * Allows a client to add a posting.
+ * Allows a client to add, edit or copy a posting.
  *
- * @module activities/posting-add
+ * @module activities/posting
  *
  */
 
