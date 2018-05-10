@@ -263,6 +263,9 @@ export default class PostingEditor extends Komponent {
 
             this.dataManager.onceLoaded()
             .then((data) => {
+                if (!data) {
+                    throw 'Posting not found';
+                }
                 if (this.editorMode() === EditorMode.copy) {
                     // On copy mode, we need to reset the ID and dataManager
                     // so it forces to create a new entry (otherwise it will
