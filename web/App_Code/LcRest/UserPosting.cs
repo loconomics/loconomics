@@ -162,7 +162,7 @@ namespace LcRest
         const string sqlWhereUserAndID = sqlWhereUser + @"
             AND a.userPostingID = @3
         ";
-        const string sqlOrderByDate = "ORDER BY createdDate DESC";
+        const string sqlOrderByDate = "ORDER BY a.createdDate DESC";
         public static UserPosting Get(int userID, int userPostingID, int languageID, int countryID, bool fillLinks)
         {
             using (var db = new LcDatabase())
@@ -283,7 +283,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return db.Query(sqlSelectSuggestedProfessionals, userPostingID, languageID, countryID)
-                    .Select((r) => (UserEmail)FromDB(r));
+                    .Select((r) => (UserEmail)UserEmail.FromDB(r));
             }
         }
         #endregion

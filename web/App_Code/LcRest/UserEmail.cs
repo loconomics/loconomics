@@ -14,7 +14,7 @@ namespace LcRest
         public int userID;
         public string email;
 
-        private static UserEmail FromDB(dynamic record)
+        public static UserEmail FromDB(dynamic record)
         {
             if (record == null) return null;
 

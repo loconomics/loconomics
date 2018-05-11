@@ -932,6 +932,21 @@ public class LcMessaging
                 { "UserID", userID }
         }), "Loconomics Cooperative <automated@loconomics.com>");
     }
+    /// <summary>
+    /// Sended when a user creates a user posting, and this user seems to match the requirements so we
+    /// notify him/her about it.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="userEmail"></param>
+    public static void SendSuggestedPosting(int userID, string userEmail, int userPostingID)
+    {
+        SendMail(userEmail, "[Action Required] Suggested GIG Posting",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/SuggestedPosting/",
+            new Dictionary<string, object> {
+                { "UserID", userID },
+                { "userPostingID", userPostingID }
+        }), "Loconomics Cooperative <automated@loconomics.com>");
+    }
     #endregion
 
     #region Type:Admin/Internal Notifications to Loconomics Stuff/Support

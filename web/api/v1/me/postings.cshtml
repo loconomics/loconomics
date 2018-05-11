@@ -125,6 +125,13 @@
                 ((List<int>)record.desiredSpecializationIDs).AddRange(userDesiredSpecializationIDs);
                 // Insert and return with db generated data
                 record.userPostingID = LcRest.UserPosting.Set(record, locale);
+                // Send emails to SendSuggestedPosting
+                // TODO Doubt: What if this take too long? (it waits for email to be sent?) Should be fast, without delay cause of emails
+                foreach (var prof in LcRest.UserPosting.ListSuggestedProfessionals(record.userPostingID, locale.languageID, locale.countryID))
+                {
+                    LcMessaging.SendSuggestedPosting(prof.userID, prof.email, record.userPostingID);
+                }
+                // Return the generated posting
                 return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
             }
             else if (UrlData.Count == 2 && UrlData[0].IsInt() && UrlData[1] == "close")
