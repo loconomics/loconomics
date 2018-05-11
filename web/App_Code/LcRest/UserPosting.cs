@@ -324,6 +324,17 @@ namespace LcRest
                 db.Execute(sqlSetReaction, userPostingID, serviceProfessionalUserID, (short)reaction, message);
             }
         }
+        public static string GetServiceProfessionalReactionMessage(int userPostingID, int serviceProfessionalUserID)
+        {
+            using (var db = new LcDatabase())
+            {
+                var sql = @"
+                    SELECT TOP 1 message FROM UserPostingReaction
+                    WHERE UserPostingID = @0 AND serviceProfessionalUserID = @1
+                ";
+                return (string)db.QueryValue(sql, userPostingID, serviceProfessionalUserID);
+            }
+        }
         #endregion
 
         #region Delete

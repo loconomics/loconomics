@@ -24,5 +24,13 @@ namespace LcRest
                 email = record.email
             };
         }
+
+        public static UserEmail Get(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle("SELECT userID, email FROM userprofile WHERE userID=@0", userID));
+            }
+        }
     }
 }

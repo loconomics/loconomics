@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -77,6 +78,28 @@ namespace LcRest
         public string timeZone;
 
         public DateTime updatedDate;
+        
+        /// <summary>
+        /// Business name or full name.
+        /// App code is able to construct this from other fields too, is not exposed to the API, just for
+        /// internal usage (like in emails)
+        /// </summary>
+        [JsonIgnore]
+        public string publicName
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(businessName))
+                {
+                    return businessName;
+                }
+                else
+                {
+                    var parts = new string[] { firstName, lastName, secondLastName }.Where((a) => !String.IsNullOrEmpty(a));
+                    return string.Join(" ", parts);
+                }
+            }
+        }
         #endregion
 
         public static PublicUserProfile FromDB(dynamic record)

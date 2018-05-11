@@ -155,20 +155,23 @@
             {
                 var id = UrlData[1].AsInt();
                 var userID = WebSecurity.CurrentUserId;
+                var userEmail = WebSecurity.CurrentUserName;
                 var locale = LcRest.Locale.Current;
                 var message = Request.Form["message"];
                 switch (UrlData[2])
                 {
                     case "apply":
                         LcRest.UserPosting.SetServiceProfessionalReaction(id, userID, LcEnum.UserPostingReactionType.applied, message);
-                        break;
+                        var posting = LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.languageID, locale.countryID);
+                        var clientEmail = LcRest.UserEmail.Get(posting.userID).email;
+                        LcMessaging.SendPostingApplicationToAuthor(posting.userID, clientEmail, id, userID, userEmail);
+                        return posting;
                     case "discard":
                         LcRest.UserPosting.SetServiceProfessionalReaction(id, userID, LcEnum.UserPostingReactionType.discarded);
-                        break;
+                        return LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.languageID, locale.countryID);
                     default:
                         throw new HttpException(404, "Not Found");
                 }
-                return LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.languageID, locale.countryID);
             }
             return base.Post();
         }
