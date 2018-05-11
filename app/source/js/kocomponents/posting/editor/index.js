@@ -398,7 +398,7 @@ export default class PostingEditor extends Komponent {
 
         return showConfirm({
             title: 'Are you sure?',
-            message: `Delete posting "${this.data.title}".`,
+            message: `Delete posting "${this.data.title()}".`,
             yes: 'Delete',
             no: 'Keep'
         })
