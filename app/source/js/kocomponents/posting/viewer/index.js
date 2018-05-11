@@ -1,5 +1,7 @@
 /**
- * Used to view the details of a suggested posting (to professionals).
+ * Used to view the details of a posting, with optional client info (to show
+ * a suggested posting to professionals).
+ * It's a template-only (stateless/dummy) component.
  *
  * @module kocomponents/posting/suggested
  *
@@ -9,7 +11,7 @@
 import ko from 'knockout';
 import template from './template.html';
 
-const TAG_NAME = 'posting-suggested';
+const TAG_NAME = 'posting-viewer';
 
 ko.components.register(TAG_NAME, {
     template: template

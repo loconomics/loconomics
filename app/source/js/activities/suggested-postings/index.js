@@ -7,7 +7,7 @@
 
 import '../../utils/activeViewBindingHandler';
 import '../../kocomponents/posting/list';
-import '../../kocomponents/posting/suggested';
+import '../../kocomponents/posting/viewer';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
 import UserPosting from '../../models/UserPosting';
