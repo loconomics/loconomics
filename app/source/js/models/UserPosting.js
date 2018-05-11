@@ -1,8 +1,8 @@
 /**
  * Represents a GIG Posting made by a client user.
  */
-import Client from './Client';
 import Model from './Model';
+import PublicUserProfile from './PublicUserProfile';
 import ko from 'knockout';
 
 export class UserPostingSpecialization {
@@ -44,7 +44,7 @@ export default class UserPosting {
                 Model: UserPostingSpecialization
             },
             client: {
-                Model: Client
+                Model: PublicUserProfile
             },
             languageID: null,
             countryID: null,

@@ -5,9 +5,10 @@
     <p><span data-bind="text: statusName"></span> created on <span data-bind="text: createdDate, format: { type: 'datetime', format: 'LLL' }"></span></p>
     <h2>Solution Needed</h2>
     <p data-bind="text: solutionName"></p>
-    <!-- ko if: client -->
+    <!-- ko with: client -->
     <h2>Client</h2>
-    <p data-bind="text: client.businessName"></p>
+    <p data-bind="text: publicName"></p>
+    <p class="text-muted" data-bind="text: publicBio, visible: publicBio"></p>
     <!-- /ko -->
     <h2>Specializations Required</h2>
     <ul class="TilesList isolated" data-bind="foreach: neededSpecializations">
