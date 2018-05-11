@@ -56,6 +56,13 @@ export default class PostingEditor extends Komponent {
             userPostingID: ko.unwrap(params.userPostingID) || 0
         });
 
+        /**
+         * Keeps a timestamp of the loaded data, allowing to track when there
+         * are changes.
+         * @member {Date}
+         */
+        this.dataTimestamp = ko.observable(this.data.model.dataTimestamp());
+
         // Is allowed to request a 'copy' mode from outside if an ID is provided,
         // on any other case, the mode is automatic depending whether a positive ID
         // is given or not
@@ -90,6 +97,15 @@ export default class PostingEditor extends Komponent {
         this.__setupStatusFlags();
 
         /**
+         * Whether there are changes not saved.
+         * @member {KnockoutComputed<boolean>}
+         */
+        this.hasUnsavedChanges = ko.pureComputed(() => {
+            var c = this.data;
+            return c && this.dataTimestamp() !== c.model.dataTimestamp();
+        });
+
+        /**
          * Label text for the 'delete' button
          * @member {KnockoutComputed<string>}
          */
@@ -103,8 +119,25 @@ export default class PostingEditor extends Komponent {
          * @member {KnockoutComputed<string>}
          */
         this.saveButtonText = ko.pureComputed(() => {
-            var itIs = this.isSaving();
-            return itIs ? 'Submitting..' : 'Submit';
+            // Special case when we are copying an entry and it was not
+            // changed still, so looks like a duplicated entry
+            const isDuplicated = this.editorMode() === EditorMode.copy && !this.hasUnsavedChanges();
+            // Text depending on state:
+            const text = (
+                this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                'Submitting..' :
+                isDuplicated ?
+                'Unchanged' :
+                this.isNew() ?
+                'Submit' :
+                this.hasUnsavedChanges() ?
+                'Submit changes' :
+                // anything else:
+                'Submitted'
+            );
+            return text;
         });
 
         /**
@@ -289,6 +322,7 @@ export default class PostingEditor extends Komponent {
                     this.dataManager = userPosting(0);
                 }
                 this.data.model.updateWith(data);
+                this.dataTimestamp(this.data.model.dataTimestamp());
                 this.isLoading(false);
             })
             .catch((error) => {
@@ -341,6 +375,7 @@ export default class PostingEditor extends Komponent {
             else {
                 // Use updated/created data
                 this.data.model.updateWith(freshData);
+                this.dataTimestamp(this.data.model.dataTimestamp());
             }
         })
         .catch((error) => {
@@ -403,7 +438,7 @@ export default class PostingEditor extends Komponent {
         return showConfirm({
             title: 'Are you sure?',
             message: `Close posting "${this.data.title()}".`,
-            yes: 'Close',
+            yes: 'Close posting',
             no: 'Keep active'
         })
         .then(() =>  this.dataManager.close())

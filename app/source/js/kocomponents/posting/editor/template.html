@@ -182,7 +182,10 @@
         </ul>
 
         <div class="isolated">
-            <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="visible: isEditable(), disable: $component.isLocked, text: $component.saveButtonText"></button>
+            <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="
+                visible: isEditable(),
+                disable: $component.isLocked() || !$component.hasUnsavedChanges(),
+                text: $component.saveButtonText"></button>
             <p class="help-block isolated" data-bind="visible: isEditable()">Please review carefully before submitting.</p>
             <p class="isolated" data-bind="visible: !$component.isNew() && isEditable()">
                 <button type="button" class="btn btn-link" data-bind="
