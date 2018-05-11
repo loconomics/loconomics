@@ -34,6 +34,21 @@ namespace LcRest
         /// the posting is displayed to suggested professional(s)
         /// </summary>
         public PublicUserProfile client;
+        /// <summary>
+        /// User-dependant info: based on the user requesting the information, this field
+        /// is filled or not.
+        /// For professionals fetching a suggested user posting, this can include which reaction
+        /// they have given to it (they discarded, they applied for it,..) and some reactions can
+        /// even prevent the posting from being returned through the API under default query.
+        /// If no reaction still, is null; for the creator of the posting, this will be ever null.
+        /// </summary>
+        public LcEnum.UserPostingReactionType? reactionTypeID;
+        /// <summary>
+        /// Related to reactionTypeID, will only have a value when that one has too, so all
+        /// its rules apply here. From the underlyning UserPostingReaction table, the 
+        /// updatedDate value is used here.
+        /// </summary>
+        public DateTimeOffset? reactionDate;
         [JsonIgnore]
         public int languageID;
         [JsonIgnore]
@@ -115,8 +130,7 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        const string sqlSelect = @"
-            SELECT
+        const string sqlFields = @"
                 a.userPostingID,
                 a.userID,
                 a.solutionID,
@@ -130,13 +144,17 @@ namespace LcRest
                 a.updatedDate,
                 a.languageID,
                 a.countryID
-            FROM
+        ";
+        const string sqlFromTables = @"
                 UserPosting as A
                 INNER JOIN Solution as S
                  ON A.solutionID = S.solutionID
                  AND A.languageID = S.languageID
                  AND A.countryID = S.countryID
         ";
+        const string sqlSelect = @"
+            SELECT " + sqlFields + @"
+            FROM " + sqlFromTables;
         const string sqlWhereUser = @"
             WHERE a.userID = @0
                 AND a.languageID = @1 AND a.countryID = @2
@@ -171,15 +189,25 @@ namespace LcRest
         #endregion
 
         #region Suggested lists
-        const string sqlSelectSuggestedForUser = sqlSelect + @"
+        const string sqlSelectSuggestedForUser = "SELECT " + sqlFields + @"
+                ,r.reactionTypeID
+                ,r.updatedDate as reactionDate 
+            FROM " + sqlFromTables + @"
                 INNER JOIN UserSolution
                  ON UserSolution.SolutionID = A.SolutionID
                     AND UserSolution.Active = 1
+                LEFT JOIN UserPostingReaction As R
+                 ON R.userPostingID = a.userPostingID
+                 AND R.serviceProfessionalUserID = @0
             WHERE a.userID <> @0
                 AND UserSolution.userID = @0
                 AND a.languageID = @1 AND a.countryID = @2
                 AND a.statusID = 1
-        " + sqlOrderByDate;
+        ";
+        const string sqlReactionFiltered = @"
+                -- Only not-set or applied reactions (prevents 'discarded' from appearing)
+                AND (R.reactionTypeID is null OR R.reactionTypeID = 1)
+        ";
         /// <summary>
         /// Provides a list of postings suggested for that user to apply for.
         /// It NEVER returns sugestions where the user is the creator on it, only active suggestions
@@ -194,8 +222,34 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlSelectSuggestedForUser, userID, languageID, countryID)
-                    .Select((r) => (UserPosting)FromDB(r, true, userID));
+                var sql = sqlSelectSuggestedForUser + sqlReactionFiltered + sqlOrderByDate;
+                return db.Query(sql, userID, languageID, countryID)
+                    .Select((r) => {
+                        var post = (UserPosting)FromDB(r, true, userID);
+                        post.reactionDate = r.reactionDate;
+                        post.reactionTypeID = (LcEnum.UserPostingReactionType?)r.reactionTypeID;
+                        return post;
+                    });
+            }
+        }
+        /// <summary>
+        /// Get a single user posting if suggested for the given user, attaching any reaction information it has (even discarded)
+        /// </summary>
+        /// <param name="userPostingID"></param>
+        /// <param name="userID"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public static UserPosting GetSuggestedPosting(int userPostingID, int userID, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                var sql = sqlSelectSuggestedForUser + " AND a.userPostingID = @3 " + sqlOrderByDate;
+                var r = db.QuerySingle(sql, userID, languageID, countryID, userPostingID);
+                var post = (UserPosting)FromDB(r, true, userID);
+                post.reactionDate = r.reactionDate;
+                post.reactionTypeID = (LcEnum.UserPostingReactionType?)r.reactionTypeID;
+                return post;
             }
         }
         const string sqlSelectSuggestedProfessionals = @"
@@ -230,6 +284,44 @@ namespace LcRest
             {
                 return db.Query(sqlSelectSuggestedProfessionals, userPostingID, languageID, countryID)
                     .Select((r) => (UserEmail)FromDB(r));
+            }
+        }
+        #endregion
+
+        #region Service Professional Reactions
+        const string sqlSetReaction = @"
+            UPDATE UserPostingReaction
+            SET reactionTypeID = @2, message = @3, updatedDate = getdate()
+            WHERE UserPostingID = @0 AND serviceProfessionalUserID = @1
+
+            IF @@ROWCOUNT = 0
+                INSERT INTO UserPostingReaction (
+                    userPostingID,
+                    serviceProfessionalUserID,
+                    reactionTypeID,
+                    createdDate,
+                    updatedDate,
+                    message
+                ) VALUES (
+                    @0, @1, @2,
+                    getdate(), getdate(),
+                    @3
+                )
+        ";
+        /// <summary>
+        /// Saves a record with the service professional reaction to a user posting. It does NOT send any message on cases
+        /// that should being needed ('apply'), check LcMessaging for one to run manually.
+        /// </summary>
+        /// <param name="userPostingID"></param>
+        /// <param name="serviceProfessionalUserID"></param>
+        /// <param name="reaction"></param>
+        /// <param name="message"></param>
+        public static void SetServiceProfessionalReaction(
+            int userPostingID, int serviceProfessionalUserID, LcEnum.UserPostingReactionType reaction, string message = null)
+        {
+            using (var db = new LcDatabase())
+            {
+                db.Execute(sqlSetReaction, userPostingID, serviceProfessionalUserID, (short)reaction, message);
             }
         }
         #endregion

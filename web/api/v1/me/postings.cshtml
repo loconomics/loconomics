@@ -50,9 +50,19 @@
             "url": "/api/v1/en-US/me/postings/1/close",
             "post": { }
         },
-        "GIG Postings suggested to an user to apply for": {
+        "GIG Postings suggested to an user": {
             "url": "/api/v1/en-US/me/postings/suggested",
             "get": { }
+        },
+        "GIG Postings suggested to an user: apply to one": {
+            "url": "/api/v1/en-US/me/postings/suggested/1/apply",
+            "post": {
+                "message": "I'm available!'"
+            }
+        },
+        "GIG Postings suggested to an user: discard one (hide)": {
+            "url": "/api/v1/en-US/me/postings/suggested/1/discard",
+            "post": { }
         }
     }
 *@
@@ -133,6 +143,25 @@
                 {
                     return record;
                 }
+            }
+            else if (UrlData.Count == 3 && UrlData[0] == "suggested" && UrlData[1].IsInt())
+            {
+                var id = UrlData[1].AsInt();
+                var userID = WebSecurity.CurrentUserId;
+                var locale = LcRest.Locale.Current;
+                var message = Request.Form["message"];
+                switch (UrlData[2])
+                {
+                    case "apply":
+                        LcRest.UserPosting.SetServiceProfessionalReaction(id, userID, LcEnum.UserPostingReactionType.applied, message);
+                        break;
+                    case "discard":
+                        LcRest.UserPosting.SetServiceProfessionalReaction(id, userID, LcEnum.UserPostingReactionType.discarded);
+                        break;
+                    default:
+                        throw new HttpException(404, "Not Found");
+                }
+                return LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.languageID, locale.countryID);
             }
             return base.Post();
         }

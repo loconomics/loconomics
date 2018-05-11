@@ -23,6 +23,11 @@ export const UserPostingStatus = {
     closed: 3
 };
 
+export const UserPostingReactionType = {
+    applied: 1,
+    discarded: 2
+};
+
 export default class UserPosting {
     constructor(values) {
         Model(this);
@@ -46,6 +51,11 @@ export default class UserPosting {
             client: {
                 Model: PublicUserProfile
             },
+            /**
+             * @member {KnockoutObservable<UserPostingReactionType?>}
+             */
+            reactionTypeID: null,
+            reactionDate: null,
             languageID: null,
             countryID: null,
             createdDate: null,
@@ -57,6 +67,11 @@ export default class UserPosting {
          * @member {KnockoutComputed<string>}
          */
         this.statusName = ko.pureComputed(() => getStatusNameFor(this.statusID()));
+        /**
+         * The display name for the reaction type
+         * @member {KnockoutComputed<string>}
+         */
+        this.reactionTypeName = ko.pureComputed(() => getReactionTypeNameFor(this.reactionTypeID()));
         /**
          * Whether the posting is editable per its status
          * @member {KnockoutComputed<boolean>}
@@ -76,6 +91,20 @@ export function getStatusNameFor(postingStatusID) {
         case UserPostingStatus.active: return 'Active';
         case UserPostingStatus.expired: return 'Expired';
         case UserPostingStatus.closed: return 'Closed';
+        default: return '';
+    }
+}
+
+/**
+ * Gives the display name for the given user posting reaction type ID, or empty
+ * if source is null
+ * @param {number} postingReactionTypeID
+ * @returns {string}
+ */
+export function getReactionTypeNameFor(postingReactionTypeID) {
+    switch (postingReactionTypeID) {
+        case UserPostingReactionType.applied: return 'Applied';
+        case UserPostingReactionType.discarded: return 'Discarded';
         default: return '';
     }
 }

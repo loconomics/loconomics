@@ -9,12 +9,13 @@ import '../../utils/activeViewBindingHandler';
 import '../../kocomponents/posting/list';
 import '../../kocomponents/posting/viewer';
 import * as activities from '../index';
-import { applyToPoster, list as suggestedPostings } from '../../data/suggestedPostings';
+import { applyToPoster, discardPoster, list as suggestedPostings } from '../../data/suggestedPostings';
 import Activity from '../../components/Activity';
 import UserPosting from '../../models/UserPosting';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
 import shell from '../../app.shell';
+import { show as showConfirm } from '../../modals/confirm';
 import { show as showError } from '../../modals/error';
 import { show as showTextInput } from '../../modals/textInput';
 import template from './template.html';
@@ -46,7 +47,7 @@ export default class SuggestedPostingsActivity extends Activity {
         /**
          * Gives null or the posting selected by the instance ID, by filtering
          * the full list.
-         * @member {KnockoutComputed<rest/SuggestedPosting>}
+         * @member {KnockoutComputed<rest/UserPosting>}
          */
         this.selectedPosting = ko.pureComputed(() => {
             const ready = !this.isLoading();
@@ -135,7 +136,7 @@ export default class SuggestedPostingsActivity extends Activity {
         const name = post && post.client() && post.client().publicName();
         if (name) {
             showTextInput({
-                submitLabel: 'I\'m interested',
+                submitLabel: 'Apply',
                 title: `Message to ${name}`,
                 required: true,
                 // Notes/Help:
@@ -145,18 +146,42 @@ export default class SuggestedPostingsActivity extends Activity {
                 // Template:
                 text: 'I\'m interested and available for this job'
             })
-            // TODO submit to server
+            // Submit to server
             .then((message) => {
-                if (message !==  null) {
+                if (message !== null) {
                     return applyToPoster(post.userPostingID(), {
                         message
                     })
-                    .then(() => {
-                        // TODO done
+                    .then((updatedPosting) => {
+                        // Update posting copy with new data
+                        post.model.updateWith(updatedPosting, true);
                     });
                 }
             })
             .catch((error) => {
+                showError({
+                    title: 'There was an error sending your request',
+                    error
+                });
+            });
+        }
+    }
+
+    discardPosting() {
+        const post = this.selectedPosting();
+        const name = post && post.client() && post.client().publicName();
+        if (name) {
+            showConfirm({
+                title: 'Discard this posting',
+                message: `Since you are not interested in "${post.title()}", let's hide it for you`,
+                yes: 'Discard posting',
+                no: 'Keep'
+            })
+            // Submit to server
+            .then(() => discardPoster(post.userPostingID()))
+            .then(() => shell.go('/suggested-postings'))
+            .catch((error) => {
+                if (!error) return; // just answered no
                 showError({
                     title: 'There was an error sending your request',
                     error

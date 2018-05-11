@@ -1277,9 +1277,19 @@
             "url": "/api/v1/en-US/me/postings/1/close",
             "post": { }
         },
-        "GIG Postings suggested to an user to apply for": {
+        "GIG Postings suggested to an user": {
             "url": "/api/v1/en-US/me/postings/suggested",
             "get": {}
+        },
+        "GIG Postings suggested to an user: apply to one": {
+            "url": "/api/v1/en-US/me/postings/suggested/1/apply",
+            "post": {
+                "message": "I'm available!'"
+            }
+        },
+        "GIG Postings suggested to an user: discard one (hide)": {
+            "url": "/api/v1/en-US/me/postings/suggested/1/discard",
+            "post": {}
         },
         "Specializations search (autocomplete)": {
             "url": "/api/v1/en-US/specializations",

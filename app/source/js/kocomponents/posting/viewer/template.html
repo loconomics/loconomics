@@ -2,7 +2,12 @@
     <h2>Posting Title</h2>
     <p data-bind="text: title"></p>
     <h2>Status</h2>
-    <p><span data-bind="text: statusName"></span> created on <span data-bind="text: createdDate, format: { type: 'datetime', format: 'LLL' }"></span></p>
+    <p>
+        <div data-bind="if: reactionTypeName">
+            <span data-bind="text: reactionTypeName"></span> on <span data-bind="text: reactionDate, format: { type: 'datetime', format: 'LLL' }"></span>
+        </div>
+        <span data-bind="text: statusName"></span> created on <span data-bind="text: createdDate, format: { type: 'datetime', format: 'LLL' }"></span>
+    </p>
     <h2>Solution Needed</h2>
     <p data-bind="text: solutionName"></p>
     <!-- ko with: client -->

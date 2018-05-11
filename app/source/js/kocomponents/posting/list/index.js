@@ -5,9 +5,9 @@
  *
  */
 import '../../utilities/icon-dec';
+import { getStatusNameFor, getReactionTypeNameFor } from '../../../models/UserPosting';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
-import { getStatusNameFor } from '../../../models/UserPosting';
 import ko from 'knockout';
 import moment from 'moment';
 import { list as postingsList } from '../../../data/userPostings';
@@ -62,7 +62,16 @@ export default class PostingList extends Komponent {
          * @param {rest/UserPosting} item
          * @returns {string}
          */
-        this.firstLine = (item) => `${item.title} (${getStatusNameFor(item.statusID).toLowerCase()})`;
+        this.firstLine = (item) => {
+            const status = getStatusNameFor(item.statusID).toLowerCase();
+            if (item.reactionTypeID) {
+                const reaction = getReactionTypeNameFor(item.reactionTypeID).toLowerCase();
+                return `${item.title} (${reaction}, ${status})`;
+            }
+            else {
+                return `${item.title} (${status})`;
+            }
+        };
 
         /**
          * Text to display on the second line

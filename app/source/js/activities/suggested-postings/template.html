@@ -16,10 +16,16 @@
         <div class="col-md-7 col-sm-reset">
             <div class="SectionHeading">
                 <h1 data-bind="text: title"></h1>
+                <!-- ko if: view() === 'item' && selectedPosting() && !selectedPosting().reactionTypeID() -->
                 <button type="button" class="btn btn-default pull-right"
-                    data-bind="click: applyPosting, visible: view() === 'item'">
+                    data-bind="click: applyPosting.bind($root)">
                     I'm interested
                 </button>
+                <button type="button" class="btn btn-link pull-right"
+                    data-bind="click: discardPosting.bind($root)">
+                    Discard
+                </button>
+                <!-- /ko -->
             </div>
             <div data-bind="activeView: view">
                 <div data-bind="view: 'list'">

@@ -30,11 +30,34 @@ export const list = new CachedDataProvider({
 });
 
 /**
+ * Utility to run 'post methods' on a suggested posting, usually reaction
+ * methods (apply, discard).
+ * @param {string} action Action name (part of URL) to execute
+ * @param {number} userPostingID
+ * @param {object} data
+ */
+function postPostingReaction(action, userPostingID, data) {
+    return rest.post(`${API_NAME}/${userPostingID}/${action}`, data)
+    .then((r) => {
+        list.invalidateCache();
+        return r;
+    });
+}
+
+/**
  * Let's a professional to apply to a user posting.
  * @param {number} userPostingID
  * @param {Object} data
  * @param {string} data.message Text to include for the potential client.
  */
 export function applyToPoster(userPostingID, data) {
-    return rest.post(`${API_NAME}/${data.userPostingID}/apply`, data);
+    return postPostingReaction('apply', userPostingID, data);
+}
+
+/**
+ * Let's a professional to discard a user posting (gets hidden for itself).
+ * @param {number} userPostingID
+ */
+export function discardPoster(userPostingID) {
+    return postPostingReaction('discard', userPostingID);
 }
