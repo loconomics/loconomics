@@ -33,6 +33,12 @@
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'inbox' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/inbox' }"><i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i> Inbox</a>
 </li>
+<li data-bind="visible: !isServiceProfessional() && !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'postings' }">
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/postings' }"><i class="fa fa-fw ion-briefcase" aria-hidden="true"></i> Gig Postings</a>
+</li>
+<li data-bind="visible: isServiceProfessional() && !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'postings' }">
+        <a data-bind="attr: { href: isInOnboarding() ? null : '/suggested-postings' }"><i class="fa fa-fw ion-briefcase" aria-hidden="true"></i> Gig Postings</a>
+    </li>
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'cms' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/cms' }"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Clients</a>
 </li>
