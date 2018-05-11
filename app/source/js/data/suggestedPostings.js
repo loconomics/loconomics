@@ -28,3 +28,13 @@ export const list = new CachedDataProvider({
     remote: new RestSingleDataProviderDriver(rest, API_NAME),
     local: localListDriver
 });
+
+/**
+ * Let's a professional to apply to a user posting.
+ * @param {number} userPostingID
+ * @param {Object} data
+ * @param {string} data.message Text to include for the potential client.
+ */
+export function applyToPoster(userPostingID, data) {
+    return rest.post(`${API_NAME}/${data.userPostingID}/apply`, data);
+}

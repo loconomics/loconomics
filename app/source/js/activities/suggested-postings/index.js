@@ -9,13 +9,14 @@ import '../../utils/activeViewBindingHandler';
 import '../../kocomponents/posting/list';
 import '../../kocomponents/posting/viewer';
 import * as activities from '../index';
+import { applyToPoster, list as suggestedPostings } from '../../data/suggestedPostings';
 import Activity from '../../components/Activity';
 import UserPosting from '../../models/UserPosting';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
 import shell from '../../app.shell';
 import { show as showError } from '../../modals/error';
-import { list as suggestedPostings } from '../../data/suggestedPostings';
+import { show as showTextInput } from '../../modals/textInput';
 import template from './template.html';
 
 const ROUTE_NAME = 'suggested-postings';
@@ -130,7 +131,38 @@ export default class SuggestedPostingsActivity extends Activity {
     }
 
     applyPosting() {
-        // TODO
+        const post = this.selectedPosting();
+        const name = post && post.client() && post.client().publicName();
+        if (name) {
+            showTextInput({
+                submitLabel: 'I\'m interested',
+                title: `Message to ${name}`,
+                required: true,
+                // Notes/Help:
+                description: 'We will send your email, name, phone number plus ' +
+                'link to your public listing on your behalf. Please, personalize ' +
+                'next message that will be sent too to your potential new client:',
+                // Template:
+                text: 'I\'m interested and available for this job'
+            })
+            // TODO submit to server
+            .then((message) => {
+                if (message !==  null) {
+                    return applyToPoster(post.userPostingID(), {
+                        message
+                    })
+                    .then(() => {
+                        // TODO done
+                    });
+                }
+            })
+            .catch((error) => {
+                showError({
+                    title: 'There was an error sending your request',
+                    error
+                });
+            });
+        }
     }
 }
 
