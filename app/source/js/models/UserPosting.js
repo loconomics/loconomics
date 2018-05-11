@@ -1,6 +1,7 @@
 /**
  * Represents a GIG Posting made by a client user.
  */
+import Client from './Client';
 import Model from './Model';
 import ko from 'knockout';
 
@@ -41,6 +42,9 @@ export default class UserPosting {
             desiredSpecializations: {
                 isArray: true,
                 Model: UserPostingSpecialization
+            },
+            client: {
+                Model: Client
             },
             languageID: null,
             countryID: null,

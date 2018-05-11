@@ -1,11 +1,34 @@
 <div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="col-md-7 col-sm-reset">
-            <h1 data-bind="text: title"></h1>
+        <!-- ko if: view() === 'item' -->
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a data-bind="attr: { href: navBar.leftAction().link }">
+                        <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                        <span data-bind="text: navBar.leftAction().text"></span>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <div class="col-md-7 col-sm-reset" data-bind="with: currentRoute() && $data">
-            <posting-list params="onSelect: onSelect.bind($root), data: list"></posting-list>
+        <!-- /ko -->
+        <div class="col-md-7 col-sm-reset">
+            <div class="SectionHeading">
+                <h1 data-bind="text: title"></h1>
+                <button type="button" class="btn btn-default pull-right"
+                    data-bind="click: applyPosting, visible: view() === 'item'">
+                    Apply
+                </button>
+            </div>
+            <div data-bind="activeView: view">
+                <div data-bind="view: 'list'">
+                    <posting-list params="onSelect: onSelect.bind($root), data: list"></posting-list>
+                </div>
+                <div data-bind="view: 'item'">
+                    <posting-suggested params="data: selectedPosting"></posting-suggested>
+                </div>
+            </div>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'postings'"></app-inline-side-menu>
