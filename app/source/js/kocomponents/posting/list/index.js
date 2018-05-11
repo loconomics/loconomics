@@ -5,7 +5,7 @@
  *
  */
 import '../../utilities/icon-dec';
-import { getStatusNameFor, getReactionTypeNameFor } from '../../../models/UserPosting';
+import { getReactionTypeNameFor, getStatusNameFor } from '../../../models/UserPosting';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
