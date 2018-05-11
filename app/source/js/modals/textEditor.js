@@ -9,7 +9,6 @@
     @returns Promise. It resolves when a button is pressed with the introduced text on 'save'.
     Is rejected when the modal is dismissed/closed, like when pressing 'cancel', 'return' or 'close'.
 **/
-// TODO jsdocs
 'use strict';
 
 var ko = require('knockout');
@@ -18,6 +17,12 @@ var fixFocus = require('./utils/fixFocus');
 var TEMPLATE = require('../../html/modals/textEditor.html');
 var createElement = require('./utils/createElement');
 
+/**
+ * Display a new text editor modal instance
+ * @param {Object} options
+ * @param {string} options.title Modal title
+ * @param {string} [options.text] Default text for the input control (a textarea)
+ */
 exports.show = function showTextEditor(options) {
     var modal = createElement(TEMPLATE);
     var vm = modal.data('viewmodel');

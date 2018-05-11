@@ -1,0 +1,22 @@
+<div class="modal fade" id="textInputModal" tabindex="-1" role="dialog"
+    aria-labelledby="textInputModal-label" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <form class="modal-content" data-bind="event: { submit: submit }">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="textInputModal-label" data-bind="text: title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p for="textInputModal-desc" class="control-label" data-bind="visible: description, text: description"></p>
+                    <textarea rows="5" aria-labelledby="textInputModal-label"
+                        aria-describedby="textInputModal-desc" class="form-control" data-bind="textInput: text"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-wrap" id="textInputModal-submit"
+                    data-bind="text: submitLabel, enable: isValid"></button>
+            </div>
+        </form><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
