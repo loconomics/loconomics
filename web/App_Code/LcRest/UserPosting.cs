@@ -29,6 +29,11 @@ namespace LcRest
         public IEnumerable<int> desiredSpecializationIDs;
         public IEnumerable<UserPostingSpecialization> neededSpecializations;
         public IEnumerable<UserPostingSpecialization> desiredSpecializations;
+        /// <summary>
+        /// Optional info about the userID creating the posting, filled when 
+        /// the posting is displayed to suggested professional(s)
+        /// </summary>
+        public PublicUserProfile client;
         [JsonIgnore]
         public int languageID;
         [JsonIgnore]
@@ -40,7 +45,14 @@ namespace LcRest
         #region Instances
         public UserPosting() { }
 
-        private static UserPosting FromDB(dynamic record, bool fillLinks = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="record"></param>
+        /// <param name="fillSpecializations"></param>
+        /// <param name="clientRequesterUserID">UserID of a professional that request client information to be filled in</param>
+        /// <returns></returns>
+        private static UserPosting FromDB(dynamic record, bool fillSpecializations = false, int clientRequesterUserID = 0)
         {
             if (record == null) return null;
 
@@ -62,9 +74,13 @@ namespace LcRest
                 languageID = record.languageID,
                 countryID = record.countryID
             };
-            if (fillLinks)
+            if (fillSpecializations)
             {
                 r.FillSpecializations();
+            }
+            if (clientRequesterUserID > 0)
+            {
+                r.FillClient(clientRequesterUserID);
             }
             return r;
         }
@@ -75,6 +91,11 @@ namespace LcRest
         {
             neededSpecializations = UserPostingSpecialization.ListBy(neededSpecializationIDs, languageID, countryID);
             desiredSpecializations = UserPostingSpecialization.ListBy(desiredSpecializationIDs, languageID, countryID);
+        }
+        
+        public void FillClient(int requesterUserID)
+        {
+            client = PublicUserProfile.Get(userID, requesterUserID);
         }
 
         /// <summary>
@@ -169,11 +190,12 @@ namespace LcRest
         /// <param name="countryID"></param>
         /// <param name="fillLinks"></param>
         /// <returns></returns>
-        public static IEnumerable<UserPosting> ListSuggestedPostings(int userID, int languageID, int countryID, bool fillLinks)
+        public static IEnumerable<UserPosting> ListSuggestedPostings(int userID, int languageID, int countryID)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlSelectSuggestedForUser, userID, languageID, countryID).Select((r) => (UserPosting)FromDB(r, fillLinks));
+                return db.Query(sqlSelectSuggestedForUser, userID, languageID, countryID)
+                    .Select((r) => (UserPosting)FromDB(r, true, userID));
             }
         }
         const string sqlSelectSuggestedProfessionals = @"

@@ -74,7 +74,7 @@
             }
             else if (UrlData.Count == 1 && UrlData[0] == "suggested")
             {
-                return LcRest.UserPosting.ListSuggestedPostings(userID, locale.languageID, locale.countryID, true);
+                return LcRest.UserPosting.ListSuggestedPostings(userID, locale.languageID, locale.countryID);
             }
             return base.Get();
         }
