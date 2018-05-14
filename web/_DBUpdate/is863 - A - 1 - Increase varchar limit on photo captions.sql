@@ -1,0 +1,1 @@
+ALTER TABLE dbo.providerservicephoto ALTER COLUMN PhotoCaption varchar(100)
