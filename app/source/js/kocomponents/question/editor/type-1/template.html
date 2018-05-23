@@ -1,15 +1,15 @@
-<div data-bind="foreach: question.responses">
+<div data-bind="foreach: question.options">
     <div class="radio">
         <input type="radio" data-bind="
-            checked: $component.response.id,
-            checkedValue: id,
+            checked: $component.response.optionID,
+            checkedValue: optionID,
             attr: {
-                id: $component.responseElementID($data),
+                id: $component.optionElementID($data),
                 name: $component.questionElementID
             }
             " />
         <label data-bind="
-            attr: { for: $component.responseElementID($data) },
-            text: text"></label>
+            attr: { for: $component.optionElementID($data) },
+            text: option"></label>
     </div>
 </div>

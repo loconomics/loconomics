@@ -8,6 +8,7 @@ import '../../kocomponents/question/editor';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
 import QuestionResponse from '../../models/QuestionResponse';
+import ko from 'knockout';
 import template from './template.html';
 
 const ROUTE_NAME = '_test-posting-questions';
@@ -24,28 +25,29 @@ export default class _TestPostingQuestionsActivity extends Activity {
         this.question = {
             questionID: 1,
             questionTypeID: 1,
-            responses: [{
-                id: 1,
-                text: 'I have designs'
+            question: 'Where are you in the lifecycle of the project?',
+            options: [{
+                optionID: 1,
+                option: 'I have designs'
             }, {
-                id: 2,
-                text: 'I have specifications'
+                optionID: 2,
+                option: 'I have specifications'
             }, {
-                id: 3,
-                text: 'I have ideas'
+                optionID: 3,
+                option: 'I have ideas'
             }, {
-                id: 4,
-                text: 'I\'m just starting'
+                optionID: 4,
+                option: 'I\'m just starting'
             }]
         };
-        this.response = new QuestionResponse({
+        this.responses = ko.observableArray([new QuestionResponse({
             // Predefined option ID, if not free-input
-            id: 2,
-            // Predefined option label, if not fee input
-            text: 'Option label',
-            // User input
-            value: 'My input'
-        });
+            optionID: 2,
+            // Predefined option label, if one choosen
+            option: 'I have specifications',
+            // User input, if allowed by the option
+            userInput: 'My input'
+        })]);
     }
 }
 

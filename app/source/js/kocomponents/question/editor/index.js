@@ -38,58 +38,62 @@ const TAG_NAME = 'question-editor';
 // };
 
 /**
- * @enum {string}
- */
-// const ValueType = {
-//     text: 'text',
-//     datetime: 'datetime',
-//     number: 'number',
-//     currency: 'currency'
-// };
-
-/**
- * Describes a predefined response for a question or additional details for
- * a 'free input' textbox.
- * When is a predefined response, an 'option' from a list of available responses,
- * must specify almost an id and text properties. The placeholder property is
- * discarded (makes no sense on this case)
- * When is used to describe a 'free input' response only (no other predefined
- * responses are available for the question), properties id and text are
- * discarded (makes no sense on that case)
- * When used to describe an alternative user response out of a set of given options
- * (the 'otherOption'), it must include the id and text even if is displayed
- * along a textbox for free user input, since is firts selected as an option
- * by the user.
- * @typedef {Object} rest.QuestionAvailableResponse
- * @property {number} [id] Unique identifier for the response, from the set of
- * available responses
- * @property {string} [text] Text used to label this response option.
- * @property {any} [value] Default value or value typed by the user when the instance
- * represents an user response
+ * Describes an option available for a question, that may or not ask for user
+ * input of a specific type, and provide helpful optional info like a tooltip,
+ * placeholder and icon.
+ * If a question only allows for user input, still an option object is provided
+ * to describe it, requiring the inputType field and the optionID being not
+ * needed.
+ * @typedef {Object} rest.QuestionOption
+ * @property {number} [optionID] Unique identifier for the option, from the set of
+ * all available for a question
+ * @property {string} [option] Text used to label this response option.
  * @property {string} [icon] Name/classnames of the icon used together the option
  * @property {string} [tooltip] Text displayed as a tooltip when focusing the option
  * @property {string} [placeholder] Text used as placeholder of a free text
  * input option
+ * @property {string} [inputType] Defines the kind of user input expected when
+ * choosing this option, or null when no input (when just choosing the option is
+ * enough).
+ * The values allowed matches the values allowed by the attribute 'type' of
+ * the html 'input' element or any other special type supported by the UI
+ * (with fallback to input-text) and back-end validations.
  */
 
 /**
+ * Describes a response given by a user to a question, that may include user
+ * input, a selected option or both.
+ * @typedef {Object} rest.QuestionResponse
+ * @property {number} [optionID] Unique identifier for the option in the question
+ * if one was choosen. On questions with a single option for user input, this
+ * property is not required.
+ * @property {string} [option] Text used to label the optionID selected (is a
+ * copy of the text displayed to the user when answering the question, only
+ * needed when there is an optionID).
+ * @property {string} [userInput] The input provided by the user, usually in a
+ * free text box, but can be other type like number, datetime
+ * choosing this option, or null when no input (just choosing the option is enough).
+ * The values allowed matches the values allowed by the attribute 'type' of
+ * the html 'input' element.
+ */
+
+/**
+ * Describes a question with one or more options allowing one or more responses.
+ * The set of options can contain just one, describing the expected type of
+ * user input, or many options where user must choose almost one and any of them
+ * can optionally allow user input by describing the type.
  * @typedef {Object} rest.Question
  * @property {number} questionID Integer, unique identifier
  * @property {QuestionType} questionTypeID Type of question
  * @property {string} question Concise question text
- * @property {Array<rest.QuestionAvailableResponse>} responses List of available
- * responses for the question (optional, only when the response is limited to this,
- * except if otherOption is defined)
- * @property {rest.QuestionAvailableResponse>} otherOption If user is allowed to
- * specify any other value than the set of available responses, this includes
- * the description for that alternative user response (just the label
- * and ID, user will input free text). Too, this can be defined when no predefined
- * responses are available, just to describe additional attributes of the free
- * input available to the user (like specifing a placeholder, an icon or tooltip)
- * and value must match the valueType
- * @property {string} helpBlock Optional assistive text for users.
- * @property {ValueType} valueType Allowed type for the user response when no
- * choosing a predefined response.
+ * @property {Array<rest.QuestionOption>} options List of available options
+ * to choose as response(s) for the question, that may ask or not for user input
+ * per the definition of each one. On question types that just ask for user
+ * input, just one option must exists in this list to describe the allowed input
+ * and optionally provide other settings (like a placeholder, tooltip or icon).
+ * @property {string} helpBlock Optional assistive text for users relative to
+ * the question (note that each option has a tooltip property for option specific
+ * help text)
  * @property {number} languageID
  * @property {number} countryID
  * @property {Date} createdDate
@@ -108,8 +112,9 @@ export default class QuestionEditor extends Komponent {
      * @param {object} params
      * @param {(rest.Question|KnockoutObservable<rest.Question>)} params.question Data describing the
      * question
-     * @param {(models/QuestionResponse|KnockoutObservable<models/QuestionResponse>)} [params.response] Data describing the
-     * user response for the question, if any
+     * @param {KnockoutObservableArray<models/QuestionResponse>} [params.responses]
+     * List of user responses for the question, as an observable to make the updated
+     * data available outside
      */
     constructor(params) {
         super();
@@ -121,20 +126,18 @@ export default class QuestionEditor extends Komponent {
         if (!this.question) {
             throw new Error('Question required');
         }
-        /**
-         * @member {models/QuestionResponse}
-         */
-        this.response = ko.unwrap(params.response);
-        if (!this.response) {
-            throw new Error('Response required');
-        }
 
         /**
-         * Whether the UI is a fieldset (a set of available responses is displayed)
+         * @member {KnockoutObservableArray<models/QuestionResponse>}
+         */
+        this.responses = params.responses;
+
+        /**
+         * Whether the UI is a fieldset (a set of options is displayed)
          * or not.
          * @member {KnockoutComputed<boolean>}
          */
-        this.isFieldset = ko.pureComputed(() => this.question.responses && this.question.responses.length > 0);
+        this.isFieldset = ko.pureComputed(() => this.question.options && this.question.options.length > 0);
     }
 }
 

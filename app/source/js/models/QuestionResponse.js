@@ -9,12 +9,9 @@ export default class QuestionResponse {
         Model(this);
 
         this.model.defProperties({
-            id: 0,
-            text: '',
-            value: null,
-            icon: null,
-            tooltip: null,
-            placeholder: null
+            optionID: null,
+            option: null,
+            userInput: null
         }, values);
     }
 }

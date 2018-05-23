@@ -4,6 +4,7 @@
  * @module kocomponents/question/editor/type-1
  */
 import Komponent from '../../../helpers/KnockoutComponent';
+import QuestionResponse from '../../../../models/QuestionResponse';
 import ko from 'knockout';
 import template from './template.html';
 
@@ -20,8 +21,9 @@ export default class QuestionEditorType1 extends Komponent {
      * @param {object} params
      * @param {(rest.Question|KnockoutObservable<rest.Question>)} params.question Data describing the
      * question
-     * @param {(models/QuestionResponse|KnockoutObservable<models/QuestionResponse>)} params.response Object holding
-     * the user response for the question
+     * @param {(models/QuestionResponse|KnockoutObservable<models/QuestionResponse>)} params.responses
+     * List of user responses to the question, for this type would have just one
+     * or empty to create one automatically
      */
     constructor(params) {
         super();
@@ -36,9 +38,20 @@ export default class QuestionEditorType1 extends Komponent {
         /**
          * @member {models/QuestionResponse}
          */
-        this.response = ko.unwrap(params.response);
-        if (!this.response) {
-            throw new Error('Response required');
+        this.responses = params.responses;
+        if (!this.responses) {
+            throw new Error('Responses required');
+        }
+
+        // This type allows a single response only, so the unique response
+        // included in the list is used, or in case is empty (when still
+        // is unanswered), one is created, added and used
+        if (this.responses().length === 1) {
+            this.response = this.responses()[0];
+        }
+        else {
+            this.response = new QuestionResponse();
+            this.responses([this.response]);
         }
 
         /**
@@ -51,10 +64,10 @@ export default class QuestionEditorType1 extends Komponent {
     }
 
     /**
-     * Generates an ID for an HTML element representing a question predefined response
+     * Generates an ID for an HTML element representing a question option
      */
-    responseElementID(response) {
-        return `${this.questionElementID}-r-${response.id}`;
+    optionElementID(option) {
+        return `${this.questionElementID}-r-${option.optionID}`;
     }
 }
 

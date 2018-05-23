@@ -3,7 +3,7 @@
     <legend data-bind="question.question"></legend>
     <div data-bind="component: {
         name: 'question-editor-type-' + question.questionID,
-        params: { question: question, response: response }
+        params: { question: question, responses: responses }
     }"></div>
 </fieldset>
 <!-- /ko -->
