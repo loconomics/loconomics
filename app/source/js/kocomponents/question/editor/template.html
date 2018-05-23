@@ -1,0 +1,14 @@
+<!-- ko if:isFieldset -->
+<fieldset>
+    <legend data-bind="question.question"></legend>
+    <div data-bind="component: {
+        name: 'question-editor-type-' + question.questionID,
+        params: { question: question, response: response }
+    }"></div>
+</fieldset>
+<!-- /ko -->
+<!-- ko ifnot:isFieldset -->
+<div class="form-group">
+    <label data-bind="question.question"></label>
+</div>
+<!-- /ko -->
