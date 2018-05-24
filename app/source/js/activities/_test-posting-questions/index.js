@@ -101,7 +101,7 @@ export default class _TestPostingQuestionsActivity extends Activity {
             question: 'What\'s your estimated budget?',
             options: [{
                 inputType: 'number',
-                icon: 'ios-cash',
+                icon: 'ion-cash',
                 step: 0.01
             }]
         });
