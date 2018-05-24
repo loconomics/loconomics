@@ -79,6 +79,14 @@ export default class _TestPostingQuestionsActivity extends Activity {
                 inputType: 'number'
             }]
         });
+        const questionC = (id) => ({
+            questionID: id,
+            questionTypeID: 16,
+            question: 'What\'s your deadline?',
+            options: [{
+                inputType: 'date'
+            }]
+        });
 
         // Several combinations of questions, each with no responses and with
         // previously saved responses. All IDs must be unique, or problems
@@ -95,6 +103,14 @@ export default class _TestPostingQuestionsActivity extends Activity {
         }, {
             question: questionB(202),
             responses: createResponsesSingle()
+        }, {
+            question: questionC(301),
+            responses: createResponsesNew()
+        }, {
+            question: questionC(302),
+            responses: ko.observableArray([new QuestionResponse({
+                userInput: new Date(2018, 1, 2).toISOString().substr(0, 10)
+            })])
         }];
     }
 }

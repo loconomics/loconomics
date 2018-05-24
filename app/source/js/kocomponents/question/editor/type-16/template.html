@@ -1,0 +1,17 @@
+<div class="form-group">
+    <label class="control-label" data-bind="
+        text: question.question,
+        attr: {
+            for: questionElementID
+        }
+    "></label>
+    <input class="form-control" data-bind="
+        attr: {
+            id: questionElementID,
+            type: option().inputType,
+            placeholder: option().placeholder,
+            title: option().tooltip
+        },
+        textInput: userInput
+    " />
+</div>
