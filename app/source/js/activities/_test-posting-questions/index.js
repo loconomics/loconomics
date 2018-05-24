@@ -31,16 +31,16 @@ export default class _TestPostingQuestionsActivity extends Activity {
          */
         const createResponsesSingle = () => ko.observableArray([new QuestionResponse({
             // Predefined option ID, if not free-input
-            optionID: 2,
+            optionID: 5,
             // Predefined option label, if one choosen
-            option: 'I have specifications',
+            option: 'Other:',
             // User input, if allowed by the option
             userInput: 'My input'
         })]);
-        // Some questions for testing several possibilities
-        const questionA = {
-            questionID: 1,
-            questionTypeID: 4,
+        // Some question generators for testing several possibilities
+        const questionA = (id) => ({
+            questionID: id,
+            questionTypeID: 1,
             question: 'Where are you in the lifecycle of the project?',
             options: [{
                 optionID: 1,
@@ -59,9 +59,9 @@ export default class _TestPostingQuestionsActivity extends Activity {
                 option: 'Other:',
                 inputType: 'text'
             }]
-        };
-        const questionB = {
-            questionID: 1,
+        });
+        const questionB = (id) => ({
+            questionID: id,
             questionTypeID: 4,
             question: 'Amount expected?',
             options: [{
@@ -78,16 +78,23 @@ export default class _TestPostingQuestionsActivity extends Activity {
                 option: 'Specify amount:',
                 inputType: 'number'
             }]
-        };
+        });
 
+        // Several combinations of questions, each with no responses and with
+        // previously saved responses. All IDs must be unique, or problems
+        // may arise on some types (because of IDs generated)
         this.questionsSet = [{
-            question: questionA,
-            responsesNew: createResponsesNew(),
-            responsesSaved: createResponsesSingle()
+            question: questionA(101),
+            responses: createResponsesNew()
         }, {
-            question: questionB,
-            responsesNew: createResponsesNew(),
-            responsesSaved: createResponsesSingle()
+            question: questionA(102),
+            responses: createResponsesSingle()
+        }, {
+            question: questionB(201),
+            responses: createResponsesNew()
+        }, {
+            question: questionB(202),
+            responses: createResponsesSingle()
         }];
     }
 }
