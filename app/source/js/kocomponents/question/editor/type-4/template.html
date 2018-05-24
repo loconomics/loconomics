@@ -1,0 +1,32 @@
+<div>
+    <div class="form-group">
+        <label class="control-label" data-bind="
+            text: question.question,
+            attr: {
+                for: questionElementID
+            }
+        "></label>
+        <select class="form-control" data-bind="
+            options: question.options,
+            optionsText: 'option',
+            value: selectedOption,
+            optionsCaption: 'Choose...',
+            attr: {
+                id: questionElementID
+            }
+        "></select>
+    </div>
+    <!-- ko with: selectedOption -->
+    <div class="form-group" data-bind="
+        if: $data.inputType,
+        visible: $data.inputType">
+        <input class="form-control" data-bind="
+            attr: {
+                'aria-label': option,
+                type: $data.inputType
+            },
+            textInput: $component.userInput
+        " />
+    </div>
+    <!-- /ko -->
+</div>

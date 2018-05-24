@@ -4,6 +4,7 @@
  * @module kocomponents/question/editor
  */
 import './type-1';
+import './type-4';
 import Komponent from '../../helpers/KnockoutComponent';
 import ko from 'knockout';
 import template from './template.html';
@@ -131,13 +132,6 @@ export default class QuestionEditor extends Komponent {
          * @member {KnockoutObservableArray<models/QuestionResponse>}
          */
         this.responses = params.responses;
-
-        /**
-         * Whether the UI is a fieldset (a set of options is displayed)
-         * or not.
-         * @member {KnockoutComputed<boolean>}
-         */
-        this.isFieldset = ko.pureComputed(() => this.question.options && this.question.options.length > 0);
     }
 }
 

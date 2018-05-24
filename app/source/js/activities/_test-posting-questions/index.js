@@ -24,7 +24,7 @@ export default class _TestPostingQuestionsActivity extends Activity {
 
         this.question = {
             questionID: 1,
-            questionTypeID: 1,
+            questionTypeID: 4,
             question: 'Where are you in the lifecycle of the project?',
             options: [{
                 optionID: 1,
