@@ -1,12 +1,21 @@
 <div class="container-fluid">
-    <h2>Question editor</h2>
-    <question-editor params="question: question, responses: responses"></question-editor>
-    <h2>Responses</h2>
-    <ul data-bind="foreach: responses">
-        <li>
-            [<span data-bind="text: optionID"></span>]
-            <span data-bind="text: option"></span>:
-            <span data-bind="text: userInput"></span>
-        </li>
-    </ul>
+    <script type="text/template" id="test-posting-questions-responses-list">
+        <h2>Responses</h2>
+        <ul data-bind="foreach: $data">
+            <li>
+                [<span data-bind="text: optionID"></span>]
+                <span data-bind="text: option"></span>:
+                <span data-bind="text: userInput"></span>
+            </li>
+        </ul>
+    </script>
+    <div data-bind="foreach: questionsSet">
+        <h2>Question <span data-bind="text: $index"></span></h2>
+        <h3>Responses new</h3>
+        <question-editor params="question: question, responses: responsesNew"></question-editor>
+        <div data-bind="template: { name: 'test-posting-questions-responses-list', data: responsesNew }"></div>
+        <h3>Responses saved</h3>
+        <question-editor params="question: question, responses: responsesSaved"></question-editor>
+        <div data-bind="template: { name: 'test-posting-questions-responses-list', data: responsesSaved }"></div>
+    </div>
 </div>

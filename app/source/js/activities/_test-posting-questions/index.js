@@ -7,7 +7,7 @@
 import '../../kocomponents/question/editor';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
-//import QuestionResponse from '../../models/QuestionResponse';
+import QuestionResponse from '../../models/QuestionResponse';
 import ko from 'knockout';
 import template from './template.html';
 
@@ -22,7 +22,23 @@ export default class _TestPostingQuestionsActivity extends Activity {
         this.accessLevel = null;
         this.title = 'Testing Posting Questions';
 
-        this.question = {
+        /**
+         * Represents a new set of responses (empty)
+         */
+        const createResponsesNew = () => ko.observableArray();
+        /**
+         * Represents a set of saved responses, with just one
+         */
+        const createResponsesSingle = () => ko.observableArray([new QuestionResponse({
+            // Predefined option ID, if not free-input
+            optionID: 2,
+            // Predefined option label, if one choosen
+            option: 'I have specifications',
+            // User input, if allowed by the option
+            userInput: 'My input'
+        })]);
+        // Some questions for testing several possibilities
+        const questionA = {
             questionID: 1,
             questionTypeID: 4,
             question: 'Where are you in the lifecycle of the project?',
@@ -44,14 +60,35 @@ export default class _TestPostingQuestionsActivity extends Activity {
                 inputType: 'text'
             }]
         };
-        this.responses = ko.observableArray(/*[new QuestionResponse({
-            // Predefined option ID, if not free-input
-            optionID: 2,
-            // Predefined option label, if one choosen
-            option: 'I have specifications',
-            // User input, if allowed by the option
-            userInput: 'My input'
-        })]*/);
+        const questionB = {
+            questionID: 1,
+            questionTypeID: 4,
+            question: 'Amount expected?',
+            options: [{
+                optionID: 1,
+                option: '1'
+            }, {
+                optionID: 2,
+                option: '2'
+            }, {
+                optionID: 3,
+                option: '3'
+            }, {
+                optionID: 3,
+                option: 'Specify amount:',
+                inputType: 'number'
+            }]
+        };
+
+        this.questionsSet = [{
+            question: questionA,
+            responsesNew: createResponsesNew(),
+            responsesSaved: createResponsesSingle()
+        }, {
+            question: questionB,
+            responsesNew: createResponsesNew(),
+            responsesSaved: createResponsesSingle()
+        }];
     }
 }
 
