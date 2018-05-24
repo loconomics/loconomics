@@ -7,7 +7,7 @@
 import '../../kocomponents/question/editor';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
-import QuestionResponse from '../../models/QuestionResponse';
+//import QuestionResponse from '../../models/QuestionResponse';
 import ko from 'knockout';
 import template from './template.html';
 
@@ -40,14 +40,14 @@ export default class _TestPostingQuestionsActivity extends Activity {
                 option: 'I\'m just starting'
             }]
         };
-        this.responses = ko.observableArray([new QuestionResponse({
+        this.responses = ko.observableArray(/*[new QuestionResponse({
             // Predefined option ID, if not free-input
             optionID: 2,
             // Predefined option label, if one choosen
             option: 'I have specifications',
             // User input, if allowed by the option
             userInput: 'My input'
-        })]);
+        })]*/);
     }
 }
 

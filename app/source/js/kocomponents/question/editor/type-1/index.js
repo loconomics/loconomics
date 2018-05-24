@@ -43,16 +43,18 @@ export default class QuestionEditorType1 extends Komponent {
             throw new Error('Responses required');
         }
 
-        // This type allows a single response only, so the unique response
-        // included in the list is used, or in case is empty (when still
-        // is unanswered), one is created, added and used
-        if (this.responses().length === 1) {
-            this.response = this.responses()[0];
-        }
-        else {
-            this.response = new QuestionResponse();
-            this.responses([this.response]);
-        }
+        this.selectedOption = ko.observable();
+        this.selectedOption.subscribe((option) => {
+            if (!option) {
+                this.responses([]);
+            }
+            else {
+                this.responses([new QuestionResponse({
+                    optionID: option.optionID,
+                    option: option.option
+                })]);
+            }
+        });
 
         /**
          * Provides a unique identifier for the question element, that can be
