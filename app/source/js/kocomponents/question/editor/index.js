@@ -5,7 +5,7 @@
  */
 import './type-1';
 import './type-4';
-import './type-16';
+import './type-17';
 import Komponent from '../../helpers/KnockoutComponent';
 import ko from 'knockout';
 import template from './template.html';
@@ -60,6 +60,9 @@ const TAG_NAME = 'question-editor';
  * The values allowed matches the values allowed by the attribute 'type' of
  * the html 'input' element or any other special type supported by the UI
  * (with fallback to input-text) and back-end validations.
+ * @property {number} [step] Defines the precision of numbers allowed, when
+ * using an inputType of number (matches the attribute of same name in the
+ * 'input' element)
  */
 
 /**

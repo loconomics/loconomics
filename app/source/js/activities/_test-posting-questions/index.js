@@ -81,10 +81,28 @@ export default class _TestPostingQuestionsActivity extends Activity {
         });
         const questionC = (id) => ({
             questionID: id,
-            questionTypeID: 16,
+            questionTypeID: 17,
             question: 'What\'s your deadline?',
             options: [{
                 inputType: 'date'
+            }]
+        });
+        const questionD = (id) => ({
+            questionID: id,
+            questionTypeID: 17,
+            question: 'Give your posting a title',
+            options: [{
+                inputType: 'text'
+            }]
+        });
+        const questionE = (id) => ({
+            questionID: id,
+            questionTypeID: 17,
+            question: 'What\'s your estimated budget?',
+            options: [{
+                inputType: 'number',
+                icon: 'ios-cash',
+                step: 0.01
             }]
         });
 
@@ -110,6 +128,22 @@ export default class _TestPostingQuestionsActivity extends Activity {
             question: questionC(302),
             responses: ko.observableArray([new QuestionResponse({
                 userInput: new Date(2018, 1, 2).toISOString().substr(0, 10)
+            })])
+        }, {
+            question: questionD(401),
+            responses: createResponsesNew()
+        }, {
+            question: questionD(402),
+            responses: ko.observableArray([new QuestionResponse({
+                userInput: 'A title'
+            })])
+        }, {
+            question: questionE(501),
+            responses: createResponsesNew()
+        }, {
+            question: questionE(502),
+            responses: ko.observableArray([new QuestionResponse({
+                userInput: 320.30
             })])
         }];
     }
