@@ -9,7 +9,20 @@
             }
             " />
         <label data-bind="
-            attr: { for: $component.optionElementID($data) },
+            attr: {
+                for: $component.optionElementID($data),
+                id: $component.optionElementID($data) + '-label'
+            },
             text: option"></label>
+        <div class="form-group" data-bind="
+            if: $data.inputType && $component.selectedOption() === $data">
+            <input class="form-control" data-bind="
+                attr: {
+                    'aria-labelledby': $component.optionElementID($data) + '-label',
+                    type: $data.inputType
+                },
+                textInput: $component.userInput
+            " />
+        </div>
     </div>
 </div>

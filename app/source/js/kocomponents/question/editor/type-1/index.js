@@ -43,7 +43,25 @@ export default class QuestionEditorType1 extends Komponent {
             throw new Error('Responses required');
         }
 
+        /**
+         * Data introduced by the input when selecting an option that requires
+         * that.
+         * @member {KnockoutObservable<any>}
+         */
+        this.userInput = ko.observable();
+
+        /**
+         * Option selected by the user
+         * @member {KnockoutObservable<rest.QuestionOption}
+         */
         this.selectedOption = ko.observable();
+        /**
+         * When selecting an option, that is set as a response, and the
+         * user input is reset (just in case the option does not allow
+         * userInput or, having a previous value, doesn't match the kind
+         * of input for the new option -user don't expect a previous value
+         * to be 'copied' over option, not persisted-)
+         */
         this.selectedOption.subscribe((option) => {
             if (!option) {
                 this.responses([]);
@@ -53,6 +71,16 @@ export default class QuestionEditorType1 extends Komponent {
                     optionID: option.optionID,
                     option: option.option
                 })]);
+                this.userInput(null);
+            }
+        });
+        /**
+         * When changes in the user input, the current response must be
+         * updated with that
+         */
+        this.userInput.subscribe((data) => {
+            if (this.responses().length > 0) {
+                this.responses()[0].userInput(data);
             }
         });
 

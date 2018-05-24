@@ -38,6 +38,10 @@ export default class _TestPostingQuestionsActivity extends Activity {
             }, {
                 optionID: 4,
                 option: 'I\'m just starting'
+            }, {
+                optionID: 5,
+                option: 'Other:',
+                inputType: 'text'
             }]
         };
         this.responses = ko.observableArray(/*[new QuestionResponse({
