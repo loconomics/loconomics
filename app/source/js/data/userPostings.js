@@ -1,7 +1,5 @@
 /**
  * Manages the user postings. GIG Postings made by the logged user.
- *
- * IMPORTANT: Using DUMMY DATA rather than connected to the REST API for now
  */
 import CachedDataProvider from './helpers/CachedDataProvider';
 import LocalForageIndexedListDataProviderDriver from './helpers/LocalForageIndexedListDataProviderDriver';
