@@ -87,7 +87,8 @@ namespace LcRest
                 neededSpecializationIDs = neededSpecializations,
                 desiredSpecializationIDs = desiredSpecializations,
                 languageID = record.languageID,
-                countryID = record.countryID
+                countryID = record.countryID,
+                postingTemplateID = record.postingTemplateID
             };
             if (fillSpecializations)
             {
