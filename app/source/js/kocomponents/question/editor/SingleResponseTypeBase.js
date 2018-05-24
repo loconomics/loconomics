@@ -88,6 +88,15 @@ export default class QuestionEditorSingleResponseTypeBase extends Komponent {
                 this.responses()[0].userInput(data);
             }
         });
+        /**
+         * Preselect incoming responses at init, if any
+         */
+        if (this.responses().length > 0) {
+            const response = this.responses()[0];
+            const option = this.question.options.find((opt) => opt.optionID === response.optionID());
+            this.selectedOption(option);
+            this.userInput(option && option.inputType ? response.userInput() : null);
+        }
 
         /**
          * Provides a unique identifier for the question element, that can be
