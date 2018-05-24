@@ -107,6 +107,10 @@
             </ul>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
             <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 3 } }"></p>
+            <p>Questions: (inlined, WIP)</p>
+            <div data-bind="foreach: postingQuestionsResponses">
+                <question-editor params="question: question, responses: responses"></question-editor>
+            </div>
         </div>
     </fieldset>
     <div data-bind="

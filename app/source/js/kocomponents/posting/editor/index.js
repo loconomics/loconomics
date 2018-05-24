@@ -67,19 +67,18 @@ export default class PostingEditor extends Komponent {
 
         this.postingResponses = ko.observableArray();
 
-        this.responsesForQuestion = (question) => {
-            const id = question.questionID;
-            const all = this.postingResponses();
-            let responses = all.find((r) => r.questionID === id);
-            if (!responses) {
-                responses = {
-                    questionID: id,
-                    responses: ko.observableArray()
+        this.postingQuestionsResponses = ko.pureComputed(() => {
+            const questions = this.postingTemplate() && this.postingTemplate().questions;
+            const responses = this.postingResponses();
+            if (!questions || !responses) return [];
+            else return questions.map((q) => {
+                const qr = responses.find((r) => r.questionID === q.questionID);
+                return {
+                    question: q,
+                    responses: qr && qr.responses || ko.observableArray()
                 };
-                this.postingResponses.push(responses);
-            }
-            return responses;
-        };
+            });
+        });
 
         /**
          * Keeps a timestamp of the loaded data, allowing to track when there
