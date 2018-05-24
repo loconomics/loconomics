@@ -6,10 +6,12 @@
 import '../../utilities/icon-dec';
 import '../../../utils/autofocusBindingHandler';
 import '../../specialization/autocomplete';
+import '../../question/editor';
 import { ActionForValue } from '../../solution/autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserPosting from '../../../models/UserPosting';
 import ko from 'knockout';
+import { item as postingTemplateItem } from '../../../data/postingTemplates';
 import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
@@ -55,6 +57,29 @@ export default class PostingEditor extends Komponent {
         this.data = new UserPosting({
             userPostingID: ko.unwrap(params.userPostingID) || 0
         });
+
+        /**
+         * Holds the posting template, with all the questions, based on the
+         * solutionID picked by the user for the posting
+         * @member {KnockoutObservable<rest/PostingTemplate>}
+         */
+        this.postingTemplate = ko.observable();
+
+        this.postingResponses = ko.observableArray();
+
+        this.responsesForQuestion = (question) => {
+            const id = question.questionID;
+            const all = this.postingResponses();
+            let responses = all.find((r) => r.questionID === id);
+            if (!responses) {
+                responses = {
+                    questionID: id,
+                    responses: ko.observableArray()
+                };
+                this.postingResponses.push(responses);
+            }
+            return responses;
+        };
 
         /**
          * Keeps a timestamp of the loaded data, allowing to track when there
@@ -333,6 +358,27 @@ export default class PostingEditor extends Komponent {
                 });
             });
         }
+
+        // Whenever the postingTemplateID changes in the posting (as of loading
+        // or as of user picking a solution --has attached a template), the
+        // posting template needs to be loaded
+        let templateDataSub = null;
+        let templateErrorSub = null;
+        this.data.postingTemplateID.subscribe((postingTemplateID) => {
+            if (templateDataSub) templateDataSub.dispose();
+            if (templateErrorSub) templateErrorSub.dispose();
+
+            const dataProvider = postingTemplateItem(postingTemplateID);
+            templateDataSub = this.subscribeTo(dataProvider.onData, (d) => {
+                this.postingTemplate(d);
+            });
+            templateErrorSub = this.subscribeTo(dataProvider.onDataError, (error) => {
+                showError({
+                    title: 'There was an error loading the posting questions',
+                    error
+                });
+            });
+        });
     }
 
     /**
@@ -466,6 +512,7 @@ export default class PostingEditor extends Komponent {
     pickSolution(text, solution) {
         this.data.solutionID(solution.solutionID);
         this.data.solutionName(solution.name);
+        this.data.postingTemplateID(solution.postingTemplateID);
         this.saveStep();
         return {
             value: ActionForValue.copy
