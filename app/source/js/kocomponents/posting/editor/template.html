@@ -105,14 +105,21 @@
                     </button>
                 </li>
             </ul>
-            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
             <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 3 } }"></p>
-            <p>Questions: (inlined, WIP)</p>
-            <div data-bind="foreach: postingQuestionsResponses">
-                <question-editor params="question: question, responses: responses"></question-editor>
-            </div>
         </div>
     </fieldset>
+    <!-- ko foreach: postingQuestionsResponses -->
+    <fieldset class="col-xs-12" data-bind="
+        visible: $component.isAtStep($component.FIXED_STEPS_COUNT + $index() + 1),
+        autofocus: $component.isAtStep($component.FIXED_STEPS_COUNT + $index() + 1)
+    ">
+        <legend data-bind="text: question.legend"></legend>
+        <question-editor params="question: question, responses: responses"></question-editor>
+        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: $component.stepButtonLabel, disable: $component.isLocked, click: $component.saveStep"></button>
+        <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $component, step: $component.FIXED_STEPS_COUNT + $index() } }"></p>
+    </fieldset>
+    <!-- /ko -->
     <div data-bind="
             visible: isAtStep(0),
             autofocus: isAtStep(0),
@@ -184,6 +191,28 @@
         <ul class="TilesList isolated" data-bind="foreach: desiredSpecializations">
             <li class="LineTile" data-bind="text: name"></li>
         </ul>
+
+        <!-- ko foreach: $component.postingQuestionsResponses -->
+        <div class="SectionHeading SectionHeading--full">
+            <h2 data-bind="text: question.question"></h2>
+            <button type="button" data-bind="
+                visible: $parent.isEditable,
+                click: $component.goToStep.bind($component, $component.FIXED_STEPS_COUNT + $index() + 1),
+                disable: $component.isLocked,
+                attr: {
+                    'aria-label': 'Edit the response to: ' + question.question
+                }" class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec params="icon: 'ion-edit'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="foreach: responses">
+            <span data-bind="if: option() && !userInput()"><span data-bind="text: option()"></span></span>
+            <span data-bind="if: option() && userInput()"><span data-bind="text: option() + ':' + userInput()"></span></span>
+            <span data-bind="if: !option() && userInput()"><span data-bind="text: userInput()"></span></span>
+        </p>
+        <!-- /ko -->
 
         <div class="isolated">
             <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="

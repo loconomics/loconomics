@@ -32,7 +32,7 @@ export default {
                 option: 'I\'m just starting'
             }, {
                 optionID: 5,
-                option: 'Other:',
+                option: 'Other',
                 inputType: 'text'
             }]
         }]

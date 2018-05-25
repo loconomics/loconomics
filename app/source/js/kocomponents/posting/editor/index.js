@@ -59,6 +59,21 @@ export default class PostingEditor extends Komponent {
         });
 
         /**
+         * Keeps a timestamp of the loaded data, allowing to track when there
+         * are changes.
+         * @member {Date}
+         */
+        this.dataTimestamp = ko.observable(this.data.model.dataTimestamp());
+
+        /**
+         * Number of total steps for fixed/common elements.
+         * Take into account, that the questions provided by the posting template
+         * may increase the count of total steps, by accumulate to this.
+         * @const {number}
+         */
+        this.FIXED_STEPS_COUNT = 4;
+
+        /**
          * Holds the posting template, with all the questions, based on the
          * solutionID picked by the user for the posting
          * @member {KnockoutObservable<rest/PostingTemplate>}
@@ -81,11 +96,13 @@ export default class PostingEditor extends Komponent {
         });
 
         /**
-         * Keeps a timestamp of the loaded data, allowing to track when there
-         * are changes.
-         * @member {Date}
+         * Total of steps available, taking into account fixed and dynamic ones (questions)
+         * @member {KnockoutComputed<number>}
          */
-        this.dataTimestamp = ko.observable(this.data.model.dataTimestamp());
+        this.stepsCount = ko.pureComputed(() => {
+            const questions = this.postingTemplate() && this.postingTemplate().questions;
+            return (questions && questions.length || 0) + this.FIXED_STEPS_COUNT;
+        });
 
         // Is allowed to request a 'copy' mode from outside if an ID is provided,
         // on any other case, the mode is automatic depending whether a positive ID
@@ -220,11 +237,18 @@ export default class PostingEditor extends Komponent {
         this.isAtReview = ko.observable(!!startInReview);
 
         /**
-         * Takes the user to the next step in the form.
+         * Takes the user to the next step in the form, or to the summary
+         * when the end is reached.
          * @member {KnockoutComputed<number>}
          */
         this.goNextStep = () => {
-            this.currentStep(this.currentStep() + 1);
+            const next = this.currentStep() + 1;
+            if (next > this.stepsCount()) {
+                this.goToSummary();
+            }
+            else {
+                this.currentStep(next);
+            }
         };
 
         /**
