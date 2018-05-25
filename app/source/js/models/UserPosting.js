@@ -3,40 +3,9 @@
  */
 import Model from './Model';
 import PublicUserProfile from './PublicUserProfile';
-import QuestionResponse from './QuestionResponse';
+import UserPostingQuestionResponse from './UserPostingQuestionResponse';
+import UserPostingSpecialization from './UserPostingSpecialization';
 import ko from 'knockout';
-
-export class UserPostingSpecialization {
-    constructor(values) {
-        Model(this);
-
-        this.model.defProperties({
-            specializationID: 0,
-            name: ''
-        }, values);
-    }
-}
-
-/**
- * Represents the response given to a question of a posting, by the user
- * author of the posting.
- * Even if is 'a response', it actually contains a set of responses, depending
- * on the question just one or more than one are allowed.
- * It references the answered question by ID.
- */
-export class UserPostingQuestionResponse {
-    constructor(values) {
-        Model(this);
-
-        this.model.defProperties({
-            questionID: 0,
-            responses: {
-                isArray: true,
-                Model: QuestionResponse
-            }
-        }, values);
-    }
-}
 
 export const UserPostingStatus = {
     incomplete: 0,
