@@ -240,7 +240,7 @@ namespace LcRest
                 var sql = sqlSelectSuggestedForUser + sqlReactionFiltered + sqlOrderByDate;
                 return db.Query(sql, userID, languageID, countryID)
                     .Select((r) => {
-                        var post = (UserPosting)FromDB(r, true, userID);
+                        var post = (UserPosting)FromDB(r, true, userID, true);
                         post.reactionDate = r.reactionDate;
                         post.reactionTypeID = (LcEnum.UserPostingReactionType?)r.reactionTypeID;
                         return post;
@@ -261,7 +261,7 @@ namespace LcRest
             {
                 var sql = sqlSelectSuggestedForUser + " AND a.userPostingID = @3 " + sqlOrderByDate;
                 var r = db.QuerySingle(sql, userID, languageID, countryID, userPostingID);
-                var post = (UserPosting)FromDB(r, true, userID);
+                var post = (UserPosting)FromDB(r, true, userID, true);
                 post.reactionDate = r.reactionDate;
                 post.reactionTypeID = (LcEnum.UserPostingReactionType?)r.reactionTypeID;
                 return post;
