@@ -29,6 +29,7 @@ namespace LcRest
         public IEnumerable<int> desiredSpecializationIDs;
         public IEnumerable<UserPostingSpecialization> neededSpecializations;
         public IEnumerable<UserPostingSpecialization> desiredSpecializations;
+        public IEnumerable<UserPostingQuestionResponse> questionsResponses;
         /// <summary>
         /// Optional info about the userID creating the posting, filled when 
         /// the posting is displayed to suggested professional(s)
@@ -67,7 +68,11 @@ namespace LcRest
         /// <param name="fillSpecializations"></param>
         /// <param name="clientRequesterUserID">UserID of a professional that request client information to be filled in</param>
         /// <returns></returns>
-        private static UserPosting FromDB(dynamic record, bool fillSpecializations = false, int clientRequesterUserID = 0)
+        private static UserPosting FromDB(
+            dynamic record,
+            bool fillSpecializations = false,
+            int clientRequesterUserID = 0,
+            bool fillQuestionsResponses = false)
         {
             if (record == null) return null;
 
@@ -98,6 +103,10 @@ namespace LcRest
             {
                 r.FillClient(clientRequesterUserID);
             }
+            if (fillQuestionsResponses)
+            {
+                r.FillQuestionsResponses();
+            }
             return r;
         }
         #endregion
@@ -112,6 +121,11 @@ namespace LcRest
         public void FillClient(int requesterUserID)
         {
             client = PublicUserProfile.Get(userID, requesterUserID);
+        }
+
+        public void FillQuestionsResponses()
+        {
+            questionsResponses = UserPostingQuestionResponse.List(userPostingID);
         }
 
         /// <summary>
@@ -169,7 +183,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelect + sqlWhereUserAndID;
-                return FromDB(db.QuerySingle(sql, userID, languageID, countryID, userPostingID), fillLinks);
+                return FromDB(db.QuerySingle(sql, userID, languageID, countryID, userPostingID), fillLinks, fillQuestionsResponses: fillLinks);
             }
         }
         /// <summary>
@@ -184,7 +198,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelect + sqlWhereUser + sqlOrderByDate;
-                return db.Query(sql, userID, languageID, countryID).Select((r) => (UserPosting)FromDB(r, fillLinks));
+                return db.Query(sql, userID, languageID, countryID).Select((r) => (UserPosting)FromDB(r, fillLinks, fillQuestionsResponses: fillLinks));
             }
         }
         #endregion
