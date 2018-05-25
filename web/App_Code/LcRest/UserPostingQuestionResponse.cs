@@ -86,5 +86,35 @@ namespace LcRest
                 return db.Query(sqlList, userPostingID).Select(FromDB);
             }
         }
+
+        const string sqlInsert = @"
+            INSERT INTO UserPostingQuestionResponse (
+                userPostingID,
+                questionID,
+                questionTypeID,
+                question,
+                helpBlock,
+                legend,
+                options,
+                responses,
+                branchLogic
+            ) VALUES (
+                @0, @1, @2, @3,
+                @4, @5,
+                @6, @7, @8
+            )
+        ";
+
+        public static void Insert(UserPostingQuestionResponse entry, LcDatabase sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                db.Execute(sqlInsert, entry.userPostingID, entry.questionID, entry.questionTypeID, entry.question,
+                    entry.helpBlock, entry.legend,
+                    Newtonsoft.Json.JsonConvert.SerializeObject(entry.options),
+                    Newtonsoft.Json.JsonConvert.SerializeObject(entry.responses),
+                    Newtonsoft.Json.JsonConvert.SerializeObject(entry.branchLogic));
+            }
+        }
     }
 }

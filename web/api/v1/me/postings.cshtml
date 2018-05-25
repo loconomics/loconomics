@@ -123,6 +123,17 @@
                 var userDesiredSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedDesiredSpecializations, solutionID, locale, userID);
                 ((List<int>)record.neededSpecializationIDs).AddRange(userNeededSpecializationIDs);
                 ((List<int>)record.desiredSpecializationIDs).AddRange(userDesiredSpecializationIDs);
+                // Questions Responses
+                var questionsResponsesJsonArray = Request.Form["questionsResponses"];
+                try
+                {
+                    record.questionsResponses = (List<LcRest.UserPostingQuestionResponse>)Newtonsoft.Json.JsonConvert.DeserializeObject(
+                       questionsResponsesJsonArray, typeof(List<LcRest.UserPostingQuestionResponse>));
+                }
+                catch
+                {
+                    throw new ConstraintException("Invalid responses data");
+                }
                 // Insert and return with db generated data
                 record.userPostingID = LcRest.UserPosting.Set(record, locale);
                 // Send emails to SendSuggestedPosting

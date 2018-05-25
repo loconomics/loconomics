@@ -425,6 +425,9 @@ namespace LcRest
                 var neededSpecializationsText = string.Join(",", entry.neededSpecializationIDs);
                 var desiredSpecializationsText = string.Join(",", entry.desiredSpecializationIDs);
 
+                db.Execute("BEGIN TRANSACTION");
+                var id = 0;
+
                 if (entry.userPostingID > 0)
                 {
                     db.QueryValue(sqlUpdate,
@@ -434,11 +437,11 @@ namespace LcRest
                         neededSpecializationsText,
                         desiredSpecializationsText
                     );
-                    return entry.userPostingID;
+                    id = entry.userPostingID;
                 }
                 else
                 {
-                    return (int)db.QueryValue(sqlInsert,
+                    id = (int)db.QueryValue(sqlInsert,
                         entry.userID,
                         entry.solutionID,
                         entry.postingTemplateID,
@@ -450,7 +453,15 @@ namespace LcRest
                         locale.countryID,
                         entry.userID
                     );
+                    foreach (var qr in entry.questionsResponses)
+                    {
+                        qr.userPostingID = id;
+                        UserPostingQuestionResponse.Insert(qr, db);
+                    }
                 }
+
+                db.Execute("COMMIT TRANSACTION");
+                return id;
             }
         }
         /// <summary>

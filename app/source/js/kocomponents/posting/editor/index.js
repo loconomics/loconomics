@@ -413,6 +413,8 @@ export default class PostingEditor extends Komponent {
         .filter((s) => s.specializationID === 0)
         .map((s) => s.name);
         delete data.desiredSpecializations;
+        // QuestionsResponses: send the whole content as a single JSON array
+        data.questionsResponses = JSON.stringify(data.questionsResponses);
 
         return this.dataManager
         .save(data)
