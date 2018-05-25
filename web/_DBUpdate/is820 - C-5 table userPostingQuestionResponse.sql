@@ -12,6 +12,8 @@ CREATE TABLE [dbo].[UserPostingQuestionResponse](
 	[helpBlock] [nvarchar](300) NULL,
 	[options] [text] NOT NULL,
 	[responses] [text] NOT NULL,
+	[legend] [nvarchar](60) NOT NULL,
+	[branchLogic] [text] NULL,
  CONSTRAINT [PK_UserPostingQuestionResponse_1] PRIMARY KEY CLUSTERED 
 (
 	[userPostingID] ASC,
