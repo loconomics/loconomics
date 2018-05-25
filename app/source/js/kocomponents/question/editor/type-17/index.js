@@ -25,29 +25,19 @@ export default class QuestionEditorType17 extends KnockoutComponent {
 
     /**
      * @param {object} params
-     * @param {(rest.Question|KnockoutObservable<rest.Question>)} params.question Data describing the
-     * question, with just one option for this type or nothing for a default
-     * simple 'text input'
-     * @param {(models/QuestionResponse|KnockoutObservable<models/QuestionResponse>)} params.responses
-     * List of user responses to the question, for this type would have just one
-     * or empty to create one automatically
+     * @param {(models/UserPostingQuestionResponse|KnockoutObservable<models/UserPostingQuestionResponse>)} params.data Data describing the
+     * question with specific set-up for the posting (based on the posting template)
+     * plus the responses stored or just empty when new.
      */
     constructor(params) {
         super();
 
         /**
-         * @member {rest.Question}
+         * @member {models/UserPostingQuestionResponse}
          */
-        this.question = ko.unwrap(params.question);
+        this.question = ko.unwrap(params.data);
         if (!this.question) {
             throw new Error('Question required');
-        }
-        /**
-         * @member {models/QuestionResponse}
-         */
-        this.responses = params.responses;
-        if (!this.responses) {
-            throw new Error('Responses required');
         }
 
         /**
@@ -56,7 +46,7 @@ export default class QuestionEditorType17 extends KnockoutComponent {
          * If no options, fallback to 'text' input.
          * @member {rest.QuestionOption}
          */
-        this.option = this.question.options && this.question.options[0] || {
+        this.option = this.question.options()[0] || {
             inputType: 'text',
             placeholder: null,
             tooltip: null,
@@ -74,11 +64,11 @@ export default class QuestionEditorType17 extends KnockoutComponent {
          * updated with that
          */
         userInput.subscribe((data) => {
-            if (this.responses().length === 1) {
-                this.responses()[0].userInput(data);
+            if (this.question.responses().length === 1) {
+                this.question.responses()[0].userInput(data);
             }
             else {
-                this.responses([new QuestionResponse({
+                this.question.responses([new QuestionResponse({
                     userInput: data
                 })]);
             }
@@ -87,10 +77,10 @@ export default class QuestionEditorType17 extends KnockoutComponent {
         /**
          * Preselect incoming responses at init, if any
          */
-        if (this.responses().length > 0) {
-            const response = this.responses()[0];
+        if (this.question.responses().length > 0) {
+            const response = this.question.responses()[0];
             let raw = response.userInput();
-            if (this.option.inputType === 'number' && typeof(raw) === 'string') {
+            if (this.option.inputType() === 'number' && typeof(raw) === 'string') {
                 raw = parseFloat(raw);
             }
             userInput(raw);
@@ -100,7 +90,7 @@ export default class QuestionEditorType17 extends KnockoutComponent {
          * Data introduced by the user
          * @member {KnockoutObservable<any>}
          */
-        this.userInput = this.option.inputType === 'date' ?
+        this.userInput = this.option.inputType() === 'date' ?
             createEditableDate(userInput) : userInput;
 
         /**
@@ -109,7 +99,7 @@ export default class QuestionEditorType17 extends KnockoutComponent {
          * @readonly
          * @property {string}
          */
-        this.questionElementID = `question-editor-q-${this.question.questionID}`;
+        this.questionElementID = `question-editor-q-${this.question.questionID()}`;
     }
 }
 

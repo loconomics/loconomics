@@ -18,7 +18,7 @@ import Model from './Model';
 import QuestionOption from './QuestionOption';
 import QuestionResponse from './QuestionResponse';
 
-export class UserPostingQuestionResponse {
+export default class UserPostingQuestionResponse {
     constructor(values) {
         Model(this);
 
@@ -51,29 +51,29 @@ export class UserPostingQuestionResponse {
 /**
  * @enum {number}
  */
-export const QuestionType = {
-    multipleChoice: 1,
-    checkboxes: 2,
-    imageChoice: 3,
-    dropdown: 4,
-    starRating: 5,
-    matrixRatingScale: 6,
-    fileUpload: 7,
-    slider: 8,
-    matrixDropdownMenus: 9,
-    ranking: 10,
-    netPromoterScore: 11,
-    singleTextbox: 12,
-    multipleTextboxes: 13,
-    commentBox: 14,
-    contactInformation: 15,
-    dateTime: 16,
-    text: 17,
-    image: 18,
-    textABTest: 19,
-    imageABTest: 20,
-    matrixSliders: 21
-};
+// export const QuestionType = {
+//     multipleChoice: 1,
+//     checkboxes: 2,
+//     imageChoice: 3,
+//     dropdown: 4,
+//     starRating: 5,
+//     matrixRatingScale: 6,
+//     fileUpload: 7,
+//     slider: 8,
+//     matrixDropdownMenus: 9,
+//     ranking: 10,
+//     netPromoterScore: 11,
+//     singleTextbox: 12,
+//     multipleTextboxes: 13,
+//     commentBox: 14,
+//     contactInformation: 15,
+//     dateTime: 16,
+//     text: 17,
+//     image: 18,
+//     textABTest: 19,
+//     imageABTest: 20,
+//     matrixSliders: 21
+// };
 
 /**
  * Describes a question with one or more options allowing one or more responses.

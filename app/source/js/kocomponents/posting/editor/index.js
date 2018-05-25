@@ -80,21 +80,6 @@ export default class PostingEditor extends Komponent {
          */
         this.postingTemplate = ko.observable();
 
-        this.postingResponses = ko.observableArray();
-
-        this.postingQuestionsResponses = ko.pureComputed(() => {
-            const questions = this.postingTemplate() && this.postingTemplate().questions;
-            const responses = this.postingResponses();
-            if (!questions || !responses) return [];
-            else return questions.map((q) => {
-                const qr = responses.find((r) => r.questionID === q.questionID);
-                return {
-                    question: q,
-                    responses: qr && qr.responses || ko.observableArray()
-                };
-            });
-        });
-
         /**
          * Total of steps available, taking into account fixed and dynamic ones (questions)
          * @member {KnockoutComputed<number>}

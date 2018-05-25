@@ -3,7 +3,7 @@
  */
 import Model from './Model';
 
-export class UserPostingSpecialization {
+export default class UserPostingSpecialization {
     constructor(values) {
         Model(this);
 

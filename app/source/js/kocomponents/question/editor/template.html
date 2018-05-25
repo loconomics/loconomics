@@ -1,4 +1,4 @@
 <div data-bind="component: {
-    name: 'question-editor-type-' + question.questionTypeID,
-    params: { question: question, responses: responses }
+    name: 'question-editor-type-' + data.questionTypeID(),
+    params: { data: data }
 }"></div>

@@ -6,13 +6,10 @@
  * Because is a base class, is not registered as a component
  * but inherits from the KnockoutComponent class, has no
  * template, no styles.
+ *
+ * @module kocomponents/question/editor/SingleResponseTypeBase
  */
 
-/**
- * Specialized question editor for QuestionTypeID:1 'multipleChoice'
- *
- * @module kocomponents/question/editor/type-1
- */
 import Komponent from '../../helpers/KnockoutComponent';
 import QuestionResponse from '../../../models/QuestionResponse';
 import ko from 'knockout';
@@ -24,28 +21,19 @@ export default class QuestionEditorSingleResponseTypeBase extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(rest.Question|KnockoutObservable<rest.Question>)} params.question Data describing the
-     * question
-     * @param {(models/QuestionResponse|KnockoutObservable<models/QuestionResponse>)} params.responses
-     * List of user responses to the question, for this type would have just one
-     * or empty to create one automatically
+     * @param {(models/UserPostingQuestionResponse|KnockoutObservable<models/UserPostingQuestionResponse>)} params.data Data describing the
+     * question with specific set-up for the posting (based on the posting template)
+     * plus the responses stored or just empty when new.
      */
     constructor(params) {
         super();
 
         /**
-         * @member {rest.Question}
+         * @member {models/UserPostingQuestionResponse}
          */
-        this.question = ko.unwrap(params.question);
+        this.question = ko.unwrap(params.data);
         if (!this.question) {
             throw new Error('Question required');
-        }
-        /**
-         * @member {models/QuestionResponse}
-         */
-        this.responses = params.responses;
-        if (!this.responses) {
-            throw new Error('Responses required');
         }
 
         /**
@@ -69,12 +57,12 @@ export default class QuestionEditorSingleResponseTypeBase extends Komponent {
          */
         this.selectedOption.subscribe((option) => {
             if (!option) {
-                this.responses([]);
+                this.question.responses([]);
             }
             else {
-                this.responses([new QuestionResponse({
-                    optionID: option.optionID,
-                    option: option.option
+                this.question.responses([new QuestionResponse({
+                    optionID: option.optionID(),
+                    option: option.option()
                 })]);
                 this.userInput(null);
             }
@@ -84,18 +72,18 @@ export default class QuestionEditorSingleResponseTypeBase extends Komponent {
          * updated with that
          */
         this.userInput.subscribe((data) => {
-            if (this.responses().length > 0) {
-                this.responses()[0].userInput(data);
+            if (this.question.responses().length > 0) {
+                this.question.responses()[0].userInput(data);
             }
         });
         /**
          * Preselect incoming responses at init, if any
          */
-        if (this.responses().length > 0) {
-            const response = this.responses()[0];
-            const option = this.question.options.find((opt) => opt.optionID === response.optionID());
+        if (this.question.responses().length > 0) {
+            const response = this.question.responses()[0];
+            const option = this.question.options().find((opt) => opt.optionID() === response.optionID());
             this.selectedOption(option);
-            this.userInput(option && option.inputType ? response.userInput() : null);
+            this.userInput(option && option.inputType() ? response.userInput() : null);
         }
 
         /**
@@ -104,13 +92,13 @@ export default class QuestionEditorSingleResponseTypeBase extends Komponent {
          * @readonly
          * @property {string}
          */
-        this.questionElementID = `question-editor-q-${this.question.questionID}`;
+        this.questionElementID = `question-editor-q-${this.question.questionID()}`;
     }
 
     /**
      * Generates an ID for an HTML element representing a question option
      */
     optionElementID(option) {
-        return `${this.questionElementID}-r-${option.optionID}`;
+        return `${this.questionElementID}-r-${option.optionID()}`;
     }
 }

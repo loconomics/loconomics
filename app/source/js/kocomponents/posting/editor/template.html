@@ -109,13 +109,13 @@
             <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $data, step: 3 } }"></p>
         </div>
     </fieldset>
-    <!-- ko foreach: postingQuestionsResponses -->
+    <!-- ko foreach: data.questionsResponses -->
     <fieldset class="col-xs-12" data-bind="
         visible: $component.isAtStep($component.FIXED_STEPS_COUNT + $index() + 1),
         autofocus: $component.isAtStep($component.FIXED_STEPS_COUNT + $index() + 1)
     ">
-        <legend data-bind="text: question.legend"></legend>
-        <question-editor params="question: question, responses: responses"></question-editor>
+        <legend data-bind="text: legend"></legend>
+        <question-editor params="data: $data"></question-editor>
         <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: $component.stepButtonLabel, disable: $component.isLocked, click: $component.saveStep"></button>
         <p class="isolated" data-bind="template: { name: 'posting-editor-back-step', data: { context: $component, step: $component.FIXED_STEPS_COUNT + $index() } }"></p>
     </fieldset>
@@ -192,15 +192,15 @@
             <li class="LineTile" data-bind="text: name"></li>
         </ul>
 
-        <!-- ko foreach: $component.postingQuestionsResponses -->
+        <!-- ko foreach: questionsResponses -->
         <div class="SectionHeading SectionHeading--full">
-            <h2 data-bind="text: question.question"></h2>
+            <h2 data-bind="text: question"></h2>
             <button type="button" data-bind="
                 visible: $parent.isEditable,
                 click: $component.goToStep.bind($component, $component.FIXED_STEPS_COUNT + $index() + 1),
                 disable: $component.isLocked,
                 attr: {
-                    'aria-label': 'Edit the response to: ' + question.question
+                    'aria-label': 'Edit the response to: ' + question()
                 }" class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec params="icon: 'ion-edit'"></icon-dec>
