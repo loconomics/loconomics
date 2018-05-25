@@ -74,18 +74,11 @@ export default class PostingEditor extends Komponent {
         this.FIXED_STEPS_COUNT = 4;
 
         /**
-         * Holds the posting template, with all the questions, based on the
-         * solutionID picked by the user for the posting
-         * @member {KnockoutObservable<rest/PostingTemplate>}
-         */
-        this.postingTemplate = ko.observable();
-
-        /**
          * Total of steps available, taking into account fixed and dynamic ones (questions)
          * @member {KnockoutComputed<number>}
          */
         this.stepsCount = ko.pureComputed(() => {
-            const questions = this.postingTemplate() && this.postingTemplate().questions;
+            const questions = this.data.questionsResponses();
             return (questions && questions.length || 0) + this.FIXED_STEPS_COUNT;
         });
 
@@ -367,26 +360,29 @@ export default class PostingEditor extends Komponent {
             });
         }
 
-        // Whenever the postingTemplateID changes in the posting (as of loading
-        // or as of user picking a solution --has attached a template), the
+        // When the postingTemplateID changes in the posting for new posting, the
         // posting template needs to be loaded
-        let templateDataSub = null;
-        let templateErrorSub = null;
-        this.data.postingTemplateID.subscribe((postingTemplateID) => {
-            if (templateDataSub) templateDataSub.dispose();
-            if (templateErrorSub) templateErrorSub.dispose();
+        if (this.isNew()) {
+            this.data.postingTemplateID.subscribe((postingTemplateID) => {
+                // Double check we are in a new posting, just in case data loaded
+                // from server after save a new one
+                if (!this.isNew()) return;
 
-            const dataProvider = postingTemplateItem(postingTemplateID);
-            templateDataSub = this.subscribeTo(dataProvider.onData, (d) => {
-                this.postingTemplate(d);
-            });
-            templateErrorSub = this.subscribeTo(dataProvider.onDataError, (error) => {
-                showError({
-                    title: 'There was an error loading the posting questions',
-                    error
+                postingTemplateItem(postingTemplateID)
+                .onceLoaded()
+                .then((template) => {
+                    this.data.model.updateWith({
+                        questionsResponses: template.questions
+                    }, true);
+                })
+                .catch((error) => {
+                    showError({
+                        title: 'There was an error loading the posting questions',
+                        error
+                    });
                 });
             });
-        });
+        }
     }
 
     /**
