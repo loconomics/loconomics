@@ -38,8 +38,9 @@ export class UserPostingQuestionResponse {
             },
             legend: '',
             /**
-             * Optional dictionary relating optionIDs (key and value) from where to go
-             * after choosing an option (optionID -> optionID)
+             * Optional dictionary relating the selection of an optionID (key)
+             * to another questionID (value) that must be the next step if that
+             * option (from current question) was choosen
              * @member {KnockoutObservable<object>}
              */
             branchLogic: null
