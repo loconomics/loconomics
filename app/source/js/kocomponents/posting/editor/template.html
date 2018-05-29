@@ -208,9 +208,7 @@
             </button>
         </div>
         <p data-bind="foreach: responses">
-            <span data-bind="if: option() && !userInput()"><span data-bind="text: option()"></span></span>
-            <span data-bind="if: option() && userInput()"><span data-bind="text: option() + ':' + userInput()"></span></span>
-            <span data-bind="if: !option() && userInput()"><span data-bind="text: userInput()"></span></span>
+            <span><span data-bind="text: $parent.displayResponse($data)"></span></span>
         </p>
         <!-- /ko -->
 

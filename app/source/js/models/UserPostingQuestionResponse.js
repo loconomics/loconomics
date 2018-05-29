@@ -17,6 +17,7 @@
 import Model from './Model';
 import QuestionOption from './QuestionOption';
 import QuestionResponse from './QuestionResponse';
+import moment from 'moment';
 
 export default class UserPostingQuestionResponse {
     constructor(values) {
@@ -45,6 +46,34 @@ export default class UserPostingQuestionResponse {
              */
             branchLogic: null
         }, values);
+    }
+
+    /**
+     * Formats the given response as part of current question for users.
+     * This involves custom logic on case of special option inputType
+     * and display of the preselected 'option' caption and/or userInput in the
+     * response.
+     * @param {QuestionResponse} response
+     */
+    displayResponse(response) {
+        const optionLabel = response.option();
+        let userInput = response.userInput();
+        const optionDef = this.options().find((opt) => opt.optionID() === response.optionID());
+
+        if (optionDef) {
+            switch (optionDef.inputType()) {
+                case 'date':
+                    userInput = moment(userInput).format('LL');
+                    break;
+                case 'datetime':
+                    userInput = moment(userInput).format('LL LT');
+                    break;
+                case 'time':
+                    userInput = moment(userInput).format('LT');
+                    break;
+            }
+        }
+        return [optionLabel, ':', userInput].join('').replace(/^:|:$/, '');
     }
 }
 
