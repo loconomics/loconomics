@@ -187,6 +187,13 @@ function SignupVM() {
      */
     this.isStudent = ko.pureComputed(() => this.cccUserType() === 'student');
 
+    /**
+     * Configuration option (has no reset) to enable only for landing pages
+     * targetted to GIG Posting Partners.
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isGigPartner = ko.observable(false);
+
     this.reset = function() {
         this.atBooking(false);
         this.confirmationCode(null);
@@ -301,6 +308,7 @@ function SignupVM() {
             jobTitleID: this.jobTitleID(),
             jobTitleName: this.jobTitleName(),
             isCccMember: this.isCccMember(),
+            isGigPartner: this.isGigPartner(),
             institutionID: this.institutionID(),
             fieldOfStudyID: this.fieldOfStudyID(),
             cccUserType: this.cccUserType(),
