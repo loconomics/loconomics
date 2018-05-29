@@ -259,7 +259,9 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
                         __dataTimestampModelsSubscriptions[key].forEach((sub) => sub.dispose());
                     }
                     if (newValue) {
-                        __dataTimestampModelsSubscriptions[key] = newValue.map((itemModel) => itemModel.model && itemModel.model.dataTimestamp.subscribe(() => dataTimestamp(new Date())));
+                        __dataTimestampModelsSubscriptions[key] = newValue
+                        .map((itemModel) => itemModel.model && itemModel.model.dataTimestamp.subscribe(() => dataTimestamp(new Date())))
+                        .filter((a) => !!a);
                     }
                 }
                 else {
