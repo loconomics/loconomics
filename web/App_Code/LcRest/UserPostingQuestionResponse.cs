@@ -116,5 +116,23 @@ namespace LcRest
                     Newtonsoft.Json.JsonConvert.SerializeObject(entry.branchLogic));
             }
         }
+
+        const string sqlUpdate = @"
+            UPDATE UserPostingQuestionResponse SET
+                responses = @2
+            WHERE
+                userPostingID = @0
+                 AND
+                questionID = @1
+        ";
+
+        public static void Update(UserPostingQuestionResponse entry, LcDatabase sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                db.Execute(sqlUpdate, entry.userPostingID, entry.questionID,
+                    Newtonsoft.Json.JsonConvert.SerializeObject(entry.responses));
+            }
+        }
     }
 }

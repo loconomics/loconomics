@@ -438,6 +438,11 @@ namespace LcRest
                         desiredSpecializationsText
                     );
                     id = entry.userPostingID;
+                    foreach (var qr in entry.questionsResponses)
+                    {
+                        qr.userPostingID = id;
+                        UserPostingQuestionResponse.Update(qr, db);
+                    }
                 }
                 else
                 {
