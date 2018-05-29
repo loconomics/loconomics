@@ -259,7 +259,7 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
                         __dataTimestampModelsSubscriptions[key].forEach((sub) => sub.dispose());
                     }
                     if (newValue) {
-                        __dataTimestampModelsSubscriptions[key] = newValue.map((itemModel) => itemModel.model.dataTimestamp.subscribe(() => dataTimestamp(new Date())));
+                        __dataTimestampModelsSubscriptions[key] = newValue.map((itemModel) => itemModel.model && itemModel.model.dataTimestamp.subscribe(() => dataTimestamp(new Date())));
                     }
                 }
                 else {
@@ -267,7 +267,7 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
                         __dataTimestampModelsSubscriptions[key].dispose();
                     }
                     if (newValue) {
-                        __dataTimestampModelsSubscriptions[key] = newValue.model.dataTimestamp.subscribe(() => dataTimestamp(new Date()));
+                        __dataTimestampModelsSubscriptions[key] = newValue.model && newValue.model.dataTimestamp.subscribe(() => dataTimestamp(new Date()));
                     }
                 }
             }
