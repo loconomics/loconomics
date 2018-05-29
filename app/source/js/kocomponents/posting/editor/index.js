@@ -347,8 +347,8 @@ export default class PostingEditor extends Komponent {
                     data.userPostingID = 0;
                     this.dataManager = userPosting(0);
                 }
-                this.data.model.updateWith(data);
-                this.dataTimestamp(this.data.model.dataTimestamp());
+                this.data.model.updateWith(data, true);
+                setTimeout(() => this.dataTimestamp(this.data.model.dataTimestamp()));
                 this.isLoading(false);
             })
             .catch((error) => {
@@ -426,8 +426,8 @@ export default class PostingEditor extends Komponent {
             }
             else {
                 // Use updated/created data
-                this.data.model.updateWith(freshData);
-                this.dataTimestamp(this.data.model.dataTimestamp());
+                this.data.model.updateWith(freshData, true);
+                setTimeout(() => this.dataTimestamp(this.data.model.dataTimestamp()));
             }
         })
         .catch((error) => {
@@ -497,7 +497,7 @@ export default class PostingEditor extends Komponent {
         .then((freshData) => {
             this.isClosing(false);
             // Use updated/created data
-            this.data.model.updateWith(freshData);
+            this.data.model.updateWith(freshData, true);
         })
         .catch((error) => {
             this.isClosing(false);
