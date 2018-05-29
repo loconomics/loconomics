@@ -23,4 +23,12 @@
     <ul class="TilesList isolated" data-bind="foreach: desiredSpecializations">
         <li class="LineTile" data-bind="text: name"></li>
     </ul>
+    <!-- ko foreach: questionsResponses -->
+    <h2 data-bind="text: question"></h2>
+    <p data-bind="foreach: responses">
+        <span data-bind="if: option() && !userInput()"><span data-bind="text: option()"></span></span>
+        <span data-bind="if: option() && userInput()"><span data-bind="text: option() + ':' + userInput()"></span></span>
+        <span data-bind="if: !option() && userInput()"><span data-bind="text: userInput()"></span></span>
+    </p>
+    <!-- /ko -->
 </div>
