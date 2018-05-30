@@ -47,6 +47,7 @@ export default class QuestionEditorType16 extends KnockoutComponent {
          * @member {rest.QuestionOption}
          */
         this.option = this.question.options()[0] || {
+            inputType: 'date',
             placeholder: null,
             tooltip: null,
             icon: null
