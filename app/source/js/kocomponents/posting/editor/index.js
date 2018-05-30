@@ -589,5 +589,5 @@ ko.components.register(TAG_NAME, PostingEditor);
  * @returns {rest/Specialization} Or null if not found
  */
 function findSpecializationIn(list, specialization) {
-    return list.find((s) => ko.unwrap(s.specializationID) === specialization.specializationID || ko.unwrap(s.name) === specialization.name );
+    return list.find((s) => (specialization.specializationID && ko.unwrap(s.specializationID) === specialization.specializationID) || ko.unwrap(s.name) === specialization.name );
 }
