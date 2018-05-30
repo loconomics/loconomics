@@ -74,6 +74,10 @@ export default class QuestionEditorSingleResponseTypeBase extends Komponent {
         this.userInput.subscribe((data) => {
             if (this.question.responses().length > 0) {
                 this.question.responses()[0].userInput(data);
+                // Workaround: notice the owner model that there were changes
+                // (in theory, Model.js:256-275 tried this automatically, but fails
+                // on this specific path)
+                this.question.model.touch();
             }
         });
         /**
