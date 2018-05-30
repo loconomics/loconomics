@@ -5,6 +5,7 @@
  */
 import './type-1';
 import './type-4';
+import './type-16';
 import './type-17';
 import Komponent from '../../helpers/KnockoutComponent';
 import ko from 'knockout';
