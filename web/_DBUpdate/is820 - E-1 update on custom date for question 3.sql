@@ -1,0 +1,1 @@
+UPDATE question SET questionTypeID=16, options='[{}]' WHERE questionID = 3
