@@ -141,11 +141,16 @@ export default class SuggestedPostingsActivity extends Activity {
                 required: true,
                 // Notes/Help:
                 description: 'We will send your email, name, phone number and ' +
-                'a link to your public listing on your behalf. Add a note to ' +
+                'a link to your public listing on your behalf. Personalize a note to ' +
                 'your potential client below:',
                 // Template:
-                text: 'Tell them about how your experience relates to the ' +
-                'project they want to accomplish.'
+                text: `Hi ${name}, \r\n` + 
+                `\r\n` +
+                `I'd like to help you with your project and feel my experience ` + 
+                `will allow me to do a great job. Please get in touch so we can ` +
+                `get going on next steps. \r\n` +
+                `\r\n` +
+                `Thank you!`,
             })
             // Submit to server
             .then((message) => {
