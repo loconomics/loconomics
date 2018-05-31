@@ -1,5 +1,5 @@
 <div data-bind="with: data">
-    <h2>Posting Title</h2>
+    <h2>Project title</h2>
     <p data-bind="text: title"></p>
     <h2>Status</h2>
     <p>
@@ -8,18 +8,18 @@
         </div>
         <span data-bind="text: statusName"></span> created on <span data-bind="text: createdDate, format: { type: 'datetime', format: 'LLL' }"></span>
     </p>
-    <h2>Solution Needed</h2>
+    <h2>What's needed</h2>
     <p data-bind="text: solutionName"></p>
     <!-- ko with: client -->
     <h2>Client</h2>
     <p data-bind="text: publicName"></p>
     <p class="text-muted" data-bind="text: publicBio, visible: publicBio"></p>
     <!-- /ko -->
-    <h2 data-bind="visible: neededSpecializations().length">Specializations Required</h2>
+    <h2 data-bind="visible: neededSpecializations().length">Specializations required</h2>
     <ul class="TilesList isolated" data-bind="foreach: neededSpecializations, visible: neededSpecializations().length">
         <li class="LineTile" data-bind="text: name"></li>
     </ul>
-    <h2 data-bind="visible: desiredSpecializations().length">Specializations Desired</h2>
+    <h2 data-bind="visible: desiredSpecializations().length">Specializations desired</h2>
     <ul class="TilesList isolated" data-bind="foreach: desiredSpecializations, visible: desiredSpecializations().length">
         <li class="LineTile" data-bind="text: name"></li>
     </ul>
