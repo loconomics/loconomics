@@ -83,7 +83,55 @@ export default class PostingEditor extends Komponent {
          */
         this.questionsSteps = ko.pureComputed(() => {
             const questions = this.data.questionsResponses();
-            return questions;
+            if (!questions || questions.length === 0) {
+                return [];
+            }
+            // List of steps, the first is ever included
+            const steps = [];
+            const neededQuestionIds = [questions[0].questionID()];
+            const getNaturalNextQuestionID = (currentIndex) => {
+                const next = questions[currentIndex + 1];
+                return next && next.questionID() || null;
+            };
+            questions.some((q, index) => {
+                if (neededQuestionIds.includes(q.questionID())) {
+                    steps.push(q);
+
+                    // If no logic, use next natural question no matters which response
+                    // is chosen
+                    const logic = q.branchLogic();
+                    const noLogic = !logic || Object.keys(logic).length === 0;
+                    if (noLogic) {
+                        const next = getNaturalNextQuestionID(index);
+                        if (next) {
+                            neededQuestionIds.push(next);
+                        }
+                        // continue next iteration
+                        return;
+                    }
+
+                    const res = q.responses();
+                    if (res.length === 0) {
+                        // no responses, no next still: break loop
+                        return true;
+                    }
+                    else {
+                        // Only one response is valid for branch logic,
+                        // use the first one
+                        const optionID = res[0].optionID();
+                        // Get the next questionID for the option based on branch logic
+                        // or the default one if no specific branch for that one
+                        const next = logic[optionID] || logic['default'];
+                        // if we have a next step, add that question to the list
+                        if (next) {
+                            neededQuestionIds.push(next);
+                        }
+                        // else: Bad branch logic, not defining a next will make no more
+                        // questions are added
+                    }
+                }
+            });
+            return steps;
         });
 
         /**
