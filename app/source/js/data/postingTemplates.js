@@ -22,8 +22,8 @@ const ID_PROPERTY_NAME = 'postingTemplateID';
  */
 export function item(id) {
     return new CachedDataProvider({
-        // 1 day
-        ttl: 1 * 24 * 60 * 60 * 1000,
+        // 1 hour
+        ttl: 1 * 60 * 60 * 1000,
         remote: new RestItemDataProviderDriver(rest, API_NAME, id),
         local: new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME)
     });

@@ -98,7 +98,7 @@
                 Validation.RequireField("title", LcRessources.RequiredField("Title"));
                 Validation.RequireField("solutionID", LcRessources.RequiredField("Solution"));
 
-                if (!ModelState.IsValid)
+                if (!Validation.IsValid() || !ModelState.IsValid)
                 {
                     throw new HttpException(400, LcRessources.ValidationSummaryTitle);
                 }
@@ -195,7 +195,7 @@
             {
                 Validation.RequireField("title", LcRessources.RequiredField("Title"));
 
-                if (!ModelState.IsValid)
+                if (!Validation.IsValid() || !ModelState.IsValid)
                 {
                     throw new HttpException(400, LcRessources.ValidationSummaryTitle);
                 }

@@ -72,9 +72,9 @@ export default class SuggestedPostingsActivity extends Activity {
             switch (this.view()) {
                 default:
                 case 'list':
-                    return 'Suggested postings';
+                    return 'Clients that need your help';
                 case 'item':
-                    return 'Posting details';
+                    return 'Project details';
             }
         });
 
@@ -96,7 +96,7 @@ export default class SuggestedPostingsActivity extends Activity {
                         title: null,
                         leftAction: {
                             link: '/suggested-postings',
-                            text: 'Suggested postings',
+                            text: 'Suggested projects',
                             icon: 'fa ion ion-ios-arrow-left',
                             isMenu: false,
                             isShell: false
@@ -122,7 +122,7 @@ export default class SuggestedPostingsActivity extends Activity {
         this.subscribeTo(suggestedPostings.onDataError, (error) => {
             this.isLoading(false);
             showError({
-                title: 'There was an error loading suggested postings',
+                title: 'There was an error loading suggested clients',
                 error
             });
         });
@@ -140,11 +140,17 @@ export default class SuggestedPostingsActivity extends Activity {
                 title: `Message to ${name}`,
                 required: true,
                 // Notes/Help:
-                description: 'We will send your email, name, phone number plus ' +
-                'link to your public listing on your behalf. Please, personalize ' +
-                'next message that will be sent too to your potential new client:',
+                description: 'We will send your email, name, phone number and ' +
+                'a link to your public listing on your behalf. Personalize a note to ' +
+                'your potential client below:',
                 // Template:
-                text: 'I\'m interested and available for this job'
+                text: `Hi ${name}, \r\n` + 
+                `\r\n` +
+                `I'd like to help you with your project and feel my experience ` + 
+                `will allow me to do a great job. Please get in touch so we can ` +
+                `get going on next steps. \r\n` +
+                `\r\n` +
+                `Thank you!`,
             })
             // Submit to server
             .then((message) => {
@@ -160,7 +166,7 @@ export default class SuggestedPostingsActivity extends Activity {
             })
             .catch((error) => {
                 showError({
-                    title: 'There was an error sending your request',
+                    title: 'There was an error sending your application',
                     error
                 });
             });
@@ -172,9 +178,9 @@ export default class SuggestedPostingsActivity extends Activity {
         const name = post && post.client() && post.client().publicName();
         if (name) {
             showConfirm({
-                title: 'Discard this posting',
-                message: `Since you are not interested in "${post.title()}", let's hide it for you`,
-                yes: 'Discard posting',
+                title: 'Discard this project',
+                message: `Since you're not interested in "${post.title()}", let's hide it for you`,
+                yes: 'Discard project',
                 no: 'Keep'
             })
             // Submit to server

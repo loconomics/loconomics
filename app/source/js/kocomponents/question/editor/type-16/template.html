@@ -9,16 +9,15 @@
         <span class="input-group-addon" data-bind="visible: option.icon">
             <span data-bind="css: option.icon"></span>
         </span>
-        <input class="form-control" data-bind="
+        <!--<input class="form-control" type="text" data-bind="
             attr: {
                 id: questionElementID,
-                type: option.inputType,
                 placeholder: option.placeholder,
-                title: option.tooltip,
-                step: option.step
+                title: option.tooltip
             },
-            textInput: userInput
-        " />
+            textInput: manualUserInput
+        " />-->
+        <input-date params="value: userInput"></input-date>
     </div>
     <div class="help-block" data-bind="visible: question.helpBlock, text: question.helpBlock"></div>
 </div>

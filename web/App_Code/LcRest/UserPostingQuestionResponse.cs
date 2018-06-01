@@ -19,7 +19,7 @@ namespace LcRest
         public IEnumerable<QuestionOption> options;
         public IEnumerable<QuestionResponse> responses;
         public string legend;
-        public IDictionary<int, int> branchLogic;
+        public IDictionary<string, int> branchLogic;
 
         public UserPostingQuestionResponse() { }
 
@@ -43,11 +43,11 @@ namespace LcRest
                 );
             }
             var branchLogicText = (string)record.branchLogic;
-            var branchLogic = new Dictionary<int, int>();
+            var branchLogic = new Dictionary<string, int>();
             if (!string.IsNullOrWhiteSpace(branchLogicText))
             {
-                branchLogic = (Dictionary<int, int>)Newtonsoft.Json.JsonConvert.DeserializeObject(
-                    branchLogicText, typeof(Dictionary<int, int>)
+                branchLogic = (Dictionary<string, int>)Newtonsoft.Json.JsonConvert.DeserializeObject(
+                    branchLogicText, typeof(Dictionary<string, int>)
                 );
             }
             return new UserPostingQuestionResponse
