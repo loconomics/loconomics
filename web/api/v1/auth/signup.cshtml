@@ -161,30 +161,42 @@
         {
             if (Request["isCccMember"].AsBool(false))
             {
-                Validation.RequireField("institutionID", "You must select an institution.");
-                Validation.RequireField("cccUserType", "You must select user type.");
-                var isStudent = Request["cccUserType"] == "student";
-                if (isStudent)
+                var isClient = Request["cccUserType"] == "client";
+                if (!isClient)
                 {
-                    Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
-                    Validation.RequireField("genderID", "You must select a gender.");
-                    Validation.RequireField("birthDate", "You must denote your birh date.");
+                    Validation.RequireField("institutionID", "You must select an institution.");
+                    Validation.RequireField("cccUserType", "You must select user type.");
+                    var isStudent = Request["cccUserType"] == "student";
+                    if (isStudent)
+                    {
+                        Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
+                        Validation.RequireField("genderID", "You must select a gender.");
+                        Validation.RequireField("birthDate", "You must denote your birh date.");
+                    }
                 }
             }
         }
 
         private void SaveCccMember(LcAuthHelper.LoginResult login)
         {
+            var isClient = Request["cccUserType"] == "client";
             using (var db = new LcDatabase())
             {
                 db.Execute("BEGIN TRANSACTION");
                 try
                 {
-                    ResetTrialEndDate(db, login.userID);
-                    InsertExtraUserInfo(db, login.userID);
-                    InsertCccUser(db, login.userID);
-                    InsertUserEducation(db, login.userID);
-                    InsertCccPaymentPlan(db, login.userID);
+                    if (isClient)
+                    {
+                        InsertCccUserTypeClient(db, login.userID);
+                    }
+                    else
+                    {
+                        ResetTrialEndDate(db, login.userID);
+                        InsertExtraUserInfo(db, login.userID);
+                        InsertCccUser(db, login.userID);
+                        InsertUserEducation(db, login.userID);
+                        InsertCccPaymentPlan(db, login.userID);
+                    }
                     db.Execute("COMMIT TRANSACTION");
                 }
                 catch
@@ -240,6 +252,23 @@
                     @4
                 )
             ", userID, institutionID, fieldOfStudyID, expiration, cccUserType);
+        }
+        /// <summary>
+        /// Specific for user type 'client' (GIG posting partners)
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="userID"></param>
+        private void InsertCccUserTypeClient(LcDatabase db, int userID)
+        {
+            db.Execute(@"
+                INSERT CCCUsers (
+                    UserID,
+                    UserType
+                ) VALUES (
+                    @0,
+                    @1
+                )
+            ", userID, "client");
         }
         private void InsertUserEducation(LcDatabase db, int userID)
         {
