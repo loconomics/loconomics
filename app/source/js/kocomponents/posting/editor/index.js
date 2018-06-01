@@ -74,11 +74,24 @@ export default class PostingEditor extends Komponent {
         this.FIXED_STEPS_COUNT = 4;
 
         /**
+         * Dynamic additional steps based on available posting questionsReponses
+         * and the branch logic (where previous responses choosen by the user
+         * define which is the next question and so if there are questions avoided
+         * -not relevant given a previous answer- don't take part in this list
+         * of steps available -and the total count-.
+         * @member {KnockoutComputed<Array<UserPostingQuestionResponse>>}
+         */
+        this.questionsSteps = ko.pureComputed(() => {
+            const questions = this.data.questionsResponses();
+            return questions;
+        });
+
+        /**
          * Total of steps available, taking into account fixed and dynamic ones (questions)
          * @member {KnockoutComputed<number>}
          */
         this.stepsCount = ko.pureComputed(() => {
-            const questions = this.data.questionsResponses();
+            const questions = this.questionsSteps();
             return (questions && questions.length || 0) + this.FIXED_STEPS_COUNT;
         });
 
