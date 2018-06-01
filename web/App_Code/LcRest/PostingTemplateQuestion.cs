@@ -12,7 +12,7 @@ namespace LcRest
         public int questionTypeID;
         public string question;
         public string helpBlock;
-        public IDictionary<int, int> branchLogic;
+        public IDictionary<string, int> branchLogic;
         public IEnumerable<QuestionOption> options;
         #endregion
 
@@ -31,11 +31,11 @@ namespace LcRest
                 );
             }
             var branchLogicText = (string)record.branchLogic;
-            var branchLogic = new Dictionary<int, int>();
+            var branchLogic = new Dictionary<string, int>();
             if (!string.IsNullOrWhiteSpace(branchLogicText))
             {
-                branchLogic = (Dictionary<int, int>)Newtonsoft.Json.JsonConvert.DeserializeObject(
-                    branchLogicText, typeof(Dictionary<int, int>)
+                branchLogic = (Dictionary<string, int>)Newtonsoft.Json.JsonConvert.DeserializeObject(
+                    branchLogicText, typeof(Dictionary<string, int>)
                 );
             }
             return new PostingTemplateQuestion
