@@ -12,33 +12,30 @@ var ko = require('knockout');
  * and accepts that as the first URL segment
  */
 var STEPS = {
-    welcome: {},
-    publicContactInfo: {},
+    welcome: {
+        userFlags: ['isClient', 'isServiceProfessional']
+    },
+    publicContactInfo: {
+        userFlags: ['isClient', 'isServiceProfessional']
+    },
     addJobTitle: {
-        serviceProfessionalOnly: true
+        userFlags: ['isServiceProfessional']
     },
     serviceAddresses: {
-        serviceProfessionalOnly: true,
+        userFlags: ['isServiceProfessional'],
         jobTitleSpecific: true
     }
 };
 var PROFESSIONAL_FINISH_STEP = 'listingEditor';
 var CLIENT_FINISH_STEP = 'home';
 
-var PROFESSIONAL_STEPS = Object.keys(STEPS)
-.filter(function(stepName) {
-    return !STEPS[stepName].clientOnly;
-})
-.map(function(stepName) {
-    return stepName;
-});
-var CLIENT_STEPS = Object.keys(STEPS)
-.filter(function(stepName) {
-    return !STEPS[stepName].serviceProfessionalOnly;
-})
-.map(function(stepName) {
-    return stepName;
-});
+function getUserSteps(user) {
+    return Object.keys(STEPS)
+    .filter(function(stepName) {
+        const step = STEPS[stepName];
+        return !!step.userFlags.some((flag) => user[flag]());
+    });
+}
 
 function OnboardingProgress(values) {
     var stepNumberFinished = -1;
@@ -53,7 +50,7 @@ function OnboardingProgress(values) {
     }, values);
 
     this.stepNames = ko.pureComputed(function() {
-        return this.isServiceProfessional() ? PROFESSIONAL_STEPS : CLIENT_STEPS;
+        return getUserSteps(this);
     }, this);
     /**
      * Gives the name of the step (activity) that should be navigated after finishing
