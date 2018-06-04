@@ -45,6 +45,20 @@ yarn grunt build --dev
 With the `--dev` modifier, we ensure the files includes source maps and debugging symbols. And optimization/minification steps
 are not executed with this, being a bit faster (they are not used when debugging anyway).
 
+##### Building landing pages
+To test landing pages created in the /welcome folder, you must build them separately using the following commands:
+```
+grunt build-landingPages
+```
+Make that build available at web folder to prepare upload: 
+```
+grunt publish-landingPages
+```
+Working just on landing pages: 
+```
+grunt atwork --target=landing_pages
+```
+Landing pages will be available at http://localhost:8811/welcome/.
 #### Start local server
 Allows you to test the webapp in the browser, a lightweight built-in http server is being used (connect), to start it, run next command and keep the task alive.
 ```
