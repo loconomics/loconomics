@@ -18,6 +18,9 @@ var STEPS = {
     publicContactInfo: {
         userFlags: ['isClient', 'isServiceProfessional']
     },
+    organizationInfo: {
+        userFlags: ['isOrganization']
+    },
     addJobTitle: {
         userFlags: ['isServiceProfessional']
     },
@@ -28,6 +31,7 @@ var STEPS = {
 };
 var PROFESSIONAL_FINISH_STEP = 'listingEditor';
 var CLIENT_FINISH_STEP = 'home';
+var ORGANIZATION_FINISH_STEP = 'posting';
 
 function getUserSteps(user) {
     return Object.keys(STEPS)
@@ -58,7 +62,11 @@ function OnboardingProgress(values) {
      * @member {KnockoutComputed<string>}
      */
     this.stepAfterFinish = ko.pureComputed(function() {
-        return this.isServiceProfessional() ? PROFESSIONAL_FINISH_STEP : CLIENT_FINISH_STEP;
+        return this.isOrganization() ?
+            ORGANIZATION_FINISH_STEP :
+            this.isServiceProfessional() ?
+            PROFESSIONAL_FINISH_STEP :
+            CLIENT_FINISH_STEP;
     }, this);
 
     this.totalSteps = ko.pureComputed(function() {
