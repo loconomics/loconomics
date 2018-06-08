@@ -1,12 +1,12 @@
 /**
-    OwnerInfo activity
+    Community activity
 **/
 'use strict';
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 
-var A = Activity.extend(function OwnerInfoActivity() {
+var A = Activity.extend(function CommunityActivity() {
 
     Activity.apply(this, arguments);
 
@@ -15,7 +15,7 @@ var A = Activity.extend(function OwnerInfoActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
-    this.title('Cooperative');
+    this.title('Community');
 });
 
 exports.init = A.init;
