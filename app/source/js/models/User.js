@@ -35,6 +35,10 @@ function User(values) {
 
         photoUrl: null,
 
+        orgName: null,
+        orgDescription: null,
+        orgWebsite: null,
+
         onboardingStep: null,
         accountStatusID: 0,
         createdDate: null,
