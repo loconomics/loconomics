@@ -35,6 +35,10 @@ namespace LcRest
         public bool isAdmin;
         public bool isOrganization;
 
+        public string orgName;
+        public string orgDescription;
+        public string orgWebsite;
+
         /// <summary>
         /// Used in the app with a different set of names, but the first one is the same: 'welcome'.
         /// </summary>
@@ -100,6 +104,10 @@ namespace LcRest
                 isAdmin = record.isAdmin,
                 isOrganization = record.isOrganization,
 
+                orgName = record.orgName,
+                orgDescription = record.orgDescription,
+                orgWebsite = record.orgWebsite,
+
                 onboardingStep = record.onboardingStep,
                 accountStatusID = record.accountStatusID,
                 createdDate = record.createdDate,
@@ -145,17 +153,24 @@ namespace LcRest
             ,onboardingStep
             ,accountStatusID
             ,createdDate
-            ,updatedDate
+            ,Users.updatedDate
             ,PreferredLanguageID as languageID
             ,PreferredCountryID as countryID
 
             ,ownerStatusID
             ,ownerAnniversaryDate
 
+            ,O.orgName
+            ,O.orgDescription
+            ,O.orgWebsite
+
         FROM Users
                 INNER JOIN
             UserProfile As UP
                 ON UP.UserID = Users.UserID
+                LEFT JOIN
+            userOrganization As O
+                ON O.userID = Users.UserID
         WHERE Users.UserID = @0
             AND Active = 1
         ";
@@ -292,7 +307,6 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
-
                 db.Execute(sqlUpdateProfile,
                     profile.userID,
                     profile.firstName,
@@ -304,6 +318,30 @@ namespace LcRest
                     profile.canReceiveSms,
                     profile.birthMonthDay,
                     profile.birthMonth
+                );
+            }
+        }
+        public static void SetOrganizationInfo(UserProfile profile)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                db.Execute(@"
+                    UPDATE UserOrganization SET
+                        orgName = @1,
+                        orgDescription = @2,
+                        orgWebsite = @3,
+                        updatedDate = getdate()
+                    WHERE
+                        userID = @0
+
+                    IF @@ROWCOUNT  = 0
+                    INSERT INTO UserOrganization (userID, orgName, orgDescription, orgWebsite, updatedDate)
+                    VALUES (@0, @1, @2, @3, getdate())
+                ",
+                    profile.userID,
+                    profile.orgName,
+                    profile.orgDescription,
+                    profile.orgWebsite
                 );
             }
         }
