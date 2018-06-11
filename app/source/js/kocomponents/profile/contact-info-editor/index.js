@@ -131,7 +131,7 @@ export default class ProfileContactInfoEditor extends Komponent {
          * @member {KnockoutComputed<boolean>}
          */
         this.isPhoneValid = ko.pureComputed(() => {
-            var isUSA = this.profile.countryID() === countriesOptions.unitedStates.id;
+            var isUSA = this.data.countryID() === countriesOptions.unitedStates.id;
             var phoneRegex = isUSA ? phoneValidationRegex.NORTH_AMERICA_PATTERN : phoneValidationRegex.GENERAL_VALID_CHARS;
             return phoneRegex.test(this.data.phone());
         });
@@ -151,7 +151,7 @@ export default class ProfileContactInfoEditor extends Komponent {
             errors.lastName = 'Last name is too short';
         }
         if (!this.isPhoneValid()) {
-            errors.phone = this.profile.phone() ? 'Given phone is not valid' : 'Phone is required';
+            errors.phone = this.data.phone() ? 'Given phone is not valid' : 'Phone is required';
         }
         this.isFormValidated(true);
         if (Object.keys(errors).length === 0) {
