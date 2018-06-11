@@ -11,21 +11,21 @@
     </p>
     <fieldset>
         <div class="form-group" data-bind="css: { 'has-error': isFormValidated() && !isFirstNameValid() }">
-            <label for="firstName">First name:</label>
-            <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: data.firstName, disable: isLocked">
+            <label for="contactInfo-firstName">First name:</label>
+            <input id="contactInfo-firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: data.firstName, disable: isLocked">
         </div>
         <div class="form-group" data-bind="css: { 'has-error': isFormValidated() &&!isLastNameValid() }">
-            <label for="lastName">Last name:</label>
-            <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: data.lastName, disable: isLocked">
+            <label for="contactInfo-lastName">Last name:</label>
+            <input id="contactInfo-lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: data.lastName, disable: isLocked">
         </div>
         <div class="form-group" data-bind="css: { 'has-error': isFormValidated() &&!isPhoneValid() }">
-            <label for="phone">Phone number:</label>
-            <input id="phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: data.phone, disable: isLocked">
+            <label for="contactInfo-phone">Phone number:</label>
+            <input id="contactInfo-phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: data.phone, disable: isLocked">
         </div>
         <div class="form-group">
-            <label for="canReceiveSms">Does this number receive texts?</label>
-            <input id="canReceiveSms" type="checkbox" data-bind="checked: data.canReceiveSms, disable: isLocked" aria-describedby="canReceiveSmsInstructions">
-            <p id="canReceiveSmsInstructions" class="help-block">We may send text notifications about appointments. You can cancel these anytime.</p>
+            <label for="contactInfo-canReceiveSms">Does this number receive texts?</label>
+            <input id="contactInfo-canReceiveSms" type="checkbox" data-bind="checked: data.canReceiveSms, disable: isLocked" aria-describedby="contactInfo-canReceiveSmsInstructions">
+            <p id="contactInfo-canReceiveSmsInstructions" class="help-block">We may send text notifications about appointments. You can cancel these anytime.</p>
         </div>
     </fieldset>
     <div class="LightForm-submitBar">
