@@ -14,7 +14,7 @@ import onboarding from '../../data/onboarding';
 import template from './template.html';
 import { data as user } from '../../data/userProfile';
 
-const ROUTE_NAME = 'example-activity';
+const ROUTE_NAME = 'public-contact-info';
 
 export default class PublicContactInfoActivity extends Activity {
 
