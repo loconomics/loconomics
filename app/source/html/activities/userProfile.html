@@ -18,6 +18,14 @@
                             </div>
                         </a>
                     </li>
+                    <li data-bind="visible: isOrganization">
+                        <a class="IconContentItem" href="/organization-info?mustReturn=userProfile&returnText=Your profile">
+                            <icon-dec class="Item-icon" params="icon: 'ion-briefcase'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Organization information</p>
+                            </div>
+                        </a>
+                    </li>
                     <li>
                         <a class="IconContentItem" href="/publicProfilePicture?mustReturn=userProfile&returnText=Your profile">
                             <icon-dec class="Item-icon" params="icon: 'ion-ios-camera-outline'"></icon-dec>
