@@ -274,6 +274,10 @@
                     @2
                 )
             ", userID, institutionID, "client");
+
+            // SPECIAL: update onboarding to skip 'welcome' step. This makes this back-end very tight with the front-end organization
+            // hope it takes no long active!
+            db.Execute("UPDATE users SET onboardingStep='public-contact-info' WHERE userID=@0", userID);
         }
         private void InsertUserEducation(LcDatabase db, int userID)
         {
