@@ -37,16 +37,22 @@ shell.on(shell.events.itemReady, function() {
  * @param {string} options.step The step where the user left the process or starts with.
  * @param {number} [options.jobTitleID] The jobTitleID selected at a previous
  * signup form or saved after the addJobTitle step.
- * @param {boolean} [options.isServiceProfessional] It set-ups the equivalent flag
- * and when value is 'true', it skips the 'welcome' step (that has the
- * selector buttons for the type of profile) in case that's the current one.
+ * @param {(models/User|rest/UserProfile)} options.user It takes the user profile
+ * (observable model or plain object)
+ * to customize the onboarding to it's kind of profile, like being client,
+ * professional, organization or maybe other flags or options in the future.
  */
 api.setup = function(options) {
     var step = options.step;
-    if (options.isServiceProfessional === true && options.step === 'welcome') {
+    api.user.model.updateWith(options.user, true);
+    // Special: For professionals and organizations, it skips the 'welcome' step
+    // (that one has the selector buttons for the type of profile and become
+    // confusing for 'organization' users).
+    const isProfessional = api.user.isServiceProfessional();
+    const isOrg = api.user.isOrganization();
+    if ((isProfessional === true || isOrg === true) && options.step === 'welcome') {
         step = api.stepAfter(step).stepName();
     }
-    api.isServiceProfessional(options.isServiceProfessional);
     if (options.jobTitleID |0 > 0) {
         api.selectedJobTitleID(options.jobTitleID);
     }
@@ -107,7 +113,7 @@ api.goNext = function goNext() {
     // Display modal with notification when required
     if (showOnboardingSuccess) {
         onboardingSuccessModal.show({
-            isServiceProfessional: this.isServiceProfessional()
+            isServiceProfessional: this.user.isServiceProfessional()
         });
     }
 };

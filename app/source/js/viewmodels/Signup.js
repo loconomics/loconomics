@@ -319,7 +319,7 @@ function SignupVM() {
                 // Start onboarding
                 if (onboarding) {
                     onboarding.setup({
-                        isServiceProfessional: signupData.profile.isServiceProfessional,
+                        user: signupData.profile,
                         jobTitleID: signupData.onboardingJobTitleID,
                         step: signupData.onboardingStep
                     });

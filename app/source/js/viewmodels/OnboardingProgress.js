@@ -2,8 +2,9 @@
     It tracks the onboarding information and methods
     to update views to that state
 **/
-var Model = require('../models/Model');
-var ko = require('knockout');
+import Model from '../models/Model';
+import User from '../models/User';
+import ko from 'knockout';
 
 /**
  * Definition of steps, in strict order, with settings from available:
@@ -47,14 +48,15 @@ function OnboardingProgress(values) {
     Model(this);
 
     this.model.defProperties({
-        isServiceProfessional: false,
         stepNumber: stepNumberFinished,
         // Let's set a job title to pass in to jobTitleSpecific steps as URL segment
         selectedJobTitleID: null
     }, values);
 
+    this.user = new User();
+
     this.stepNames = ko.pureComputed(function() {
-        return getUserSteps(this);
+        return getUserSteps(this.user);
     }, this);
     /**
      * Gives the name of the step (activity) that should be navigated after finishing
@@ -64,7 +66,7 @@ function OnboardingProgress(values) {
     this.stepAfterFinish = ko.pureComputed(function() {
         return this.isOrganization() ?
             ORGANIZATION_FINISH_STEP :
-            this.isServiceProfessional() ?
+            this.user.isServiceProfessional() ?
             PROFESSIONAL_FINISH_STEP :
             CLIENT_FINISH_STEP;
     }, this);
@@ -91,7 +93,7 @@ function OnboardingProgress(values) {
     this.stepAfter = function(stepName) {
         var nextStep = new OnboardingProgress({
             selectedJobTitleID: this.selectedJobTitleID(),
-            isServiceProfessional: this.isServiceProfessional()
+            user: this.user
         });
         nextStep.setStepByName(stepName);
         nextStep.incrementStep();

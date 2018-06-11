@@ -211,17 +211,15 @@ public static class LcAuthHelper
     /// Sets the OnboardingStep of the user to 'welcome', so can start the onboarding process
     /// </summary>
     /// <param name="userID"></param>
-    private static void StartOnboardingForUser(int userID, bool isOrganization)
+    private static void StartOnboardingForUser(int userID)
     {
         using (var db = new LcDatabase())
         {
-            // This depends a lot in how steps are defined at the App/front-end
-            var step = isOrganization ? "publicContactInfo" : "welcome";
             db.Execute(@"
                 UPDATE Users SET 
-                OnboardingStep = @1
+                OnboardingStep = 'welcome'
                 WHERE UserID = @0
-            ", userID, step);
+            ", userID);
         }
     }
 
@@ -302,7 +300,7 @@ public static class LcAuthHelper
             {
                 WebSecurity.CreateAccount(email, LcAuth.GeneratePassword(), true);
             }
-            StartOnboardingForUser(userID, isOrganization);
+            StartOnboardingForUser(userID);
             // send email to let him to confirm it owns the given e-mail
             LcMessaging.SendWelcomeCustomer(userID, email);
             // Not valid after all, just communicate was was done and needs to do to active its account:
@@ -479,7 +477,7 @@ public static class LcAuthHelper
                     home.countryID = countryID;
                     LcRest.Address.SetAddress(home);
 
-                    StartOnboardingForUser(userID, isOrganization);
+                    StartOnboardingForUser(userID);
                 }
 
                 // SIGNUP
