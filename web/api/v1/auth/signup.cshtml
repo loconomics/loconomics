@@ -262,15 +262,18 @@
         /// <param name="userID"></param>
         private void InsertCccUserTypeClient(LcDatabase db, int userID)
         {
+            var institutionID = Request["institutionID"].IsInt() ? Request["institutionID"].AsInt() : (int?)null;
             db.Execute(@"
                 INSERT CCCUsers (
                     UserID,
+                    InstitutionID,
                     UserType
                 ) VALUES (
                     @0,
-                    @1
+                    @1,
+                    @2
                 )
-            ", userID, "client");
+            ", userID, institutionID, "client");
         }
         private void InsertUserEducation(LcDatabase db, int userID)
         {

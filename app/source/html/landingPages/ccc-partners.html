@@ -13,7 +13,46 @@
                         <div class="landingpage-brand logo-small"></div>
                     </div>
                     <div class="col-md-5">
-                        <app-signup params="isCountryVisible: false, onSignedUp: redirect, profile: 'client', isCccMember: true, cccUserType: 'client'"></app-signup>
+                        <app-signup params="isCountryVisible: false, onSignedUp: redirect, profile: 'client', isCccMember: true, cccUserType: 'client'">
+                            <h2 class="sr-only">Sign up for Loconomics</h2>
+                            <h5 class="SignupLogin-prompt">
+                                <input type="checkbox" id="signupIsOrganization" data-bind="checked: isOrganization" />
+                                <label for="signupIsOrganization">I'm hiring on behalf of my business/organization</label>
+                            </h5>
+
+                            <h5 class="SignupLogin-prompt">Nearest college:</h5>
+                            <div class="form-group">
+                                <select class="form-control" data-bind="value: institutionID">
+                                    <option selected disabled value="">Choose one</option>
+                                    <option value="222">Cabrillo College</option>
+                                    <option value="197">College of Alameda</option>
+                                    <option value="401">College of Marin</option>
+                                    <option value="263">College of the Canyons</option>
+                                    <option value="539">College of the Siskiyous</option>
+                                    <option value="293">Cosumnes River College</option>
+                                    <option value="296">Cuesta College</option>
+                                    <option value="310">East Los Angeles College</option>
+                                    <option value="314">El Camino College</option>
+                                    <option value="320">Evergreen Valley College</option>
+                                    <option value="341">Golden West College</option>
+                                    <option value="416">Merritt College</option>
+                                    <option value="429">Moorpark College</option>
+                                    <option value="464">Oxnard College</option>
+                                    <option value="476">Palomar College</option>
+                                    <option value="478">Pasadena City College</option>
+                                    <option value="497">Riverside City College</option>
+                                    <option value="313">San Diego Continuing Education</option>
+                                    <option value="521">San Jose City College</option>
+                                    <option value="528">Santa Monica College</option>
+                                    <option value="535">Sierra College</option>
+                                    <option value="541">Skyline College</option>
+                                    <option value="9890">Southwestern College</option>
+                                    <option value="573">West Hills College Coalinga</option>
+                                    <option value="8919">West Hills College Lemoore</option>
+                                </select>
+                                <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                            </div>
+                        </app-signup>
                     </div>
                 </div>
             </div>
