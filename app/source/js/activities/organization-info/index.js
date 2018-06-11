@@ -33,7 +33,7 @@ export default class OrganizationInfoActivity extends Activity {
             backLink: '/userProfile',
             helpLink: this.helpLink
         });
-        this.title = 'Your organization info';
+        this.title = "Your organization's info";
 
         this.isInOnboarding = onboarding.inProgress;
 

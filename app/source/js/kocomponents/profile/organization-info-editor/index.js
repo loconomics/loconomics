@@ -66,7 +66,7 @@ export default class OrganizationInfoEditor extends Komponent {
             this.data.model.updateWith(data, true);
         })
         .catch((error) => showError({
-            title: 'Unable to load your organization info',
+            title: "Unable to load your organization's info",
             error
         }))
         .then(() => this.isLoading(false));
@@ -110,7 +110,7 @@ export default class OrganizationInfoEditor extends Komponent {
         })
         .catch(function(err) {
             return showError({
-                title: 'Unable to save your organization info',
+                title: "Unable to save your organization's info",
                 error: err
             });
         })
