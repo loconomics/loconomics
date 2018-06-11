@@ -28,7 +28,7 @@ var alertPresets = {
         },
         personalinfo: {
             label: 'How do clients reach you?',
-            route: new RouteParser('/publicContactInfo?mustReturn=listingEditor/:jobTitleID')
+            route: new RouteParser('/public-contact-info?mustReturn=listingEditor/:jobTitleID')
         },
         photo: {
             label: 'Add your profile photo',

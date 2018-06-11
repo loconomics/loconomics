@@ -16,10 +16,10 @@ var STEPS = {
     welcome: {
         userFlags: ['isClient', 'isServiceProfessional']
     },
-    publicContactInfo: {
+    'public-contact-info': {
         userFlags: ['isClient', 'isServiceProfessional']
     },
-    organizationInfo: {
+    'organization-info': {
         userFlags: ['isOrganization']
     },
     addJobTitle: {
