@@ -940,7 +940,7 @@ public class LcMessaging
     /// <param name="userEmail"></param>
     public static void SendSuggestedPosting(int userID, string userEmail, int userPostingID)
     {
-        SendMail(userEmail, "[Action Required] Suggested GIG Posting",
+        SendMail(userEmail, "Project you may be interested in",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/SuggestedPosting/",
             new Dictionary<string, object> {
                 { "UserID", userID },
