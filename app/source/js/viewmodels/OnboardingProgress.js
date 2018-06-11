@@ -54,6 +54,9 @@ function OnboardingProgress(values) {
     }, values);
 
     this.user = new User();
+    if (values && values.user) {
+        this.user.model.updateWith(values.user, true);
+    }
 
     this.stepNames = ko.pureComputed(function() {
         return getUserSteps(this.user);
