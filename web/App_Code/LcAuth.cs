@@ -125,7 +125,7 @@ public static class LcAuth
 
                 if (isOrganization)
                 {
-                    db.Execute("UPDATE users SET IsOrganization WHERE UserID=@0", userid);
+                    db.Execute("UPDATE users SET IsOrganization=1 WHERE UserID=@0", userid);
                 }
 
                 // If is provider, update profile with that info (being both customer and provider)
