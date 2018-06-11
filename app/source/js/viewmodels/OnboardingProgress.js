@@ -64,7 +64,7 @@ function OnboardingProgress(values) {
      * @member {KnockoutComputed<string>}
      */
     this.stepAfterFinish = ko.pureComputed(function() {
-        return this.isOrganization() ?
+        return this.user.isOrganization() ?
             ORGANIZATION_FINISH_STEP :
             this.user.isServiceProfessional() ?
             PROFESSIONAL_FINISH_STEP :
