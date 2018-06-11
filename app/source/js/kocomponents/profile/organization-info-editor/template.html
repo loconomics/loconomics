@@ -1,0 +1,26 @@
+<form class="container-fluid LightForm" data-bind="submit: save" aria-describedby="organizationInfoEditorInstructions">
+    <app-loading-spinner params="mod: 'row big'"></app-loading-spinner>
+    <p id="organizationInfoEditorInstructions" class="help-block">
+        Public information for the organization you represents at Loconomics.
+    </p>
+    <fieldset>
+        <div class="form-group">
+            <label for="organizationInfoName">Organization name:</label>
+            <input id="organizationInfoName" type="text" class="form-control" required minlength="3" maxlength="200"
+                data-bind="textInput: data.orgName, disable: isLocked">
+        </div>
+        <div class="form-group">
+            <label for="organizationInfoWebsite">Website:</label>
+            <input id="organizationInfoWebsite" type="url" class="form-control" required maxlength="255"
+                data-bind="textInput: data.orgWebsite, disable: isLocked">
+        </div>
+        <div class="form-group">
+            <label for="organizationInfoDescription">Description:</label>
+            <textarea id="organizationInfoDescription" class="form-control" rows="5"
+                data-bind="textInput: data.orgDescription, disable: isLocked"></textarea>
+        </div>
+    </fieldset>
+    <div class="LightForm-submitBar">
+        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+    </div>
+</form>
