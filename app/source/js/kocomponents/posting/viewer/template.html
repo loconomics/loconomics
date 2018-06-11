@@ -24,7 +24,7 @@
         <li class="LineTile" data-bind="text: name"></li>
     </ul>
     <!-- ko foreach: questionsResponses -->
-    <h2 data-bind="text: question, visible: responses().length"></h2>
+    <h2 data-bind="text: label, visible: responses().length"></h2>
     <p data-bind="foreach: responses, visible: responses().length">
         <span><span data-bind="text: $parent.displayResponse($data)"></span></span>
     </p>

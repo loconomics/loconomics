@@ -28,6 +28,7 @@ export default class UserPostingQuestionResponse {
             questionID: 0,
             questionTypeID: 0,
             question: '',
+            label: '',
             helpBlock: null,
             options: {
                 isArray: true,

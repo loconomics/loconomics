@@ -15,6 +15,7 @@ namespace LcRest
         public int questionID;
         public int questionTypeID;
         public string question;
+        public string label;
         public string helpBlock;
         public IEnumerable<QuestionOption> options;
         public IEnumerable<QuestionResponse> responses;
@@ -56,6 +57,7 @@ namespace LcRest
                 questionID = record.questionID,
                 questionTypeID = record.questionTypeID,
                 question = record.question,
+                label = record.label,
                 helpBlock = record.helpBlock,
                 options = options,
                 responses = responses,
@@ -70,6 +72,7 @@ namespace LcRest
                 questionID,
                 questionTypeID,
                 question,
+                label,
                 helpBlock,
                 options,
                 responses,
@@ -93,6 +96,7 @@ namespace LcRest
                 questionID,
                 questionTypeID,
                 question,
+                label,
                 helpBlock,
                 legend,
                 options,
@@ -100,7 +104,7 @@ namespace LcRest
                 branchLogic
             ) VALUES (
                 @0, @1, @2, @3,
-                @4, @5,
+                @4, @5, @6,
                 @6, @7, @8
             )
         ";
@@ -109,7 +113,7 @@ namespace LcRest
         {
             using (var db = new LcDatabase(sharedDb))
             {
-                db.Execute(sqlInsert, entry.userPostingID, entry.questionID, entry.questionTypeID, entry.question,
+                db.Execute(sqlInsert, entry.userPostingID, entry.questionID, entry.questionTypeID, entry.question, entry.label,
                     entry.helpBlock, entry.legend,
                     Newtonsoft.Json.JsonConvert.SerializeObject(entry.options),
                     Newtonsoft.Json.JsonConvert.SerializeObject(entry.responses),

@@ -11,6 +11,7 @@ namespace LcRest
         public string legend;
         public int questionTypeID;
         public string question;
+        public string label;
         public string helpBlock;
         public IDictionary<string, int> branchLogic;
         public IEnumerable<QuestionOption> options;
@@ -43,6 +44,7 @@ namespace LcRest
                 questionID = record.questionID,
                 questionTypeID = record.questionTypeID,
                 question = record.question,
+                label = record.label,
                 helpBlock = record.helpBlock,
                 options = options,
                 legend = record.legend,
@@ -58,6 +60,7 @@ namespace LcRest
                 Q.questionID,
                 Q.questionTypeID,
                 Q.question,
+                Q.label,
                 Q.helpBlock,
                 Q.options,
                 P.legend,
