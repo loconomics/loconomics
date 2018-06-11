@@ -18,6 +18,7 @@
         canReceiveSms:bool Editable
         birthMonthDay:int Editable. Day of the month of the birthday (the year is not wanted)
         birthMonth:int Editable. Month of the birthday (the year is not wanted)
+        isOrganization:bool Editable
 
     - PUT /tracking: This URL is intented to be a differencial update of the profile tracking related fields, where
             all values are optional from being specified. Right now there is only one possible value:
@@ -70,7 +71,8 @@
                 "phone": "",
                 "canReceiveSms": false,
                 "birthMonthDay": 20,
-                "birthMonth": 4
+                "birthMonth": 4,
+                "isOrganization": false
             }
         },
         "User Profile: Track changes (differential changes)": {
@@ -103,14 +105,16 @@
 
         public override dynamic Get()
         {
-            if (UrlData.Count > 0) {
+            if (UrlData.Count > 0)
+            {
                 throw new HttpException(404, "Not found");
             }
 
             return GetData();
         }
 
-        object PutTracking() {
+        object PutTracking()
+        {
 
             // IMPORTANT: When implementing other optional options on this API point,
             // ensure to check first if the key was specified and avoid update if not
@@ -181,10 +185,12 @@
 
         public override dynamic Put()
         {
-            if (UrlData.Count > 1) {
+            if (UrlData.Count > 1)
+            {
                 throw new HttpException(404, "Not found");
             }
-            else if (UrlData.Count == 1) {
+            else if (UrlData.Count == 1)
+            {
                 if (UrlData[0] == "tracking")
                 {
                     return PutTracking();
@@ -206,12 +212,14 @@
             Validation.Add("birthMonthDay", Validator.Integer("Birth Day must be an number (day of the month)"));
             Validation.Add("birthMonth", Validator.Integer("Birth Month must be an number"));
 
-            if (!Validation.IsValid() || !ModelState.IsValid) {
+            if (!Validation.IsValid() || !ModelState.IsValid)
+            {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
 
             // Parameters
-            var profile = new LcRest.UserProfile {
+            var profile = new LcRest.UserProfile
+            {
                 userID = WebSecurity.CurrentUserId,
                 firstName = Request.Form["firstName"],
                 lastName = Request.Form["lastName"],
@@ -221,7 +229,8 @@
                 phone = Request.Form["phone"],
                 canReceiveSms = Request.Form["canReceiveSms"].AsBool(),
                 birthMonthDay = Request.Form["birthMonthDay"].AsInt(),
-                birthMonth = Request.Form["birthMonth"].AsInt()
+                birthMonth = Request.Form["birthMonth"].AsInt(),
+                isOrganization = Request.Form["isOrganization"].AsBool()
             };
 
             LcRest.UserProfile.Set(profile);
@@ -229,8 +238,8 @@
             return GetData();
         }
     }
-    }
-@{   
+}
+@{
     Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     new RestUserProfile().JsonResponse(this);
 }
