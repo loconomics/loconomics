@@ -63,6 +63,7 @@ export default class ProfileContactInfoEditor extends Komponent {
 
     __connectData() {
         // Request to load data, in case the initial one is empty or require cache revalidation
+        this.isLoading(true);
         userData.load()
         .then((data) => {
             this.data.model.updateWith(data, true);
@@ -70,7 +71,8 @@ export default class ProfileContactInfoEditor extends Komponent {
         .catch((error) => showError({
             title: 'Unable to load your contact info',
             error
-        }));
+        }))
+        .then(() => this.isLoading(false));
     }
 
     /**
@@ -169,6 +171,7 @@ export default class ProfileContactInfoEditor extends Komponent {
     save() {
         var errors = this.validate();
         if (!errors) {
+            this.isSaving(true);
             return userData.save(this.data.model.toPlainObject(true))
             .then((updatedData) => {
                 if (this.onSave) {
@@ -183,7 +186,8 @@ export default class ProfileContactInfoEditor extends Komponent {
                     title: 'Unable to save your contact info',
                     error: err
                 });
-            });
+            })
+            .then(() => this.isSaving(false));
         }
         else {
             return showError({

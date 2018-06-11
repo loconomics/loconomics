@@ -60,6 +60,7 @@ export default class OrganizationInfoEditor extends Komponent {
 
     __connectData() {
         // Request to load data, in case the initial one is empty or require cache revalidation
+        this.isLoading(true);
         userData.load()
         .then((data) => {
             this.data.model.updateWith(data, true);
@@ -67,7 +68,8 @@ export default class OrganizationInfoEditor extends Komponent {
         .catch((error) => showError({
             title: 'Unable to load your organization info',
             error
-        }));
+        }))
+        .then(() => this.isLoading(false));
     }
 
     /**
@@ -96,6 +98,7 @@ export default class OrganizationInfoEditor extends Komponent {
     }
 
     save() {
+        this.isSaving(true);
         return userData.saveOrganizationInfo(this.data.model.toPlainObject(true))
         .then((updatedData) => {
             if (this.onSave) {
@@ -110,7 +113,8 @@ export default class OrganizationInfoEditor extends Komponent {
                 title: 'Unable to save your organization info',
                 error: err
             });
-        });
+        })
+        .then(() => this.isSaving(false));
     }
 }
 
