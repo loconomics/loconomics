@@ -111,7 +111,9 @@ api.goNext = function goNext() {
     shell.go(url, null, true);
 
     // Display modal with notification when required
-    if (showOnboardingSuccess) {
+    // Exception for organizations (we just lead them to posting them to focus on that
+    // as first step)
+    if (showOnboardingSuccess && !this.user.isOrganization()) {
         onboardingSuccessModal.show({
             isServiceProfessional: this.user.isServiceProfessional()
         });
