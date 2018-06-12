@@ -189,7 +189,7 @@
                 {
                     if (isClient)
                     {
-                        InsertCccUserTypeClient(db, login.userID);
+                        InsertCccUserTypeClient(db, login);
                     }
                     else
                     {
@@ -260,7 +260,7 @@
         /// </summary>
         /// <param name="db"></param>
         /// <param name="userID"></param>
-        private void InsertCccUserTypeClient(LcDatabase db, int userID)
+        private void InsertCccUserTypeClient(LcDatabase db, LcAuthHelper.LoginResult logged)
         {
             var institutionID = Request["institutionID"].IsInt() ? Request["institutionID"].AsInt() : (int?)null;
             db.Execute(@"
@@ -273,11 +273,12 @@
                     @1,
                     @2
                 )
-            ", userID, institutionID, "client");
+            ", logged.userID, institutionID, "client");
 
             // SPECIAL: update onboarding to skip 'welcome' step. This makes this back-end very tight with the front-end organization
             // hope it takes no long active!
-            db.Execute("UPDATE users SET onboardingStep='public-contact-info' WHERE userID=@0", userID);
+            db.Execute("UPDATE users SET onboardingStep='public-contact-info' WHERE userID=@0", logged.userID);
+            logged.onboardingStep = "public-contact-info";
         }
         private void InsertUserEducation(LcDatabase db, int userID)
         {
