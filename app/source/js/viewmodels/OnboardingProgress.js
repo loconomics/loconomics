@@ -3,8 +3,8 @@
     to update views to that state
 **/
 import Model from '../models/Model';
-import User from '../models/User';
 import ko from 'knockout';
+import { data as user } from '../data/userProfile';
 
 /**
  * Definition of steps, in strict order, with settings from available:
@@ -34,7 +34,7 @@ var PROFESSIONAL_FINISH_STEP = 'listingEditor';
 var CLIENT_FINISH_STEP = 'home';
 var ORGANIZATION_FINISH_STEP = 'posting';
 
-function getUserSteps(user) {
+function getUserSteps() {
     return Object.keys(STEPS)
     .filter(function(stepName) {
         const step = STEPS[stepName];
@@ -53,13 +53,8 @@ function OnboardingProgress(values) {
         selectedJobTitleID: null
     }, values);
 
-    this.user = new User();
-    if (values && values.user) {
-        this.user.model.updateWith(values.user, true);
-    }
-
     this.stepNames = ko.pureComputed(function() {
-        return getUserSteps(this.user);
+        return getUserSteps();
     }, this);
     /**
      * Gives the name of the step (activity) that should be navigated after finishing
@@ -67,9 +62,9 @@ function OnboardingProgress(values) {
      * @member {KnockoutComputed<string>}
      */
     this.stepAfterFinish = ko.pureComputed(function() {
-        return this.user.isOrganization() ?
+        return user.isOrganization() ?
             ORGANIZATION_FINISH_STEP :
-            this.user.isServiceProfessional() ?
+            user.isServiceProfessional() ?
             PROFESSIONAL_FINISH_STEP :
             CLIENT_FINISH_STEP;
     }, this);
@@ -95,8 +90,7 @@ function OnboardingProgress(values) {
 
     this.stepAfter = function(stepName) {
         var nextStep = new OnboardingProgress({
-            selectedJobTitleID: this.selectedJobTitleID(),
-            user: this.user
+            selectedJobTitleID: this.selectedJobTitleID()
         });
         nextStep.setStepByName(stepName);
         nextStep.incrementStep();

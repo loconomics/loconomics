@@ -508,7 +508,6 @@ var appInit = function appInit() {
             // Resume onboarding
             // Set-up onboarding and current step, if any
             onboarding.setup({
-                user: user,
                 jobTitleID: jobTitleID,
                 step: user.onboardingStep() || null
             });

@@ -5,13 +5,15 @@
 'use strict';
 
 import shell from '../app.shell';
+import userProfile from './userProfile';
 
 var OnboardingProgress = require('../viewmodels/OnboardingProgress');
 var NavAction = require('../viewmodels/NavAction');
 var ko = require('knockout');
-var userProfile = require('./userProfile');
 var local = require('./drivers/localforage');
 var onboardingSuccessModal = require('../modals/onboardingSuccess');
+
+const user = userProfile.data;
 
 var NAVBAR_TITLE = 'Create your first listing';
 
@@ -37,19 +39,14 @@ shell.on(shell.events.itemReady, function() {
  * @param {string} options.step The step where the user left the process or starts with.
  * @param {number} [options.jobTitleID] The jobTitleID selected at a previous
  * signup form or saved after the addJobTitle step.
- * @param {(models/User|rest/UserProfile)} options.user It takes the user profile
- * (observable model or plain object)
- * to customize the onboarding to it's kind of profile, like being client,
- * professional, organization or maybe other flags or options in the future.
  */
 api.setup = function(options) {
     var step = options.step;
-    api.user.model.updateWith(options.user, true);
     // Special: For professionals and organizations, it skips the 'welcome' step
     // (that one has the selector buttons for the type of profile and become
     // confusing for 'organization' users).
-    const isProfessional = api.user.isServiceProfessional();
-    const isOrg = api.user.isOrganization();
+    const isProfessional = user.isServiceProfessional();
+    const isOrg = user.isOrganization();
     if ((isProfessional === true || isOrg === true) && options.step === 'welcome') {
         step = api.stepAfter(step).stepName();
     }
@@ -113,9 +110,9 @@ api.goNext = function goNext() {
     // Display modal with notification when required
     // Exception for organizations (we just lead them to posting them to focus on that
     // as first step)
-    if (showOnboardingSuccess && !this.user.isOrganization()) {
+    if (showOnboardingSuccess && !user.isOrganization()) {
         onboardingSuccessModal.show({
-            isServiceProfessional: this.user.isServiceProfessional()
+            isServiceProfessional: user.isServiceProfessional()
         });
     }
 };
