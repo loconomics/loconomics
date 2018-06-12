@@ -279,6 +279,7 @@
             // hope it takes no long active!
             db.Execute("UPDATE users SET onboardingStep='public-contact-info' WHERE userID=@0", logged.userID);
             logged.onboardingStep = "public-contact-info";
+            logged.profile.onboardingStep = logged.onboardingStep;
         }
         private void InsertUserEducation(LcDatabase db, int userID)
         {
