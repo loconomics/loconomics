@@ -14,6 +14,12 @@
     <h2>Client</h2>
     <p data-bind="text: publicName"></p>
     <p class="text-muted" data-bind="text: publicBio, visible: publicBio"></p>
+    <!-- ko if:isOrganization -->
+    <h2>Organization Information</h2>
+    <p data-bind="text: orgName"></p>
+    <a target="_blank" data-bind="text: orgWebsite, visible: orgWebsite, attr: { href: orgWebsite }"></a>
+    <p class="text-muted" data-bind="text: orgDescription, visible: orgDescription"></p>
+    <!-- /ko -->
     <!-- /ko -->
     <h2 data-bind="visible: neededSpecializations().length">Specializations required</h2>
     <ul class="TilesList isolated" data-bind="foreach: neededSpecializations, visible: neededSpecializations().length">
