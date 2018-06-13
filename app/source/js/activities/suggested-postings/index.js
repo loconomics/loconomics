@@ -31,7 +31,8 @@ export default class SuggestedPostingsActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSectionNavBar(null);
+        
+        this.navBar = Activity.createSubsectionNavBar('Suggested Projects');
 
         this.isLoading = ko.observable(false);
         this.list = ko.observableArray();

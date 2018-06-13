@@ -194,7 +194,7 @@
 
         <!-- ko foreach: $component.questionsSteps -->
         <div class="SectionHeading SectionHeading--full">
-            <h2 data-bind="text: question"></h2>
+            <h2 data-bind="text: label"></h2>
             <button type="button" data-bind="
                 visible: $parent.isEditable,
                 click: $component.goToStep.bind($component, $component.FIXED_STEPS_COUNT + $index() + 1),

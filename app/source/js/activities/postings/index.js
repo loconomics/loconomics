@@ -24,7 +24,7 @@ export default class PostingsActivity extends Activity {
 
         this.accessLevel = UserType.client;
         this.navBar = Activity.createSectionNavBar(null);
-        this.title = 'Postings';
+        this.title = 'Project Postings';
 
         /**
          * Creates link to where to edit the posting

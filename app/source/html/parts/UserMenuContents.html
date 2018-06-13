@@ -28,14 +28,11 @@
     <a data-bind="attr: { href: isInOnboarding() ? null : '/calendar' }"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a>
 </li>
 <li data-bind="visible: !isServiceProfessional() && !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'myAppointments' }">
-    <a data-bind="attr: { href: isInOnboarding() ? null : '/myAppointments' }"><i class="fa ion ion-calendar" aria-hidden="true"></i> My Appointments</a>
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/myAppointments' }"><i class="fa ion ion-calendar" aria-hidden="true"></i>  Appointments</a>
 </li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'inbox' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/inbox' }"><i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i> Inbox</a>
 </li>
-<li data-bind="visible: isServiceProfessional() && !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'suggested-postings' }">
-        <a data-bind="attr: { href: isInOnboarding() ? null : '/suggested-postings' }"><i class="fa fa-fw fa-search-plus" aria-hidden="true"></i> Find clients</a>
-    </li>
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'cms' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/cms' }"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Clients</a>
 </li>
@@ -53,6 +50,9 @@
 <li data-bind="visible: isServiceProfessional(), css: { 'is-disabled': isInOnboarding, active: active() === 'ownerInfo' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/ownerInfo' }"><i class="fa fa-fw ion-ios-color-filter-outline" aria-hidden="true"></i> Cooperative</a>
 </li>
+<li data-bind="visible: isServiceProfessional() && !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'suggested-postings' }">
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/suggested-postings' }"><i class="fa fa-fw fa-search-plus" aria-hidden="true"></i> Find Clients</a>
+</li>
 <li data-bind="visible: isServiceProfessional() && !isInOnboarding(), css: cssIfActive('help')" class="go-help">
     <a href="/help/categories/200431835-resources-for-service-professionals"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a>
 </li>
@@ -61,10 +61,10 @@
 </li>
 <h2 class="App-menus-group-header" data-bind="visible: !isAnonymous()">FIND SERVICES</h2>
 <li data-bind="visible: !isAnonymous(), css: cssIfActive('home')" class="go-marketplace">
-    <a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search marketplace</a>
+    <a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search Marketplace</a>
 </li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'postings' }">
-    <a data-bind="attr: { href: isInOnboarding() ? null : '/postings' }"><i class="fa fa-fw fa-bullhorn" aria-hidden="true"></i> Post a project</a>
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/postings' }"><i class="fa fa-fw fa-bullhorn" aria-hidden="true"></i> Post Projects</a>
 </li>
 <li class="divider"></li>
 <li data-bind="visible: !isAnonymous()" class="go-logout">
