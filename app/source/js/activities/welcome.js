@@ -70,11 +70,9 @@ function ViewModel() {
     }, this);
     this.startProffesionalOnboarding = function startOnboarding() {
         userProfile.becomeServiceProfessional();
-        onboarding.isServiceProfessional(true);
         onboarding.goNext();
     };
     this.startClientOnboarding = function startOnboarding() {
-        onboarding.isServiceProfessional(false);
         onboarding.goNext();
     };
 }

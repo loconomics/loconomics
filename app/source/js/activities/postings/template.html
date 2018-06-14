@@ -1,0 +1,18 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="col-md-7 col-sm-reset">
+            <div class="SectionHeading">
+                <h1 data-bind="text: title"></h1>
+                <a class="btn btn-link btn-default pull-right" href="/posting">Post project</a>
+            </div>
+        </div>
+        <div class="col-md-7 col-sm-reset" data-bind="with: currentRoute() && $data">
+            <div class="helpblock">Here you'll find any projects you've posted.</div>
+            <posting-list params="onSelect: onSelect.bind($root)"></posting-list>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'postings'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>

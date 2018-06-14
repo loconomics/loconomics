@@ -14,13 +14,17 @@
             "Email/EmailInquiry/?ThreadID=13&MessageID=26&Kind=-1&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"
             ,"Email/EmailInquiry/?ThreadID=13&MessageID=26&Kind=2&RequestKey=abcd3&EmailTo=iagosrl@gmail.com"} }
         ,{ "[needs review] EmailProviderReference", new List<string> { "Email/EmailProviderReference/?UserID=141&PositionID=14&RequestKey=abcd3&EmailTo=iagosrl@gmail.com" } }
-        
+
         ,{ "Welcome", new List<string> {
             "EmailCommunications/Admin/ToClient/Welcome?UserID=141&RequestKey=abcd3"
             ,"EmailCommunications/Admin/ToServiceProfessional/Welcome?UserID=141&RequestKey=abcd3"
         } }
         ,{ "ResetPassword", new List<string> {
             "EmailCommunications/Admin/ToUser/ResetPassword?UserID=141&RequestKey=abcd3"
+        } }
+        ,{ "GIG Posting", new List<string> {
+            "EmailCommunications/Admin/ToServiceProfessional/SuggestedPosting?UserID=141&userPostingID=1&RequestKey=abcd3"
+            ,"EmailCommunications/Admin/ToClient/PostingApplication?UserID=141&userPostingID=1&serviceProfessionalUserID=141&RequestKey=abcd3"
         } }
         ,{ "Admin/ToServiceProfessional (remaining templates)", new List<string> {
             "EmailCommunications/Admin/ToServiceProfessional/BackgroundCheckRequestReceived?UserID=141&RequestKey=abcd3"

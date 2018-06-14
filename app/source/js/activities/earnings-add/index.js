@@ -25,7 +25,9 @@ export default class EarningsAddActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Earnings', {
+            backLink: '/earnings'
+        });
         this.title = 'Add earnings';
         /**
          * Creates a placeholder for the external listing ID

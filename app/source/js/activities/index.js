@@ -4,12 +4,27 @@
  * the app to query them and the app entry points to preload activities.
  */
 
+import Activity from '../components/Activity';
+
+function createRedirect(toPath) {
+    return class Redirect extends Activity {
+        static get template() { return ''; }
+
+        show(state) {
+            setTimeout(() => this.app.shell.go(toPath, state, true), 10);
+        }
+    };
+}
+
 /**
  * Index/registry of available activity classes, as a dictionary where
  * the key is the activity route name and the class (AKA controller) the value.
+ * It includes redirections too
  * @private {Object}
  */
-const activities = {};
+const activities = {
+    'publicContactInfo': createRedirect('public-contact-info')
+};
 
 /**
  * Register an activity for a route name.

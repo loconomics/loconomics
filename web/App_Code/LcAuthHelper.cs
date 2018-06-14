@@ -269,7 +269,7 @@ public static class LcAuthHelper
     /// <param name="password"></param>
     /// <param name="returnProfile"></param>
     /// <returns></returns>
-    private static LoginResult SignupANotEnabledAccount(int userID, string email, string password, bool returnProfile, int accountStatusID)
+    private static LoginResult SignupANotEnabledAccount(int userID, string email, string password, bool returnProfile, int accountStatusID, bool isOrganization)
     {
         // Get confirmation code, if any
         var confirmationCode = Request["confirmationCode"];
@@ -351,6 +351,7 @@ public static class LcAuthHelper
     /// - phone [optional except atBooking]
     /// - returnProfile [optional defaults to false] Returns the user profile in a property of the result
     /// - atBooking [optional]
+    /// - isOrganization [optional] Default false
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
@@ -369,6 +370,7 @@ public static class LcAuthHelper
         var facebookAccessToken = Request.Form["facebookAccessToken"];
         var email = Request.Form["email"];
         var atBooking = Request.Form["atBooking"].AsBool();
+        var isOrganization = Request.Form["isOrganization"].AsBool();
 
         //
         // Conditional validations
@@ -431,7 +433,7 @@ public static class LcAuthHelper
                 // and is possible for that user to become an regular/enabled account.
                 if (IsUserButNotEnabledAccount(user))
                 {
-                    logged = SignupANotEnabledAccount(userID, email, password, returnProfile, user.accountStatusID);
+                    logged = SignupANotEnabledAccount(userID, email, password, returnProfile, user.accountStatusID, isOrganization);
                 }
                 else
                 {
@@ -443,16 +445,12 @@ public static class LcAuthHelper
                     {
                         logged = Login(email, password, false, returnProfile, true);
                         userID = logged.userID;
-                        // Ensure we set-up the onboarding even if already exists, and set-up
+                        // Ensure we set-up
                         // as a professional if requested
                         // Next code will throw exception on error
                         if (isServiceProfessional)
                         {
                             LcAuth.BecomeProvider(userID);
-                        }
-                        else
-                        {
-                            StartOnboardingForUser(userID);
                         }
                     }
                     catch (HttpException)
@@ -469,9 +467,10 @@ public static class LcAuthHelper
                         UPDATE users SET
                             firstName = coalesce(@1, firstName),
                             lastName = coalesce(@2, lastName),
-                            mobilePhone = coalesce(@3, mobilePhone)
+                            mobilePhone = coalesce(@3, mobilePhone),
+                            isOrganization = @4
                         WHERE userID = @0
-                    ", userID, firstName, lastName, phone);
+                    ", userID, firstName, lastName, phone, isOrganization);
                     // Create a home address record almost with the country
                     var home = LcRest.Address.GetHomeAddress(userID);
                     home.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
@@ -511,7 +510,7 @@ public static class LcAuthHelper
                 }
 
                 var registered = LcAuth.RegisterUser(email, firstName, lastName, password,
-                    isServiceProfessional, utm, -1, null, phone, null, countryID);
+                    isServiceProfessional, utm, -1, null, phone, null, countryID, isOrganization);
 
                 // Create a home address record almost with the country
                 var home = LcRest.Address.GetHomeAddress(registered.UserID);
@@ -619,7 +618,8 @@ public static class LcAuthHelper
             null,
             null,
             null,
-            0
+            0,
+            false
         );
         LcAuth.ConnectWithFacebookAccount(result.userID, facebookUser.id);
         LcAuth.SendRegisterUserEmail(result);

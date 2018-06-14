@@ -1,0 +1,10 @@
+<div class="container-fluid">
+    <specialization-autocomplete params="
+        allowUserEntry: true,
+        solutionID: solutionID,
+        onSelect: onSelect.bind($root),
+        id: 'testSpecialization'"></specialization-autocomplete>
+    <ul data-bind="foreach: list">
+        <li data-bind="text: name"></li>
+    </ul>
+</div>

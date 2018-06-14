@@ -187,6 +187,12 @@ function SignupVM() {
      */
     this.isStudent = ko.pureComputed(() => this.cccUserType() === 'student');
 
+    /**
+     * Whether the user sign-up on behalf an organization or not
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isOrganization = new Field();
+
     this.reset = function() {
         this.atBooking(false);
         this.confirmationCode(null);
@@ -211,6 +217,7 @@ function SignupVM() {
         this.cccUserType('');
         this.genderID(null);
         this.birthDate(null);
+        this.isOrganization(false);
     };
 
     this.submitText = ko.pureComputed(function() {
@@ -301,6 +308,7 @@ function SignupVM() {
             jobTitleID: this.jobTitleID(),
             jobTitleName: this.jobTitleName(),
             isCccMember: this.isCccMember(),
+            isOrganization: this.isOrganization(),
             institutionID: this.institutionID(),
             fieldOfStudyID: this.fieldOfStudyID(),
             cccUserType: this.cccUserType(),
@@ -319,7 +327,7 @@ function SignupVM() {
                 // Start onboarding
                 if (onboarding) {
                     onboarding.setup({
-                        isServiceProfessional: signupData.profile.isServiceProfessional,
+                        user: signupData.profile,
                         jobTitleID: signupData.onboardingJobTitleID,
                         step: signupData.onboardingStep
                     });

@@ -9,7 +9,7 @@ var A = Activity.extend(function DownloadAppActivity() {
     Activity.apply(this, arguments);
 
     this.accessLevel = null;
-    this.navBar = Activity.createSectionNavBar('Download the App');
+    this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
     this.title('Download our app');
 });

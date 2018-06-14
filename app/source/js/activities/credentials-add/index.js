@@ -25,9 +25,15 @@ export default class CredentialsAddActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
 
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Listings', {
+            backLink: '/listings'
+        });
 
         this.jobTitleID = ko.observable();
+        this.jobTitleID.subscribe((id) => {
+            this.navBar.leftAction().link(`/listingEditor/${id}`);
+            this.navBar.leftAction().text('Listing Editor');
+        });
 
         this.listingTitle = ko.observable();
 

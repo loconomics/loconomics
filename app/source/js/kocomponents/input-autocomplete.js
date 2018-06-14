@@ -451,7 +451,11 @@ function ViewModel(params, refs, children) {
      * suggestions listBox must be expanded (AKA opened).
      */
     this.isExpanded = ko.pureComputed(function() {
-        return !!(!this.collapsedRequested() && (this.isBusy() || ko.unwrap(this.suggestions().length)));
+        return !!(
+            !this.isDisabled() &&
+            !this.collapsedRequested() &&
+            (this.isBusy() || ko.unwrap(this.suggestions().length))
+        );
     }, this)
     .extend({ rateLimit: { timeout: 200, method: 'notifyWhenChangesStop' } });
     /**

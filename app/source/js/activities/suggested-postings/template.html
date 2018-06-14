@@ -1,0 +1,48 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <!-- ko if: view() === 'item' -->
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a data-bind="attr: { href: navBar.leftAction().link }">
+                        <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                        <span data-bind="text: navBar.leftAction().text"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- /ko -->
+        <div class="col-md-7 col-sm-reset">
+            <div class="SectionHeading">
+                <h1 data-bind="text: title"></h1>
+                <!-- ko if: view() === 'item' && selectedPosting() && !selectedPosting().reactionTypeID() -->
+                <button type="button" class="btn btn-default pull-right"
+                    data-bind="click: applyPosting.bind($root)">
+                    Apply
+                </button>
+                <!-- /ko -->
+            </div>
+            <div data-bind="activeView: view">
+                <div data-bind="view: 'list'">
+                    <div class="helpblock">Here you'll find projects potential clients have posted. Apply to those you're interested in.</div>
+                    <posting-list params="onSelect: onSelect.bind($root), data: list"></posting-list>
+                </div>
+                <div data-bind="view: 'item'">
+                    <posting-viewer params="data: selectedPosting"></posting-viewer>
+                    <!-- ko if: selectedPosting() && !selectedPosting().reactionTypeID() -->
+                    <div class="isolated">
+                        <button type="button" class="btn btn-danger btn-block btn-lg"
+                            data-bind="click: discardPosting.bind($root)">
+                            I'm not interested
+                        </button>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'postings'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>

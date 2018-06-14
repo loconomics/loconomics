@@ -23,7 +23,9 @@ export default class BadgeAddActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
 
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Add Credentials', {
+            backLink: '/credentials-add'
+        });
         this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
 
         /**

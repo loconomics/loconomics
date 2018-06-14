@@ -1,0 +1,1 @@
+ALTER TABLE Specialization ALTER COLUMN Approved bit null

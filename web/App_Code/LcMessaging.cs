@@ -932,6 +932,37 @@ public class LcMessaging
                 { "UserID", userID }
         }), "Loconomics Cooperative <automated@loconomics.com>");
     }
+    /// <summary>
+    /// Sended when a user creates a user posting, and this user seems to match the requirements so we
+    /// notify him/her about it.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="userEmail"></param>
+    public static void SendSuggestedPosting(int userID, string userEmail, int userPostingID)
+    {
+        SendMail(userEmail, "Project you may be interested in",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/SuggestedPosting/",
+            new Dictionary<string, object> {
+                { "UserID", userID },
+                { "userPostingID", userPostingID }
+        }), "Loconomics Cooperative <automated@loconomics.com>");
+    }
+    /// <summary>
+    /// Sended when a professional answers a GIG posting by 'applying' to it, sending a message to the 
+    /// author of the posting that will be in charge to answer directly to the professional.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="userEmail"></param>
+    public static void SendPostingApplicationToAuthor(int userID, string userEmail, int userPostingID, int serviceProfessionalUserID, string professionalEmail)
+    {
+        SendMail(userEmail, "[Action Required] A service professional is interested in your Posting",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/PostingApplication/",
+            new Dictionary<string, object> {
+                { "UserID", userID },
+                { "userPostingID", userPostingID },
+                { "serviceProfessionalUserID", serviceProfessionalUserID}
+        }), "Loconomics Cooperative <automated@loconomics.com>", professionalEmail);
+    }
     #endregion
 
     #region Type:Admin/Internal Notifications to Loconomics Stuff/Support

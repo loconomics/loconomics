@@ -1,0 +1,13 @@
+<ul class="TilesList TilesList--openEnd" data-bind="foreach: data">
+    <li>
+        <button type="button" data-bind="click: $component.onSelect" class="ListingSummaryItem">
+            <div class="Item-content">
+                <p data-bind="text: $component.firstLine($data)"></p>
+                <em data-bind="text: $component.secondLine($data)"></em>
+            </div>
+            <div class="Item-action">
+                <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+            </div>
+        </button>
+    </li>
+</ul>

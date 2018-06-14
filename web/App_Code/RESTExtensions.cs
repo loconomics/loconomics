@@ -57,7 +57,7 @@ public static class RESTExtensions
 
         if (WebMatrix.WebData.WebSecurity.IsAuthenticated)
         {
-            if (type.HasFlag(LcData.UserInfo.UserType.User))
+            if (type.HasFlag(LcData.UserInfo.UserType.LoggedUser))
             {
                 // valid
                 return;
@@ -70,7 +70,9 @@ public static class RESTExtensions
                 user.IsProvider == true ||
                 // Admin
                 type.HasFlag(LcData.UserInfo.UserType.Admin) &&
-                user.IsAdmin == true)
+                user.IsAdmin == true ||
+                type.HasFlag(LcData.UserInfo.UserType.Client) &&
+                user.IsCustomer == true)
             {
                 // valid
                 return;
