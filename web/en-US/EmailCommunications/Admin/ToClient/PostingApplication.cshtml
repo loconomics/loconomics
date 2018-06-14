@@ -71,7 +71,8 @@
                                     <strong>@(info.serviceProfessional.firstName)</strong> sent you this message:
                                     <pre>@(info.serviceProfessionalMessage)</pre>
                                     <br>
-                                    Please reach out to them and start a conversation.
+                                    Please reach out to them and start a conversation simply by replying to this email.
+                                    <br>
                                     <strong>Their contact information:</strong>
                                     <dl>
                                         <dt>Phone number</dt>
@@ -83,22 +84,6 @@
                                         <dt>Public bio</dt>
                                         <dd>@(info.serviceProfessional.publicBio)</dd>
                                     </dl>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <!-- BULLETPROOF BUTTON -->
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
-                                        <tr>
-                                            <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
-                                                <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
-                                                    <tr>
-                                                        <td align="center"><a href="@(info.viewAuthorPostingURL)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #d75560; border-top: 15px solid #d75560; border-bottom: 15px solid #d75560; border-left: 25px solid #d75560; border-right: 25px solid #d75560; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Email @(info.serviceProfessional.firstName)</a></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
                                 </td>
                             </tr>
                             <tr>
