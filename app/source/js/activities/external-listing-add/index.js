@@ -22,7 +22,9 @@ export default class ExternalListingAddActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
 
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Market externally', {
+            backLink: '/market-externally'
+        });
 
         /**
          * Creates a placeholder for an "out" parameter to be
@@ -35,6 +37,15 @@ export default class ExternalListingAddActivity extends Activity {
          * populated using the show(state) method below.
         */
         this.platformID = ko.observable();
+
+        ko.computed(() => {
+            const id = this.platformID();
+            const name = this.platformName();
+            if (id && name) {
+                this.navBar.leftAction().link(`/external-platform-view/${id}`);
+                this.navBar.leftAction().text(`${name} Info`);
+            }
+        });
 
         /**
          * Title uses a pureComputed to ensure the platformName

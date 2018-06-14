@@ -23,13 +23,20 @@ export default class EarningsEditActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Earnings History', {
+            backLink: '/earnings-history'
+        });
         /**
          * Creates a placeholder for the external listing ID
          * to be populated using the show(state) method below.
          */
         this.earningsEntryID = ko.observable();
         this.title = 'Edit earnings';
+
+        this.earningsEntryID.subscribe((id) => {
+            this.navBar.leftAction().link(`/earnings-view/${id}`);
+            this.navBar.leftAction().text('View Earnings');
+        });
 
         /**
          * After data being saved, notice and go back

@@ -21,7 +21,9 @@ export default class EarningsHistoryActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Earnings', {
+            backLink: '/earnings'
+        });
         this.title = 'Earnings History';
     }
 }

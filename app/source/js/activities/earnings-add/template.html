@@ -4,8 +4,9 @@
         <div class="SubSectionNavBar hidden-xs hidden-sm">
             <ul>
                 <li>
-                    <a data-bind="attr: { href: '/earnings'}">
-                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Earnings
+                    <a data-bind="attr: { href: navBar.leftAction().link }">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec>
+                        <span data-bind="text: navBar.leftAction().text"></span>
                     </a>
                 </li>
             </ul>

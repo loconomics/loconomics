@@ -21,7 +21,9 @@ export default class BadgeViewActivity extends Activity {
 
         this.accessLevel = null;
 
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Back', {
+            backLink: '/'
+        });
 
         this.title = 'View badge(s)';
 

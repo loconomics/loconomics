@@ -24,7 +24,9 @@ export default class ExternalListingEditActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Earnings History', {
+            backLink: '/earnings-history'
+        });
 
         /**
          * Creates a placeholder for an "out" parameter to be
@@ -37,6 +39,15 @@ export default class ExternalListingEditActivity extends Activity {
          * be populated using the show(state) method below.
          */
         this.externalListingID = ko.observable();
+
+        ko.computed(() => {
+            const id = this.externalListingID();
+            const name = this.platformName();
+            if (id && name) {
+                this.navBar.leftAction().link(`/external-listing-view/${id}`);
+                this.navBar.leftAction().text(`Your ${name} Listing`);
+            }
+        });
 
         /**
          * Title uses a pureComputed to ensure the platformName
