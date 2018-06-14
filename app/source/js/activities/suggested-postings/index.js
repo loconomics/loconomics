@@ -31,8 +31,8 @@ export default class SuggestedPostingsActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        
-        this.navBar = Activity.createSubsectionNavBar('Suggested Projects');
+
+        this.navBar = Activity.createSectionNavBar(null);
 
         this.isLoading = ko.observable(false);
         this.list = ko.observableArray();
@@ -94,7 +94,7 @@ export default class SuggestedPostingsActivity extends Activity {
                     break;
                 case 'item':
                     this.navBar.model.updateWith({
-                        title: null,
+                        title: '',
                         leftAction: {
                             link: '/suggested-postings',
                             text: 'Suggested projects',
@@ -145,9 +145,9 @@ export default class SuggestedPostingsActivity extends Activity {
                 'a link to your public listing on your behalf. Personalize a note to ' +
                 'your potential client below:',
                 // Template:
-                text: `Hi ${name}, \r\n` + 
+                text: `Hi ${name}, \r\n` +
                 `\r\n` +
-                `I'd like to help you with your project and feel my experience ` + 
+                `I'd like to help you with your project and feel my experience ` +
                 `will allow me to do a great job. Please get in touch so we can ` +
                 `get going on next steps. \r\n` +
                 `\r\n` +
