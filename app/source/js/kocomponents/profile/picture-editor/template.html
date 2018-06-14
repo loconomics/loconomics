@@ -1,0 +1,18 @@
+<form class="container-fluid LightForm" data-bind="submit: save" aria-describedby="contactInfoEditorInstructions">
+    <app-loading-spinner params="mod: 'row big'"></app-loading-spinner>
+    <p id="contactInfoEditorInstructions" class="help-block">
+        <span data-bind="visible: data.isServiceProfessional()">
+            Only your first name and last name's initial will be shown on your listing. After an appointment is scheduled,
+            the client will see your full name and phone number so they can reach you regarding the appointment.
+        </span>
+        <span data-bind="visible: !data.isServiceProfessional()">
+            Only your first name and last name's initial will be shown on your profile and reviews you make. After an appointment is scheduled, the service professional will see your full name and phone number so they can reach you regarding your appointment.
+        </span>
+    </p>
+    <fieldset>
+        <profile-photo-picker-ui params="photoPickerSettings"></profile-photo-picker-ui>
+    </fieldset>
+    <div class="LightForm-submitBar">
+        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+    </div>
+</form>

@@ -1,0 +1,60 @@
+<fieldset class="LightForm-tool">
+    <p class="help-block">
+        <span data-bind="visible: isServiceProfessional">
+            Upload a clear, professional-looking photo of you for clients to see.
+        </span>
+        <span data-bind="visible: !isServiceProfessional()">
+            Upload a clear photo of you for service professionals to see.
+        </span>
+    </p>
+    <div data-bind="visible: !localPhotoPreview()">
+        <div class="Avatar Avatar--lg" data-bind="attr: { style: photoRotationStyle }">
+            <img data-bind="attr: { src: previewPhotoUrl() || photoUrl() }"/>
+        </div>
+    </div>
+    <div data-bind="visible: localPhotoPreview">
+        <div class="Avatar Avatar--lg" data-bind="
+            domElement: localPhotoPreview,
+            attr: { style: photoRotationStyle }"></div>
+    </div>
+    <button type="button" class="btn btn-default btn-block" data-bind="
+        visible: hasPhoto, disable: isSaving, click: rotatePhoto">
+        <span class="ion-ios-refresh-empty" aria-hidden="true"></span>
+        <span>Rotate photo</span>
+    </button>
+    <button type="button" class="btn btn-default btn-block"
+        data-bind="visible: takePhotoSupported, disable: isSaving, attr: {
+            'data-target': id + '-photoSheet'
+        }"
+        data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet">
+        <icon-dec params="icon: 'ion-ios-camera-outline fa-lg'"></icon-dec>
+        <span data-bind="text: uploadButtonText"></span>
+    </button>
+    <button-file class="btn btn-default btn-block"
+        data-bind="visible: !takePhotoSupported()"
+        params="disabled: isSaving, id: id + '-photoFile',
+            inputElement: inputElement, accept: 'image/*'">
+        <label data-bind="attr: { id: id }">
+            <icon-dec params="icon: 'ion-ios-camera-outline fa-lg'"></icon-dec>
+            <span data-bind="text: $parentContext.uploadButtonText"></span>
+        </label>
+    </button-file>
+</fieldset>
+<div class="ActionSheetBackdrop"></div>
+<div class="ActionSheet" hidden="hidden" data-bind="attr: {
+        id: id + '-photoSheet'
+    }">
+    <ul>
+        <li>
+            <a href="#takePhoto" data-bind="click: takePhoto">Take a photo</a>
+        </li>
+        <li>
+            <a href="#pickPhoto" data-bind="click: pickPhoto">Select a photo</a>
+        </li>
+    </ul>
+    <ul class="ActionSheet-close">
+        <li>
+            <a href="#close">Cancel</a>
+        </li>
+    </ul>
+</div>
