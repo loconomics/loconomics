@@ -47,8 +47,8 @@
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'account' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/account' }"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a>
 </li>
-<li data-bind="visible: isServiceProfessional(), css: { 'is-disabled': isInOnboarding, active: active() === 'ownerInfo' }">
-    <a data-bind="attr: { href: isInOnboarding() ? null : '/ownerInfo' }"><i class="fa fa-fw ion-ios-color-filter-outline" aria-hidden="true"></i> Cooperative</a>
+<li data-bind="visible: isServiceProfessional(), css: { 'is-disabled': isInOnboarding, active: active() === 'community' }">
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/community' }"><i class="fa fa-fw ion-ios-color-filter-outline" aria-hidden="true"></i> Community</a>
 </li>
 <li data-bind="visible: isServiceProfessional() && !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'suggested-postings' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/suggested-postings' }"><i class="fa fa-fw fa-search-plus" aria-hidden="true"></i> Find Clients</a>
