@@ -39,6 +39,11 @@ namespace LcRest
         public string orgDescription;
         public string orgWebsite;
 
+        public string partner;
+        public string partnerUserType;
+        [JsonIgnore]
+        public int? institutionID;
+
         /// <summary>
         /// Used in the app with a different set of names, but the first one is the same: 'welcome'.
         /// </summary>
@@ -108,6 +113,10 @@ namespace LcRest
                 orgDescription = record.orgDescription,
                 orgWebsite = record.orgWebsite,
 
+                partner = record.partner,
+                partnerUserType = record.partnerUserType,
+                institutionID = record.institutionID,
+
                 onboardingStep = record.onboardingStep,
                 accountStatusID = record.accountStatusID,
                 createdDate = record.createdDate,
@@ -164,6 +173,10 @@ namespace LcRest
             ,O.orgDescription
             ,O.orgWebsite
 
+            ,CASE WHEN ccc.userID is null THEN null ELSE 'ccc' END as partner
+            ,ccc.userType as partnerUserType
+            ,ccc.institutionID as institutionID
+
         FROM Users
                 INNER JOIN
             UserProfile As UP
@@ -171,6 +184,9 @@ namespace LcRest
                 LEFT JOIN
             userOrganization As O
                 ON O.userID = Users.UserID
+                LEFT JOIN
+            CCCUsers As ccc
+                ON ccc.userID = Users.UserID
         WHERE Users.UserID = @0
             AND Active = 1
         ";
