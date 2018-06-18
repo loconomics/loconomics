@@ -39,6 +39,9 @@ function User(values) {
         orgDescription: null,
         orgWebsite: null,
 
+        partner: null,
+        partnerUserType: null,
+
         onboardingStep: null,
         accountStatusID: 0,
         createdDate: null,

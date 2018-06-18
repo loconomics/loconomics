@@ -39,3 +39,12 @@ export const globalReport = new CachedDataProvider({
 const invalidateReport = globalReport.invalidateCache.bind(globalReport);
 userEarnings.list.onCacheChanged.subscribe(invalidateReport);
 userEarnings.list.onCacheInvalidated.subscribe(invalidateReport);
+
+/**
+ * Gives a report filtered by the given query data and optionally for an
+ * institutionID just for studends of CCC colleges
+ * @returns {Promise<rest/UserExternalReport>}
+ */
+export function queryCccStudents(filters, institutionID) {
+    return rest.get(API_NAME + '/ccc' + (institutionID ? '/' + institutionID : ''), filters);
+}
