@@ -11,6 +11,14 @@
             <earnings-admin-filters params="onSelect: reportFilters, defaultTimeRangeOption: defaultTimeRangeOption"
                 data-bind="visible: areFiltersVisible" class="isolated"></earnings-admin-filters>
             <earnings-report params="filters: appliedFilters, data: earningsReport"></earnings-report>
+            <div class="isolated">
+                <a class="btn btn-default" data-bind="attr: { href: linkDownloadReportCsv }">
+                    Download CSV
+                </a>
+                <a class="btn btn-primary" data-bind="attr: { href: linkDownloadDetailedReportCsv }">
+                    Download Detailed report (CSV)
+                </a>
+            </div>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
             <app-inline-side-menu params="vocElement: 'partner'"></app-inline-side-menu>

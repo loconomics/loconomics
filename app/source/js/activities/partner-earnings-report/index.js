@@ -90,6 +90,23 @@ export default class PartnerEarningsReportActivity extends Activity {
                 });
             });
         });
+
+        /**
+         * Gives a clickable URL to download report as CSV
+         * @member {KnockoutComputed<string>}
+         */
+        this.linkDownloadReportCsv = ko.pureComputed(() => {
+            var f = this.reportFilters();
+            return f ? report.getLinkToCsvCccReport(f) : '';
+        });
+        /**
+         * Gives a clickable URL to download detailed report as CSV
+         * @member {KnockoutComputed<string>}
+         */
+        this.linkDownloadDetailedReportCsv = ko.pureComputed(() => {
+            var f = this.reportFilters();
+            return f ? report.getLinkToCsvCccDetailedReport(f) : '';
+        });
     }
 }
 
