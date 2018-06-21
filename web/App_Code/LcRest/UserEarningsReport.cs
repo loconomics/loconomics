@@ -86,7 +86,7 @@ namespace LcRest
 
         #region Query CCC Admin
         #region SQL
-        const string sqlQueryCccStudents = @"
+        const string sqlCccAdminReport = @"
             SELECT
 	            SUM(amount) as total
 	            ,SUM(paidOut) as paidOut
@@ -114,14 +114,66 @@ namespace LcRest
                 AND (@4 is null OR CCCUsers.institutionID = @4)
             ) AS T
         ";
+        const string sqlCccAdminDetailedReport = @"
+            SELECT
+                E.paidDate,
+                E.userID,
+                P.name as platform,
+                J.positionSingular as jobTitle,
+                C.institutionName as college,
+                E.amount as earnings,
+                E.durationMinutes as minutes,
+                (F.fieldOfStudyName + '    (' + CAST(F.CCCTOPCode as nvarchar) + ')') as fieldOfStudy
+            FROM
+                UserEarningsEntry As E
+                  INNER JOIN
+                UserExternalListing As L
+                    ON E.userExternalListingID = L.userExternalListingID
+                 INNER JOIN
+                platform as P
+                    ON P.platformID = L.platformID
+                    AND P.languageID = @0 AND P.countryID = @1
+                  INNER JOIN
+                positions as J
+                    ON J.positionID = E.jobTitleID
+                    AND J.languageID = @0 AND J.countryID = @1
+                  INNER JOIN
+                CCCUsers as U
+                    ON U.UserID = E.UserID
+                  INNER JOIN
+                institution As C
+                    ON C.institutionID = U.institutionID
+                  INNER JOIN
+                fieldOfStudy As F
+                    ON F.fieldOfStudyID = U.fieldOfStudyID
+              WHERE
+                E.active = 1
+                AND (@2 is null OR E.PaidDate >= @2)
+                AND (@3 is null OR E.PaidDate <= @3)
+                AND (@4 is null OR E.JobTitleID = @4)
+                AND (@5 is null OR L.PlatformID = @5)
+                AND (@6 is null OR U.institutionID = @6)
+        ";
         #endregion
-        public static UserEarningsReport QueryAllCccStudents(EarningsFilterValues filter)
+        public static UserEarningsReport CccAdminReport(EarningsFilterValues filter)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlQueryCccStudents,
+                return FromDB(db.QuerySingle(sqlCccAdminReport,
                     filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID,
                     filter.institutionID));
+            }
+        }
+        public static IEnumerable<dynamic> CccAdminDetailedReport(EarningsFilterValues filter, Locale locale)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlCccAdminDetailedReport,
+                    locale.languageID, locale.countryID,
+                    filter.fromDate, filter.toDate,
+                    filter.jobTitleID,
+                    filter.platformID,
+                    filter.institutionID);
             }
         }
         #endregion

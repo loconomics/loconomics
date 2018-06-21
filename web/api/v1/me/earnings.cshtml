@@ -80,6 +80,26 @@
                 "userExternalListingID": null,
                 "institutionID": null
             }
+        },
+        "Earnings Report: Detailed Admin Report": {
+            "url": "/api/v1/en-US/me/earnings/detailed-report/ccc",
+            "get": {
+                "fromDate": "2018-01-01 00:00:00+0100",
+                "toDate": "2019-01-01 00:00:00+0100",
+                "jobTitleID": null,
+                "userExternalListingID": null,
+                "institutionID": null
+            }
+        },
+        "Earnings Report: Detailed Admin Report (in CSV format)": {
+            "url": "/api/v1/en-US/me/earnings/detailed-report/ccc/csv",
+            "get": {
+                "fromDate": "2018-01-01 00:00:00+0100",
+                "toDate": "2019-01-01 00:00:00+0100",
+                "jobTitleID": null,
+                "userExternalListingID": null,
+                "institutionID": null
+            }
         }
     }
 *@
@@ -98,6 +118,57 @@
             return LcRest.UserEarningsEntry.GetList(userID, locale.languageID, locale.countryID, limit, untilID, sinceID);
         }
 
+        private LcRest.UserEarningsReport.EarningsFilterValues GetReportFilters()
+        {
+            return new LcRest.UserEarningsReport.EarningsFilterValues
+            {
+                fromDate = DateTimeOffsetFromISO(Request["fromDate"]),
+                toDate = DateTimeOffsetFromISO(Request["toDate"]),
+                jobTitleID = Request["jobTitleID"].IsInt() ? (int?)Request["jobTitleID"].AsInt() : null,
+                userExternalListingID = Request["userExternalListingID"].IsInt() ? (int?)Request["userExternalListingID"].AsInt() : null,
+                platformID = Request["platformID"].IsInt() ? (int?)Request["platformID"].AsInt() : null,
+                institutionID = Request["institutionID"].IsInt() ? (int?)Request["institutionID"].AsInt() : null
+            };
+        }
+
+        private dynamic GetCccReport(bool detailedReport, bool exportAsCsv)
+        {
+            WebPage.Response.RestRequiresUser(LcData.UserInfo.UserType.LoggedUser);
+            var exportCsv = UrlData[2] == "csv";
+
+            var user = LcRest.UserProfile.Get(WebSecurity.CurrentUserId);
+            if (user.partner == "ccc")
+            {
+                var isSystemAdmin = user.isAdmin;
+                var isAdmin = user.partnerUserType == "admin";
+                var isCollegeAdmin = user.partnerUserType == "collegeAdmin";
+                // Only allowed to admins
+                if (isAdmin || isCollegeAdmin || isSystemAdmin)
+                {
+                    var filter = GetReportFilters();
+                    // Forced institution for college admins
+                    if (isCollegeAdmin)
+                    {
+                        filter.institutionID = user.institutionID ?? 0;
+                    }
+
+                    var data = detailedReport ?
+                        LcRest.UserEarningsReport.CccAdminDetailedReport(filter, LcRest.Locale.Current) :
+                        new List<object> { LcRest.UserEarningsReport.CccAdminReport(filter) };
+
+                    if (exportAsCsv)
+                    {
+                        return this.ExportAsCsv(data, "earnings-report.csv");
+                    }
+                    else
+                    {
+                        return data;
+                    }
+                }
+            }
+            return null;
+        }
+
         public override dynamic Get()
         {
             if (UrlData.Count == 0)
@@ -107,54 +178,20 @@
             }
             else if (UrlData[0] == "report")
             {
-                // Get Common Filters
-                var filter = new LcRest.UserEarningsReport.EarningsFilterValues
-                {
-                    fromDate = DateTimeOffsetFromISO(Request["fromDate"]),
-                    toDate = DateTimeOffsetFromISO(Request["toDate"]),
-                    jobTitleID = Request["jobTitleID"].IsInt() ? (int?)Request["jobTitleID"].AsInt() : null,
-                    userExternalListingID = Request["userExternalListingID"].IsInt() ? (int?)Request["userExternalListingID"].AsInt() : null,
-                    platformID = Request["platformID"].IsInt() ? (int?)Request["platformID"].AsInt() : null,
-                    institutionID = Request["institutionID"].IsInt() ? (int?)Request["institutionID"].AsInt() : null
-                };
                 if (UrlData.Count == 1)
                 {
                     WebPage.Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+                    var filter = GetReportFilters();
                     return LcRest.UserEarningsReport.Query(WebSecurity.CurrentUserId, filter);
                 }
                 else if (UrlData[1] == "ccc")
                 {
-                    WebPage.Response.RestRequiresUser(LcData.UserInfo.UserType.LoggedUser);
-                    var exportCsv = UrlData[2] == "csv";
-
-                    var user = LcRest.UserProfile.Get(WebSecurity.CurrentUserId);
-                    if (user.partner == "ccc")
-                    {
-                        var isSystemAdmin = user.isAdmin;
-                        var isAdmin = user.partnerUserType == "admin";
-                        var isCollegeAdmin = user.partnerUserType == "collegeAdmin";
-                        // Only allowed to admins
-                        if (isAdmin || isCollegeAdmin || isSystemAdmin)
-                        {
-                            // Forced institution for college admins
-                            if (isCollegeAdmin)
-                            {
-                                filter.institutionID = user.institutionID ?? 0;
-                            }
-
-                            var data = LcRest.UserEarningsReport.QueryAllCccStudents(filter);
-
-                            if (exportCsv)
-                            {
-                                return this.ExportAsCsv(new List<object> { data }, "earnings-report.csv");
-                            }
-                            else
-                            {
-                                return data;
-                            }
-                        }
-                    }
+                    return GetCccReport(false, UrlData[2] == "csv");
                 }
+            }
+            else if (UrlData[0] == "detailed-report" && UrlData[1] == "ccc" && UrlData.Count <= 3)
+            {
+                return GetCccReport(true, UrlData[2] == "csv");
             }
             else if (UrlData[0].IsInt() && UrlData.Count == 1)
             {
