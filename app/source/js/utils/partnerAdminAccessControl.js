@@ -5,6 +5,7 @@
  * more generic logic in a future or supporting other specific partnerships.
  */
 import CccUserType from '../enums/CccUserType';
+import ko from 'knockout';
 import { data as user } from '../data/userProfile';
 
 /**
@@ -17,17 +18,13 @@ const ALLOWED_CCC_TYPES = [CccUserType.admin, CccUserType.collegeAdmin];
  * Whether the current user is a partner 'college admin' user type.
  * @returns {boolean}
  */
-export function amIPartnerAdmin() {
-    return user.partner() && ALLOWED_CCC_TYPES.includes(user.partnerUserType());
-}
+export const amIPartnerAdmin = ko.pureComputed(() => user.partner() && ALLOWED_CCC_TYPES.includes(user.partnerUserType()));
 
 /**
  * Whether the current user is a partner 'college admin' user type.
  * @returns {boolean}
  */
-export function amICollegeAdmin() {
-    return user.partner() && user.partnerUserType() === CccUserType.collegeAdmin;
-}
+export const amICollegeAdmin = ko.pureComputed(() => user.partner() && user.partnerUserType() === CccUserType.collegeAdmin);
 
 /**
  * Custom management of access control, by checking the user partner and

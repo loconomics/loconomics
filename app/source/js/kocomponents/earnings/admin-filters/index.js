@@ -6,6 +6,7 @@
 
 import '../time-range-filter';
 import Komponent from '../../helpers/KnockoutComponent';
+import { amICollegeAdmin } from '../../../utils/partnerAdminAccessControl';
 import institutions from '../../../data/embedded/cccColleges';
 import jobTitles from '../../../data/embedded/jobTitlesAutocomplete';
 import ko from 'knockout';
@@ -107,24 +108,47 @@ export default class EarningsAdminFilter extends Komponent {
         this.institutions = ko.observableArray(institutions);
 
         /**
+         * @member {KnockoutComputed<boolean>}
+         */
+        this.amICollegeAdmin = amICollegeAdmin;
+
+        /**
+         * Gets object with filter values for institution, or empty if doesn't
+         * apply for current user.
+         * @returns {Object}
+         */
+        const getInstitutionFilter = () => {
+            const hasInstitutionFilter = !this.amICollegeAdmin();
+            if (hasInstitutionFilter) {
+                const institution = this.institution();
+                return {
+                    institutionID: institution && institution.institutionID,
+                    institutionText: institution && institution.name || 'All colleges'
+                };
+            }
+            else {
+                return {};
+            }
+        };
+
+        /**
          * Automatically trigger onSelect on options changes
          */
         ko.computed(() => {
             const range = this.timeRangeSelected();
             const jobTitle = this.jobTitle();
             const platform = this.platform();
-            const institution = this.institution();
-            params.onSelect({
+            const inst = getInstitutionFilter();
+
+            params.onSelect(Object.assign({
                 fromDate: range.from,
                 toDate: range.to,
                 timeRangeOption: range.option,
                 jobTitleID: jobTitle && jobTitle.jobTitleID,
                 platformID: platform && platform.platformID,
                 jobTitleText: jobTitle && jobTitle.singularName,
-                platformText: platform && platform.name || 'All platforms',
-                institutionID: institution && institution.institutionID,
-                institutionText: institution && institution.name || 'All colleges'
-            });
+                platformText: platform && platform.name || 'All platforms'
+            }, inst));
         })
         // Prevent that several, automated/related changes, trigger too much notifications.
         .extend({ rateLimit: { timeout: 100, method: 'notifyWhenChangesStop' } });
