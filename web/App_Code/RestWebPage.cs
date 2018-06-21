@@ -212,8 +212,15 @@ public class RestWebPage
     /// </summary>
     /// <param name="WebPage"></param>
     public void JsonResponse(System.Web.WebPages.WebPage WebPage)
-    {   
+    {
         var data = Run(WebPage);
+
+        if (data is CsvHelper.CsvWriter)
+        {
+            WebPage.Response.ContentType = "text/csv";
+            WebPage.Response.End();
+            return;
+        }
 
         WebPage.Response.ContentType = "application/json";
         // JSON.NET Works Better: good datetime formatting as ISO-8601 and some bugfixes details.
@@ -232,6 +239,21 @@ public class RestWebPage
     {
         this.WebPage.Response.RestRequiresUser(userType);
     }
+
+    #region CSV Export
+    public CsvHelper.CsvWriter ExportAsCsv(object data)
+    {
+        return ExportAsCsv(new List<object> { data });
+    }
+
+    public CsvHelper.CsvWriter ExportAsCsv(IEnumerable<object> data)
+    {
+        var csv = new CsvHelper.CsvWriter(WebPage.Response.Output);
+        csv.Configuration.MemberTypes = CsvHelper.Configuration.MemberTypes.Fields | CsvHelper.Configuration.MemberTypes.Properties;
+        csv.WriteRecords(data);
+        return csv;
+    }
+    #endregion
 
     #region REST utilities
     /// <summary>

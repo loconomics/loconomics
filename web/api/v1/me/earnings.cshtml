@@ -70,6 +70,16 @@
                 "userExternalListingID": null,
                 "institutionID": null
             }
+        },
+        "Earnings Report: in CSV format": {
+            "url": "/api/v1/en-US/me/earnings/report/ccc/csv",
+            "get": {
+                "fromDate": "2018-01-01 00:00:00+0100",
+                "toDate": "2019-01-01 00:00:00+0100",
+                "jobTitleID": null,
+                "userExternalListingID": null,
+                "institutionID": null
+            }
         }
     }
 *@
@@ -115,6 +125,8 @@
                 else if (UrlData[1] == "ccc")
                 {
                     WebPage.Response.RestRequiresUser(LcData.UserInfo.UserType.LoggedUser);
+                    var exportCsv = UrlData[2] == "csv";
+
                     var user = LcRest.UserProfile.Get(WebSecurity.CurrentUserId);
                     if (user.partner == "ccc")
                     {
@@ -130,7 +142,16 @@
                                 filter.institutionID = user.institutionID ?? 0;
                             }
 
-                            return LcRest.UserEarningsReport.QueryAllCccStudents(filter);
+                            var data = LcRest.UserEarningsReport.QueryAllCccStudents(filter);
+
+                            if (exportCsv)
+                            {
+                                return this.ExportAsCsv(data);
+                            }
+                            else
+                            {
+                                return data;
+                            }
                         }
                     }
                 }
