@@ -7,12 +7,12 @@
  *
  */
 
-import '../../kocomponents/earnings/filters';
+import '../../kocomponents/earnings/user-filters';
 import '../../kocomponents/earnings/report';
 import '../../utils/Time';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
-import TimeRangeOption from '../../kocomponents/earnings/filters/TimeRangeOption';
+import TimeRangeOption from '../../kocomponents/earnings/time-range-filter/TimeRangeOption';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
 import template from './template.html';
@@ -67,7 +67,7 @@ export default class EarningsActivity extends Activity {
         };
 
         /**
-         * Holds the of filtering values, as given by the earnings-filters
+         * Holds the of filtering values, as given by the earnings-user-filters
          * and accepted by the earnings-report
          * @member {KnockoutObservable<boolean>}
          */

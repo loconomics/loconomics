@@ -1,0 +1,23 @@
+<div class="form-group">
+    <label for="earnings-time-range-filter-period" class="sr-only">Period</label>
+    <select id="earnings-time-range-filter-period" class="form-control" data-bind="
+        value: timeRangeOption, optionsCaption: ' Dates', options: presetTimeRangeOptions,
+        optionsValue: 'id', optionsText: 'option'">
+    </select>
+</div>
+<!-- ko if: isCustomTimeRangeVisible -->
+<div class="form-horizontal">
+    <div class="form-group">
+        <label for="earnings-time-range-filter-from" class="col-xs-6 col-sm-3">From</label>
+        <div class="col-xs-6 col-sm-9">
+            <input id="earnings-time-range-filter-from" class="form-control" data-bind="value: editableFromDate" type="date" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="earnings-time-range-filter-to" class="col-xs-6 col-sm-3">to</label>
+        <div class="col-xs-6 col-sm-9">
+            <input id="earnings-time-range-filter-to" class="form-control" data-bind="value: editableToDate" type="date" />
+        </div>
+    </div>
+</div>
+<!-- /ko -->
