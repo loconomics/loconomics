@@ -117,7 +117,7 @@ export default class EarningsAdminFilter extends Komponent {
         /**
          * @member {KnockoutObservable<Array<rest/FieldOfStudy>>}
          */
-        this.fieldsOfStudy = ko.observableArray(fieldsOfStudy);
+        this.fieldsOfStudy = ko.observableArray(fieldsOfStudy.map(mergeTopCodeIntoName));
 
         /**
          * @member {KnockoutComputed<boolean>}
@@ -201,3 +201,17 @@ export default class EarningsAdminFilter extends Komponent {
 }
 
 ko.components.register(TAG_NAME, EarningsAdminFilter);
+
+/**
+ * Returns and updated field-of-study object where TOP Code is part of the
+ * name, following pattern: 'name    (code)'
+ * @param {rest/FieldOfStudy} fieldOfStudy
+ * @return {rest/FieldOfStudy}
+ */
+function mergeTopCodeIntoName(fieldOfStudy) {
+    return {
+        fieldOfStudyID: fieldOfStudy.fieldOfStudyID,
+        name: `${fieldOfStudy.name}    (${fieldOfStudy.cccTopCode})`,
+        cccTopCode: fieldOfStudy.cccTopCode
+    };
+}
