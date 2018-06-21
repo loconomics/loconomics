@@ -7,7 +7,7 @@
 import '../../utilities/icon-dec';
 import * as report from '../../../data/userEarningsReport';
 import Komponent from '../../helpers/KnockoutComponent';
-import TimeRangeOption from '../filters/TimeRangeOption';
+import TimeRangeOption from '../time-range-filter/TimeRangeOption';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import moment from 'moment';
@@ -114,13 +114,14 @@ export default class EarningsReport extends Komponent {
         });
 
         /**
-         * Text describing the filtered platform/listing, or fallback for all
+         * Text describing the filtered platform/listing, or fallback for all.
+         * It supports both excluding filters: userExternalListing and platform
+         * (first one is used for user reports and second one for admin reports),
          * @member {KnockoutComputed<string>}
          */
         this.selectedUserExternalListingText = ko.pureComputed(() => {
             const filters = this.appliedFilters();
-            const hasSelected = filters && filters.userExternalListingID > 0;
-            return hasSelected ? filters.userExternalListingText : 'All listings/platforms';
+            return filters && (filters.userExternalListingText || filters.platformText) || '';
         });
 
         if (connectUserData) {

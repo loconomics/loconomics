@@ -45,6 +45,7 @@ namespace LcRest
             public DateTimeOffset? toDate;
             public int? jobTitleID;
             public int? userExternalListingID;
+            public int? platformID;
         }
         #endregion
 
@@ -101,11 +102,14 @@ namespace LcRest
                 INNER JOIN CCCUsers
                 ON UserEarningsEntry.UserID = CCCUsers.UserID
                     AND CCCUsers.UserType = 'student'
-              WHERE active = 1
+                LEFT JOIN UserExternalListing As UEL
+                ON UEL.UserExternalListingID = UserEarningsEntry.UserExternalListingID
+                   AND UEL.Active = 1
+              WHERE UserEarningsEntry.active = 1
                 AND (@0 is null OR PaidDate >= @0)
                 AND (@1 is null OR PaidDate <= @1)
                 AND (@2 is null OR JobTitleID = @2)
-                AND (@3 is null OR UserExternalListingID = @3)
+                AND (@3 is null OR UEL.PlatformID = @3)
                 AND (@4 is null OR CCCUsers.institutionID = @4)
             ) AS T
         ";
@@ -114,14 +118,14 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlQueryCccStudents, filter.fromDate, filter.toDate, filter.jobTitleID, filter.userExternalListingID, null));
+                return FromDB(db.QuerySingle(sqlQueryCccStudents, filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID, null));
             }
         }
         public static UserEarningsReport QueryCccCollegeStudents(EarningsFilterValues filter, int institutionID)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlQueryCccStudents, filter.fromDate, filter.toDate, filter.jobTitleID, filter.userExternalListingID, institutionID));
+                return FromDB(db.QuerySingle(sqlQueryCccStudents, filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID, institutionID));
             }
         }
         #endregion

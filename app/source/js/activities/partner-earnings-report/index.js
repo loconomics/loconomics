@@ -5,11 +5,11 @@
  */
 
 import '../../kocomponents/earnings/report';
-import '../../kocomponents/earnings/filters';
+import '../../kocomponents/earnings/admin-filters';
 import * as activities from '../index';
 import * as report from '../../data/userEarningsReport';
 import Activity from '../../components/Activity';
-import TimeRangeOption from '../../kocomponents/earnings/filters/TimeRangeOption';
+import TimeRangeOption from '../../kocomponents/earnings/time-range-filter/TimeRangeOption';
 import UserType from '../../enums/UserType';
 import { accessControl } from '../../utils/partnerAdminAccessControl';
 import ko from 'knockout';
@@ -51,7 +51,7 @@ export default class PartnerEarningsReportActivity extends Activity {
         };
 
         /**
-         * Holds the of filtering values, as given by the earnings-filters
+         * Holds the of filtering values, as given by the earnings-admin-filters
          * and accepted by the earnings-report
          * @member {KnockoutObservable<boolean>}
          */

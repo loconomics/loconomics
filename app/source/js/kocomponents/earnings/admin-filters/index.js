@@ -1,41 +1,41 @@
 /**
- * Form with available filter options for earnings.
+ * Form with available filter options for earnings for partner admin.
  *
- * @module kocomponents/earnings/filters
+ * @module kocomponents/earnings/admin-filters
  */
 
 import '../time-range-filter';
 import Komponent from '../../helpers/KnockoutComponent';
+import jobTitles from '../../../data/embedded/jobTitlesAutocomplete';
 import ko from 'knockout';
+import { list as platforms } from '../../../data/platforms';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
-import { list as userExternalListings } from '../../../data/userExternalListings';
-import { list as userListings } from '../../../data/userListings';
 
-const TAG_NAME = 'earnings-user-filters';
+const TAG_NAME = 'earnings-admin-filters';
 
 /**
  * Describes values for a set of selected filters.
  * Properties described as 'filtering value' are the actual values that must be
  * used for filtering, the rest are just information for the UI.
- * @typedef {Object} EarningsUserFilterValues
+ * @typedef {Object} EarningsAdminFilterValues
  * @property {Date} fromDate Filtering value for inclusive initial date
  * @property {Date} toDate Filtering value for inclusive final date
  * @property {number} jobTitleID Filtering value for job title
- * @property {number} userExternalListingID Fitlering value for external listing/platform
+ * @property {number} platformID Fitlering value for external listing/platform
  * @property {TimeRangeOption} timeRangeOption Option used to fill
  * the fromDate and toDate properties, provided only to allow customization of
  * the display for the time range but must not be used as the actual value to
  * filter by.
  * @property {string} jobTitleText Display value, name matching the jobTitleID
- * @property {string} userExternalListingText Display value, name or title matching the
+ * @property {string} platformText Display value, name or title matching the
  * userExternalListingID
  */
 
 /**
  * Component
  */
-export default class EarningsUserFilter extends Komponent {
+export default class EarningsAdminFilter extends Komponent {
 
     static get template() { return template; }
 
@@ -43,7 +43,7 @@ export default class EarningsUserFilter extends Komponent {
      * @param {object} params
      * @param {Function} params.onSelect Callback executed when the user
      * changes the selected values for the filters, It includes as parameter
-     * a EarningsUserFilterValues object.
+     * a EarningsAdminFilterValues object.
      * @param {TimeRangeOption} params.defaultTimeRangeOption
      */
     constructor(params) {
@@ -51,7 +51,7 @@ export default class EarningsUserFilter extends Komponent {
 
         // Required Callback for external notifications on changing filters
         if (typeof(params.onSelect) !== 'function') {
-            throw new Error('earnings-user-filters: onSelect param is required');
+            throw new Error('earnings-admin-filters: onSelect param is required');
         }
 
         /**
@@ -76,24 +76,23 @@ export default class EarningsUserFilter extends Komponent {
         this.jobTitle = ko.observable();
 
         /**
-         * External listing object selected.
-         * @member {KnockoutObservable<rest/UserExternalListing>}
+         * Holds the list of job titles available to allow filter by job title.
+         * @member {KnockoutObservable<Array<JobTitleAutocomplete>>}
          */
-        this.externalListing = ko.observable();
+        this.jobTitles = ko.observableArray(jobTitles);
 
         /**
-         * Holds the list of available user listings at Loconomics, to allow
-         * filter by job title
-         * @member {KnockoutObservableArray<rest/UserJobTitle>}
+         * Platform object selected.
+         * @member {KnockoutObservable<rest/Platform>}
          */
-        this.listings = ko.observableArray([]);
+        this.platform = ko.observable();
 
         /**
-         * Holds the list of user external listings to allow filter by
-         * the listing/platform.
-         * @member {KnockoutObservableArray<rest/UserExternalListings>}
+         * Holds the list of external platforms to allow filter by
+         * a platform.
+         * @member {KnockoutObservableArray<rest/Platform>}
          */
-        this.externalListings = ko.observableArray([]);
+        this.platforms = ko.observableArray([]);
 
         /**
          * Automatically trigger onSelect on options changes
@@ -101,15 +100,15 @@ export default class EarningsUserFilter extends Komponent {
         ko.computed(() => {
             const range = this.timeRangeSelected();
             const jobTitle = this.jobTitle();
-            const externalListing = this.externalListing();
+            const platform = this.platform();
             params.onSelect({
                 fromDate: range.from,
                 toDate: range.to,
                 timeRangeOption: range.option,
                 jobTitleID: jobTitle && jobTitle.jobTitleID,
-                userExternalListingID: externalListing && externalListing.userExternalListingID,
-                jobTitleText: jobTitle && jobTitle.title,
-                userExternalListingText: externalListing && externalListing.title || 'All listings/platforms'
+                platformID: platform && platform.platformID,
+                jobTitleText: jobTitle && jobTitle.singularName,
+                platformText: platform && platform.name || 'All platforms'
             });
         })
         // Prevent that several, automated/related changes, trigger too much notifications.
@@ -124,26 +123,17 @@ export default class EarningsUserFilter extends Komponent {
      * @private
      */
     __connectData() {
-        // Load listings
-        this.subscribeTo(userListings.onData, this.listings);
-        // Load external listings
-        this.subscribeTo(userExternalListings.onData, this.externalListings);
+        // Load platforms
+        this.subscribeTo(platforms.onData, this.platforms);
 
         // Notify data load errors
-        this.subscribeTo(userListings.onDataError, (err) => {
+        this.subscribeTo(platforms.onDataError, (err) => {
             showError({
-                title: 'There was an error loading your listings',
-                error: err
-            });
-        });
-        // Notify data load errors
-        this.subscribeTo(userExternalListings.onDataError, (err) => {
-            showError({
-                title: 'There was an error loading your external listings',
+                title: 'There was an error loading platforms availables',
                 error: err
             });
         });
     }
 }
 
-ko.components.register(TAG_NAME, EarningsUserFilter);
+ko.components.register(TAG_NAME, EarningsAdminFilter);
