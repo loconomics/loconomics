@@ -52,6 +52,7 @@
                  "returnProfile": false,
                  "jobTitleID": null,
                  "jobTitleName": null,
+                 "isOrganization": false,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }
         },
@@ -70,6 +71,7 @@
                  "returnProfile": false,
                  "jobTitleID": null,
                  "jobTitleName": null,
+                 "isOrganization": false,
                  "isCccMember": true,
                  "institutionID": 222,
                  "fieldOfStudyID": 1,
@@ -161,23 +163,42 @@
         {
             if (Request["isCccMember"].AsBool(false))
             {
-                Validation.RequireField("institutionID", "You must select an institution.");
-                Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
-                Validation.RequireField("cccUserType", "You must select user type.");
+                var isClient = Request["cccUserType"] == "client";
+                if (!isClient)
+                {
+                    Validation.RequireField("institutionID", "You must select an institution.");
+                    Validation.RequireField("cccUserType", "You must select user type.");
+                    var isStudent = Request["cccUserType"] == "student";
+                    if (isStudent)
+                    {
+                        Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
+                        Validation.RequireField("genderID", "You must select a gender.");
+                        Validation.RequireField("birthDate", "You must denote your birh date.");
+                    }
+                }
             }
         }
 
         private void SaveCccMember(LcAuthHelper.LoginResult login)
         {
+            var isClient = Request["cccUserType"] == "client";
             using (var db = new LcDatabase())
             {
                 db.Execute("BEGIN TRANSACTION");
                 try
                 {
-                    ResetTrialEndDate(db, login.userID);
-                    InsertCccUser(db, login.userID);
-                    InsertUserEducation(db, login.userID);
-                    InsertCccPaymentPlan(db, login.userID);
+                    if (isClient)
+                    {
+                        InsertCccUserTypeClient(db, login);
+                    }
+                    else
+                    {
+                        ResetTrialEndDate(db, login.userID);
+                        InsertExtraUserInfo(db, login.userID);
+                        InsertCccUser(db, login.userID);
+                        InsertUserEducation(db, login.userID);
+                        InsertCccPaymentPlan(db, login.userID);
+                    }
                     db.Execute("COMMIT TRANSACTION");
                 }
                 catch
@@ -190,10 +211,31 @@
         {
             db.Execute("UPDATE users SET TrialEndDate=null WHERE UserID=@0", userID);
         }
+        private void InsertExtraUserInfo(LcDatabase db, int userID)
+        {
+            var genderID = Request.Form["genderID"].AsInt(-1);
+            var birthDate = DateTimeOffsetFromISO(Request.Form["birthDate"]);
+            int? day = null, month = null, year = null;
+            if (birthDate.HasValue)
+            {
+                day = birthDate.Value.Day;
+                month = birthDate.Value.Month;
+                year = birthDate.Value.Year;
+            }
+
+            db.Execute(@"
+                UPDATE Users SET
+                    GenderID = @1,
+                    BirthMonthDay = @2,
+                    BirthMonth = @3,
+                    BirthYear = @4
+                WHERE UserID = @0
+            ", userID, genderID, day, month, year);
+        }
         private void InsertCccUser(LcDatabase db, int userID)
         {
             var institutionID = Request["institutionID"].AsInt();
-            var fieldOfStudyID = Request["fieldOfStudyID"].AsInt();
+            var fieldOfStudyID = Request["fieldOfStudyID"].IsInt() ? (int?)Request["fieldOfStudyID"].AsInt() : null;
             var cccUserType = Request["cccUserType"];
             // PlanExpirationDate to 180 days from signUp date #761
             var expiration = DateTime.Today.AddDays(180);
@@ -212,6 +254,32 @@
                     @4
                 )
             ", userID, institutionID, fieldOfStudyID, expiration, cccUserType);
+        }
+        /// <summary>
+        /// Specific for user type 'client' (GIG posting partners)
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="userID"></param>
+        private void InsertCccUserTypeClient(LcDatabase db, LcAuthHelper.LoginResult logged)
+        {
+            var institutionID = Request["institutionID"].IsInt() ? Request["institutionID"].AsInt() : (int?)null;
+            db.Execute(@"
+                INSERT CCCUsers (
+                    UserID,
+                    InstitutionID,
+                    UserType
+                ) VALUES (
+                    @0,
+                    @1,
+                    @2
+                )
+            ", logged.userID, institutionID, "client");
+
+            // SPECIAL: update onboarding to skip 'welcome' step. This makes this back-end very tight with the front-end organization
+            // hope it takes no long active!
+            db.Execute("UPDATE users SET onboardingStep='public-contact-info' WHERE userID=@0", logged.userID);
+            logged.onboardingStep = "public-contact-info";
+            logged.profile.onboardingStep = logged.onboardingStep;
         }
         private void InsertUserEducation(LcDatabase db, int userID)
         {

@@ -1,7 +1,7 @@
 /**
- * Shows the user the information about the listing they 
+ * Shows the user the information about the listing they
  * created on an external platform.
- * 
+ *
  * @module activities/external-listing-view
  *
  */
@@ -18,26 +18,28 @@ const ROUTE_NAME = 'external-listing-view';
 export default class ExternalListingViewActivity extends Activity {
 
     static get template() { return template; }
- 
+
     constructor($activity, app) {
 
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Listings', {
+            backLink: '/listings'
+        });
 
         /**
          * Creates a placeholder for an "out" parameter to
          * be populated by the component.
          */
         this.platformName = ko.observable('');
-        
+
         /**
          * Creates a placeholder for the external listing ID
          * to be populated using the show(state) method below.
          */
         this.externalListingID = ko.observable();
-        
+
         /**
          * Title uses a pureComputed to ensure the platformName
          * is updated.
@@ -53,7 +55,7 @@ export default class ExternalListingViewActivity extends Activity {
         var params = state.route && state.route.segments;
 
         /**
-         * externalListingID is the first segment in the activity 
+         * externalListingID is the first segment in the activity
          * URL.
          */
         this.externalListingID(params[0] |0);

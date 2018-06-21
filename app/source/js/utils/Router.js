@@ -61,6 +61,10 @@ Route.prototype.match = function(url) {
     return match ? $.extend(this.defaults, match) : false;
 };
 
+Route.prototype.reverse = function(values) {
+    return this.routeParser.reverse(values);
+};
+
 var RouteMatcher = function(routes, defaults) {
     this.routes = routes;
     this.defaults = defaults || {};

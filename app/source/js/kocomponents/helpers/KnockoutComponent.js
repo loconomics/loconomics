@@ -132,8 +132,8 @@ export default class KnockoutComponent {
         }
 
         // We set the class name directly in the component, if any
-        if (this.cssClass) {
-            componentInfo.element.classList.add(this.cssClass);
+        if (this.constructor.cssClass) {
+            componentInfo.element.classList.add(this.constructor.cssClass);
         }
 
         /**

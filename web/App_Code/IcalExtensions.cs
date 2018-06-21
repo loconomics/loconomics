@@ -15,6 +15,12 @@ public static class IcalExtensions
     {
         using (var client = new WebClient())
         {
+            // Support for the 'webcal://' scheme, that actually is the 'http://' protocol and same default port (80)
+            if (uri.Scheme.ToLower() == "webcal")
+            {
+                var fixedUri = System.Text.RegularExpressions.Regex.Replace(uri.ToString(), "^webcal:", "http:", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                uri = new Uri(fixedUri);
+            }
             var rawContent = client.DownloadString(uri);
             return Calendar.LoadFromStream(new StringReader(rawContent)) as CalendarCollection;
         }

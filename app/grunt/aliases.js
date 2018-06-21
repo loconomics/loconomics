@@ -44,8 +44,17 @@ module.exports = {
         'clean:build',
         'prepare-for-build',
         'build-webapp',
-        'build-landingPages',
-        'publish-landingPages',
+        // Task 'build-landingPages' but without repeating things done by previous tasks in this list
+        'stylus:landingPages',
+        'cssmin:landingPages',
+        'bliss:landingPagesBuild',
+        'htmlmin:landingPagesBuild',
+        // Task 'publish-landingPages' but without repeating things done by previous tasks in this list
+        'bliss:landingPagesWeb',
+        'uglify:appCommon',
+        'htmlmin:landingPagesWeb',
+        'copyto:landingPages_assets',
+        // test all
         'test'
     ],
     // Any preparation of the folder where building results will go

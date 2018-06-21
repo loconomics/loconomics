@@ -1,0 +1,60 @@
+﻿@using WebMatrix.WebData;
+@*
+    Get and set solutions attached to a user profile.
+
+    Options:
+
+    - GET /listing/@userListingID
+      Get the list of solutions attached to a specific user listing
+
+    - PUT /listing/@userListingID
+      Replace the list of solutions attached to a specific user listing with the given one
+      respecting the given order
+
+    - @Result List of LcRest.Solution
+
+    EXAMPLE {
+        "Solutions by user listing": {
+            "url": "/api/v1/en-US/me/solutions/listing/1",
+            "get": { },
+            "put": {
+                "solutions": [1,2,5,3]
+            }
+        }
+    }
+*@
+@functions{
+    public class RestMeSolutions: RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 2 && UrlData[0] == "listing" && UrlData[1].IsInt())
+            {
+                var listingID = UrlData[1].AsInt(0);
+                var locale = LcRest.Locale.Current;
+                var userID = WebSecurity.CurrentUserId;
+                return LcRest.UserSolution.GetSolutionsByListing(userID, listingID, locale);
+            }
+            return base.Get();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 2 && UrlData[0] == "listing" && UrlData[1].IsInt())
+            {
+                var listingID = UrlData[1].AsInt(0);
+                var locale = LcRest.Locale.Current;
+                var userID = WebSecurity.CurrentUserId;
+                var solutions = Request.Form.GetValues("solutions[]") ?? new string[] {};
+                var sortedSolutions = solutions.Select((raw) => raw.AsInt());
+                LcRest.UserSolution.SetList(userID, listingID, sortedSolutions, locale);
+                return LcRest.UserSolution.GetSolutionsByListing(userID, listingID, locale);
+            }
+            return base.Get();
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestMeSolutions().JsonResponse(this);
+}

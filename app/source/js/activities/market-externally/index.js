@@ -24,7 +24,9 @@ export default class MarketExternallyActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
 
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Listings', {
+            backLink: '/listings'
+        });
 
         this.title = 'Market yourself outside of Loconomics';
     }

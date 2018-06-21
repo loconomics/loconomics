@@ -45,6 +45,7 @@ namespace LcRest
             public DateTimeOffset? toDate;
             public int? jobTitleID;
             public int? userExternalListingID;
+            public int? platformID;
         }
         #endregion
 
@@ -78,6 +79,53 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return FromDB(db.QuerySingle(sqlQuery, userID, filter.fromDate, filter.toDate, filter.jobTitleID, filter.userExternalListingID));
+            }
+        }
+        #endregion
+
+        #region Query CCC Admin
+        #region SQL
+        const string sqlQueryCccStudents = @"
+            SELECT
+	            SUM(amount) as total
+	            ,SUM(paidOut) as paidOut
+	            ,SUM(expected) as expected
+	            ,count(*) as entriesCount
+	            ,SUM(durationMinutes) as totalDurationMinutes
+            FROM (
+              SELECT 
+                  amount
+                  ,CASE WHEN PaidDate < GETDATE() THEN amount ELSE 0 END as paidOut
+                  ,CASE WHEN PaidDate >= GETDATE() THEN amount ELSE 0 END as expected
+                  ,DurationMinutes     
+              FROM UserEarningsEntry
+                INNER JOIN CCCUsers
+                ON UserEarningsEntry.UserID = CCCUsers.UserID
+                    AND CCCUsers.UserType = 'student'
+                LEFT JOIN UserExternalListing As UEL
+                ON UEL.UserExternalListingID = UserEarningsEntry.UserExternalListingID
+                   AND UEL.Active = 1
+              WHERE UserEarningsEntry.active = 1
+                AND (@0 is null OR PaidDate >= @0)
+                AND (@1 is null OR PaidDate <= @1)
+                AND (@2 is null OR JobTitleID = @2)
+                AND (@3 is null OR UEL.PlatformID = @3)
+                AND (@4 is null OR CCCUsers.institutionID = @4)
+            ) AS T
+        ";
+        #endregion
+        public static UserEarningsReport QueryAllCccStudents(EarningsFilterValues filter)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlQueryCccStudents, filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID, null));
+            }
+        }
+        public static UserEarningsReport QueryCccCollegeStudents(EarningsFilterValues filter, int institutionID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlQueryCccStudents, filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID, institutionID));
             }
         }
         #endregion

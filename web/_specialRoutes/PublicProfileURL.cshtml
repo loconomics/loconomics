@@ -35,14 +35,14 @@
         }
     }
     if (userid is int) {
-
+        var prefPosition = LcData.UserInfo.GetProviderPreferredPosition(userid);
         // Verify city and position
         if (city == LcHelpers.StringSlugify(LcData.UserInfo.GetUserCity(userid), 40)
             &&
-            position == LcHelpers.StringSlugify(LcData.UserInfo.GetProviderPreferredPosition(userid).PositionSingular)
+            position == LcHelpers.StringSlugify(prefPosition.PositionSingular)
         )
         {
-            Response.Redirect(LcData.UserInfo.GetUserPublicUrlPath(userid));
+            Response.Redirect(LcData.UserInfo.GetUserPublicUrlPath(userid, (int)prefPosition.PositionID));
                 
             ok = true;
         }

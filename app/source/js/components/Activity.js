@@ -53,6 +53,12 @@ function Activity($activity, app) {
     this.title = ko.observable('');
 
     /**
+     * Holds a reference to the route object received at 'show'
+     * @member {KnockoutObservable<Object>}
+     */
+    this.currentRoute = ko.observable(null);
+
+    /**
      * Holds a list of objects with a 'dispose' method or functions that
      * need to be called when disposing a cycle of the activity, freeing up ressources
      * that don't do it automatically (see `_disposeCycle` method).
@@ -188,6 +194,7 @@ Activity.prototype.show = function show(options) {
         this.$activity.scrollTop(0);
 
     this.isShown(true);
+    this.currentRoute(options && options.route);
 };
 
 /**

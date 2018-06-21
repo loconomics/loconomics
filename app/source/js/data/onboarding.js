@@ -4,12 +4,16 @@
 // TODO store-jsdocs
 'use strict';
 
+import shell from '../app.shell';
+import userProfile from './userProfile';
+
 var OnboardingProgress = require('../viewmodels/OnboardingProgress');
 var NavAction = require('../viewmodels/NavAction');
 var ko = require('knockout');
-var userProfile = require('./userProfile');
 var local = require('./drivers/localforage');
 var onboardingSuccessModal = require('../modals/onboardingSuccess');
+
+const user = userProfile.data;
 
 var NAVBAR_TITLE = 'Create your first listing';
 
@@ -21,17 +25,13 @@ api.navbarTitle = function() {
     return NAVBAR_TITLE;
 };
 
+// We keep a reference to current activity name
+// TODO: should be possible to replace this with shell.currentRouteObservable but need some testing
 api.currentActivity = ko.observable('');
-
-// Requires initialization to receive and app instance
-// TODO: Rething to refactor this; will require decoupling app.shell
-api.init = function init(app) {
-    api.app = app;
-    api.currentActivity(app.shell.currentRoute && app.shell.currentRoute.name);
-    app.shell.on(app.shell.events.itemReady, function() {
-        api.currentActivity(app.shell.currentRoute.name);
-    });
-};
+api.currentActivity(shell.currentRoute && shell.currentRoute.name);
+shell.on(shell.events.itemReady, function() {
+    api.currentActivity(shell.currentRoute.name);
+});
 
 /**
  * Set-up the onboarding with preset data after a signup or restoring a session.
@@ -39,16 +39,17 @@ api.init = function init(app) {
  * @param {string} options.step The step where the user left the process or starts with.
  * @param {number} [options.jobTitleID] The jobTitleID selected at a previous
  * signup form or saved after the addJobTitle step.
- * @param {boolean} [options.isServiceProfessional] It set-ups the equivalent flag
- * and when value is 'true', it skips the 'welcome' step (that has the
- * selector buttons for the type of profile) in case that's the current one.
  */
 api.setup = function(options) {
     var step = options.step;
-    if (options.isServiceProfessional === true && options.step === 'welcome') {
+    // Special: For professionals and organizations, it skips the 'welcome' step
+    // (that one has the selector buttons for the type of profile and become
+    // confusing for 'organization' users).
+    const isProfessional = user.isServiceProfessional();
+    const isOrg = user.isOrganization();
+    if ((isProfessional === true || isOrg === true) && options.step === 'welcome') {
         step = api.stepAfter(step).stepName();
     }
-    api.isServiceProfessional(options.isServiceProfessional);
     if (options.jobTitleID |0 > 0) {
         api.selectedJobTitleID(options.jobTitleID);
     }
@@ -82,7 +83,7 @@ api.updateNavBar = function(navBar) {
 api.goCurrentStep = function() {
     // Go current step of onboarding, and if no one, go to dashboard
     var url = this.inProgress() ? this.stepUrl() : 'dashboard';
-    this.app.shell.go(url);
+    shell.go(url);
 };
 
 api.goNext = function goNext() {
@@ -104,12 +105,14 @@ api.goNext = function goNext() {
     }
 
     // replaceState flag is true, preventing browser back button to move between onboarding steps
-    this.app.shell.go(url, null, true);
+    shell.go(url, null, true);
 
     // Display modal with notification when required
-    if (showOnboardingSuccess) {
+    // Exception for organizations (we just lead them to posting them to focus on that
+    // as first step)
+    if (showOnboardingSuccess && !user.isOrganization()) {
         onboardingSuccessModal.show({
-            isServiceProfessional: this.isServiceProfessional()
+            isServiceProfessional: user.isServiceProfessional()
         });
     }
 };
@@ -127,7 +130,7 @@ api.goIfEnabled = function() {
     if (inProgress && !api.isAtCurrentStep()) {
         // Go to the step URL if we are NOT already there, by checking name to
         // not overwrite additional details, like a jobTitleID at the URL
-        api.app.shell.go(api.stepUrl());
+        shell.go(api.stepUrl());
     }
 
     return inProgress;

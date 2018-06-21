@@ -26,7 +26,9 @@ export default class EarningsCopyActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Add Earnings', {
+            backLink: '/earnings-add'
+        });
 
         this.earningsEntryID = ko.observable();
 

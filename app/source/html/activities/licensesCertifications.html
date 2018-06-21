@@ -7,9 +7,9 @@
             <div class="SubSectionNavBar hidden-xs hidden-sm" data-bind="visible: !isInOnboarding()">
                 <ul>
                     <li>
-                        <a href="/listingEditor/" data-bind="attr: {href: '/listingEditor/' + jobTitleID()}">
+                        <a href="/listingEditor" data-bind="attr: { href: navBar.leftAction().link }">
                             <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
-                            <span data-bind="text: listingTitle"></span>
+                            <span data-bind="text: navBar.leftAction().text"></span>
                         </a>
                     </li>
                 </ul>
@@ -22,11 +22,11 @@
                         <span class="Tile-icon fa fa-certificate" aria-hidden="true"></span>
                     </div>
                     <span class="Tile-content">
-                        <h2><span data-bind="visible: isInOnboarding()">Upload your <span data-bind="text: listingTitle"></span> credentials</span><span data-bind="visible: !isInOnboarding()"><span data-bind="text: listingTitle"></span> credentials</span></h2>
-                        <p>Our records indicate credentials are legally required to provide <span data-bind="text: listingTitle"></span> services in your area. See our <a href="/terms/background-check-policy" target="_blank">License Verification Policy</a> for more info.</p>
+                        <h2>Upload your <span data-bind="text: listingTitle"></span> credentials</h2>
+                        <p>Some professions may require credentials to provide services. See our <a href="/terms/background-check-policy" target="_blank">License Verification Policy</a> for more info.</p>
                     </span>
                 </div>
-                <h2 class="SectionTitle" data-bind="visible: submittedUserLicensesCertifications()">
+                <h2 class="SectionTitle" data-bind="visible: submittedUserLicensesCertifications().length">
                     <span>Your <span data-bind="text: listingTitle"></span> credentials</span>
                 </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
@@ -48,12 +48,12 @@
                         </li>
                     </ul>
                     <div data-bind="with: jobTitleApplicableLicences()">
-                        <div data-bind="visible: country().length">
+                        <div data-bind="visible: $root.hasRequiredLicenses">
                             <h2 class="SectionTitle">
                                 <span>Generally required credentials</span>
                             </h2>
                             <ul class="TilesList TilesList--openEnd" data-bind="foreach: country">
-                                <li data-bind="visible: licenseCertificationID() === -1">
+                                <li data-bind="visible: licenseCertificationID() === $root.REQUIRED_LICENSE_SPECIAL_ID">
                                     <button class="CompactLinkTile" type="button" data-bind="click: $root.addNew">
                                         <div class="Tile-content text-muted">Add <span data-bind="text: licenseCertification() && licenseCertification().name"></span>
                                         </div>
@@ -65,79 +65,10 @@
                         </div>
                     </div>
                     <div data-bind="with: jobTitleApplicableLicences()">
-                        <div data-bind="visible: municipality().length">
-                            <h2 class="SectionTitle">Required by your municipality</h2>
-                            <ul class="TilesList TilesList--openEnd" data-bind="foreach: municipality">
-                                <li>
-                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
-                                        <div class="Tile-content text-muted">
-                                            <span data-bind="text: licenseCertification().name"></span>
-                                            <div>
-                                                <em data-bind="text: licenseCertification().authority"></em>
-                                            </div>
-                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">
-                                                <span class="fa ion ion-ios-checkmark-outline"></span>
-                                            </div>
-                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">
-                                                <span class="fa ion ion-plus"></span>
-                                            </div>
-                                        </div>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div data-bind="with: jobTitleApplicableLicences()">
-                        <div data-bind="visible: county().length">
-                            <h2 class="SectionTitle">Required by your county</h2>
-                            <ul class="TilesList TilesList--openEnd" data-bind="foreach: county">
-                                <li>
-                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
-                                        <div class="Tile-content text-muted">
-                                            <span data-bind="text: licenseCertification().name"></span>
-                                            <div>
-                                                <em data-bind="text: licenseCertification().authority"></em>
-                                            </div>
-                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">
-                                                <span class="fa ion ion-ios-checkmark-outline"></span>
-                                            </div>
-                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">
-                                                <span class="fa ion ion-plus"></span>
-                                            </div>
-                                        </div>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div data-bind="with: jobTitleApplicableLicences()">
-                        <div data-bind="visible: stateProvince().length">
-                            <h2 class="SectionTitle">Required by your state</h2>
-                            <ul class="TilesList TilesList--openEnd" data-bind="foreach: stateProvince">
-                                <li>
-                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
-                                        <div class="Tile-content text-muted">
-                                            <span data-bind="text: licenseCertification().name"></span>
-                                            <div>
-                                                <em data-bind="text: licenseCertification().authority"></em>
-                                            </div>
-                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">
-                                                <span class="fa ion ion-ios-checkmark-outline"></span>
-                                            </div>
-                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">
-                                                <span class="fa ion ion-plus"></span>
-                                            </div>
-                                        </div>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div data-bind="with: jobTitleApplicableLicences()">
-                        <div data-bind="visible: country().length">
+                        <div data-bind="visible: $root.hasOptionalLicenses">
                             <h2 class="SectionTitle">Supplemental credentials</h2>
                             <ul class="TilesList TilesList--openEnd" data-bind="foreach: country">
-                                <li data-bind="visible: licenseCertificationID() === 0">
+                                <li data-bind="visible: licenseCertificationID() === $root.OPTIONAL_LICENSE_SPECIAL_ID">
                                     <button class="CompactLinkTile" type="button" data-bind="click: $root.addNew">
                                         <div class="Tile-content text-muted">Add <span data-bind="text: licenseCertification() && licenseCertification().name"></span>
                                         </div>
@@ -159,4 +90,3 @@
         </div>
     </div>
 </div>
-

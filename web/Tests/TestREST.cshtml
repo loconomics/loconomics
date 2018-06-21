@@ -121,19 +121,43 @@
         "Signup": {
             "url": "/api/v1/en-US/auth/signup",
             "post": {
-                 "email": "some user email",
-                 "password": "",
-                 "atBooking": true,
-                 "firstName": "John",
-                 "lastName": "Smith",
-                 "phone": "1234",
-                 "profileType": "service-professional",
-                 "facebookUserID": "",
-                 "facebookAccessToken": "",
-                 "returnProfile": false,
-                 "jobTitleID": null,
-                 "jobTitleName": null,
-                 "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
+                "email": "some user email",
+                "password": "",
+                "atBooking": true,
+                "firstName": "John",
+                "lastName": "Smith",
+                "phone": "1234",
+                "profileType": "service-professional",
+                "facebookUserID": "",
+                "facebookAccessToken": "",
+                "returnProfile": false,
+                "jobTitleID": null,
+                "jobTitleName": null,
+                "isOrganization": false,
+                "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
+            }
+        },
+        "CCC Signup": {
+            "url": "/api/v1/en-US/auth/signup",
+            "post": {
+                "email": "some user email",
+                "password": "",
+                "atBooking": true,
+                "firstName": "John",
+                "lastName": "Student",
+                "phone": "1234",
+                "profileType": "service-professional",
+                "facebookUserID": "",
+                "facebookAccessToken": "",
+                "returnProfile": false,
+                "jobTitleID": null,
+                "jobTitleName": null,
+                "isOrganization": false,
+                "isCccMember": true,
+                "institutionID": 222,
+                "fieldOfStudyID": 1,
+                "cccUserType": "student",
+                "api comment": "Used only for California Community Colleges specific landing pages."
             }
         },
         "Facebook Signup (quick signup that will retrieve basic user data from Facebook, server2server)": {
@@ -479,6 +503,14 @@
             "url": "/api/v1/en-US/me/profile/tracking",
             "put": {
                 "onboardingStep": "welcome"
+            }
+        },
+        "User Profile: save just  organization info (for isOrganization users)": {
+            "url": "/api/v1/en-US/me/profile/organization",
+            "put": {
+                "orgName": "My Coop.",
+                "orgDescription": null,
+                "orgWebsite": null
             }
         },
         "User Profile: Become a service professional": {
@@ -1175,6 +1207,152 @@
                 "jobTitleID": null,
                 "userExternalListingID": null
             }
+        },
+        "Earnings Report: all CCC students (only CCC admin), or CCC college for collegeAdmin": {
+            "url": "/api/v1/en-US/me/earnings/report/ccc",
+            "get": {
+                "fromDate": "2018-01-01 00:00:00+0100",
+                "toDate": "2019-01-01 00:00:00+0100",
+                "jobTitleID": null,
+                "userExternalListingID": null
+            }
+        },
+        "Earnings Report: CCC College (only CCC admin)": {
+            "url": "/api/v1/en-US/me/earnings/report/ccc/197",
+            "get": {
+                "fromDate": "2018-01-01 00:00:00+0100",
+                "toDate": "2019-01-01 00:00:00+0100",
+                "jobTitleID": null,
+                "userExternalListingID": null
+            }
+        },
+        "Badges (create)": {
+            "url": "/api/v1/en-US/me/badges",
+            "post": {
+                "solutionID": 1,
+                "badgeURL": "https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0",
+                "type": "badge"
+            }
+        },
+        "Badges (udpate and delete": {
+            "url": "/api/v1/en-US/me/badges/123",
+            "get": {},
+            "put": {
+                "solutionID": 1,
+                "badgeURL": "https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0",
+                "type": "badge"
+            },
+            "delete": {}
+        },
+        "Badges by listing": {
+            "url": "/api/v1/en-US/me/badges/by-listing/123",
+            "get": {}
+        },
+        "Badges by solution": {
+            "url": "/api/v1/en-US/me/badges/by-solution/123",
+            "get": {}
+        },
+        "Admin user badges (list and create)": {
+            "url": "/api/v1/en-US/admin/users/141",
+            "get": {},
+            "post": {
+                "badgeURL": "https://badgr.io/assertions/asdf?v=2",
+                "type": "badge",
+                "category": "general",
+                "solutionID": null,
+                "expiryDate": "2020-01-01T01:01:01Z"
+            }
+        },
+        "Admin user badges (item by userBadgeID)": {
+            "url": "/api/v1/en-US/admin/users/141/2",
+            "get": {},
+            "put": {
+                "badgeURL": "https://badgr.io/assertions/asdf?v=2",
+                "type": "badge",
+                "category": "general",
+                "solutionID": null,
+                "expiryDate": "2020-01-01T01:01:01Z"
+            }
+        },
+        "Solutions search": {
+            "url": "/api/v1/en-US/solutions",
+            "get": {
+                "searchTerm": "wedding"
+            }
+        },
+        "Solutions - Get item": {
+            "url": "/api/v1/en-US/solutions/1",
+            "get": {}
+        },
+        "Solutions - By Search SubCategory": {
+            "url": "/api/v1/en-US/solutions/search-subcategory/1",
+            "get": {}
+        },
+        "Solutions by user listing": {
+            "url": "/api/v1/en-US/me/solutions/listing/1",
+            "get": { },
+            "put": {
+                "solutions": [1,2,5,3]
+            }
+        },
+        "Solutions - By Job Title": {
+            "url": "/api/v1/en-US/solutions/job-title/106",
+            "get": { }
+        },
+        "GIG Postings made by the user (or create one)": {
+            "url": "/api/v1/en-US/me/postings",
+            "get": {},
+            "post": {
+                "solutionID": 1,
+                "title": "Concise work description",
+                "neededSpecializationIDs": [1, 20, 5],
+                "proposedNeededSpecializations": ["Some new specialization", "that doesn't exists still"],
+                "desiredSpecializationIDs": [2, 4],
+                "proposedDesiredSpecializations": ["This would be great to have"],
+                "questionsResponses": "[{\"questionID\":1,\"questionTypeID\":1,\"question\":\"Where+are+you+in+the+lifecycle+of+the+project?\",\"helpBlock\":null,\"options\":[{\"optionID\":1,\"option\":\"I+have+designs\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":2,\"option\":\"I+have+specifications\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":3,\"option\":\"I+have+ideas\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":4,\"option\":\"I'm+just+starting\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":5,\"option\":\"Other\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":\"text\",\"step\":null}],\"responses\":[{\"optionID\":2,\"option\":\"I+have+specifications\",\"userInput\":null}],\"legend\":\"General+Project+Info\",\"branchLogic\":{}}]"
+            }
+        },
+        "GIG Posting made by the user (fetch, update, delete)": {
+            "url": "/api/v1/en-US/me/postings/1",
+            "get": {},
+            "put": {
+                "title": "Concise work description",
+                "neededSpecializationIDs": [1, 20, 5],
+                "proposedNeededSpecializations": ["Some new specialization", "that doesn't exists still"],
+                "desiredSpecializationIDs": [2, 4],
+                "proposedDesiredSpecializations": ["This would be great to have"],
+                "questionsResponses": "[{\"questionID\":1,\"questionTypeID\":1,\"question\":\"Where+are+you+in+the+lifecycle+of+the+project?\",\"helpBlock\":null,\"options\":[{\"optionID\":1,\"option\":\"I+have+designs\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":2,\"option\":\"I+have+specifications\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":3,\"option\":\"I+have+ideas\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":4,\"option\":\"I'm+just+starting\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":5,\"option\":\"Other\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":\"text\",\"step\":null}],\"responses\":[{\"optionID\":2,\"option\":\"I+have+specifications\",\"userInput\":null}],\"legend\":\"General+Project+Info\",\"branchLogic\":{}}]"
+            },
+            "delete": {}
+        },
+        "GIG Posting: close posting made by the user": {
+            "url": "/api/v1/en-US/me/postings/1/close",
+            "post": { }
+        },
+        "GIG Postings suggested to an user": {
+            "url": "/api/v1/en-US/me/postings/suggested",
+            "get": {}
+        },
+        "GIG Postings suggested to an user: apply to one": {
+            "url": "/api/v1/en-US/me/postings/suggested/1/apply",
+            "post": {
+                "message": "I'm available!'"
+            }
+        },
+        "GIG Postings suggested to an user: discard one (hide)": {
+            "url": "/api/v1/en-US/me/postings/suggested/1/discard",
+            "post": {}
+        },
+        "Specializations search (autocomplete)": {
+            "url": "/api/v1/en-US/specializations",
+            "get": {
+                "searchTerm": "cleaning",
+                "solutionID": 153
+            }
+        },
+        "Posting Templates - Get item": {
+            "url": "/api/v1/en-US/posting-templates/1",
+            "get": {}
         }
     };
 

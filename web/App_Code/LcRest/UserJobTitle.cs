@@ -111,9 +111,10 @@ namespace LcRest
             foreach(UserJobTitle userJobTitle in userJobTitles)
             {
                 userJobTitle.BindAlerts(alerts);
+                // We must return each item from the loop, rather than return userJobTitles after, because the
+                // generated list will be different and so, the changes here attaching the alerts will be lost
+                yield return userJobTitle;
             }
-
-            return userJobTitles;
         }
 
         /// <summary>
@@ -312,6 +313,15 @@ namespace LcRest
                     else
                     {
                         throw new Exception("We're sorry, there was an error creating your listing: " + message);
+                    }
+                }
+                else
+                {
+                    // Additional data for the new listing:
+                    // Needs the default solutions
+                    if ((int)results.userListingID > 0)
+                    {
+                        UserSolution.SetDefaultSolutionsForListing((int)results.userListingID);
                     }
                 }
             }

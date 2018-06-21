@@ -45,17 +45,32 @@ yarn grunt build --dev
 With the `--dev` modifier, we ensure the files includes source maps and debugging symbols. And optimization/minification steps
 are not executed with this, being a bit faster (they are not used when debugging anyway).
 
+##### Building landing pages
+To test landing pages created in the /welcome folder, you must build them separately using the following commands:
+```
+grunt build-landingPages
+```
+Make that build available at web folder to prepare upload: 
+```
+grunt publish-landingPages
+```
+Working just on landing pages: 
+```
+grunt atwork --target=landing_pages
+```
+Landing pages will be available at http://localhost:8811/welcome/.
 #### Start local server
 Allows you to test the webapp in the browser, a lightweight built-in http server is being used (connect), to start it, run next command and keep the task alive.
 ```
-yarn grunt atwork
+yarn start
 ```
 
 This will:
 - run the connect server at http://localhost:8811/ (calls internally to `grunt connect:atbuild`)
+- perform a dev build, ensuring you have an up-to-date copy; since `browserify-incremental` is used, builds following first one should be fast (calls internally to `grunt build --dev`)
 - run the watch task that will listen for changes on source files to automatically rebuild the needed files (specific builds are performed, like build-js, build-css, depending on the modified files; when they finish, the browser can be refreshed to try latest changes).
-  **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart the 'atwork' task to let detect further changes. Any help fixing this is welcome, at [#28](https://github.com/loconomics/loconomics/issues/28).
-- by modifying the package.json file, e.g. to update the version number, the watch task will run the grunt build task, rebuilding everything.
+  **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart task to let detect further changes. Any help fixing this is welcome, at [#28](https://github.com/loconomics/loconomics/issues/28).
+- by modifying the package.json file, e.g. to update the version number, the watch task will run the `grunt build` task, rebuilding everything.
 - when the build ends, a notification is sent to the system. [More info on this](https://github.com/dylang/grunt-notify)
 
 ## Open the app
@@ -75,7 +90,7 @@ At start-up, the app looks for a `siteUrl` key at localStorage; if nothing, look
 element; if nothing, uses the document base URL (the domain from where the document is being served).
 
 ### To set up a different REST Service URL:
-Open the Web console with the page opened (can be the local development server created by 'grunt atwork', or our Webapp dev.loconomics.com) and replace the `local siteUrl`:
+Open the Web console with the page opened (can be the local development server created by 'yarn start', or our Webapp dev.loconomics.com) and replace the `local siteUrl`:
 
 #### For our dev database (ignore security warnings):
 ```

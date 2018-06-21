@@ -1,0 +1,33 @@
+﻿@*
+    Reading posting templates.
+
+    Options:
+
+    - GET /@solutionID
+
+    EXAMPLES {
+        "Posting Templates - Get item": {
+            "url": "/api/v1/en-US/posting-templates/1",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestPostingTemplates : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt();
+                var locale = LcRest.Locale.Current;
+                return LcRest.PostingTemplate.Get(id, locale.languageID, locale.countryID, true);
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{
+    new RestPostingTemplates().JsonResponse(this);
+}

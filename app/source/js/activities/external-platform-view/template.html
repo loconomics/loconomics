@@ -4,8 +4,9 @@
         <div class="SubSectionNavBar hidden-xs hidden-sm">
             <ul>
                 <li>
-                    <a href="/market-externally" data-bind="attr: { href: '/market-externally' + '?mustReturn=external-platform-view/' + platformID() + '&returnText=' + + title() }">
-                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Market externally
+                    <a data-bind="attr: { href: navBar.leftAction().link }">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec>
+                        <span data-bind="text: navBar.leftAction().text"></span>
                     </a>
                 </li>
             </ul>

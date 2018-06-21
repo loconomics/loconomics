@@ -1,0 +1,22 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a data-bind="attr: { href: navBar.leftAction().link }">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec>
+                        <span data-bind="text: navBar.leftAction().text"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <h1 data-bind="text: title"></h1>
+        <div class="col-md-7 col-sm-reset">
+            <badge-editor params="userBadgeID: userBadgeID, jobTitleID: jobTitleID, listingTitle: listingTitle, onSaved: onSaved, onDeleted: onDeleted"></badge-editor>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'credentials'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>

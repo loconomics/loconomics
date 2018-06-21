@@ -171,6 +171,22 @@ app.successSave = function successSave(settings) {
         this.performsNavBarBack({ silentMode: true });
 };
 
+/**
+ * Placeholder for some clean-up tasks executed before the app runs, general,
+ * like data changes, local storage
+ */
+function cleanUpBeforeRun() {
+    try {
+        // As of #587, announcement for first-time users was removed. Remove the
+        // local data about that too
+        // TODO: To be removed after had this code for a while in the wild
+        delete localStorage.sanFranciscoLaunchPopup;
+    }
+    catch (ex) {
+        // do not bother with errors here, it doesn't matters
+    }
+}
+
 /** App Init **/
 var appInit = function appInit() {
     /* eslint max-statements:"off", complexity:"off" */
@@ -491,9 +507,7 @@ var appInit = function appInit() {
             // Now we are ready with values in place
             // Resume onboarding
             // Set-up onboarding and current step, if any
-            onboarding.init(app);
             onboarding.setup({
-                isServiceProfessional: user.isServiceProfessional(),
                 jobTitleID: jobTitleID,
                 step: user.onboardingStep() || null
             });
@@ -564,6 +578,8 @@ var appInit = function appInit() {
         });
     };
 
+    cleanUpBeforeRun();
+
     // keep track if a login was requested
     var loginRequired = false;
     // Try to restore a user session ('remember login')
@@ -599,7 +615,10 @@ var appInit = function appInit() {
     .catch(alertError);
 
     // DEBUG
-    window.app = app;
+    window.debug = {
+        app,
+        ko
+    };
 };
 
 // App init on page ready and phonegap ready

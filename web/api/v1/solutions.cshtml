@@ -1,0 +1,77 @@
+﻿@*
+    Reading and searching solutions.
+
+    Options:
+
+    - GET /
+        @searchTerm
+
+    - GET /@solutionID
+
+    - GET /search-subcategory/@searchSubcategoryID
+
+    EXAMPLES {
+        "Solutions search": {
+            "url": "/api/v1/en-US/solutions",
+            "get": {
+                "searchTerm": "wedding"
+            }
+        },
+        "Solutions - Get item": {
+            "url": "/api/v1/en-US/solutions/1",
+            "get": { }
+        },
+        "Solutions - By Search SubCategory": {
+            "url": "/api/v1/en-US/solutions/search-subcategory/1",
+            "get": { }
+        },
+        "Solutions - By Job Title": {
+            "url": "/api/v1/en-US/solutions/job-title/106",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestSolutions : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 0)
+            {
+                var term = Request.QueryString["searchTerm"];
+                var locale = LcRest.Locale.Current;
+                if (String.IsNullOrEmpty(term))
+                {
+                    return LcRest.Solution.List(locale.languageID, locale.countryID);
+                }
+                else
+                {
+                    return LcRest.Solution.Search(term, locale.languageID, locale.countryID);
+                }
+            }
+            else if (UrlData.Count == 2 && UrlData[0] == "search-subcategory")
+            {
+                var id = UrlData[1].AsInt();
+                var locale = LcRest.Locale.Current;
+                return LcRest.Solution.BySearchSubcategory(id, locale.languageID, locale.countryID);
+            }
+            else if (UrlData.Count == 2 && UrlData[0] == "job-title")
+            {
+                var id = UrlData[1].AsInt();
+                var locale = LcRest.Locale.Current;
+                return LcRest.Solution.ByJobTitle(id, locale.languageID, locale.countryID);
+            }
+            else if (UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt();
+                var locale = LcRest.Locale.Current;
+                return LcRest.Solution.Get(id, locale.languageID, locale.countryID);
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{
+    new RestSolutions().JsonResponse(this);
+}

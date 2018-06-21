@@ -1,0 +1,269 @@
+﻿@using WebMatrix.WebData;
+@*
+    Get and set GIG Postings of the logged user.
+
+    Options:
+
+    - GET /
+      Get the list of postings made by the user
+
+    - GET /@userPostingID
+      Gets a GIG posting made by the user
+
+    - POST /
+      Create a new GIG posting
+
+    - PUT /@userPostingID
+      Updates a GIG posting
+
+    - DELETE /@userPostingID
+      Deletes a GIG posting
+
+    - @Result Item or List of LcRest.UserPosting
+
+    EXAMPLE {
+        "GIG Postings made by the user (or create one)": {
+            "url": "/api/v1/en-US/me/postings",
+            "get": { },
+            "post": {
+                "solutionID": 1,
+                "title": "Concise work description",
+                "neededSpecializationIDs": [1, 20, 5],
+                "proposedNeededSpecializations": ["Some new specialization", "that doesn't exists still"],
+                "desiredSpecializationIDs": [2, 4],
+                "proposedDesiredSpecializations": ["This would be great to have"],
+                "questionsResponses":"[{\"questionID\":1,\"questionTypeID\":1,\"question\":\"Where+are+you+in+the+lifecycle+of+the+project?\",\"helpBlock\":null,\"options\":[{\"optionID\":1,\"option\":\"I+have+designs\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":2,\"option\":\"I+have+specifications\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":3,\"option\":\"I+have+ideas\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":4,\"option\":\"I'm+just+starting\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":5,\"option\":\"Other\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":\"text\",\"step\":null}],\"responses\":[{\"optionID\":2,\"option\":\"I+have+specifications\",\"userInput\":null}],\"legend\":\"General+Project+Info\",\"branchLogic\":{}}]"
+            }
+        },
+        "GIG Posting made by the user (fetch, update, delete)": {
+            "url": "/api/v1/en-US/me/postings/1",
+            "get": { },
+            "put": {
+                "title": "Concise work description",
+                "neededSpecializationIDs": [1, 20, 5],
+                "proposedNeededSpecializations": ["Some new specialization", "that doesn't exists still"],
+                "desiredSpecializationIDs": [2, 4],
+                "proposedDesiredSpecializations": ["This would be great to have"],
+                "questionsResponses":"[{\"questionID\":1,\"questionTypeID\":1,\"question\":\"Where+are+you+in+the+lifecycle+of+the+project?\",\"helpBlock\":null,\"options\":[{\"optionID\":1,\"option\":\"I+have+designs\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":2,\"option\":\"I+have+specifications\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":3,\"option\":\"I+have+ideas\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":4,\"option\":\"I'm+just+starting\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":null,\"step\":null},{\"optionID\":5,\"option\":\"Other\",\"icon\":null,\"tooltip\":null,\"placeholder\":null,\"inputType\":\"text\",\"step\":null}],\"responses\":[{\"optionID\":2,\"option\":\"I+have+specifications\",\"userInput\":null}],\"legend\":\"General+Project+Info\",\"branchLogic\":{}}]"
+            },
+            "delete": { }
+        },
+        "GIG Posting: close posting made by the user": {
+            "url": "/api/v1/en-US/me/postings/1/close",
+            "post": { }
+        },
+        "GIG Postings suggested to an user": {
+            "url": "/api/v1/en-US/me/postings/suggested",
+            "get": { }
+        },
+        "GIG Postings suggested to an user: apply to one": {
+            "url": "/api/v1/en-US/me/postings/suggested/1/apply",
+            "post": {
+                "message": "I'm available!'"
+            }
+        },
+        "GIG Postings suggested to an user: discard one (hide)": {
+            "url": "/api/v1/en-US/me/postings/suggested/1/discard",
+            "post": { }
+        }
+    }
+*@
+@functions{
+    public class RestMePostings : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var locale = LcRest.Locale.Current;
+            var userID = WebSecurity.CurrentUserId;
+            if (UrlData.Count == 0)
+            {
+                return LcRest.UserPosting.List(userID, locale.languageID, locale.countryID, true);
+            }
+            else if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt(0);
+                return LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+            }
+            else if (UrlData.Count == 1 && UrlData[0] == "suggested")
+            {
+                return LcRest.UserPosting.ListSuggestedPostings(userID, locale.languageID, locale.countryID);
+            }
+            return base.Get();
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 0)
+            {
+                Validation.RequireField("title", LcRessources.RequiredField("Title"));
+                Validation.RequireField("solutionID", LcRessources.RequiredField("Solution"));
+
+                if (!Validation.IsValid() || !ModelState.IsValid)
+                {
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
+
+                var locale = LcRest.Locale.Current;
+                var userID = WebSecurity.CurrentUserId;
+                var title = Request.Form["title"];
+                var solutionID = Request.Form["solutionID"].AsInt();
+                var neededSpecializationsIDs = Request.Form.GetValues("neededSpecializationIDs[]") ?? new string[] { };
+                var desiredSpecializationsIDs = Request.Form.GetValues("desiredSpecializationIDs[]") ?? new string[] { };
+                var proposedNeededSpecializations = Request.Form.GetValues("proposedNeededSpecializations[]") ?? new string[] { };
+                var proposedDesiredSpecializations = Request.Form.GetValues("proposedDesiredSpecializations[]") ?? new string[] { };
+                var record = new LcRest.UserPosting
+                {
+                    userID = userID,
+                    solutionID = solutionID,
+                    title = title
+                };
+                // User selected specializations
+                record.neededSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(neededSpecializationsIDs, solutionID, locale);
+                record.desiredSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(desiredSpecializationsIDs, solutionID, locale);
+                // User proposed specializations -> create user generated records
+                var userNeededSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedNeededSpecializations, solutionID, locale, userID);
+                var userDesiredSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedDesiredSpecializations, solutionID, locale, userID);
+                ((List<int>)record.neededSpecializationIDs).AddRange(userNeededSpecializationIDs);
+                ((List<int>)record.desiredSpecializationIDs).AddRange(userDesiredSpecializationIDs);
+                // Questions Responses
+                var questionsResponsesJsonArray = Request.Form["questionsResponses"];
+                try
+                {
+                    record.questionsResponses = (List<LcRest.UserPostingQuestionResponse>)Newtonsoft.Json.JsonConvert.DeserializeObject(
+                       questionsResponsesJsonArray, typeof(List<LcRest.UserPostingQuestionResponse>));
+                }
+                catch
+                {
+                    throw new ConstraintException("Invalid responses data");
+                }
+                // Insert and return with db generated data
+                record.userPostingID = LcRest.UserPosting.Set(record, locale);
+                // Send emails to SendSuggestedPosting
+                // TODO Doubt: What if this take too long? (it waits for email to be sent?) Should be fast, without delay cause of emails
+                foreach (var prof in LcRest.UserPosting.ListSuggestedProfessionals(record.userPostingID, locale.languageID, locale.countryID))
+                {
+                    LcMessaging.SendSuggestedPosting(prof.userID, prof.email, record.userPostingID);
+                }
+                // Return the generated posting
+                return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
+            }
+            else if (UrlData.Count == 2 && UrlData[0].IsInt() && UrlData[1] == "close")
+            {
+                var id = UrlData[0].AsInt();
+                var userID = WebSecurity.CurrentUserId;
+                var locale = LcRest.Locale.Current;
+                LcRest.UserPosting.SetStatus(userID, id, LcEnum.UserPostingStatus.closed);
+                this.StatusCode = 200;
+                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+                if (record == null)
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+                else
+                {
+                    return record;
+                }
+            }
+            else if (UrlData.Count == 3 && UrlData[0] == "suggested" && UrlData[1].IsInt())
+            {
+                var id = UrlData[1].AsInt();
+                var userID = WebSecurity.CurrentUserId;
+                var userEmail = WebSecurity.CurrentUserName;
+                var locale = LcRest.Locale.Current;
+                var message = Request.Form["message"];
+                switch (UrlData[2])
+                {
+                    case "apply":
+                        LcRest.UserPosting.SetServiceProfessionalReaction(id, userID, LcEnum.UserPostingReactionType.applied, message);
+                        var posting = LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.languageID, locale.countryID);
+                        var clientEmail = LcRest.UserEmail.Get(posting.userID).email;
+                        LcMessaging.SendPostingApplicationToAuthor(posting.userID, clientEmail, id, userID, userEmail);
+                        return posting;
+                    case "discard":
+                        LcRest.UserPosting.SetServiceProfessionalReaction(id, userID, LcEnum.UserPostingReactionType.discarded);
+                        return LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.languageID, locale.countryID);
+                    default:
+                        throw new HttpException(404, "Not Found");
+                }
+            }
+            return base.Post();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                Validation.RequireField("title", LcRessources.RequiredField("Title"));
+
+                if (!Validation.IsValid() || !ModelState.IsValid)
+                {
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
+
+                var id = UrlData[0].AsInt(0);
+                var locale = LcRest.Locale.Current;
+                var userID = WebSecurity.CurrentUserId;
+
+                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, false);
+                if (record == null)
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+
+                // Updatable fields
+                record.title = Request.Form["title"];
+                // User selected specializations
+                var neededSpecializations = Request.Form.GetValues("neededSpecializationIDs[]") ?? new string[] { };
+                var desiredSpecializations = Request.Form.GetValues("desiredSpecializationIDs[]") ?? new string[] { };
+                record.neededSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(neededSpecializations, record.solutionID, locale);
+                record.desiredSpecializationIDs = LcRest.Specialization.ValidateIncomingSpecializations(desiredSpecializations, record.solutionID, locale);
+                // User proposed specializations -> create user generated records
+                var proposedNeededSpecializations = Request.Form.GetValues("proposedNeededSpecializations[]") ?? new string[] { };
+                var proposedDesiredSpecializations = Request.Form.GetValues("proposedDesiredSpecializations[]") ?? new string[] { };
+                var userNeededSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedNeededSpecializations, record.solutionID, locale, userID);
+                var userDesiredSpecializationIDs = LcRest.Specialization.InsertProposedSpecializations(proposedDesiredSpecializations, record.solutionID, locale, userID);
+                ((List<int>)record.neededSpecializationIDs).AddRange(userNeededSpecializationIDs);
+                ((List<int>)record.desiredSpecializationIDs).AddRange(userDesiredSpecializationIDs);
+                // Questions Responses
+                var questionsResponsesJsonArray = Request.Form["questionsResponses"];
+                try
+                {
+                    record.questionsResponses = (List<LcRest.UserPostingQuestionResponse>)Newtonsoft.Json.JsonConvert.DeserializeObject(
+                       questionsResponsesJsonArray, typeof(List<LcRest.UserPostingQuestionResponse>));
+                }
+                catch
+                {
+                    throw new ConstraintException("Invalid responses data");
+                }
+
+                // Update and return with db generated data
+                LcRest.UserPosting.Set(record, locale);
+                return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
+            }
+            return base.Put();
+        }
+
+        public override dynamic Delete()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt(0);
+                var locale = LcRest.Locale.Current;
+                var userID = WebSecurity.CurrentUserId;
+                // Get copy
+                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+                if (record == null)
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+                LcRest.UserPosting.Delete(userID, id, locale.languageID, locale.countryID);
+                return record;
+            }
+            return base.Delete();
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.LoggedUser);
+    new RestMePostings().JsonResponse(this);
+}

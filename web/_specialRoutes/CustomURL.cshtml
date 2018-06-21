@@ -13,7 +13,8 @@
         ", customurl);
 
         if (user is int) {
-            Response.Redirect(LcData.UserInfo.GetUserPublicUrlPath(user));
+            var posID = LcData.UserInfo.GetProviderPreferredPosition(user).PositionID;
+            Response.Redirect(LcData.UserInfo.GetUserPublicUrlPath(user, posID));
         }
     }
     // Not found custom URL, this URL page doesn't exist, transfer to Not Found

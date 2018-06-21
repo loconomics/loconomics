@@ -1,0 +1,198 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.WebPages;
+
+namespace LcRest
+{
+    /// <summary>
+    /// Manage specialization records. Take care that an specialized sub-type of this exist 
+    /// with name UserPostingSpecialization, just to have only the fields that goes with
+    /// an UserPosting record, being responsable of some details.
+    /// 
+    /// All user generated records have an ID>=1000 by design
+    /// </summary>
+    public class Specialization
+    {
+        #region Instances
+        public Specialization() { }
+        #endregion
+
+        #region User incoming list
+        const string sqlCheckSpecializations = @"
+            SELECT count(*) as c
+            FROM Specialization
+            WHERE specializationID IN (@0)
+                AND languageID = @1
+                AND countryID = @2
+                AND solutionID = @3
+        ";
+
+        /// <summary>
+        /// Validates that external list of IDs as text are valid numbers and exists on DB
+        /// for the given solutionID and locale
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="solutionID"></param>
+        /// <param name="locale"></param>
+        /// <returns>Formatted text for storage with the specializations IDs</returns>
+        public static List<int> ValidateIncomingSpecializations(IEnumerable<string> list, int solutionID, Locale locale)
+        {
+            var sanitizedList = new List<int>();
+            foreach (var sid in list)
+            {
+                if (!sid.IsInt())
+                {
+                    throw new ConstraintException("Invalid specialization ID");
+                }
+                sanitizedList.Add(sid.AsInt());
+            }
+            // Quick return: when no values
+            if (sanitizedList.Count == 0)
+            {
+                return sanitizedList;
+            }
+
+            using (var db = new LcDatabase())
+            {
+                var sql = db.UseListInSqlParameter(sqlCheckSpecializations, 0, sanitizedList, "-1");
+                if (sanitizedList.Count == (int)db.QueryValue(sql, null, locale.languageID, locale.countryID, solutionID))
+                {
+                    // valid
+                    return sanitizedList;
+                }
+                else
+                {
+                    throw new ConstraintException("Some specializations are not valid");
+                }
+            }
+        }
+        /// <summary>
+        /// Inserts specializations proposed by the user by names, since couldn't find existent ones that satisfies
+        /// its needs. This records are tagged as user-generated with the userID and pending of public approval
+        /// (available on its profile, but not still for other users to pick them).
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="solutionID"></param>
+        /// <param name="locale"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static List<int> InsertProposedSpecializations(IEnumerable<string> list, int solutionID, Locale locale, int userID)
+        {
+            var newSpecializationsList = new List<int>();
+            using (var db = new LcDatabase())
+            {
+                db.Execute("BEGIN TRANSACTION");
+                foreach (var name in list)
+                {
+                    var id = InsertUserGenerated(name, solutionID, userID, locale, db);
+                    newSpecializationsList.Add(id);
+                }
+                db.Execute("COMMIT TRANSACTION");
+            }
+            return newSpecializationsList;
+        }
+        #endregion
+
+        #region Insert
+        const string sqlInsertUserGenerated = @"
+            -- 'Calculate' new ID
+            DECLARE @id int
+            SELECT TOP 1 @id = coalesce(specializationID + 1, 1)
+            FROM Specialization WITH (TABLOCKX)
+            ORDER BY specializationID DESC
+            -- All user IDs starts at 1000
+            IF @id < 1000
+                SET @id = 1000
+
+            INSERT INTO Specialization (
+                specializationID,
+                languageID,
+                countryID,
+                solutionID,
+                name,
+                displayRank,
+                createdDate,
+                updatedDate,
+                createdBy,
+                approved,
+                active,
+                enteredByUserID
+            ) VALUES (
+                @id,
+                @0,
+                @1,
+                @2,
+                @3,
+                null,
+                getdate(),
+                getdate(),
+                'user',
+                -- By default, approval is not defined still (null)
+                null,
+                1,
+                @4
+            )
+            SELECT @id as id
+        ";
+        /// <summary>
+        /// Inserts a new specialization generated by the user
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="solutionID"></param>
+        /// <param name="createdBy"></param>
+        /// <param name="enteredByUserID"></param>
+        /// <param name="locale"></param>
+        /// <param name="sharedDb"></param>
+        /// <returns></returns>
+        public static int InsertUserGenerated(
+            string name,
+            int solutionID,
+            int enteredByUserID,
+            Locale locale,
+            LcDatabase sharedDb)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                return (int)db.QueryValue(sqlInsertUserGenerated,
+                    locale.languageID, locale.countryID,
+                    solutionID, name,
+                    enteredByUserID);
+            }
+        }
+        #endregion
+
+        #region Fetch
+        const string sqlAutocomplete = @"
+            SELECT TOP 20
+                specializationID,
+                name
+            FROM specialization
+            WHERE (Approved = 1 OR Approved is null)
+                AND languageID = @0
+                AND countryID = @1
+                AND name like '%' + @2 + '%'
+                AND (@3 = 0 OR @3 = solutionID)
+            ORDER BY DisplayRank, name
+        ";
+        /// <summary>
+        /// It performs a limited search of specializations for the autocomplete, just with the
+        /// subset of fields needed (matches UserPostingSpecialization type).
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserPostingSpecialization> AutocompleteSearch(
+            string searchText, int solutionID, int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                var sql = sqlAutocomplete;
+                return db.Query(sql, languageID, countryID, searchText, solutionID).Select(UserPostingSpecialization.FromDB);
+            }
+        }
+        #endregion
+    }
+}

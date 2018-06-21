@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.Linq;
-using System.Web;
 using WebMatrix.Data;
 
 namespace LcRest
@@ -76,7 +75,34 @@ namespace LcRest
 
         public string timeZone;
 
+        public bool isOrganization;
+        public string orgName;
+        public string orgDescription;
+        public string orgWebsite;
+
         public DateTime updatedDate;
+        
+        /// <summary>
+        /// Business name or full name.
+        /// App code is able to construct this from other fields too, is not exposed to the API, just for
+        /// internal usage (like in emails)
+        /// </summary>
+        [JsonIgnore]
+        public string publicName
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(businessName))
+                {
+                    return businessName;
+                }
+                else
+                {
+                    var parts = new string[] { firstName, lastName, secondLastName }.Where((a) => !String.IsNullOrEmpty(a));
+                    return string.Join(" ", parts);
+                }
+            }
+        }
         #endregion
 
         public static PublicUserProfile FromDB(dynamic record)
@@ -103,6 +129,11 @@ namespace LcRest
                 isClient = record.isClient,
 
                 timeZone = record.timeZone,
+
+                isOrganization = record.isOrganization,
+                orgName = record.orgName,
+                orgDescription = record.orgDescription,
+                orgWebsite = record.orgWebsite,
 
                 updatedDate = record.updatedDate
             };
@@ -133,6 +164,11 @@ namespace LcRest
 
             ,cpa.timeZone as timeZone
 
+            ,users.isOrganization as isOrganization
+            ,org.orgName as orgName
+            ,org.orgDescription as orgDescription
+            ,org.orgWebsite as orgWebsite
+
             ,Users.updatedDate
 
         FROM Users
@@ -147,6 +183,9 @@ namespace LcRest
                 LEFT JOIN            
             CalendarProviderAttributes as cpa
                 ON cpa.UserID = Users.UserID
+                LEFT JOIN
+            userOrganization as org
+                ON org.userID = Users.userID
         WHERE Users.UserID = @0
             -- Users must be active (no deleted and publicly active) OR to exist in relationship with the other user (active or not, but with record)
           AND (Users.Active = 1 AND Users.AccountStatusID = 1 OR PC.Active is not null)
@@ -175,6 +214,11 @@ namespace LcRest
 
             ,cpa.timeZone as timeZone
 
+            ,users.isOrganization as isOrganization
+            ,org.orgName as orgName
+            ,org.orgDescription as orgDescription
+            ,org.orgWebsite as orgWebsite
+
             ,Users.updatedDate
 
         FROM Users
@@ -184,6 +228,9 @@ namespace LcRest
                 LEFT JOIN            
             CalendarProviderAttributes as cpa
                 ON cpa.UserID = Users.UserID
+                LEFT JOIN
+            userOrganization as org
+                ON org.userID = Users.userID
         WHERE Users.UserID = @0
           AND Users.Active = 1
         ";

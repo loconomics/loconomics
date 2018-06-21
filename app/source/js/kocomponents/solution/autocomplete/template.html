@@ -1,0 +1,22 @@
+<input-autocomplete params="
+    id: id,
+    name: 'solution',
+    icon: 'glyphicon glyphicon-search',
+    size: 'lg',
+    value: value,
+    suggestions: suggestions,
+    onSelect: onSelect,
+    isDisabled: isDisabled
+    ">
+    <template slot="suggestions">
+        <ul data-bind="foreach: suggestions" class="list-unstyled">
+            <li class="Result" data-input-autocomplete-suggestion
+                data-bind="attr: { id: $parent.id() + '-suggestion-' + $index() }">
+                <div class="Result-info">
+                    <span class="Result-name" data-bind="text: name"></span>
+                </div>
+                <span class="btn btn-secondary btn-md btn-inline">Select</span>
+            </li>
+        </ul>
+    </template>
+</input-autocomplete>

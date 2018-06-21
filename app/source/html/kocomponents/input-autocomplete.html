@@ -1,5 +1,5 @@
 <div class="InputAutocomplete-field input-group" data-bind="css: groupClasses">
-    <!-- ko if: icon --><span class="input-group-addon inset"><icon-dec params="icon: icon"></icon-dec></span><!-- /ko -->
+    <!-- ko if: icon --><span class="input-group-addon" data-bind="css: { inset: !isDisabled() }"><icon-dec params="icon: icon"></icon-dec></span><!-- /ko -->
     <input type="text" autocomplete="off" role="combobox"
         aria-expanded="false" aria-autocomplete="list"
         class="form-control inset"
@@ -8,9 +8,9 @@
             'aria-owns': listBoxID,
             'aria-expanded': isExpanded,
             placeholder: placeholder,
-            'aria-activedescendant': activeSuggestionID,
-            disable: isDisabled
+            'aria-activedescendant': activeSuggestionID
         },
+        disable: isDisabled,
         event: { keypress: onKeyPress, keydown: onKeyDown, blur: onBlur, focus: onFocus }" />
     <!-- ko template: { if: afterInputElement, nodes: afterInputElement && [afterInputElement], data: $component } --><!-- /ko -->
 </div>

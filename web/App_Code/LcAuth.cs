@@ -65,7 +65,8 @@ public static class LcAuth
         string aboutMe,
         string phone,
         string signupDevice,
-        int countryID
+        int countryID,
+        bool isOrganization
     )
     {
         // Check password validity.
@@ -121,6 +122,11 @@ public static class LcAuth
                     countryID > 0 ? countryID : LcData.GetCurrentCountryID(),
                     genderID, aboutMe, phone
                 );
+
+                if (isOrganization)
+                {
+                    db.Execute("UPDATE users SET IsOrganization=1 WHERE UserID=@0", userid);
+                }
 
                 // If is provider, update profile with that info (being both customer and provider)
                 // It assigns the first OnboardingStep 'welcome' for the new Onboarding Dashboard #454

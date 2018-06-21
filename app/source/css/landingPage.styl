@@ -66,7 +66,44 @@
                 height: 50px;
                 background-size: 100px auto;
             }
+            &.ccc-logo {
+                height: 150px;
+                background-image: url('../images/ccc_logo_wrap_text_clr.png');
+                background-size: 150px auto;
+                margin-bottom: 30px;
+                @media $mediaMaxSm {
+                    height: 100px;
+                    background-size: 100px auto;
+                }
+            }
+            &.logo-small {
+                height: 75px;
+                background-size: 150px auto;
+                background-position: left;
+                margin: 0px 0px 0px 15px;
+                @media $mediaMaxSm {
+                    background-position: center;
+                    height: 50px;
+                    background-size: 100px auto;
+                    margin: 0px;
+                }
+            }
         }
+        .landingpage-dwm-logo {
+                display: block;
+                background: no-repeat;
+                background-image: url('../images/DWM_Logo_Horizontal-01.png');
+                height: 150px;
+                background-size: 400px auto;
+                background-position: center;
+                margin: 0px 0px 0px 15px;
+                @media $mediaMaxSm {
+                    background-position: center;
+                    height: 100px;
+                    background-size: 300px auto;
+                    margin: 0px;
+                }
+            }
 
         .landingpage-copy {
             margin-bottom: 30px;
@@ -77,6 +114,36 @@
                 margin-bottom: 0;
                 margin-top: 0;
                 background: none;
+            }
+
+            @media $mediaMaxXs {
+                padding: 15px;
+            }
+        }
+        .landingpage-cta {
+            width: 200px;
+            padding: 10px;
+            font-size: 16px;   
+            margin: 20px auto; 
+            background: #259AD0; 
+            &:hover,
+            &:focus,
+            &:active {
+                outline: 3px solid #135077;
+            }
+        }
+        .landingpage-copy-partners {
+            margin-bottom: 30px;
+            padding: 30px; 0px; 30px; 30px;
+            background: rgba(99, 100, 102, 0.75);
+
+            @media $mediaMaxSm {
+                margin-bottom: 0;
+                margin-top: 0;
+                h1 {
+                    margin-top:0px;
+                    font-size:21px;
+                }
             }
 
             @media $mediaMaxXs {
@@ -107,6 +174,9 @@
             @media $mediaMaxSm {
                 padding-top: 0px;
             }
+            &.ccc-partner-background {
+                background-image: url('../images/paper-3187096_1920.jpg'); 
+            }
           }
         .landingpage-
         .landingpage-title {
@@ -124,6 +194,15 @@
             text-align: left;
             @media $mediaMaxSm {
                 font-size: 16px;
+            }
+            &.landingpage-poweredby {
+                font-size: 18px;
+                text-align: left;
+                margin: 10px 0px 5px 0px; 
+                @media $mediaMaxSm {
+                    text-align: center;
+                    font-size: 16px;
+                }               
             }
         }
         .landingpage-proposition {
@@ -205,6 +284,9 @@
               color: white;
               text-align: center;
             }
+            &.hiw-ccc {
+                background: #135077;    
+            }
             ul {
                 margin-top: ($iconsSize / 2) + 18px;
                 margin-bottom: 0;
@@ -224,7 +306,7 @@
                 }
             }
             @media (max-width: 520px) {
-                    margin: 0 $grid-gap;
+                    margin: 0;
             }
             h3 {
                 font-weight: bold;
@@ -240,6 +322,9 @@
                 height: $iconsSize;
                 line-height: $iconsSize;
                 color: white;
+                &.hiw-ccc {
+                    background: #135077;    
+                }
             }
         }
     }

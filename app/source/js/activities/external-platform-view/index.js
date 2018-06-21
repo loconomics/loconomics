@@ -2,7 +2,7 @@
  * Shows the user information about an external platform
  * to help them decide if they'd like to list themselves
  * there.
- * 
+ *
  * @module activities/external-platform-view
  *
  */
@@ -26,7 +26,9 @@ export default class ExternalPlatformViewActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
 
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Market externally', {
+            backLink: '/market-externally'
+        });
 
         /**
          * Creates a placeholder for an "out" parameter to be
@@ -39,9 +41,9 @@ export default class ExternalPlatformViewActivity extends Activity {
          * is updated.
          */
         this.title = ko.pureComputed( () =>  this.platformName() + ' information');
-        
+
         /**
-         * Creates a placeholder for the platform ID to be 
+         * Creates a placeholder for the platform ID to be
          * populated using the show(state) method below.
          */
         this.platformID = ko.observable();
@@ -50,7 +52,7 @@ export default class ExternalPlatformViewActivity extends Activity {
     show(state) {
         super.show(state);
         var params = state.route && state.route.segments;
-        
+
         /**
          * platformID is the first segment in the activity
          * URL.

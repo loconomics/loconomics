@@ -1,0 +1,1 @@
+ALTER TABLE dbo.Specialization DROP COLUMN Description

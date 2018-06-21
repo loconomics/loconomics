@@ -48,7 +48,7 @@ export default class AboutActivity extends Activity {
                 case 'careers':
                     return 'Careers';
                 default:
-                    return 'About Loconomics cooperative';
+                    return 'About Loconomics Cooperative';
             }
         }, this);
     }

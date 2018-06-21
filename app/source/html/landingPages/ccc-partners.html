@@ -1,0 +1,152 @@
+@render('../parts/landingPageHead.html')
+<div id="landingPage" data-activity="ccc-partners" class="LandingPage">
+    <div role="main">
+        <div class="landingpage-background ccc-partner-background">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-7 col-sm-reset landingpage-copy-partners">
+                        <div class="landingpage-brand ccc-logo"></div>
+                        <h1 class="landingpage-title">Hire California Community College Students</h1>
+                        <p class="landingpage-tagline">Skilled students are ready to work on your projects and tasks</p>
+                        <p class="landingpage-tagline landingpage-poweredby">Powered by:</p>
+                        <div class="landingpage-brand logo-small"></div>
+                    </div>
+                    <div class="col-md-5">
+                        <app-signup params="isCountryVisible: false, onSignedUp: redirect, profile: 'client', isCccMember: true, cccUserType: 'client'">
+                            <h2 class="sr-only">Get started for free</h2>
+
+                            <h5 class="SignupLogin-prompt">Nearest college:</h5>
+                            <div class="form-group">
+                                <select class="form-control" data-bind="value: institutionID">
+                                    <option selected disabled value="">Choose one</option>
+                                    <option value="222">Cabrillo College</option>
+                                    <option value="197">College of Alameda</option>
+                                    <option value="401">College of Marin</option>
+                                    <option value="263">College of the Canyons</option>
+                                    <option value="539">College of the Siskiyous</option>
+                                    <option value="293">Cosumnes River College</option>
+                                    <option value="296">Cuesta College</option>
+                                    <option value="310">East Los Angeles College</option>
+                                    <option value="314">El Camino College</option>
+                                    <option value="320">Evergreen Valley College</option>
+                                    <option value="341">Golden West College</option>
+                                    <option value="416">Merritt College</option>
+                                    <option value="429">Moorpark College</option>
+                                    <option value="464">Oxnard College</option>
+                                    <option value="476">Palomar College</option>
+                                    <option value="478">Pasadena City College</option>
+                                    <option value="497">Riverside City College</option>
+                                    <option value="313">San Diego Continuing Education</option>
+                                    <option value="521">San Jose City College</option>
+                                    <option value="528">Santa Monica College</option>
+                                    <option value="535">Sierra College</option>
+                                    <option value="541">Skyline College</option>
+                                    <option value="9890">Southwestern College</option>
+                                    <option value="573">West Hills College Coalinga</option>
+                                    <option value="8919">West Hills College Lemoore</option>
+                                </select>
+                                <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                            </div>
+                        </app-signup>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="landingpage-hiw hiw-ccc">
+            <h2 class="landingpage-title">How it works:</h2>
+            <div class="container landingpage-hiw-list">
+                <ul class="row list-unstyled">
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-clipboard hiw-ccc"></i>
+                        <h3>Post project</h3>
+                        <p>Post a new project and tell us about your needs. Students who fit your criteria apply. </p>
+                    </li>
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-chatboxes hiw-ccc"></i>
+                        <h3>Work together</h3>
+                        <p>Review applicants and hire who fits your needs best. Agree on terms and get to work!</p>
+                    </li>
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-android-checkbox-outline hiw-ccc"></i>
+                        <h3>Project completed</h3>
+                        <p>Once the project is successfully completed, begin discussing your next one.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 Testimonials">
+                    <div class="carousel slide" data-ride="carousel" id="quote-carousel" data-interval="false">
+                        <!-- Carousel Slides / Quotes -->
+                        <div class="carousel-inner text-center">
+                            <!-- Quote 1 -->
+                            <div class="item active">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>I like that I run my own business but have the support of Loconomics to keep my schedule flowing and organized.</p>
+                                            <small>YaVette Holts, One Presence Massage</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                            <!-- Quote 2 -->
+                            <div class="item">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>I love being part of something bigger and radical. Loconomics is bringing local service professionals together with a progressive team of technologists to facilitate our success. Even better, I share the profits and help influence decisions.</p>
+                                            <small>Christopher Tellez, SF Reiki Center</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                            <!-- Quote 3 -->
+                            <div class="item">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>I've worked for 7 years in different cooperatives and am proud to be part of Loconomics. We work as a team and at the same time I can own my own business with the confidence that we share the profits of this platform with nobody else. We learn and share leadership positions, make decisions and grow personally.</p>
+                                            <small>Anahi Rojas, Professional Eco-Cleaning</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                        <!-- Bottom Carousel Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#quote-carousel" data-slide-to="0" class="active"><img class="img-responsive " src="/assets/images/YaVette.png" alt="">
+                            </li>
+                            <li data-target="#quote-carousel" data-slide-to="1"><img class="img-responsive" src="/assets/images/christopher.png" alt="">
+                            </li>
+                            <li data-target="#quote-carousel" data-slide-to="2"><img class="img-responsive" src="/assets/images/anahi.png" alt="">
+                            </li>
+                        </ol>
+                        <!-- Carousel Buttons Next/Prev -->
+                        <a data-slide="prev" href="#quote-carousel" class="left carousel-control"><i class="fa ion-ios-arrow-left"></i></a>
+                        <a data-slide="next" href="#quote-carousel" class="right carousel-control"><i class="fa ion-ios-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Press">
+                <a class="pressLogo pressLogo-NYT" href="https://www.nytimes.com/2016/07/21/business/smallbusiness/a-new-wrinkle-in-the-gig-economy-workers-get-most-of-the-money.html?_r=0" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-SFChronicle" href="http://www.sfgate.com/business/article/Cooperatives-give-new-meaning-to-sharing-economy-5502879.php" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-TheNation" href="https://www.thenation.com/article/5-ways-take-back-tech/" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-Shareable" href="http://www.shareable.net/blog/owning-is-the-new-sharing" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-FastCompany" href="https://www.fastcompany.com/3051845/the-peoples-uber-why-the-sharing-economy-must-share-ownership" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-EastBayExpress" href="http://www.eastbayexpress.com/oakland/the-true-sharing-economy/Content?oid=4563249" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-FT" href="https://www.ft.com/content/beb85bdc-1f8e-11e7-b7d3-163f5a7f229c" target="_blank">
+                </a>
+        </div>
+        <div class="landingpage-dwm-logo"></div>
+    </div>
+</div>
+@render('../parts/landingPageFoot.html')

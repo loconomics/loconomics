@@ -5,7 +5,6 @@
  *
  * IMPORTANT: Any activity starting with underscore must not being published.
  */
-'use strict';
 
 import * as activities from '../index';
 import Activity from '../../components/Activity';

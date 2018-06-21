@@ -1,0 +1,1 @@
+INSERT INTO dbo.jobTitleLicense (PositionID, LicenseCertificationID, StateProvinceID, CountryID, Required, CreatedDate, UpdatedDate, ModifiedBy, Active, MunicipalityID, CountyID, OptionGroup) VALUES (19, -1, -1, 1, 1, '03/21/2018', '03/21/2018', 'jd', 1, 0, 0, null);
