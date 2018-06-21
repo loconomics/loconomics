@@ -7,6 +7,7 @@
 import '../time-range-filter';
 import Komponent from '../../helpers/KnockoutComponent';
 import { amICollegeAdmin } from '../../../utils/partnerAdminAccessControl';
+import fieldsOfStudy from '../../../data/embedded/fieldsOfStudy';
 import institutions from '../../../data/embedded/cccColleges';
 import jobTitles from '../../../data/embedded/jobTitlesAutocomplete';
 import ko from 'knockout';
@@ -108,6 +109,17 @@ export default class EarningsAdminFilter extends Komponent {
         this.institutions = ko.observableArray(institutions);
 
         /**
+         * Field Of Study (TOP Code) selected
+         * @member {KnockoutObservable<rest/FieldOfStudy>}
+         */
+        this.fieldOfStudy = ko.observable();
+
+        /**
+         * @member {KnockoutObservable<Array<rest/FieldOfStudy>>}
+         */
+        this.fieldsOfStudy = ko.observableArray(fieldsOfStudy);
+
+        /**
          * @member {KnockoutComputed<boolean>}
          */
         this.amICollegeAdmin = amICollegeAdmin;
@@ -132,6 +144,18 @@ export default class EarningsAdminFilter extends Komponent {
         };
 
         /**
+         * Gets object iwth filter values for field of study
+         * @returns {Object}
+         */
+        const getFieldOfStudyFilter = () => {
+            const f = this.fieldOfStudy();
+            return {
+                fieldOfStudyID: f && f.fieldOfStudyID,
+                fieldOfStudyText: f && f.name || 'All TOP Codes'
+            };
+        };
+
+        /**
          * Automatically trigger onSelect on options changes
          */
         ko.computed(() => {
@@ -139,6 +163,7 @@ export default class EarningsAdminFilter extends Komponent {
             const jobTitle = this.jobTitle();
             const platform = this.platform();
             const inst = getInstitutionFilter();
+            const f = getFieldOfStudyFilter();
 
             params.onSelect(Object.assign({
                 fromDate: range.from,
@@ -148,7 +173,7 @@ export default class EarningsAdminFilter extends Komponent {
                 platformID: platform && platform.platformID,
                 jobTitleText: jobTitle && jobTitle.singularName,
                 platformText: platform && platform.name || 'All platforms'
-            }, inst));
+            }, inst, f));
         })
         // Prevent that several, automated/related changes, trigger too much notifications.
         .extend({ rateLimit: { timeout: 100, method: 'notifyWhenChangesStop' } });

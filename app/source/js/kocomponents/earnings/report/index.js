@@ -136,7 +136,8 @@ export default class EarningsReport extends Komponent {
             const labels = [
                 this.selectedJobTitleText(),
                 this.selectedUserExternalListingText(),
-                ('institutionText' in filters ? filters.institutionText : '')
+                ('institutionText' in filters ? filters.institutionText : ''),
+                ('fieldOfStudyText' in filters ? filters.fieldOfStudyText : '')
             ];
             return labels.filter((a) => a).join(', ');
         });

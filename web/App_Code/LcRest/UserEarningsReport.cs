@@ -47,6 +47,7 @@ namespace LcRest
             public int? userExternalListingID;
             public int? platformID;
             public int? institutionID;
+            public int? fieldOfStudyID;
         }
         #endregion
 
@@ -112,6 +113,7 @@ namespace LcRest
                 AND (@2 is null OR JobTitleID = @2)
                 AND (@3 is null OR UEL.PlatformID = @3)
                 AND (@4 is null OR CCCUsers.institutionID = @4)
+                AND (@5 is null OR CCCUsers.fieldOfStudyID = @5)
             ) AS T
         ";
         #endregion
@@ -120,8 +122,11 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return FromDB(db.QuerySingle(sqlCccAdminReport,
-                    filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID,
-                    filter.institutionID));
+                    filter.fromDate, filter.toDate,
+                    filter.jobTitleID,
+                    filter.platformID,
+                    filter.institutionID,
+                    filter.fieldOfStudyID));
             }
         }
 
@@ -168,6 +173,7 @@ namespace LcRest
                 AND (@4 is null OR E.JobTitleID = @4)
                 AND (@5 is null OR L.PlatformID = @5)
                 AND (@6 is null OR U.institutionID = @6)
+                AND (@7 is null OR U.fieldOfStudyID = @7)
         ";
         #endregion
         public class DetailedReport
@@ -206,7 +212,8 @@ namespace LcRest
                     filter.fromDate, filter.toDate,
                     filter.jobTitleID,
                     filter.platformID,
-                    filter.institutionID)
+                    filter.institutionID,
+                    filter.fieldOfStudyID)
                     .Select(DetailedReport.FromDB);
             }
         }
