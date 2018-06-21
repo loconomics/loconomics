@@ -241,16 +241,24 @@ public class RestWebPage
     }
 
     #region CSV Export
-    public CsvHelper.CsvWriter ExportAsCsv(object data)
+    /// <summary>
+    /// Prepares the response output to be done as a CSV file, returning a wrapper that serialized the data
+    /// that should be returned to let the process finalize (as of a Get, Post, Put, Delete methods).
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="downloadWithFilename">If given, force browser to download the content with the given file name</param>
+    /// <returns></returns>
+    public CsvHelper.CsvWriter ExportAsCsv(IEnumerable<object> data, string downloadWithFilename = null)
     {
-        return ExportAsCsv(new List<object> { data });
-    }
+        if (!String.IsNullOrEmpty(downloadWithFilename))
+        {
+            WebPage.Response.AddHeader("Content-Disposition", "attachment; filename=" + downloadWithFilename);
+        }
 
-    public CsvHelper.CsvWriter ExportAsCsv(IEnumerable<object> data)
-    {
         var csv = new CsvHelper.CsvWriter(WebPage.Response.Output);
         csv.Configuration.MemberTypes = CsvHelper.Configuration.MemberTypes.Fields | CsvHelper.Configuration.MemberTypes.Properties;
         csv.WriteRecords(data);
+
         return csv;
     }
     #endregion

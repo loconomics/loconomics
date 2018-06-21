@@ -146,7 +146,7 @@
 
                             if (exportCsv)
                             {
-                                return this.ExportAsCsv(data);
+                                return this.ExportAsCsv(new List<object> { data }, "earnings-report.csv");
                             }
                             else
                             {
