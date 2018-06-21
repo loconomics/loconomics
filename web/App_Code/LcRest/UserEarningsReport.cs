@@ -114,6 +114,21 @@ namespace LcRest
                 AND (@4 is null OR CCCUsers.institutionID = @4)
             ) AS T
         ";
+        #endregion
+        public static UserEarningsReport CccAdminReport(EarningsFilterValues filter)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlCccAdminReport,
+                    filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID,
+                    filter.institutionID));
+            }
+        }
+
+        #endregion
+
+        #region Query CCC Admin Detailed Report
+        #region SQL
         const string sqlCccAdminDetailedReport = @"
             SELECT
                 E.paidDate,
@@ -155,16 +170,34 @@ namespace LcRest
                 AND (@6 is null OR U.institutionID = @6)
         ";
         #endregion
-        public static UserEarningsReport CccAdminReport(EarningsFilterValues filter)
+        public class DetailedReport
         {
-            using (var db = new LcDatabase())
+            public DateTimeOffset paidDate;
+            public int userID;
+            public string platform;
+            public string jobTitle;
+            public string college;
+            public decimal earnings;
+            public int minutes;
+            public string fieldOfStudy;
+
+            public static DetailedReport FromDB(dynamic record)
             {
-                return FromDB(db.QuerySingle(sqlCccAdminReport,
-                    filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID,
-                    filter.institutionID));
+                if (record == null) return null;
+                return new DetailedReport
+                {
+                    paidDate = record.paidDate,
+                    userID = record.userID,
+                    platform = record.platform,
+                    college = record.college,
+                    earnings = record.earnings,
+                    fieldOfStudy = record.fieldOfStudy,
+                    jobTitle = record.jobTitle,
+                    minutes = record.minutes
+                };
             }
         }
-        public static IEnumerable<dynamic> CccAdminDetailedReport(EarningsFilterValues filter, Locale locale)
+        public static IEnumerable<DetailedReport> CccAdminDetailedReport(EarningsFilterValues filter, Locale locale)
         {
             using (var db = new LcDatabase())
             {
@@ -173,7 +206,8 @@ namespace LcRest
                     filter.fromDate, filter.toDate,
                     filter.jobTitleID,
                     filter.platformID,
-                    filter.institutionID);
+                    filter.institutionID)
+                    .Select(DetailedReport.FromDB);
             }
         }
         #endregion
