@@ -4,29 +4,29 @@
         defaultTimeRangeOption: defaultTimeRangeOption">
     </earnings-time-range-filter>
     <div class="form-group">
-        <label for="earnings-admin-filters-jobtitle" class="sr-only">Job Title</label>
+        <label for="earnings-admin-filters-jobtitle">Select Job Title</label>
         <select id="earnings-admin-filters-jobtitle" class="form-control" data-bind="
             value: jobTitle,
             options: jobTitles,
-            optionsCaption: ' All job titles',
+            optionsCaption: ' All Job Titles',
             optionsText: 'singularName'">
         </select>
     </div>
     <div class="form-group">
-        <label for="earnings-admin-filters-platform" class="sr-only">Platform</label>
+        <label for="earnings-admin-filters-platform">Select Platform</label>
         <select id="earnings-admin-filters-platform" class="form-control" data-bind="
             value: platform,
             options: platforms,
-            optionsCaption: ' All platforms',
+            optionsCaption: ' All Platforms',
             optionsText: 'name'">
         </select>
     </div>
     <div class="form-group" data-bind="visible: !amICollegeAdmin(), if: !amICollegeAdmin()">
-        <label for="earnings-admin-filters-institution" class="sr-only">College</label>
+        <label for="earnings-admin-filters-institution">Select College</label>
         <select id="earnings-admin-filters-institution" class="form-control" data-bind="
             value: institution,
             options: institutions,
-            optionsCaption: ' All colleges',
+            optionsCaption: ' All Colleges',
             optionsText: 'name'">
         </select>
     </div>
