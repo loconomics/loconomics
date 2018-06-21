@@ -6,6 +6,8 @@
 **/
 'use strict';
 
+import { amICollegeAdmin, amIPartnerAdmin } from './utils/partnerAdminAccessControl';
+
 var ko = require('knockout');
 var $ = require('jquery');
 var NavBar = require('./viewmodels/NavBar');
@@ -254,6 +256,9 @@ exports.extend = function (app) {
             return activityName === app.navBarBinding.active() ? 'active' : '';
         });
     };
+
+    app.navBarBinding.isPartnerAdmin = ko.pureComputed(() => amIPartnerAdmin());
+    app.navBarBinding.isCollegeAdmin = ko.pureComputed(() => amICollegeAdmin());
 
     app.setupNavBarBinding = function setupNavBarBinding() {
         app.navBarBinding.isApp(!!window.cordova);
