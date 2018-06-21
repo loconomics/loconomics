@@ -10,7 +10,7 @@ import { amICollegeAdmin } from '../../../utils/partnerAdminAccessControl';
 import institutions from '../../../data/embedded/cccColleges';
 import jobTitles from '../../../data/embedded/jobTitlesAutocomplete';
 import ko from 'knockout';
-import { list as platforms } from '../../../data/platforms';
+import { allRegisteredPlatforms as platforms } from '../../../data/platforms';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
 
