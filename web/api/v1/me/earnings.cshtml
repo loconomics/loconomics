@@ -152,17 +152,29 @@
                         filter.institutionID = user.institutionID ?? 0;
                     }
 
-                    var data = detailedReport ?
-                        LcRest.UserEarningsReport.CccAdminDetailedReport(filter, LcRest.Locale.Current) :
-                        new List<object> { LcRest.UserEarningsReport.CccAdminReport(filter) };
-
-                    if (exportAsCsv)
+                    if (detailedReport)
                     {
-                        return this.ExportAsCsv(data, "earnings-report.csv");
+                        var data = LcRest.UserEarningsReport.CccAdminDetailedReport(filter, LcRest.Locale.Current);
+                        if (exportAsCsv)
+                        {
+                            return this.ExportAsCsv(data, "earnings-report.csv");
+                        }
+                        else
+                        {
+                            return data;
+                        }
                     }
                     else
                     {
-                        return data;
+                        var data = LcRest.UserEarningsReport.CccAdminReport(filter);
+                        if (exportAsCsv)
+                        {
+                            return this.ExportAsCsv(new List<object> { data }, "earnings-report.csv");
+                        }
+                        else
+                        {
+                            return data;
+                        }
                     }
                 }
             }
