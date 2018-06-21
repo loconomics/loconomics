@@ -6,6 +6,7 @@
 
 import '../time-range-filter';
 import Komponent from '../../helpers/KnockoutComponent';
+import institutions from '../../../data/embedded/cccColleges';
 import jobTitles from '../../../data/embedded/jobTitlesAutocomplete';
 import ko from 'knockout';
 import { list as platforms } from '../../../data/platforms';
@@ -95,12 +96,24 @@ export default class EarningsAdminFilter extends Komponent {
         this.platforms = ko.observableArray([]);
 
         /**
+         * Institution selected
+         * @member {KnockoutObservable<rest/Institution>}
+         */
+        this.institution = ko.observable();
+
+        /**
+         * @member {KnockoutObservable<Array<rest/Institution>>}
+         */
+        this.institutions = ko.observableArray(institutions);
+
+        /**
          * Automatically trigger onSelect on options changes
          */
         ko.computed(() => {
             const range = this.timeRangeSelected();
             const jobTitle = this.jobTitle();
             const platform = this.platform();
+            const institution = this.institution();
             params.onSelect({
                 fromDate: range.from,
                 toDate: range.to,
@@ -108,7 +121,9 @@ export default class EarningsAdminFilter extends Komponent {
                 jobTitleID: jobTitle && jobTitle.jobTitleID,
                 platformID: platform && platform.platformID,
                 jobTitleText: jobTitle && jobTitle.singularName,
-                platformText: platform && platform.name || 'All platforms'
+                platformText: platform && platform.name || 'All platforms',
+                institutionID: institution && institution.institutionID,
+                institutionText: institution && institution.name || 'All colleges'
             });
         })
         // Prevent that several, automated/related changes, trigger too much notifications.

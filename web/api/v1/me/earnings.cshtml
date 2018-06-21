@@ -61,22 +61,14 @@
                 "userExternalListingID": null
             }
         },
-        "Earnings Report: all CCC students (only CCC admin), or CCC college for collegeAdmin": {
+        "Earnings Report: all CCC students (only CCC admin), or CCC college for collegeAdmin (institutionID is automatic for them)": {
             "url": "/api/v1/en-US/me/earnings/report/ccc",
             "get": {
                 "fromDate": "2018-01-01 00:00:00+0100",
                 "toDate": "2019-01-01 00:00:00+0100",
                 "jobTitleID": null,
-                "userExternalListingID": null
-            }
-        },
-        "Earnings Report: CCC College (only CCC admin)": {
-            "url": "/api/v1/en-US/me/earnings/report/ccc/197",
-            "get": {
-                "fromDate": "2018-01-01 00:00:00+0100",
-                "toDate": "2019-01-01 00:00:00+0100",
-                "jobTitleID": null,
-                "userExternalListingID": null
+                "userExternalListingID": null,
+                "institutionID": null
             }
         }
     }
@@ -112,7 +104,8 @@
                     toDate = DateTimeOffsetFromISO(Request["toDate"]),
                     jobTitleID = Request["jobTitleID"].IsInt() ? (int?)Request["jobTitleID"].AsInt() : null,
                     userExternalListingID = Request["userExternalListingID"].IsInt() ? (int?)Request["userExternalListingID"].AsInt() : null,
-                    platformID = Request["platformID"].IsInt() ? (int?)Request["platformID"].AsInt() : null
+                    platformID = Request["platformID"].IsInt() ? (int?)Request["platformID"].AsInt() : null,
+                    institutionID = Request["institutionID"].IsInt() ? (int?)Request["institutionID"].AsInt() : null
                 };
                 if (UrlData.Count == 1)
                 {
@@ -122,25 +115,22 @@
                 else if (UrlData[1] == "ccc")
                 {
                     WebPage.Response.RestRequiresUser(LcData.UserInfo.UserType.LoggedUser);
-                    var institutionID = UrlData[2].AsInt(0);
                     var user = LcRest.UserProfile.Get(WebSecurity.CurrentUserId);
                     if (user.partner == "ccc")
                     {
                         var isSystemAdmin = user.isAdmin;
                         var isAdmin = user.partnerUserType == "admin";
                         var isCollegeAdmin = user.partnerUserType == "collegeAdmin";
-                        // Forced institution for college admins
-                        if (isCollegeAdmin)
+                        // Only allowed to admins
+                        if (isAdmin || isCollegeAdmin || isSystemAdmin)
                         {
-                            institutionID = user.institutionID ?? 0;
-                        }
-                        if (institutionID == 0 && (isAdmin || isSystemAdmin))
-                        {
+                            // Forced institution for college admins
+                            if (isCollegeAdmin)
+                            {
+                                filter.institutionID = user.institutionID ?? 0;
+                            }
+
                             return LcRest.UserEarningsReport.QueryAllCccStudents(filter);
-                        }
-                        else if (isAdmin || isCollegeAdmin || isSystemAdmin)
-                        {
-                            return LcRest.UserEarningsReport.QueryCccCollegeStudents(filter, institutionID);
                         }
                     }
                 }
