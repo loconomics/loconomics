@@ -41,10 +41,10 @@ userEarnings.list.onCacheChanged.subscribe(invalidateReport);
 userEarnings.list.onCacheInvalidated.subscribe(invalidateReport);
 
 /**
- * Gives a report filtered by the given query data and optionally for an
- * institutionID just for studends of CCC colleges
+ * Gives a report filtered by the given query data just including data for
+ * studends of CCC colleges for user allowed as admins
  * @returns {Promise<rest/UserExternalReport>}
  */
-export function queryCccStudents(filters, institutionID) {
-    return rest.get(API_NAME + '/ccc' + (institutionID ? '/' + institutionID : ''), filters);
+export function queryCccStudents(filters) {
+    return rest.get(API_NAME + '/ccc', filters);
 }

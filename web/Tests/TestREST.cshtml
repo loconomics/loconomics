@@ -1208,22 +1208,14 @@
                 "userExternalListingID": null
             }
         },
-        "Earnings Report: all CCC students (only CCC admin), or CCC college for collegeAdmin": {
+        "Earnings Report: all CCC students (only CCC admin), or CCC college for collegeAdmin (institutionID is automatic for them)": {
             "url": "/api/v1/en-US/me/earnings/report/ccc",
             "get": {
                 "fromDate": "2018-01-01 00:00:00+0100",
                 "toDate": "2019-01-01 00:00:00+0100",
                 "jobTitleID": null,
-                "userExternalListingID": null
-            }
-        },
-        "Earnings Report: CCC College (only CCC admin)": {
-            "url": "/api/v1/en-US/me/earnings/report/ccc/197",
-            "get": {
-                "fromDate": "2018-01-01 00:00:00+0100",
-                "toDate": "2019-01-01 00:00:00+0100",
-                "jobTitleID": null,
-                "userExternalListingID": null
+                "userExternalListingID": null,
+                "institutionID": null
             }
         },
         "Badges (create)": {
@@ -1352,6 +1344,10 @@
         },
         "Posting Templates - Get item": {
             "url": "/api/v1/en-US/posting-templates/1",
+            "get": {}
+        },
+        "Platforms (all registered)": {
+            "url": "/api/v1/en-US/platforms",
             "get": {}
         }
     };

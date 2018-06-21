@@ -12,6 +12,9 @@ import template from './template.html';
 
 const ROUTE_NAME = 'partner-admin';
 
+const REQUEST_REPORT_SUBJECT = `Request Custom Report`;
+const REQUEST_REPORT_MESSAGE = `Please describe the data you're looking for, and we'll create a report for you.`;
+
 export default class PartnerAdminActivity extends Activity {
 
     static get template() { return template; }
@@ -24,6 +27,8 @@ export default class PartnerAdminActivity extends Activity {
         this.navBar = Activity.createSectionNavBar(null);
         this.navBar.rightAction(null);
         this.title = 'Admin';
+
+        this.requestReportLink = `/contactForm?subject=${encodeURIComponent(REQUEST_REPORT_SUBJECT)}&message=${encodeURIComponent(REQUEST_REPORT_MESSAGE)}`;
     }
 }
 

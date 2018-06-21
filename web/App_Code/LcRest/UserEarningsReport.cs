@@ -46,6 +46,7 @@ namespace LcRest
             public int? jobTitleID;
             public int? userExternalListingID;
             public int? platformID;
+            public int? institutionID;
         }
         #endregion
 
@@ -118,14 +119,9 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlQueryCccStudents, filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID, null));
-            }
-        }
-        public static UserEarningsReport QueryCccCollegeStudents(EarningsFilterValues filter, int institutionID)
-        {
-            using (var db = new LcDatabase())
-            {
-                return FromDB(db.QuerySingle(sqlQueryCccStudents, filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID, institutionID));
+                return FromDB(db.QuerySingle(sqlQueryCccStudents,
+                    filter.fromDate, filter.toDate, filter.jobTitleID, filter.platformID,
+                    filter.institutionID));
             }
         }
         #endregion

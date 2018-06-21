@@ -124,6 +124,23 @@ export default class EarningsReport extends Komponent {
             return filters && (filters.userExternalListingText || filters.platformText) || '';
         });
 
+        /**
+         * Text enumerating the filter options selected by the user (if provided),
+         * excluding intentionally the date that is displayed apart.
+         * @member {KnockoutComputed<string>}
+         */
+        this.filtersText = ko.pureComputed(() => {
+            const filters = this.appliedFilters();
+            if (!filters) return '';
+
+            const labels = [
+                this.selectedJobTitleText(),
+                this.selectedUserExternalListingText(),
+                ('institutionText' in filters ? filters.institutionText : '')
+            ];
+            return labels.filter((a) => a).join(', ');
+        });
+
         if (connectUserData) {
             this.__connectData();
         }

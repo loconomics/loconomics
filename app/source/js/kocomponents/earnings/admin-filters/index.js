@@ -6,9 +6,11 @@
 
 import '../time-range-filter';
 import Komponent from '../../helpers/KnockoutComponent';
+import { amICollegeAdmin } from '../../../utils/partnerAdminAccessControl';
+import institutions from '../../../data/embedded/cccColleges';
 import jobTitles from '../../../data/embedded/jobTitlesAutocomplete';
 import ko from 'knockout';
-import { list as platforms } from '../../../data/platforms';
+import { allRegisteredPlatforms as platforms } from '../../../data/platforms';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
 
@@ -95,13 +97,50 @@ export default class EarningsAdminFilter extends Komponent {
         this.platforms = ko.observableArray([]);
 
         /**
+         * Institution selected
+         * @member {KnockoutObservable<rest/Institution>}
+         */
+        this.institution = ko.observable();
+
+        /**
+         * @member {KnockoutObservable<Array<rest/Institution>>}
+         */
+        this.institutions = ko.observableArray(institutions);
+
+        /**
+         * @member {KnockoutComputed<boolean>}
+         */
+        this.amICollegeAdmin = amICollegeAdmin;
+
+        /**
+         * Gets object with filter values for institution, or empty if doesn't
+         * apply for current user.
+         * @returns {Object}
+         */
+        const getInstitutionFilter = () => {
+            const hasInstitutionFilter = !this.amICollegeAdmin();
+            if (hasInstitutionFilter) {
+                const institution = this.institution();
+                return {
+                    institutionID: institution && institution.institutionID,
+                    institutionText: institution && institution.name || 'All colleges'
+                };
+            }
+            else {
+                return {};
+            }
+        };
+
+        /**
          * Automatically trigger onSelect on options changes
          */
         ko.computed(() => {
             const range = this.timeRangeSelected();
             const jobTitle = this.jobTitle();
             const platform = this.platform();
-            params.onSelect({
+            const inst = getInstitutionFilter();
+
+            params.onSelect(Object.assign({
                 fromDate: range.from,
                 toDate: range.to,
                 timeRangeOption: range.option,
@@ -109,7 +148,7 @@ export default class EarningsAdminFilter extends Komponent {
                 platformID: platform && platform.platformID,
                 jobTitleText: jobTitle && jobTitle.singularName,
                 platformText: platform && platform.name || 'All platforms'
-            });
+            }, inst));
         })
         // Prevent that several, automated/related changes, trigger too much notifications.
         .extend({ rateLimit: { timeout: 100, method: 'notifyWhenChangesStop' } });
