@@ -193,6 +193,14 @@ function SignupVM() {
      */
     this.isOrganization = new Field();
 
+    // Automatically link the profile type for CCC users
+    ko.computed(() => {
+        if (this.isCccMember()) {
+            const profile = this.isStudent() ? profileType.serviceProfessional : profileType.client;
+            this.profile(profile);
+        }
+    });
+
     this.reset = function() {
         this.atBooking(false);
         this.confirmationCode(null);

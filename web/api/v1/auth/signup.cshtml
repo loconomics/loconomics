@@ -190,6 +190,7 @@
         private void SaveCccMember(LcAuthHelper.LoginResult login)
         {
             var isClient = Request["cccUserType"] == "client";
+            var isStudent = Request["cccUserType"] == "student";
             using (var db = new LcDatabase())
             {
                 db.Execute("BEGIN TRANSACTION");
@@ -201,11 +202,22 @@
                     }
                     else
                     {
-                        ResetTrialEndDate(db, login.userID);
-                        InsertExtraUserInfo(db, login.userID);
                         InsertCccUser(db, login.userID);
-                        InsertUserEducation(db, login.userID);
-                        InsertCccPaymentPlan(db, login.userID);
+                        if (isStudent)
+                        {
+                            // Only students include auto-add education
+                            InsertUserEducation(db, login.userID);
+                            // We only request gender and birth date to students
+                            InsertExtraUserInfo(db, login.userID);
+                        }
+                        if (login.profile.isServiceProfessional)
+                        {
+                            // Only students should sign-up as service professionals from a CCC landing,
+                            // still we check the flag and apply some specific steps only for CCC users
+                            // that get a free service professional account.
+                            ResetTrialEndDate(db, login.userID);
+                            InsertCccPaymentPlan(db, login.userID);
+                        }
                     }
                     db.Execute("COMMIT TRANSACTION");
                 }
