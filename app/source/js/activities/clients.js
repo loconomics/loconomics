@@ -64,7 +64,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 
     var itIs = this.viewModel.isSelectionMode();
 
-    this.viewModel.headerText(itIs ? 'Select a client' : 'My clients');
+    this.viewModel.headerText(itIs ? 'Select a client' : '');
 
     if (this.requestData.title) {
         // Replace title by title if required
