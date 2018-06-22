@@ -143,7 +143,9 @@ namespace LcRest
                 C.institutionName as college,
                 E.amount as earnings,
                 E.durationMinutes as minutes,
-                (F.fieldOfStudyName + '    (' + CAST(F.CCCTOPCode as nvarchar) + ')') as fieldOfStudy
+                (F.fieldOfStudyName + '    (' + CAST(F.CCCTOPCode as nvarchar) + ')') as fieldOfStudy,
+                U.studentID,
+                Cast((UU.BirthYear + '-' + UU.BirthMonth + '-' + UU.BirthMonthDay) as datetime) as dateOfBirth
             FROM
                 UserEarningsEntry As E
                   INNER JOIN
@@ -160,6 +162,9 @@ namespace LcRest
                   INNER JOIN
                 CCCUsers as U
                     ON U.UserID = E.UserID
+                  INNER JOIN
+                Users as UU
+                    ON UU.UserID = E.UserID
                   INNER JOIN
                 institution As C
                     ON C.institutionID = U.institutionID
@@ -186,6 +191,8 @@ namespace LcRest
             public decimal earnings;
             public int minutes;
             public string fieldOfStudy;
+            public int? studentID;
+            public DateTimeOffset? dateOfBirth;
 
             public static DetailedReport FromDB(dynamic record)
             {
@@ -199,7 +206,9 @@ namespace LcRest
                     earnings = record.earnings,
                     fieldOfStudy = record.fieldOfStudy,
                     jobTitle = record.jobTitle,
-                    minutes = record.minutes
+                    minutes = record.minutes,
+                    studentID = record.studentID,
+                    dateOfBirth = record.dateOfBirth
                 };
             }
         }
