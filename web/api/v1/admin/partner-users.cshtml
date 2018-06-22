@@ -1,0 +1,37 @@
+﻿@**
+    List and manage users of a partnership.
+    Only site admins and admins of the requested partne can access this.
+
+    Options:
+
+    GET /@partner
+        List all users in the given partnership.
+
+    EXAMPLES {
+        "Admin: List Partner Users": {
+            "url": "/api/v1/en-US/admin/partner-users/ccc",
+            "get": {}
+        }
+    }
+**@
+@functions{
+    public class RestPartnerUsers : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 1 &&
+                !UrlData[0].IsEmpty())
+            {
+                var partner = UrlData[0];
+
+                return LcRest.PartnerUser.List(partner);
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{
+    Response.RestRequiresPartnerUser("admin", UrlData[0]);
+    new RestPartnerUsers().JsonResponse(this);
+}
