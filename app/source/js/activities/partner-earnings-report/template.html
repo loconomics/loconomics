@@ -1,0 +1,27 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <h1 data-bind="text: title"></h1>
+        <div class="col-md-7 col-sm-reset">
+            <button type="button" data-bind="click: showFilters" class="btn btn-icon-link btn-default" aria-label="Filter Earnings Summary">
+                <span>Filter results
+                    <icon-dec params="icon: 'ion-android-funnel'"></icon-dec>
+                </span>
+            </button>
+            <earnings-admin-filters params="onSelect: reportFilters, defaultTimeRangeOption: defaultTimeRangeOption"
+                data-bind="visible: areFiltersVisible" class="isolated"></earnings-admin-filters>
+            <earnings-report params="filters: appliedFilters, data: earningsReport"></earnings-report>
+            <div class="isolated">
+                <a class="btn btn-default" data-bind="attr: { href: linkDownloadReportCsv }">
+                    Download CSV
+                </a>
+                <a class="btn btn-primary" data-bind="attr: { href: linkDownloadDetailedReportCsv }">
+                    Download Detailed report (CSV)
+                </a>
+            </div>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+            <app-inline-side-menu params="vocElement: 'partner'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>

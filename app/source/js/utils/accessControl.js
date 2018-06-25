@@ -1,15 +1,23 @@
 /**
-    Create an Access Control for an app that just checks
-    the activity property for allowed user level.
+    Create an Access Control for an app that checks
+    the activity property for allowed user level and
+    optional custom accessControl.
     To be provided to Shell.js and used by the app.js,
     very tied to that both classes.
 
-    Activities can define on its object an accessLevel
+    Activities can define an accessLevel
     property like next examples
 
     this.accessLevel = app.Usertype.user; // anyone
     this.accessLevel = app.UserType.anonymous; // anonymous users only
     this.accessLevel = app.UserType.loggedUser; // authenticated users only
+
+    And optionally, can define an accessControl instance method, receiving
+    the route as unique parameter and returning null if allowed, or a
+    descriptive object with error information (it's the same signature as
+    the accessControl function generated here).
+    This custom method will be called only if accessLevel passed succesfully,
+    so that can be used as a first barrier.
 **/
 'use strict';
 
@@ -36,6 +44,10 @@ module.exports = function createAccessControl(app) {
                     requiredLevel: activity.accessLevel,
                     currentType: currentType
                 };
+            }
+            // Custom control?
+            else if(activity.accessControl) {
+                return activity.accessControl(route);
             }
         }
 

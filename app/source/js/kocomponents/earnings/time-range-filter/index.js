@@ -1,43 +1,28 @@
 /**
- * Form with available filter options for earnings.
+ * Form fields to selet a time range as an earnings filters option
  *
- * @module kocomponents/earnings/filters
+ * @module kocomponents/earnings/time-range-filter
  */
 import Komponent from '../../helpers/KnockoutComponent';
 import TimeRangeOption from './TimeRangeOption';
 import { create as createEditableDate } from '../../../utils/inputEditableComputedDate';
 import ko from 'knockout';
 import moment from 'moment';
-import { show as showError } from '../../../modals/error';
 import template from './template.html';
-import { list as userExternalListings } from '../../../data/userExternalListings';
-import { list as userListings } from '../../../data/userListings';
 
-const TAG_NAME = 'earnings-filters';
+const TAG_NAME = 'earnings-time-range-filter';
 
 /**
- * Describes a specific range of time giving two dates, both inclusive
+ * Describes a specific range of time giving two dates, both inclusive,
+ * plus the option type it belongs to if any.
+ *
+ * Note: it includes the predefined option, so it allow to some UI elements to
+ * keep in sync with it if more specialized usage than just
+ * custom range is needed (like different title and so).
  * @typedef {Object} TimeRange
  * @property {Date} from
  * @property {Date} to
- */
-
-/**
- * Describes values for a set of selected filters.
- * Properties described as 'filtering value' are the actual values that must be
- * used for filtering, the rest are just information for the UI.
- * @typedef {Object} EarningsFilterValues
- * @property {Date} fromDate Filtering value for inclusive initial date
- * @property {Date} toDate Filtering value for inclusive final date
- * @property {number} jobTitleID Filtering value for job title
- * @property {number} userExternalListingID Fitlering value for external listing/platform
- * @property {TimeRangeOption} timeRangeOption Option used to fill
- * the fromDate and toDate properties, provided only to allow customization of
- * the display for the time range but must not be used as the actual value to
- * filter by.
- * @property {string} jobTitleText Display value, name matching the jobTitleID
- * @property {string} userExternalListingText Display value, name or title matching the
- * userExternalListingID
+ * @property {TimeRangeOption} option
  */
 
 /**
@@ -64,7 +49,8 @@ const timeRangeOptionConverters = {
     [TimeRangeOption.thisMonth]: function() {
         return {
             from: moment().startOf('month').toDate(),
-            to: moment().endOf('month').toDate()
+            to: moment().endOf('month').toDate(),
+            option: TimeRangeOption.thisMonth
         };
     },
     /**
@@ -73,7 +59,8 @@ const timeRangeOptionConverters = {
     [TimeRangeOption.thisQuarter]: function() {
         return {
             from: moment().startOf('quarter').toDate(),
-            to: moment().endOf('quarter').toDate()
+            to: moment().endOf('quarter').toDate(),
+            option: TimeRangeOption.thisQuarter
         };
     },
     /**
@@ -82,7 +69,8 @@ const timeRangeOptionConverters = {
     [TimeRangeOption.thisYear]: function() {
         return {
             from: moment().startOf('year').toDate(),
-            to: moment().endOf('year').toDate()
+            to: moment().endOf('year').toDate(),
+            option: TimeRangeOption.thisYear
         };
     },
     /**
@@ -91,7 +79,8 @@ const timeRangeOptionConverters = {
     [TimeRangeOption.lastMonth]: function() {
         return {
             from: moment().subtract(1, 'month').startOf('month').toDate(),
-            to: moment().subtract(1, 'month').endOf('month').toDate()
+            to: moment().subtract(1, 'month').endOf('month').toDate(),
+            option: TimeRangeOption.lastMonth
         };
     }
 };
@@ -99,15 +88,14 @@ const timeRangeOptionConverters = {
 /**
  * Component
  */
-export default class EarningsFilter extends Komponent {
+export default class EarningsTimeRangeFilter extends Komponent {
 
     static get template() { return template; }
 
     /**
      * @param {object} params
-     * @param {Function} params.onSelect Callback executed when the user
-     * changes the selected values for the filters, It includes as parameter
-     * a EarningsFilterValues object.
+     * @param {Function<TimeRangeOption>} params.onSelect Callback executed when the user
+     * changes the selected values, providing the TimeRange value.
      * @param {TimeRangeOption} params.defaultTimeRangeOption
      */
     constructor(params) {
@@ -115,7 +103,7 @@ export default class EarningsFilter extends Komponent {
 
         // Required Callback for external notifications on changing filters
         if (typeof(params.onSelect) !== 'function') {
-            throw new Error('earnings-filters: onSelect param is required');
+            throw new Error('time-range-filter: onSelect param is required');
         }
 
         /**
@@ -123,18 +111,6 @@ export default class EarningsFilter extends Komponent {
          * @member {KnockoutObservable<number>}
          */
         this.timeRangeOption = ko.observable(params.defaultTimeRangeOption);
-
-        /**
-         * Job title object selected.
-         * @member {KnockoutObservable<rest/UserJobTitle>}
-         */
-        this.jobTitle = ko.observable();
-
-        /**
-         * External listing object selected.
-         * @member {KnockoutObservable<rest/UserExternalListing>}
-         */
-        this.externalListing = ko.observable();
 
         /**
          * Beggining date for a custom time range.
@@ -194,14 +170,16 @@ export default class EarningsFilter extends Komponent {
                 // Return custom range
                 return {
                     from: this.fromDate(),
-                    to: this.toDate()
+                    to: this.toDate(),
+                    option: id
                 };
             }
             else {
                 // No option, no dates filtering (global report)
                 return {
                     from: null,
-                    to: null
+                    to: null,
+                    option: id
                 };
             }
         });
@@ -216,71 +194,10 @@ export default class EarningsFilter extends Komponent {
         });
 
         /**
-         * Holds the list of available user listings at Loconomics, to allow
-         * filter by job title
-         * @member {KnockoutObservableArray<rest/UserJobTitle>}
-         */
-        this.listings = ko.observableArray([]);
-
-        /**
-         * Holds the list of user external listings to allow filter by
-         * the listing/platform.
-         * @member {KnockoutObservableArray<rest/UserExternalListings>}
-         */
-        this.externalListings = ko.observableArray([]);
-
-        /**
          * Automatically trigger onSelect on options changes
          */
-        ko.computed(() => {
-            const range = this.timeRange();
-            const jobTitle = this.jobTitle();
-            const externalListing = this.externalListing();
-            params.onSelect({
-                fromDate: range.from,
-                toDate: range.to,
-                jobTitleID: jobTitle && jobTitle.jobTitleID,
-                userExternalListingID: externalListing && externalListing.userExternalListingID,
-                // Includes the predefined option, so allow for other UI to
-                // keep in sync with it if more specialized usage than just
-                // custom range is needed (like different title and so).
-                timeRangeOption: this.timeRangeOption(),
-                jobTitleText: jobTitle && jobTitle.title,
-                userExternalListingText: externalListing && externalListing.title
-            });
-        })
-        // Prevent that several, automated/related changes, trigger too much notifications.
-        .extend({ rateLimit: { timeout: 100, method: 'notifyWhenChangesStop' } });
-
-        this.__setupDataOperations();
-    }
-
-    /**
-     * Define members, prepare subscriptions to work with the code
-     * and start any initial request for data
-     * @private
-     */
-    __setupDataOperations() {
-        // Load listings
-        this.subscribeTo(userListings.onData, this.listings);
-        // Load external listings
-        this.subscribeTo(userExternalListings.onData, this.externalListings);
-
-        // Notify data load errors
-        this.subscribeTo(userListings.onDataError, (err) => {
-            showError({
-                title: 'There was an error loading your listings',
-                error: err
-            });
-        });
-        // Notify data load errors
-        this.subscribeTo(userExternalListings.onDataError, (err) => {
-            showError({
-                title: 'There was an error loading your external listings',
-                error: err
-            });
-        });
+        this.timeRange.subscribe(params.onSelect);
     }
 }
 
-ko.components.register(TAG_NAME, EarningsFilter);
+ko.components.register(TAG_NAME, EarningsTimeRangeFilter);

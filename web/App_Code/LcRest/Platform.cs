@@ -124,5 +124,19 @@ namespace LcRest
             }
         }
         #endregion
+
+        #region Fetch Public Full List
+        const string sqlGetFullList = sqlSelect + @"
+            WHERE
+                P.LanguageID = @0 AND P.CountryID = @1
+        ";
+        public static IEnumerable<Platform> GetFullList(int languageID, int countryID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlGetFullList, languageID, countryID).Select(FromDB);
+            }
+        }
+        #endregion
     }
 }

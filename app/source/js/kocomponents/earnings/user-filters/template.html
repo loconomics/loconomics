@@ -1,0 +1,20 @@
+<form>
+    <earnings-time-range-filter params="
+        onSelect: timeRangeSelected,
+        defaultTimeRangeOption: defaultTimeRangeOption">
+    </earnings-time-range-filter>
+    <div class="form-group">
+        <label for="earnings-user-filters-job-title">Select Job Title</label>
+        <select id="earnings-user-filters-job-title" class="form-control" data-bind="value: jobTitle,
+            options: listings, optionsCaption: ' All Job Titles',
+            optionsText: 'title'">
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="earnings-user-filters-listing">Select Platform</label>
+        <select id="earnings-user-filters-listing" class="form-control" data-bind="value: externalListing,
+            options: externalListings, optionsCaption: ' All Platforms',
+            optionsText: 'title'">
+        </select>
+    </div>
+</form>

@@ -66,6 +66,9 @@
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'postings' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/postings' }"><i class="fa fa-fw fa-bullhorn" aria-hidden="true"></i> Post Projects</a>
 </li>
+<li data-bind="visible: isPartnerAdmin, css: { 'is-disabled': isInOnboarding, active: active() === 'partner-admin' }">
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/partner-admin' }"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Admin</a>
+</li>
 <li class="divider"></li>
 <li data-bind="visible: !isAnonymous()" class="go-logout">
     <a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a>

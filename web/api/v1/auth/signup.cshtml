@@ -159,16 +159,24 @@
             }
         }
 
+        private List<string> AllowedCccUserTypes = new List<string> { "student", "client", "professor", "administrator" };
+
         private void CccMemberValidation()
         {
             if (Request["isCccMember"].AsBool(false))
             {
-                var isClient = Request["cccUserType"] == "client";
+                // adminRequested
+                var type = Request["cccUserType"];
+                if (!AllowedCccUserTypes.Contains(type))
+                {
+                    ModelState.AddError("cccUserType", "Given user type is not valid");
+                }
+                var isClient = type == "client";
                 if (!isClient)
                 {
                     Validation.RequireField("institutionID", "You must select an institution.");
                     Validation.RequireField("cccUserType", "You must select user type.");
-                    var isStudent = Request["cccUserType"] == "student";
+                    var isStudent = type == "student";
                     if (isStudent)
                     {
                         Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
@@ -182,6 +190,7 @@
         private void SaveCccMember(LcAuthHelper.LoginResult login)
         {
             var isClient = Request["cccUserType"] == "client";
+            var isStudent = Request["cccUserType"] == "student";
             using (var db = new LcDatabase())
             {
                 db.Execute("BEGIN TRANSACTION");
@@ -193,11 +202,22 @@
                     }
                     else
                     {
-                        ResetTrialEndDate(db, login.userID);
-                        InsertExtraUserInfo(db, login.userID);
                         InsertCccUser(db, login.userID);
-                        InsertUserEducation(db, login.userID);
-                        InsertCccPaymentPlan(db, login.userID);
+                        if (isStudent)
+                        {
+                            // Only students include auto-add education
+                            InsertUserEducation(db, login.userID);
+                            // We only request gender and birth date to students
+                            InsertExtraUserInfo(db, login.userID);
+                        }
+                        if (login.profile.isServiceProfessional)
+                        {
+                            // Only students should sign-up as service professionals from a CCC landing,
+                            // still we check the flag and apply some specific steps only for CCC users
+                            // that get a free service professional account.
+                            ResetTrialEndDate(db, login.userID);
+                            InsertCccPaymentPlan(db, login.userID);
+                        }
                     }
                     db.Execute("COMMIT TRANSACTION");
                 }
@@ -237,6 +257,16 @@
             var institutionID = Request["institutionID"].AsInt();
             var fieldOfStudyID = Request["fieldOfStudyID"].IsInt() ? (int?)Request["fieldOfStudyID"].AsInt() : null;
             var cccUserType = Request["cccUserType"];
+            // The type should be validated previously as one of allowed, here we will ones that choosen to be
+            // an 'administrator' as 'adminRequested', meaning that has no effects (it's more like a simple user)
+            // until a real 'admin' change it to 'admin' or another based type ('collegeAdmin')
+            // NOTE: even input should only be 'administrator', we take care of prevent a security problem that
+            // could be caused by a misuse of this call or code change that breaks type validation by checking
+            // just if the type contains the word 'admin'.
+            if (cccUserType.Contains("admin"))
+            {
+                cccUserType = "adminRequested";
+            }
             // PlanExpirationDate to 180 days from signUp date #761
             var expiration = DateTime.Today.AddDays(180);
             db.Execute(@"

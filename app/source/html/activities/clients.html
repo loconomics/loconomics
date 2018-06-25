@@ -15,9 +15,8 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h1><icon-dec params="icon: 'ion-android-contacts'"></icon-dec> <span data-bind="text: title"></span></h1>
-                <h2 class="SectionTitle">
+                <h2 class="SectionTitle" data-bind="visible: headerText">
                     <span data-bind="text: headerText"></span>
-                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
                 <div class="isolated">
                     <div class="input-group">
