@@ -12,10 +12,10 @@
                 data-bind="visible: areFiltersVisible" class="isolated"></earnings-admin-filters>
             <earnings-report params="filters: appliedFilters, data: earningsReport"></earnings-report>
             <div class="isolated">
-                <a class="btn btn-default" data-bind="attr: { href: linkDownloadReportCsv }">
+                <a class="btn btn-default" target="_system" data-bind="attr: { href: linkDownloadReportCsv }">
                     Download Summary (.csv)
                 </a>
-                <a class="btn btn-primary" data-bind="attr: { href: linkDownloadDetailedReportCsv }">
+                <a class="btn btn-primary" target="_system" data-bind="attr: { href: linkDownloadDetailedReportCsv }">
                     Download Details (.csv)
                 </a>
             </div>
