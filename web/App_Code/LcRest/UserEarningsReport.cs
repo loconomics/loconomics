@@ -114,6 +114,39 @@ namespace LcRest
                 AND (@3 is null OR UEL.PlatformID = @3)
                 AND (@4 is null OR CCCUsers.institutionID = @4)
                 AND (@5 is null OR CCCUsers.fieldOfStudyID = @5)
+
+              UNION ALL
+
+                SELECT
+                  (PricingSummary.totalPrice - PricingSummary.serviceFeeAmount) as amount
+                  ,CASE WHEN Booking.BookingStatusID IN (3, 8)
+                        THEN PricingSummary.totalPrice - PricingSummary.serviceFeeAmount
+                        ELSE 0 END as paidOut
+                  ,CASE WHEN Booking.BookingStatusID = 7
+                        THEN PricingSummary.totalPrice - PricingSummary.serviceFeeAmount
+                        ELSE 0 END as expected
+                  ,PricingSummary.ServiceDurationMinutes as durationMinutes
+                FROM Booking
+                INNER JOIN CalendarEvents
+                ON CalendarEvents.Id = Booking.ServiceDateID
+                INNER JOIN PricingSummary
+                ON Booking.PricingSummaryID = PricingSummary.PricingSummaryID
+                    AND Booking.PricingSummaryRevision = PricingSummary.PricingSummaryRevision
+                INNER JOIN CCCUsers
+                ON Booking.ServiceProfessionalUserID = CCCUsers.UserID
+                    AND CCCUsers.UserType = 'student'
+                INNER JOIN UserProfilePositions As J
+                ON J.PositionID = Booking.JobTitleID
+                    AND J.UserID = Booking.ServiceProfessionalUserID
+                WHERE
+                    Booking.BookingStatusID IN (3, 7, 8) -- cancelled (can had paidOut cancellation feeds or 0), servicePerformed (expected) or completed (paidOut)
+                    AND PricingSummary.TotalPrice > 0 -- (dont countr free services)
+                    AND (@0 is null OR CalendarEvents.EndTime >= @0)
+                    AND (@1 is null OR CalendarEvents.EndTime <= @1)
+                    AND (@2 is null OR Booking.JobTitleID = @2)
+                    AND (@3 is null OR 1 = @3) -- special platformID=1 Loconomics
+                    AND (@4 is null OR CCCUsers.institutionID = @4)
+                    AND (@5 is null OR CCCUsers.fieldOfStudyID = @5)
             ) AS T
         ";
         #endregion
