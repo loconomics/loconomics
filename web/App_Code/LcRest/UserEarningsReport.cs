@@ -135,9 +135,9 @@ namespace LcRest
                 INNER JOIN CCCUsers
                 ON Booking.ServiceProfessionalUserID = CCCUsers.UserID
                     AND CCCUsers.UserType = 'student'
-                INNER JOIN UserProfilePositions As J
-                ON J.PositionID = Booking.JobTitleID
-                    AND J.UserID = Booking.ServiceProfessionalUserID
+                INNER JOIN UserProfilePositions As UL
+                ON UL.PositionID = Booking.JobTitleID
+                    AND UL.UserID = Booking.ServiceProfessionalUserID
                 WHERE
                     Booking.BookingStatusID IN (3, 7, 8) -- cancelled (can had paidOut cancellation feeds or 0), servicePerformed (expected) or completed (paidOut)
                     AND PricingSummary.TotalPrice > 0 -- (dont countr free services)
@@ -168,50 +168,107 @@ namespace LcRest
         #region Query CCC Admin Detailed Report
         #region SQL
         const string sqlCccAdminDetailedReport = @"
-            SELECT
-                E.paidDate,
-                E.userID,
-                P.name as platform,
-                J.positionSingular as jobTitle,
-                C.institutionName as college,
-                E.amount as earnings,
-                E.durationMinutes as minutes,
-                (F.fieldOfStudyName + '    (' + CAST(F.CCCTOPCode as nvarchar) + ')') as fieldOfStudy,
-                U.studentID,
-                Cast((UU.BirthYear + '-' + UU.BirthMonth + '-' + UU.BirthMonthDay) as datetime) as dateOfBirth
-            FROM
-                UserEarningsEntry As E
-                  INNER JOIN
-                UserExternalListing As L
-                    ON E.userExternalListingID = L.userExternalListingID
-                 INNER JOIN
-                platform as P
-                    ON P.platformID = L.platformID
-                    AND P.languageID = @0 AND P.countryID = @1
-                  INNER JOIN
-                positions as J
-                    ON J.positionID = E.jobTitleID
-                    AND J.languageID = @0 AND J.countryID = @1
-                  INNER JOIN
-                CCCUsers as U
-                    ON U.UserID = E.UserID
-                  INNER JOIN
-                Users as UU
-                    ON UU.UserID = E.UserID
-                  INNER JOIN
-                institution As C
-                    ON C.institutionID = U.institutionID
-                  INNER JOIN
-                fieldOfStudy As F
-                    ON F.fieldOfStudyID = U.fieldOfStudyID
-              WHERE
-                E.active = 1
-                AND (@2 is null OR E.PaidDate >= @2)
-                AND (@3 is null OR E.PaidDate <= @3)
-                AND (@4 is null OR E.JobTitleID = @4)
-                AND (@5 is null OR L.PlatformID = @5)
-                AND (@6 is null OR U.institutionID = @6)
-                AND (@7 is null OR U.fieldOfStudyID = @7)
+            SELECT * FROM (
+                SELECT
+                    E.paidDate,
+                    E.userID,
+                    P.name as platform,
+                    J.positionSingular as jobTitle,
+                    C.institutionName as college,
+                    E.amount as earnings,
+                    E.durationMinutes as minutes,
+                    (F.fieldOfStudyName + '    (' + CAST(F.CCCTOPCode as nvarchar) + ')') as fieldOfStudy,
+                    U.studentID,
+                    Cast((UU.BirthYear + '-' + UU.BirthMonth + '-' + UU.BirthMonthDay) as datetime) as dateOfBirth
+                FROM
+                    UserEarningsEntry As E
+                      INNER JOIN
+                    UserExternalListing As L
+                        ON E.userExternalListingID = L.userExternalListingID
+                     INNER JOIN
+                    platform as P
+                        ON P.platformID = L.platformID
+                        AND P.languageID = @0 AND P.countryID = @1
+                      INNER JOIN
+                    positions as J
+                        ON J.positionID = E.jobTitleID
+                        AND J.languageID = @0 AND J.countryID = @1
+                      INNER JOIN
+                    CCCUsers as U
+                        ON U.UserID = E.UserID
+                        AND U.UserType = 'student'
+                      INNER JOIN
+                    Users as UU
+                        ON UU.UserID = E.UserID
+                      INNER JOIN
+                    institution As C
+                        ON C.institutionID = U.institutionID
+                      INNER JOIN
+                    fieldOfStudy As F
+                        ON F.fieldOfStudyID = U.fieldOfStudyID
+                  WHERE
+                    E.active = 1
+                    AND (@2 is null OR E.PaidDate >= @2)
+                    AND (@3 is null OR E.PaidDate <= @3)
+                    AND (@4 is null OR E.JobTitleID = @4)
+                    AND (@5 is null OR L.PlatformID = @5)
+                    AND (@6 is null OR U.institutionID = @6)
+                    AND (@7 is null OR U.fieldOfStudyID = @7)
+
+              UNION ALL
+
+                SELECT
+                    CalendarEvents.EndTime as paidDate,
+                    Booking.serviceProfessionalUserID as userID,
+                    'Loconomics' as platform,
+                    J.positionSingular as jobTitle,
+                    C.institutionName as college,
+                    (PricingSummary.totalPrice - PricingSummary.serviceFeeAmount) as earnings,
+                    PricingSummary.ServiceDurationMinutes as minutes,
+                    (F.fieldOfStudyName + '    (' + CAST(F.CCCTOPCode as nvarchar) + ')') as fieldOfStudy,
+                    U.studentID,
+                    Cast((UU.BirthYear + '-' + UU.BirthMonth + '-' + UU.BirthMonthDay) as datetime) as dateOfBirth
+                FROM
+                    Booking
+                      INNER JOIN
+                    CalendarEvents
+                        ON CalendarEvents.Id = Booking.ServiceDateID
+                      INNER JOIN
+                    PricingSummary
+                        ON Booking.PricingSummaryID = PricingSummary.PricingSummaryID
+                        AND Booking.PricingSummaryRevision = PricingSummary.PricingSummaryRevision
+                      INNER JOIN
+                    CCCUsers As U
+                        ON Booking.ServiceProfessionalUserID = U.UserID
+                        AND U.UserType = 'student'
+                      INNER JOIN
+                    Users as UU
+                        ON UU.UserID = Booking.ServiceProfessionalUserID
+                      INNER JOIN
+                    institution As C
+                        ON C.institutionID = U.institutionID
+                      INNER JOIN
+                    fieldOfStudy As F
+                        ON F.fieldOfStudyID = U.fieldOfStudyID
+                      INNER JOIN
+                    UserProfilePositions As UL
+                        ON UL.PositionID = Booking.JobTitleID
+                        AND UL.UserID = Booking.ServiceProfessionalUserID
+                      INNER JOIN
+                    positions as J
+                        ON J.positionID = UL.PositionID
+                        AND J.languageID = @0 AND J.countryID = @1
+                WHERE
+                    Booking.BookingStatusID IN (3, 7, 8) -- cancelled (can had paidOut cancellation feeds or 0), servicePerformed (expected) or completed (paidOut)
+                    AND PricingSummary.TotalPrice > 0 -- (dont countr free services)
+                    AND (@2 is null OR CalendarEvents.EndTime >= @2)
+                    AND (@3 is null OR CalendarEvents.EndTime <= @3)
+                    AND (@4 is null OR Booking.JobTitleID = @4)
+                    AND (@5 is null OR 1 = @5) -- special platformID=1 Loconomics
+                    AND (@6 is null OR U.institutionID = @6)
+                    AND (@7 is null OR U.fieldOfStudyID = @7)
+            ) As T
+            ORDER BY paidDate
         ";
         #endregion
         public class DetailedReport
