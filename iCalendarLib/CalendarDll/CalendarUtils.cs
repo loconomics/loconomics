@@ -1360,7 +1360,7 @@ namespace CalendarDll
                     yield return new AvailabilitySlot {
                         StartTime = slotStart,
                         EndTime = slotEnd,
-                        AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
+                        AvailabilityTypeID = ((iEvent)ev).AvailabilityID
                     };
                 }
             }
