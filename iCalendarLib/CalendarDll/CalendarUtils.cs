@@ -1357,10 +1357,14 @@ namespace CalendarDll
                     {
                         continue;
                     }
+                    if (ev as iEvent == null)
+                    {
+                        throw new Exception("Null AssociatedObject for occ" + occ.ToString() + ", event:" + ev.Summary + ", " + ev.Start.ToString());
+                    }
                     yield return new AvailabilitySlot {
                         StartTime = slotStart,
                         EndTime = slotEnd,
-                        AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
+                        AvailabilityTypeID = ((iEvent)ev).AvailabilityID
                     };
                 }
             }
