@@ -28,19 +28,19 @@ namespace CalendarDll
         /// </summary>
         /// <returns></returns>
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
-        public Calendar GetCalendarLibraryInstance() 
+        public Calendar GetCalendarLibraryInstance()
         {
 
             const string Calendar_VERSION = "2.0";
 
-            Calendar newCalendar = 
+            Calendar newCalendar =
                 new Calendar()
-                { 
-                    Version = Calendar_VERSION 
+                {
+                    Version = Calendar_VERSION
                 };
 
             return newCalendar;
-        
+
         }
 
 
@@ -52,7 +52,7 @@ namespace CalendarDll
 
         /// <summary>
         /// Get Free Events
-        /// 
+        ///
         /// It includes both dates, full date times (not limited by the time in startDate and endDate)
         /// </summary>
         /// <param name="startDate"></param>
@@ -87,27 +87,27 @@ namespace CalendarDll
             // we start on 0:00 AM and we end x minutes before the end of the day
             // (x minutes is the size of each Time Slice - see TIME_SLICE_SIZE above)
             //
-            // What we do to get the endDate is 
+            // What we do to get the endDate is
             // Add a Day and then Subtract the Time Slice size
             //----------------------------------------------------------------------
 
 
             DateTimeOffset startDateTime = startDate;
-            
+
 
             // To get to the Start of the last Time Slice of the day
             // First, it goes to the Next Day ( .AddDays(1) )
             // and then reverses by the size of the Time Slice
             // ( .AddMinutes(-TIME_SLICE_SIZE) )
-            // We want to stop short of the TIME_SLICE_SIZE 
+            // We want to stop short of the TIME_SLICE_SIZE
             // as this is the last iteration for all the Timeslices in the Date Range
 
-            
+
             DateTimeOffset endDateTime = endDate.
                         AddDays(1).                   // Goes to the Next Day
                         AddMinutes(-TIME_SLICE_SIZE); // Goes back by the Time Slice size
-            
-            
+
+
             //----------------------------------------------------------------------
             // Advance Time
             //
@@ -117,9 +117,9 @@ namespace CalendarDll
             //----------------------------------------------------------------------
 
 
-            var advanceTime = 
-                currentDateTimeForAdvanceTime + 
-                user.AdvanceTime; 
+            var advanceTime =
+                currentDateTimeForAdvanceTime +
+                user.AdvanceTime;
 
 
             //----------------------------------------------------------------------
@@ -149,7 +149,7 @@ namespace CalendarDll
             // time slice, as previously happens by checking only 'less than'
             while (refDate <= endDateTime)
             {
-                var newTimeSliceStart = 
+                var newTimeSliceStart =
                     refDate.AddMinutes(
                         TIME_SLICE_SIZE);
 
@@ -195,7 +195,7 @@ namespace CalendarDll
                     tempDataContainer.TimeBlock = stamp;
                     tempDataContainer.DT = refDate;
                     tempDataContainer.AddBusyTime = new TimeSpan();
-                    
+
                 }
                 else
                 {
@@ -203,18 +203,18 @@ namespace CalendarDll
                     // Timeslices after Advance Time
 
                     //----------------------------------------------------------------------
-                    // iCal.GetOcurrence recovers the Ocurrences between two dates 
+                    // iCal.GetOcurrence recovers the Ocurrences between two dates
                     // but it is "INCLUSIVE these two dates"
                     //
-                    // We want the events just before the ending date, 
+                    // We want the events just before the ending date,
                     // but NOT including the ending date.
                     //
-                    // So, we did this Hack where 
+                    // So, we did this Hack where
                     // we subtract 1 Millisecond to the Ending Date
                     // 2013/01/02 CA2S RM
                     //----------------------------------------------------------------------
 
-                    var TimeSliceEndJust1MillisecondBefore = 
+                    var TimeSliceEndJust1MillisecondBefore =
                         newTimeSliceStart.AddMilliseconds(-1);
 
                     //----------------------------------------------------------------------
@@ -247,7 +247,7 @@ namespace CalendarDll
 
                 stamp =
                     (stamp == lastDayTimeSlice) ?
-                        stamp = new TimeSpan() :                         // Starting anew from 00:00:00 
+                        stamp = new TimeSpan() :                         // Starting anew from 00:00:00
                         stamp.Add(new TimeSpan(0, TIME_SLICE_SIZE, 0));  // Continue with next Time Slice
 
 
@@ -258,7 +258,7 @@ namespace CalendarDll
             List<ProviderAvailability> ocurrences = new List<ProviderAvailability>();
 
             //----------------------------------------------------------------------
-            // Gets the TimeSlices with Availability 
+            // Gets the TimeSlices with Availability
             // depending on the Ocurrences inside each TimeSlice
             //----------------------------------------------------------------------
 
@@ -311,7 +311,7 @@ namespace CalendarDll
 
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="user"></param>
         /// <param name="startDate"></param>
@@ -320,15 +320,15 @@ namespace CalendarDll
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
         public Calendar GetCalendarEventsFromDBByUserDateRange(
             CalendarUser user,
-            DateTimeOffset startDate, 
+            DateTimeOffset startDate,
             DateTimeOffset endDate)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
 
             return GetCalendarForEvents(GetEventsByUserDateRange(
-                user, 
-                startDate, 
+                user,
+                startDate,
                 endDate));
         }
 
@@ -355,8 +355,8 @@ namespace CalendarDll
 
         /// <summary>
         /// Get Calendar Events, for Export, by User
-        /// 
-        /// It only takes into account the Events 
+        ///
+        /// It only takes into account the Events
         /// with UIDs starting with Asterisk (*)
         /// </summary>
         /// <returns></returns>
@@ -382,11 +382,11 @@ namespace CalendarDll
                 // used by objects contained in the file (events, vfreebusy..)
                 var vt = new VTimeZone(user.DefaultTimeZone);
                 iCalForExport.AddTimeZone(vt);
-                // Default calendar TimeZone (Google Calendar property) -used for objets without 
+                // Default calendar TimeZone (Google Calendar property) -used for objets without
                 // a specific time-zone, but non standard-
                 iCalForExport.AddProperty("X-WR-TIMEZONE", user.DefaultTimeZone);
             }
-            
+
 
             if (user != null)
             {
@@ -397,7 +397,7 @@ namespace CalendarDll
                     /* IagoSRL: filtering per "*" removed because is now events are filtered by EventType
                      * that works better and more extensively, and has not the problem of events without saved GUID
                     // Only add Events that have an UID with a "*" in front
-                    if (currEvent.UID.Length > 0 && 
+                    if (currEvent.UID.Length > 0 &&
                         currEvent.UID.Substring(0, 1) == "*")
                     {
                         iCalForExport.Events.Add(currEvent);
@@ -450,8 +450,8 @@ namespace CalendarDll
         #region Create Event (iCal Format, having the Loconomics DB Record)
 
         /// <summary>
-        /// Create Event 
-        /// 
+        /// Create Event
+        ///
         /// In iCal format, from the Loconomics DB
         /// </summary>
         /// <param name="eventFromDB"></param>
@@ -530,10 +530,10 @@ namespace CalendarDll
 
         /// <summary>
         /// Create Between Events
-        /// 
+        ///
         /// It takes the Original iCal Event
-        /// and creates another iCal Event 
-        /// following the original, 
+        /// and creates another iCal Event
+        /// following the original,
         /// and with the duration of the Between Event of the User
         /// </summary>
         /// <param name="originalICalEvent"></param>
@@ -542,7 +542,7 @@ namespace CalendarDll
         private iEvent CreateBetweenEvent(iEvent originalICalEvent,CalendarUser user)
         {
             //CultureInfo.CreateSpecificCulture("es-ES");
-            var resources = 
+            var resources =
                 new System.Resources.ResourceManager(
                     typeof(CalendarDll.Resources));
 
@@ -556,33 +556,33 @@ namespace CalendarDll
 
                 Summary = descriptionBetweenTime,
                 Uid = "*" + Guid.NewGuid().ToString(), // * at the start dennotes a Loconomics (not external) Event
-                Start = 
+                Start =
                     originalICalEvent.DtEnd,
-                Duration = 
+                Duration =
                     user.BetweenTime,
-                AvailabilityID = 
+                AvailabilityID =
                     originalICalEvent.AvailabilityID,
-                Status = 
+                Status =
                     originalICalEvent.Status,
-                Priority = 
+                Priority =
                     originalICalEvent.Priority,
-                Description = 
+                Description =
                     originalICalEvent.Description + " - " + descriptionBetweenTime,
-                Organizer = 
+                Organizer =
                     originalICalEvent.Organizer,
-                Transparency = 
+                Transparency =
                     originalICalEvent.Transparency,
-                Created = 
+                Created =
                     originalICalEvent.Created,
-                DtStamp = 
+                DtStamp =
                     originalICalEvent.DtEnd,
-                DtStart = 
+                DtStart =
                     originalICalEvent.DtEnd,
-                DtEnd = 
+                DtEnd =
                     originalICalEvent.DtEnd.Add(user.BetweenTime),
-                Sequence = 
+                Sequence =
                     originalICalEvent.Sequence,
-                RecurrenceId = 
+                RecurrenceId =
                     originalICalEvent.RecurrenceId,
                 //RecurrenceRules = evt.RecurrenceRules,
 
@@ -659,7 +659,7 @@ namespace CalendarDll
             var Status = currEvent.Status;
             var Transparency = currEvent.Transparency;
 
-           
+
             if (Transparency == null) Transparency = TransparencyType.Opaque;
 
 
@@ -669,14 +669,14 @@ namespace CalendarDll
             {
                 returnValue = AvailabilityTypes.TRANSPARENT;
             }
-            else 
+            else
             {
 
                 switch (Status)
                 {
                     case EventStatus.Confirmed:
                         {
-                            returnValue = AvailabilityTypes.BUSY; 
+                            returnValue = AvailabilityTypes.BUSY;
                             break;
                         }
                     case EventStatus.Tentative:
@@ -694,14 +694,14 @@ namespace CalendarDll
                             returnValue = AvailabilityTypes.TENTATIVE;
                             break;
                         }
-                } 
+                }
 
-            } 
+            }
             return (Int32)returnValue;
         }
 
         /// <summary>
-        /// Get the Database AvailabilityID based on the 
+        /// Get the Database AvailabilityID based on the
         /// FreeBusyEntry status, that has one-to-one equivalencies
         /// </summary>
         /// <param name="fbentry"></param>
@@ -735,18 +735,18 @@ namespace CalendarDll
         {
 
 
-            if (eventStatus == 0) { 
-                return 4; 
+            if (eventStatus == 0) {
+                return 4;
             }
-            
-            
+
+
             return 2;
 
         }
 
         /// <summary>
         /// Availabilty when Importing
-        /// 
+        ///
         /// It calculates the Availability
         /// depending on the Status (which could be Confirmed, Tentative, Cancelled)
         /// and the Transparency (which could be Opaque or Transparent)
@@ -788,12 +788,12 @@ namespace CalendarDll
             // Default Values for the Parameters
             //----------------------------------------------------------------------
 
-            if (Status == "") 
+            if (Status == "")
             {
                 Status = STATUS_CONFIRMED;
             }
 
-            if (Transparency == "") 
+            if (Transparency == "")
             {
                 Transparency = TRANSPARENCY_OPAQUE;
             }
@@ -805,14 +805,14 @@ namespace CalendarDll
 
             //if ((Status=="") && (Transparency==""))
             //{
-            //    return 2; // 2 == Busy            
+            //    return 2; // 2 == Busy
             //}
 
             ////----------------------------------------------------------------------
             //// If Status Parameter is empty
             ////----------------------------------------------------------------------
 
-            //if ((Status == "") && (Transparency != "")) 
+            //if ((Status == "") && (Transparency != ""))
             //{
 
             //    if (Transparency == "")
@@ -827,7 +827,7 @@ namespace CalendarDll
 
 
             //----------------------------------------------------------------------
-            // Default Value for the Return Value: Transparent 
+            // Default Value for the Return Value: Transparent
             // (Doesn't take part in Free/Busy calculations)
             //----------------------------------------------------------------------
 
@@ -839,42 +839,42 @@ namespace CalendarDll
             // Check which Combination of Parameters applies
             //----------------------------------------------------------------------
 
-            if (Transparency == TRANSPARENCY_OPAQUE) 
+            if (Transparency == TRANSPARENCY_OPAQUE)
             {
 
-                switch (Status) 
+                switch (Status)
                 {
-                    case STATUS_CONFIRMED: { 
+                    case STATUS_CONFIRMED: {
                         returnValue = AVAILABILITY_BUSY;
                         break;
                     }
-                    case STATUS_TENTATIVE: { 
+                    case STATUS_TENTATIVE: {
                         returnValue = AVAILABILITY_TENTATIVE;
                         break;
                     }
-                    case STATUS_CANCELLED: { 
+                    case STATUS_CANCELLED: {
                         returnValue = AVAILABILITY_TRANSPARENT;
                         break;
                     }
 
                 } // switch (Status)
-            
+
             }
             else if (Transparency == TRANSPARENCY_TRANSPARENT)
             {
 
-                switch (Status) 
+                switch (Status)
                 {
-                    case STATUS_CONFIRMED: { 
+                    case STATUS_CONFIRMED: {
                         returnValue = AVAILABILITY_FREE;
                         break;
                     }
-                    case STATUS_TENTATIVE: { 
+                    case STATUS_TENTATIVE: {
                         // Case Free, but Tentative - Don't take part in calculations
                         returnValue = AVAILABILITY_TRANSPARENT;
                         break;
                     }
-                    case STATUS_CANCELLED: { 
+                    case STATUS_CANCELLED: {
                         // Case Free, but Cancelled - Don't take part in calculations
                         returnValue = AVAILABILITY_TRANSPARENT;
                         break;
@@ -908,9 +908,9 @@ namespace CalendarDll
         private IEnumerable<iEvent> GetEventsByUser(CalendarUser user)
         {
 
-            using (var db = new CalendarDll.Data.loconomicsEntities()) 
-            { 
-            
+            using (var db = new CalendarDll.Data.loconomicsEntities())
+            {
+
                 var listEventsFromDB =
                     db.CalendarEvents.
                         Where(c => c.UserId == user.Id && c.Deleted == null).ToList();
@@ -957,7 +957,7 @@ namespace CalendarDll
 
                     //----------------------------------------------------------------------
 
-                }     
+                }
                 return iCalEvents;
             }
         }
@@ -971,8 +971,8 @@ namespace CalendarDll
         /// <remarks>IagoSRL</remarks>
         private IEnumerable<iEvent> GetEventsByUserForExport(CalendarUser user, string defaultTZID)
         {
-            using (var db = new CalendarDll.Data.loconomicsEntities()) 
-            { 
+            using (var db = new CalendarDll.Data.loconomicsEntities())
+            {
                 var listEventsFromDB =
                     db.CalendarEvents.
                         // We filter by user and
@@ -995,7 +995,7 @@ namespace CalendarDll
                         var evExt = CreateBetweenEvent(iCalEvent,user);
                         iCalEvents.Add(evExt);
                     }*/
-                }     
+                }
                 return iCalEvents;
             }
         }
@@ -1003,7 +1003,7 @@ namespace CalendarDll
         /// <summary>
         /// Get Events By User
         /// (overloads another version without Dates parameters)
-        /// 
+        ///
         /// And also by Range of Dates
         /// Note: Because recurrence events are more complicated,
         /// they are recovered regardless of dates
@@ -1014,23 +1014,23 @@ namespace CalendarDll
         /// <returns></returns>
         /// <remarks>2012/12 by CA2S FA</remarks>
         public IEnumerable<iEvent> GetEventsByUserDateRange(
-            CalendarUser user, 
-            DateTimeOffset startEvaluationDate, 
+            CalendarUser user,
+            DateTimeOffset startEvaluationDate,
             DateTimeOffset endEvaluationDate)
         {
 
             // For the Ending of the Range
             // We'll get the Next Day
             // And the comparisson will be: Less than this Next Day
-            DateTimeOffset nextDayFromEndEvaluationDay = 
+            DateTimeOffset nextDayFromEndEvaluationDay =
                 endEvaluationDate.Date.AddDays(1);
 
 
-            using (var db = new CalendarDll.Data.loconomicsEntities()) 
-            { 
-            
-            
-                // Recovers Events 
+            using (var db = new CalendarDll.Data.loconomicsEntities())
+            {
+
+
+                // Recovers Events
                 // for a particular User
                 // and a particular Date Range
                 // OR, if they are Recurrence, any Date Range
@@ -1040,16 +1040,16 @@ namespace CalendarDll
                         (
                             // IagoSRL: Date Ranges query updated from being
                             // 'only events that are completely included' (next commented code from CASS):
-                            //(c.EndTime < nextDayFromEndEvaluationDay && 
-                            //c.StartTime >=startEvaluationDate) || 
-                        
+                            //(c.EndTime < nextDayFromEndEvaluationDay &&
+                            //c.StartTime >=startEvaluationDate) ||
+
                             // to be 'all events complete or partially inside the range: complete included or with a previous
                             // start or with a posterior end'.
                             // This fix a bug found on #463 described on comment https://github.com/joshdanielson/Loconomics/issues/463#issuecomment-36936782 and nexts.
                             (
-                                c.StartTime < nextDayFromEndEvaluationDay && 
+                                c.StartTime < nextDayFromEndEvaluationDay &&
                                 c.EndTime >= startEvaluationDate
-                            ) || 
+                            ) ||
                             // OR, if they are Recurrence, any Date Range
                             c.CalendarReccurrence.Any()
                         )
@@ -1094,8 +1094,8 @@ namespace CalendarDll
 
                     //----------------------------------------------------------------------
 
-                } 
-            
+                }
+
             }
 
         }
@@ -1105,8 +1105,8 @@ namespace CalendarDll
         #region IAGO: New, faster, optimized fetch event and occurrences (don't fetch unneeded data, use SQL, time filtering, faster)
 
         /// <summary>
-        /// Create Event 
-        /// 
+        /// Create Event
+        ///
         /// In iCal format, from the Loconomics DB
         /// </summary>
         /// <param name="eventFromDB"></param>
@@ -1223,7 +1223,7 @@ namespace CalendarDll
         {
             using (var db = new CalendarDll.Data.loconomicsEntities())
             {
-                // Recovers Events 
+                // Recovers Events
                 // for a particular User
                 // and a particular Date Range
                 // OR, if they are Recurrence, any Date Range (cannot be filtered out at database)
@@ -1394,7 +1394,7 @@ namespace CalendarDll
         /// and complete timeline, where some availabilities takes precedence over others to don't have overlapping.
         /// Results may include slots that goes beyond the given filter dates, but it ensures that all that, partial or complete
         /// happens in that dates will be returned.
-        /// 
+        ///
         /// Resulting dates are given in UTC.
         /// </summary>
         /// <param name="userID"></param>
@@ -1431,12 +1431,12 @@ namespace CalendarDll
             string defaultTZID)
         {
             var tzid = defaultTZID ?? "UTC";
-            var exceptionDates = 
+            var exceptionDates =
                 eventFromDB.CalendarEventExceptionsPeriodsList;
 
-            if (!exceptionDates.Any()) 
-            { 
-                return; 
+            if (!exceptionDates.Any())
+            {
+                return;
             }
 
             var periodsList = new List<PeriodList>();
@@ -1505,10 +1505,10 @@ namespace CalendarDll
             string defaultTZID)
         {
             var tzid = defaultTZID ?? "UTC";
-            var recurrenceDates = 
+            var recurrenceDates =
                 eventFromDB.CalendarEventRecurrencesPeriodList;
-            
-            if (!recurrenceDates.Any())   return; 
+
+            if (!recurrenceDates.Any())   return;
 
             var periodsList = new List<PeriodList>();
 
@@ -1578,7 +1578,7 @@ namespace CalendarDll
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="iCalEvent"></param>
         /// <param name="eventForDB"></param>
@@ -1615,11 +1615,11 @@ namespace CalendarDll
             foreach (var att in eventFromDB.CalendarEventsAttendees)
             {
                 iCalEvent.Attendees.Add(new Attendee(att.Uri){ CommonName = att.Attendee, Role = att.Role});
-                
+
             }
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="iCalEvent"></param>
         /// <param name="eventForDB"></param>
@@ -1631,7 +1631,7 @@ namespace CalendarDll
             if (!iCalObject.Attendees.Any()) return;
 
             foreach (var atts in iCalObject.Attendees) {
-                eventForDB.CalendarEventsAttendees.Add(new CalendarEventsAttendees { 
+                eventForDB.CalendarEventsAttendees.Add(new CalendarEventsAttendees {
                     Attendee = atts.CommonName, IdEvent = eventForDB.Id, Role = atts.Role, Uri = atts.Value.ToString()
                 });
             }
@@ -1658,7 +1658,7 @@ namespace CalendarDll
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="iCalObject"></param>
         /// <param name="objectForDB"></param>
@@ -1670,7 +1670,7 @@ namespace CalendarDll
             if (!iCalObject.Comments.Any()) return;
 
             foreach(var comment in iCalObject.Comments)
-                eventForDB.CalendarEventComments.Add(new CalendarEventComments { Comment = comment, IdEvent = eventForDB.Id  });            
+                eventForDB.CalendarEventComments.Add(new CalendarEventComments { Comment = comment, IdEvent = eventForDB.Id  });
         }
 
 
@@ -1721,7 +1721,7 @@ namespace CalendarDll
                     Interval = rec.Interval,
                     RestristionType = Convert.ToInt32(rec.RestrictionType),
                     FirstDayOfWeek = Convert.ToInt32(rec.FirstDayOfWeek),
-                    
+
                 };
                 if (rec.Until != null && rec.Until.Year > 1900) newrec.Until = rec.Until;
                 SetFrequenciesToDB(rec, newrec);
@@ -1729,7 +1729,7 @@ namespace CalendarDll
                 eventforDB.CalendarReccurrence.Add(newrec);
             }
 
-           
+
                 /*eventFromDB.CalendarReccurrence;
             if (!recur.Any()) return;
 
@@ -1747,7 +1747,7 @@ namespace CalendarDll
             }*/
         }
 
-       
+
 
         #endregion
 
@@ -1825,7 +1825,7 @@ namespace CalendarDll
                     //var frecDay = fr.FrequencyDay??-2147483648;
                     // Bugfix: @IagoSRL: DayOfWeek > -1 instead of buggy '> 0', because
                     // Sunday is value 0, and was discarted for recurrence because of this:
-                    if (fr.DayOfWeek != null && fr.DayOfWeek > -1) 
+                    if (fr.DayOfWeek != null && fr.DayOfWeek > -1)
                         recPattern.ByDay.Add( new WeekDay((DayOfWeek)fr.DayOfWeek, (FrequencyOccurrence)(fr.FrequencyDay ?? -2147483648)));
                 }
                 else if (fr.ByHour ?? false)
@@ -1838,12 +1838,12 @@ namespace CalendarDll
                 }
                 else if (fr.ByMonth ?? false)
                 {
-                  
+
                     recPattern.ByMonth.Add(fr.ExtraValue ?? 0);
                 }
                 else if (fr.ByMonthDay ?? false)
                 {
-                    
+
                     recPattern.ByMonthDay.Add(fr.ExtraValue ?? 0);
                 }
                 else if (fr.BySecond ?? false)
@@ -1856,12 +1856,12 @@ namespace CalendarDll
                 }
                 else if (fr.ByWeekNo ?? false)
                 {
-                    
+
                     recPattern.ByWeekNo.Add(fr.ExtraValue ?? 0);
                 }
                 else if (fr.ByYearDay ?? false)
                 {
-                   
+
                     recPattern.ByYearDay.Add(fr.ExtraValue ?? 0);
                 }
             }
@@ -1925,16 +1925,16 @@ namespace CalendarDll
         public uint FutureMonthsLimitForImportingFreeBusy = 0;
         /// <summary>
         /// Import Calendar.
-        /// 
+        ///
         /// STRATEGIES:
         /// When importing an iCalendar there are several precautions we need to take.
-        /// 
+        ///
         /// 1: not import our exported events.
         /// Just in case the user sofware is reading our exported calendar and merging with
         /// user defined events, we need to prevent importing events originally generated by us
         /// (because we have them in database with a different types, to not duplicate, because
         /// we do not let arbitrary editions of that events -even we completely lock them depending
-        /// on booking rules-, and at the same time we lock edition of imported events, since 
+        /// on booking rules-, and at the same time we lock edition of imported events, since
         /// do not export them).
         /// Strategies to that:
         /// A- check the UID of the imported event and verify it's not at our database
@@ -1943,18 +1943,18 @@ namespace CalendarDll
         ///    Quick. Still do not prevent that others use the same pattern, so we have false positives
         ///    when filtering that events.
         ///    -a check if starts with an asterisk (in use).
-        ///      Quick and dirty, too vague. Easy of false positives. 
+        ///      Quick and dirty, too vague. Easy of false positives.
         ///      ACTUALLY IN USE. TO REPLACE
         ///    -b check if ends with @loconomics.com suffix
         ///      Better approach, difficult of false positives (still positive, but if other follow
         ///      good practices must not happen).
-        ///      
+        ///
         /// TODO switch to strategy B-b.
-        /// 
+        ///
         /// 2: insert/update/remove existing imported events
         /// After the first read, we need to maintain the already imported events, updating them if
         /// any change or removing them if no more exists at the source.
-        /// 
+        ///
         /// Strategies:
         /// A- Keep list of imported identifiers.
         ///   - Detect if an imported record (using UID) exists at DB: choose insert or update
@@ -1980,7 +1980,7 @@ namespace CalendarDll
         ///   Less memory than A, less writtings to database than B, IDs are kept for updated records.
         ///   Needs analysis: could be slower than B because the check about if an event exists or not (to insert/update),
         ///   but the non removal of records that then are re-created may be faster.
-        ///   
+        ///
         /// TODO switch to strategy C
         /// </summary>
         /// <param name="calendar"></param>
@@ -1997,7 +1997,7 @@ namespace CalendarDll
 #endif
 
                 //----------------------------------------------------------------------
-                // Loop that adds the Imported Events to a List of CalendarEvents 
+                // Loop that adds the Imported Events to a List of CalendarEvents
                 // which are compatible in their fields with the Loconomics database
                 //----------------------------------------------------------------------
 
@@ -2010,7 +2010,7 @@ namespace CalendarDll
                     // as it simplifies dealing with Events created externally.
                     // In particular, he was concerned when an Event was deleted
                     // outside Loconomics (for example, Google Calendar)
-                    // 
+                    //
                     // Note: EventType = 4 are the Imported Events
                     //
                     // 2013/01/15 CA2S RM
@@ -2031,7 +2031,7 @@ namespace CalendarDll
                             (x.EventType == 4));
 
                     // Mark the Events as Deleted
-                    foreach (var eventToDelete in previouslyImportedEventsToDelete) 
+                    foreach (var eventToDelete in previouslyImportedEventsToDelete)
                     {
                         db.CalendarEvents.Remove(eventToDelete);
                     }
@@ -2065,7 +2065,7 @@ namespace CalendarDll
                         foreach (Event currEvent in currentCalendar.Events.Where(evs => !evs.Uid.StartsWith("*")))
                         {
 
-                            // Event Types 
+                            // Event Types
                             // (See table: CalendarEventType)
                             //
                             // 1	booking - GENERATES BETWEEN TIME
@@ -2085,7 +2085,7 @@ namespace CalendarDll
 
                             //----------------------------------------------------------------------
                             //// Delete old event
-                            //// This won't be necessary anymore, 
+                            //// This won't be necessary anymore,
                             //// as the Imported Events are deleted beforehand now
                             //// 2013/01/15 CA2S RM
                             //----------------------------------------------------------------------
@@ -2302,7 +2302,7 @@ namespace CalendarDll
                     // PERF::
                     LastImportTimeline.SetTime("Importing:: saving to db: " + user.Id);
 #endif
-                    
+
                     db.SaveChanges();
 
 #if DEBUG
@@ -2336,7 +2336,7 @@ namespace CalendarDll
         /// original time zone to the current system time zone (we are using California
         /// TimeZone in our server and database data).
         /// It updates every elements collection inside it (ExceptionDates, RecurrenceDates)
-        /// 
+        ///
         /// IagoSRL @Loconomics
         /// </summary>
         /// <param name="anEvent"></param>
@@ -2411,7 +2411,7 @@ namespace CalendarDll
         /// original time zone to the current system time zone (we are using California
         /// TimeZone in our server and database data).
         /// It updates every elements collection inside it (freebusyentries)
-        /// 
+        ///
         /// IagoSRL @Loconomics
         /// </summary>
         /// <param name="freebusy"></param>
@@ -2434,9 +2434,9 @@ namespace CalendarDll
         /// Returns an updated datetime object converting the given one
         /// to the system time zone (we are using California TimeZone in our
         /// server and database data).
-        /// 
+        ///
         /// IagoSRL @Loconomics
-        /// 
+        ///
         /// IMPORTANT: only needed for fields that in database are saved as DateTime
         /// but not as DateTimeOffset
         /// </summary>
