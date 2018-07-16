@@ -52,18 +52,9 @@ A.prototype.loadData = function(userID, jobTitleID) {
         .then(function(data) {
             var pu = new PublicUser(data);
             this.viewModel.user(pu);
-            if (!jobTitleID)
-                return pu.jobProfile() && pu.jobProfile()[0] && pu.jobProfile()[0].jobTitleID();
-            else
-                return jobTitleID;
-        }.bind(this))
-        .then(function(jobTitleID) {
-            // For service professionals:
-            if (jobTitleID) {
-                this.viewModel.user().selectedJobTitleID(jobTitleID);
-                // Load extra job data (reviews)
-                this.viewModel.reviews.load({ limit: 2 });
-            }
+            this.viewModel.user().selectedJobTitleID(jobTitleID);
+            // Load extra job data (reviews)
+            this.viewModel.reviews.load({ limit: 2 });
         }.bind(this))
         .catch(function(err) {
             showError({ error: err, title: 'The user profile could not be loaded.' });
