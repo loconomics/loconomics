@@ -43,6 +43,12 @@ function Client(values) {
             return null;
         }
     }, this);
+
+    /**
+     * Whethersome contact data is available (email or phone almost)
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.hasContactDetails = ko.pureComputed(() => this.email() || this.phone());
 }
 
 module.exports = Client;
