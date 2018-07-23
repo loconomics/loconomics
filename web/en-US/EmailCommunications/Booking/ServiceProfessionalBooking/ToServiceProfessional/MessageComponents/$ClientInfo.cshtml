@@ -1,1 +1,46 @@
-﻿
+﻿@* Client Contact Data 
+*@
+@using WebMatrix.Data;
+@{
+    // All the data for this component:
+    var info = LcEmailTemplate.GetBookingInfo(PageData);
+    if (info.client == null)
+    {
+        return;
+    }
+    var cientEmail = LcRest.Client.GetEmailFromDb(info.client.email);
+}
+<!-- COMPACT ARTICLE SECTION -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center" style="border-bottom: 1px solid #d2d2d2; padding: 0 15px 40px 15px;" class="section-padding">
+            <table border="0" cellpadding="0" cellspacing="0" width="500" style="padding:0 0 20px 0;" class="responsive-table">
+                <tr>
+                    <td style="padding: 40px 0 0 0;" class="no-padding">
+                        <!-- ARTICLE -->
+                        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                            <tr>
+                                <td align="left" style="padding: 0 25px 5px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Client</td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="padding: 10px 25px 15px 0; text-align: justify; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+                                    <strong>@info.client.firstName</strong> @info.client.lastName @info.client.secondLastName<br/>
+                                    @if (!String.IsNullOrEmpty(info.client.phone))
+                                    {
+                                    <img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"/> @(info.client.phone)<br/>
+                                    }
+                                    @if (!string.IsNullOrEmpty(cientEmail))
+                                    {
+                                    <img src="@(LcUrl.AppUrl)img/email/ion-ios-email-outline.png" alt="E-mail:" width="20" height="20" border="0"/><a href="mailto:@(cientEmail)?subject=@info.userJobTitle.title appt on @LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate)" target="_blank">@(cientEmail)</a>
+                                    }
+                                </td>
+                        </tr>
+                    </table>
+                </td>
+                <td valign="middle" style="padding: 10px 0 0 0;" class="mobile-hide"><a href="#" target="_blank"><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Contact details" width="150" height="150" border="0" style="display: block; font-family: Arial; color: #666666; font-size: 14px;"></a></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+</table>
+<!-- $ClientInfo END-->
