@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        
+
         <ul class="TilesList TilesList--openEnd" data-bind="visible: isEvent()">
             <li>
                 <button type="button" class="ItemTile" data-bind="click: editMode() && pickDateTime">
@@ -115,7 +115,7 @@
                 </button>
             </li>
         </ul>
-        
+
         <ul class="TilesList TilesList--openEnd" data-bind="visible: isBooking()">
             <li data-bind="visible: !isBookingRequest()">
                 <button type="button" class="ItemTile" data-bind="click: !isBookingRequest() && editMode() && pickDateTime">
@@ -139,14 +139,36 @@
                 </button>
             </li>
             <li>
-                <button type="button" class="ItemTile" data-bind="click: editMode() && isNew() && pickClient">
+                <button type="button" class="ItemTile" data-bind="visible: editMode() && isNew(), click: pickClient">
                     <i class="Tile-marker fa ion ion-android-contact" aria-hidden="true"></i>
                     <div class="Tile-content">
-                        <p data-bind="visible: item().client() && item().client().fullName(), text: item().client() && item().client().fullName()"></p>
-                        <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().client()" class="text-muted">Select/Add client</p>
+                        <!-- ko with: item().client() -->
+                        <p data-bind="visible: !hasContactDetails(), text: fullName()"></p>
+                        <div data-bind="visible: hasContactDetails, text: fullName()"></div>
+                        <div data-bind="visible: hasContactDetails">
+                            <span data-bind="visible: phone, text: phone" target="_blank"></span>
+                            <span data-bind="visible: email, text: email" target="_blank"></span>
+                        </div>
+                        <!-- /ko -->
+                        <p data-bind="visible: !item().client() && isServiceProfessionalBooking() && editMode()" class="text-muted">Select/Add client</p>
                     </div>
                     <div class="Tile-icon" data-bind="visible: editMode() && isNew()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
+                <div class="ItemTile" data-bind="visible: !(editMode() && isNew())">
+                    <i class="Tile-marker fa ion ion-android-contact" aria-hidden="true"></i>
+                    <div class="Tile-content">
+                        <!-- ko with: item().client() -->
+                        <p data-bind="visible: !hasContactDetails(), text: fullName()"></p>
+                        <div data-bind="visible: hasContactDetails, text: fullName()"></div>
+                        <div data-bind="visible: hasContactDetails">
+                            <a data-bind="visible: phone, text: phone, attr: { href: 'tel:' + phone() }" target="_blank"></a>
+                            <a data-bind="visible: email, text: email, attr: { href: 'mailto:' + email() }" target="_blank"></a>
+                        </div>
+                        <!-- /ko -->
+                        <p data-bind="visible: !item().client() && isServiceProfessionalBooking() && editMode()" class="text-muted">Select/Add client</p>
+                    </div>
+                    <div class="Tile-icon" data-bind="visible: editMode() && isNew()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+                </div>
             </li>
             <li>
                 <button type="button" class="ItemTile" data-bind="click: canChangePricing() && editMode() && pickService">
@@ -218,7 +240,7 @@
                 </button>
             </li>
         </ul>
-        
+
         <div class="AppointmentCard-actions" data-bind="visible: !isBookingRequest() && editMode()">
             <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
             <!--<button type="button" class="btn btn-danger btn-block" data-bind="event: { click: remove }, disable: isLocked">Cancel booking</button>-->
