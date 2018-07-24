@@ -200,7 +200,7 @@
                 <!-- TODO Edition Not implemented<div class="Tile-icon" data-bind="visible: canChangePricing() && editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>-->
             </button>
         </li>
-        <li>
+        <li data-bind="visible: editMode() || item().addressSummary()">
             <button type="button" class="ItemTile" data-bind="click: !isBookingRequest() && editMode() && pickLocation">
                 <i class="Tile-marker fa ion ion-ios-location-outline" aria-hidden="true"></i>
                 <div class="Tile-content">
