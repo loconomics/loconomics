@@ -383,7 +383,7 @@ export default class CachedDataProvider {
         return this.__localCache.fetch()
         .then((cache) => {
             // Check if something cached
-            if (cache.latest && cache.data) {
+            if (cache.data) {
                 // There is data
                 // notify any loaded data
                 this.onLoaded.emit(cache.data);
