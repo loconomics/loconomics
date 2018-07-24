@@ -1,7 +1,7 @@
 /**
  * Utility to retrieve a list of time zones, and
  * related utilities.
- * 
+ *
  * Backed by moment-timezone module.
  * */
 'use strict';
@@ -21,7 +21,7 @@ exports.getLocalTimeZone = function() {
 
 /**
  * Internal formatter for the timeZoneToDisplayFormat function, with more redundant
- * parameters that allows some reuses for calculated values 
+ * parameters that allows some reuses for calculated values
  * at the getUserList function, that calls this for each item (micro-optimization).
  * @returns {string}
  */
@@ -69,7 +69,7 @@ var createDisplayList = function(tzList, m, ts) {
         var z = moment.tz.zone(tzid);
         return {
             id: tzid,
-            offset: z.offset(ts),
+            offset: z.utcOffset(ts),
             label: displayTimeZone(tzid, z, m, ts)
         };
     })
@@ -84,7 +84,7 @@ var createDisplayList = function(tzList, m, ts) {
 };
 
 /**
- * Returns the complete list of time zones, as a 
+ * Returns the complete list of time zones, as a
  * list of { id, label, offset } objects,
  * sorted and formatted for display by the label value.
  * @returns {PublicTimeZone[]}
@@ -163,8 +163,8 @@ exports.getTopUsZones = function getTopUsZones() {
     zone/city ID
 */
 /**
- * DO NOT USE. TRIAL: was a trial but ends to only 
- * find tzs that are linked as aliases, but not others were the 
+ * DO NOT USE. TRIAL: was a trial but ends to only
+ * find tzs that are linked as aliases, but not others were the
  * link is done at inverse order (a lot) or not directly linked to
  * a US/* tz.
  * Look for an alias of type US/* for a given America/*
@@ -172,12 +172,12 @@ exports.getTopUsZones = function getTopUsZones() {
  * tzid. This makes possible the preference to
  * use the US/*well-know-name* IDs instead of the America/*city*
  * ones, more popular naming for users at USA.
- * 
+ *
  * IMPORTANT: It uses an internal API of moment-timezone, it can
  * change with newer versions without notice (because is not a public API).
  */
 /*function getUsAliasWhenPossible(tzid, originalTzid) {
-    // early optimization filtering by America/, buggy since there 
+    // early optimization filtering by America/, buggy since there
     // are some Pacific times too and future data may change that rule too.
     if (/^America\//i.test(tzid)) {
         var adapted = tzid.toLowerCase().replace('/', '_');
@@ -221,7 +221,7 @@ Link	America/Los_Angeles	US/Pacific
 Link	Pacific/Pago_Pago	US/Samoa
 Link	America/Los_Angeles	US/Pacific-New	##
 */
-/* tzdata::zone1970.tab  Zones related to USA (US,UM) and comments related to 
+/* tzdata::zone1970.tab  Zones related to USA (US,UM) and comments related to
 the US zone they belongs but without clarity (no actual timezone US/* used);
 that makes it not perfect clear what exact zone must be related, most seems obvious
 but Indiana zones are not clear if belongs to US/East-Indiana, Eastern or Indiana-Starke
