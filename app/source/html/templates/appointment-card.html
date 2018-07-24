@@ -146,7 +146,14 @@
                         <p data-bind="visible: !hasContactDetails(), text: fullName()"></p>
                         <div data-bind="visible: hasContactDetails, text: fullName()"></div>
                         <div data-bind="visible: hasContactDetails">
-                            <span data-bind="visible: phone, text: phone" target="_blank"></span>
+                            <span data-bind="visible: phone">
+                                <icon-dec params="icon: 'ion-ios-telephone-outline'" aria-label="Phone:"></icon-dec>
+                                <span data-bind="text: phone" target="_blank"></span>
+                            </span>
+                            <span data-bind="visible: email">
+                                <icon-dec params="icon: 'ion-ios-email-outline'" aria-label="Email:"></icon-dec>
+                                <span data-bind="text: email" target="_blank"></span>
+                            </span>
                             <span data-bind="visible: email, text: email" target="_blank"></span>
                         </div>
                         <!-- /ko -->
@@ -161,8 +168,14 @@
                         <p data-bind="visible: !hasContactDetails(), text: fullName()"></p>
                         <div data-bind="visible: hasContactDetails, text: fullName()"></div>
                         <div data-bind="visible: hasContactDetails">
-                            <a data-bind="visible: phone, text: phone, attr: { href: 'tel:' + phone() }" target="_blank"></a>
-                            <a data-bind="visible: email, text: email, attr: { href: 'mailto:' + email() }" target="_blank"></a>
+                            <a data-bind="visible: phone, attr: { href: 'tel:' + phone() }" target="_blank">
+                                <icon-dec params="icon: 'ion-ios-telephone-outline'" aria-label="Phone:"></icon-dec>
+                                <span data-bind="text: phone"></span>
+                            </a>
+                            <a data-bind="visible: email, attr: { href: 'mailto:' + email() }" target="_blank">
+                                <icon-dec params="icon: 'ion-ios-email-outline'" aria-label="Email:"></icon-dec>
+                                <span data-bind="text: email"></span>
+                            </a>
                         </div>
                         <!-- /ko -->
                         <p data-bind="visible: !item().client() && isServiceProfessionalBooking() && editMode()" class="text-muted">Select/Add client</p>
