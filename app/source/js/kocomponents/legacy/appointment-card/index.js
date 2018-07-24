@@ -1,36 +1,64 @@
-/** AppointmentCard view model.
-    It provides data and method to visualize and
-    edit and appointment card, with booking, event
-    or placeholder information
-**/
+/**
+ * It provides data and method to visualize and
+ * edit and appointment card, with booking, event
+ * or placeholder information
+ *
+ * Legacy state: original component goal was to remove some complexity from the appointment
+ * activity, but is still too much complex that needs refactor and adapt to
+ * the Komponent class.
+ *
+ *
+ * @module kocomponents/legacy/appointment-card
+ */
+import '../../utilities/icon-dec';
+import Address from '../../../models/Address';
+import Appointment from '../../../models/Appointment';
+import AppointmentView from '../../../viewmodels/AppointmentView';
+import Booking from '../../../models/Booking';
+import { EventEmitter } from 'events';
+import ModelVersion from '../../../utils/ModelVersion';
+import PricingSummaryDetail from '../../../models/PricingSummaryDetail';
+import bookings from '../../../data/bookings';
+import calendar from '../../../data/calendar';
+import getDateWithoutTime from '../../../utils/getDateWithoutTime';
+import getObservable from '../../../utils/getObservable';
+import ko from 'knockout';
+import moment from 'moment';
+import paymentAccount from '../../../data/paymentAccount';
+import payoutPreferenceRequired from '../../../modals/payoutPreferenceRequired';
+import { show as showConfirm } from '../../../modals/confirm';
+import { show as showError } from '../../../modals/error';
+import { show as showNotification } from '../../../modals/notification';
+import { show as showTextEditor } from '../../../modals/textEditor';
+import template from './template.html';
 
-var ko = require('knockout');
-var moment = require('moment');
-var getObservable = require('../utils/getObservable');
-var Appointment = require('../models/Appointment');
-var AppointmentView = require('../viewmodels/AppointmentView');
-var ModelVersion = require('../utils/ModelVersion');
-var getDateWithoutTime = require('../utils/getDateWithoutTime');
-var PricingSummaryDetail = require('../models/PricingSummaryDetail');
-var EventEmitter = require('events').EventEmitter;
-var Booking = require('../models/Booking');
-var Address = require('../models/Address');
-var calendar = require('../data/calendar');
-var bookings = require('../data/bookings');
-var showNotification = require('../modals/notification').show;
-var showConfirm = require('../modals/confirm').show;
-var showTextEditor = require('../modals/textEditor').show;
-var showError = require('../modals/error').show;
-var paymentAccount = require('../data/paymentAccount');
-var payoutPreferenceRequired = require('../modals/payoutPreferenceRequired');
+const TAG_NAME = 'legacy-appointment-card';
 
-var events = {
+/**
+ * Type of appointment changes events
+ * @enum {string}
+ */
+export const events = {
     confirmed: 'confirmed',
     declined: 'declined',
     cancelled: 'cancelled'
 };
 
-function AppointmentCardViewModel(params) {
+/**
+ *
+ * @param {Object} params
+ * @param {KnockoutObservable<ComponentViewModel>} [params.api] A hook to provide a
+ * reference of the view model instance to the code where the component is used
+ * so can call method directly.
+ * @param {models/Appointment} params.sourceItem The appointment to display/edit
+ * @param {Object} params.app Reference to the App instance to be able to use
+ * global objects/methods attached to it
+ * @param {(boolean|KnockoutObservable<boolean>)} params.editMode Whether is
+ * or not in edit mode.
+ * @param {(boolean|KnockoutObservable<boolean>)} params.isLoading Whether there
+ * is data being loaded
+ */
+export default function ComponentViewModel(params) {
     /* eslint max-statements:"off" */
 
     EventEmitter.call(this);
@@ -606,7 +634,7 @@ function AppointmentCardViewModel(params) {
 }
 
 // Modifies prototype. Call prior adding prototype functions.
-AppointmentCardViewModel._inherits(EventEmitter);
+ComponentViewModel._inherits(EventEmitter);
 
 /**
     It manages incoming data provided by external activities given
@@ -614,7 +642,7 @@ AppointmentCardViewModel._inherits(EventEmitter);
     Used to manage the data returned by calls to edit data in
     external activities.
 **/
-AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
+ComponentViewModel.prototype.passIn = function passIn(requestData) {
     /* eslint complexity:"off", max-statements:"off" */
 
     // on init
@@ -725,6 +753,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     }
 };
 
-AppointmentCardViewModel.events = events;
-
-module.exports = AppointmentCardViewModel;
+ko.components.register(TAG_NAME, {
+    template: template,
+    viewModel: ComponentViewModel
+});

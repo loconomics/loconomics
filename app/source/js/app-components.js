@@ -225,12 +225,6 @@ exports.registerAll = function(app) {
         }
     });
 
-    /// appointment-card
-    ko.components.register('app-appointment-card', {
-        template: { element: 'appointment-card-template' },
-        viewModel: require('./viewmodels/AppointmentCard')
-    });
-
     /// job titles list
     ko.components.register('app-job-titles-list', {
         template: { element: 'job-titles-list-template' },
