@@ -207,7 +207,7 @@ namespace LcRest
                         { "Kind", firstSentByFreelancer ? 6 : 2 },
                         { "RequestKey", LcMessaging.SecurityRequestKey },
                         { "EmailTo", clientEmail }
-                    })
+                    }), replyTo: serviceProfessionalEmail
                     );
                 }
                 else
@@ -222,7 +222,7 @@ namespace LcRest
                         { "Kind", firstSentByFreelancer ? 5 : 3 },
                         { "RequestKey", LcMessaging.SecurityRequestKey },
                         { "EmailTo", serviceProfessionalEmail }
-                    })
+                    }), replyTo: clientEmail
                     );
                 }
 

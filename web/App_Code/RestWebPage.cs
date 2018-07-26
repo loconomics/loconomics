@@ -212,8 +212,15 @@ public class RestWebPage
     /// </summary>
     /// <param name="WebPage"></param>
     public void JsonResponse(System.Web.WebPages.WebPage WebPage)
-    {   
+    {
         var data = Run(WebPage);
+
+        if (data is CsvHelper.CsvWriter)
+        {
+            WebPage.Response.ContentType = "text/csv";
+            WebPage.Response.End();
+            return;
+        }
 
         WebPage.Response.ContentType = "application/json";
         // JSON.NET Works Better: good datetime formatting as ISO-8601 and some bugfixes details.
@@ -232,6 +239,29 @@ public class RestWebPage
     {
         this.WebPage.Response.RestRequiresUser(userType);
     }
+
+    #region CSV Export
+    /// <summary>
+    /// Prepares the response output to be done as a CSV file, returning a wrapper that serialized the data
+    /// that should be returned to let the process finalize (as of a Get, Post, Put, Delete methods).
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="downloadWithFilename">If given, force browser to download the content with the given file name</param>
+    /// <returns></returns>
+    public CsvHelper.CsvWriter ExportAsCsv(IEnumerable<object> data, string downloadWithFilename = null)
+    {
+        if (!String.IsNullOrEmpty(downloadWithFilename))
+        {
+            WebPage.Response.AddHeader("Content-Disposition", "attachment; filename=" + downloadWithFilename);
+        }
+
+        var csv = new CsvHelper.CsvWriter(WebPage.Response.Output);
+        csv.Configuration.MemberTypes = CsvHelper.Configuration.MemberTypes.Fields | CsvHelper.Configuration.MemberTypes.Properties;
+        csv.WriteRecords(data);
+
+        return csv;
+    }
+    #endregion
 
     #region REST utilities
     /// <summary>

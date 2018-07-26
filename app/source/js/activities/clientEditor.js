@@ -19,7 +19,7 @@ var pricingTypes = require('../data/pricingTypes');
 var ko = require('knockout');
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
-var Client = require('../models/Client');
+var Client = require('../models/Client').default;
 
 var A = Activity.extend(function ClientEditionActivity() {
 

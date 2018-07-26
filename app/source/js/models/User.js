@@ -31,8 +31,16 @@ function User(values) {
         isClient: false,
         isAdmin: false,
         isCollaborator: false,
+        isOrganization: false,
 
         photoUrl: null,
+
+        orgName: null,
+        orgDescription: null,
+        orgWebsite: null,
+
+        partner: null,
+        partnerUserType: null,
 
         onboardingStep: null,
         accountStatusID: 0,

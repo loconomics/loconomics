@@ -1,0 +1,14 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <h1 data-bind="text: title"></h1>
+        <div class="col-md-7 col-sm-reset">
+            <partner-users-list params="
+                data: usersList,
+                onSelect: selectedClient"></partner-users-list>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+            <app-inline-side-menu params="vocElement: 'partner'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>

@@ -2341,7 +2341,7 @@ namespace LcRest
         /// <param name="db"></param>
         private static void ProcessAddressForServiceProfessionalBooking(Address serviceAddress, Booking booking, LcDatabase db)
         {
-            if (booking.pricingSummary.isPhoneServiceOnly)
+            if (booking.pricingSummary.isRemoteService)
             {
                 booking.serviceAddressID = null;
             }
@@ -2724,7 +2724,7 @@ namespace LcRest
                 booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
                 // 4º: Validate addressID or save the new one provided
-                if (booking.pricingSummary.isPhoneServiceOnly)
+                if (booking.pricingSummary.isRemoteService)
                 {
                     booking.serviceAddressID = null;
                 }
@@ -2956,7 +2956,7 @@ namespace LcRest
 
                 // 4º: Validate addressID or update the existent, service-specific, one
                 booking.FillServiceAddress();
-                if (booking.pricingSummary.isPhoneServiceOnly)
+                if (booking.pricingSummary.isRemoteService)
                 {
                     booking.serviceAddressID = null;
                 }

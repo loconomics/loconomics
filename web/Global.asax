@@ -134,7 +134,10 @@
     }
     void Application_EndRequest(object sender, EventArgs e)
     {
-        LcData.UserInfo.RegisterLastActivityTime();
+        if (ASP.LcHelpers.Channel != "localdev")
+        {
+            LcData.UserInfo.RegisterLastActivityTime();
+        }
         LcHelpers.CloseDebugLogger();
 
         // IMPORTANT Additional code to make REST pages can

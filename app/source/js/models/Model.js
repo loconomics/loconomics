@@ -102,6 +102,12 @@ function Model(modelObject) {
     // synchronous changes emit lot of notifications, specially
     // with bulk tasks like 'updateWith'.
     this.dataTimestamp = ko.observable(new Date()).extend({ rateLimit: 0 });
+    /**
+     * @private {Object} A dictionary by property key of subscription objects
+     * to fields containing a Model or array of Model, so can be disposed
+     * properly after a ref change.
+     */
+    this.__dataTimestampModelsSubscriptions = {};
 }
 
 module.exports = Model;
@@ -217,6 +223,7 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
     var propertiesList = this.propertiesList;
     var defs = this.propertiesDefs;
     var dataTimestamp = this.dataTimestamp;
+    var __dataTimestampModelsSubscriptions = this.__dataTimestampModelsSubscriptions;
 
     Object.keys(properties).forEach(function(key) {
 
@@ -236,9 +243,36 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
         // remember initial
         modelObject[key]._initialValue = def.initialValue;
 
-        // Add subscriber to update the timestamp on changes
-        modelObject[key].subscribe(function() {
+        // Add subscriber to update the timestamp on changes, that is simple
+        // except for models and arrays of models where we need to track previous suscriptions
+        // and subscribe to each every timestamp change so it tracks any depth
+        // on individual items changes
+        // NOTE: The bad part of this strategy of noticing nested changes (by using subscriptions)
+        // is that happens at another microtask after setting the new value, so any code depending
+        // on a model with this will need to delay saving a copy of the datastamp after an updateWith/reset
+        // for next microtask (like with a zero setTimeoff)
+        modelObject[key].subscribe(function(newValue) {
             dataTimestamp(new Date());
+            if (def.Model) {
+                if (Array.isArray(newValue)) {
+                    if (__dataTimestampModelsSubscriptions[key]) {
+                        __dataTimestampModelsSubscriptions[key].forEach((sub) => sub.dispose());
+                    }
+                    if (newValue) {
+                        __dataTimestampModelsSubscriptions[key] = newValue
+                        .map((itemModel) => itemModel.model && itemModel.model.dataTimestamp.subscribe(() => dataTimestamp(new Date())))
+                        .filter((a) => !!a);
+                    }
+                }
+                else {
+                    if (__dataTimestampModelsSubscriptions[key]) {
+                        __dataTimestampModelsSubscriptions[key].dispose();
+                    }
+                    if (newValue) {
+                        __dataTimestampModelsSubscriptions[key] = newValue.model && newValue.model.dataTimestamp.subscribe(() => dataTimestamp(new Date()));
+                    }
+                }
+            }
         });
 
         // Add to the internal registry

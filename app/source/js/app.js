@@ -508,7 +508,6 @@ var appInit = function appInit() {
             // Resume onboarding
             // Set-up onboarding and current step, if any
             onboarding.setup({
-                isServiceProfessional: user.isServiceProfessional(),
                 jobTitleID: jobTitleID,
                 step: user.onboardingStep() || null
             });
@@ -616,7 +615,10 @@ var appInit = function appInit() {
     .catch(alertError);
 
     // DEBUG
-    window.app = app;
+    window.debug = {
+        app,
+        ko
+    };
 };
 
 // App init on page ready and phonegap ready

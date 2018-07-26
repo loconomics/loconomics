@@ -5,6 +5,8 @@
 **/
 'use strict';
 
+import { expandUserBadges } from '../data/userBadges';
+
 var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
@@ -46,22 +48,13 @@ A.prototype.loadData = function(userID, jobTitleID) {
     this.viewModel.reset();
     if (userID) {
         this.viewModel.isLoading(true);
-        users.getUser(userID, { includeFullJobTitleID: -1 })
+        users.getUser(userID, { includeFullJobTitleID: jobTitleID })
         .then(function(data) {
             var pu = new PublicUser(data);
             this.viewModel.user(pu);
-            if (!jobTitleID)
-                return pu.jobProfile() && pu.jobProfile()[0] && pu.jobProfile()[0].jobTitleID();
-            else
-                return jobTitleID;
-        }.bind(this))
-        .then(function(jobTitleID) {
-            // For service professionals:
-            if (jobTitleID) {
-                this.viewModel.user().selectedJobTitleID(jobTitleID);
-                // Load extra job data (reviews)
-                this.viewModel.reviews.load({ limit: 2 });
-            }
+            this.viewModel.user().selectedJobTitleID(jobTitleID);
+            // Load extra job data (reviews)
+            this.viewModel.reviews.load({ limit: 2 });
         }.bind(this))
         .catch(function(err) {
             showError({ error: err, title: 'The user profile could not be loaded.' });
@@ -91,6 +84,20 @@ A.prototype.show = function show(options) {
     this.viewModel.refreshTs(new Date());
     this.viewModel.userID(userID);
     this.viewModel.showMessageBar(true);
+
+    /**
+     * When badges for current profile are loaded, expand with the assertions data.
+     */
+    this.observeChanges(() => {
+        const vm = this.viewModel;
+        const badges = vm.user() && vm.user().selectedJobTitle() && vm.user().selectedJobTitle().badges();
+        if (badges) {
+            expandUserBadges(badges).then(vm.userBadges);
+        }
+        else {
+            return vm.userBadges([]);
+        }
+    });
 };
 
 A.prototype.hide = function() {
@@ -272,4 +279,19 @@ function ViewModel(app) {
     this.messageBarTone = ko.pureComputed(function() {
         return this.listingIsActive() ? MessageBar.tones.success : MessageBar.tones.warning;
     }, this);
+
+    /**
+     * List of expanded user badges (are loaded from the activity, mixim profile data
+     * and source data of each badge assertion)
+     * @param {KnockoutObservableArray<data/userBadges/UserBadgeAssertion>}
+     */
+    this.userBadges = ko.observableArray([]);
+
+    /**
+     * Returns a URL to where to view details of the badge assigned to the user, with a return
+     * link to the listing editor.
+     * @param {OpenBadgesV2/Assertion} assertion data for an assertion
+     * @returns {string}
+     */
+    this.getBadgeDetailsURL = (assertion) => `/badge-view/${encodeURIComponent(assertion.id)}?mustReturn=listing/${this.userID()}/${this.user() && this.user().selectedJobTitleID()}&returnText=${encodeURIComponent('Listing')}`;
 }

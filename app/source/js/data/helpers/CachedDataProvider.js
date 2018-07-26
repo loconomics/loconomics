@@ -214,12 +214,20 @@ export default class CachedDataProvider {
              * Marks cached data as invalid by touching a flag, while keeping
              * the stored data.
              * Soft alternative to 'delete'
+             *
+             * TODO: this approach to invalidation is sub-optimal on cases like
+             * LocalForageIndexedLIstDataProviderDriver, because fetch and push rather than
+             * just touch a single data structure, does it for a list of them, reading and
+             * writting from multiple keys just for nothing. Think about implementing
+             * that driver differently or implement a method like invalidate or diff at drivers.
              * @returns {Promise<Error>}
              */
             invalidate() {
                 // Get current cache
                 return settings.local.fetch()
-                .then((dataCache) => settings.local.push({
+                // take care on not try to invalidate a cache that does not exist!
+                // (only push when dataCache has something)
+                .then((dataCache) => dataCache && settings.local.push({
                         // Be careful: the cache may not exist and we need to keep the data!
                         data: dataCache && dataCache.data,
                         // reset mark, will force 'mustRevalidate' to calculate as 'true'

@@ -102,9 +102,6 @@ function ViewModel(shell) {
     this.getJobTitleUrl = function(id) {
         return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
     }.bind(this);
-    this.getServiceProfessionalUrl = function(id) {
-        return '/listing/' + id;
-    }.bind(this);
     this.getSearchCategoryUrl = function(categoryID) {
         return '/searchCategory/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
     }.bind(this);
@@ -113,9 +110,6 @@ function ViewModel(shell) {
         if (!data) return;
         if (data.jobTitleID) {
             shell.go(this.getJobTitleUrl(data.jobTitleID()));
-        }
-        else if (data.userID) {
-            shell.go(this.getServiceProfessionalUrl(data.userID()));
         }
         else if (data.categoryID) {
             shell.go(this.getSearchCategoryUrl(data.categoryID()));

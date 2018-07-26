@@ -22,7 +22,9 @@ export default class EarningsViewActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSubsectionNavBar(null);
+        this.navBar = Activity.createSubsectionNavBar('Earnings History', {
+            backLink: '/earnings-history'
+        });
         /**
          * Creates a placeholder for the external listing ID
          * to be populated using the show(state) method below.

@@ -5,6 +5,7 @@ using System.Web;
 using System.Collections;
 using System.Web.WebPages.Html;
 using System.Web.Helpers;
+using WebMatrix.WebData;
 
 /// <summary>
 /// Collection of extensions useful for implementation
@@ -57,7 +58,7 @@ public static class RESTExtensions
 
         if (WebMatrix.WebData.WebSecurity.IsAuthenticated)
         {
-            if (type.HasFlag(LcData.UserInfo.UserType.User))
+            if (type.HasFlag(LcData.UserInfo.UserType.LoggedUser))
             {
                 // valid
                 return;
@@ -70,7 +71,9 @@ public static class RESTExtensions
                 user.IsProvider == true ||
                 // Admin
                 type.HasFlag(LcData.UserInfo.UserType.Admin) &&
-                user.IsAdmin == true)
+                user.IsAdmin == true ||
+                type.HasFlag(LcData.UserInfo.UserType.Client) &&
+                user.IsCustomer == true)
             {
                 // valid
                 return;
@@ -85,6 +88,11 @@ public static class RESTExtensions
             response.StatusCode = 401;
         }
 
+        ThrowHttpAuthError(response, info);
+    }
+
+    public static void ThrowHttpAuthError(this HttpResponseBase response, dynamic info)
+    {
         // IMPORTANT: Ugly Forms Authentication do redirects when a response 401/403 is sent,
         // so it overrides everything sent by the asp.net default behavior of redirect
         // to login pages.
@@ -100,6 +108,44 @@ public static class RESTExtensions
         response.ContentType = "application/json";
         Json.Write(info, response.Output);
         response.End();
+    }
+
+    public static void RestRequiresPartnerUser(this HttpResponseBase response, string partnerUserType, string partner = null)
+    {
+        if (!WebSecurity.IsAuthenticated)
+        {
+            // Unauthorized
+            response.StatusCode = 401;
+        }
+        else
+        {
+            var user = LcRest.UserProfile.Get(WebSecurity.CurrentUserId);
+            var isSystemAdmin = user.isAdmin;
+            if (isSystemAdmin)
+            {
+                // ever valid for system admin
+                return;
+            }
+            if (partner == null || user.partner == partner)
+            {
+                // valid
+                return;
+            }
+            partner = user.partner;
+            if (user.partnerUserType == partnerUserType)
+            {
+                // valid
+                return;
+            }
+            // Forbidden
+            response.StatusCode = 403;
+        }
+        ThrowHttpAuthError(response, new
+        {
+            requiredLevel = partner + ":" + partnerUserType,
+            login = LcUrl.LangPath + "rest/login",
+            signup = LcUrl.LangPath + "rest/signup"
+        });
     }
 
     /// <summary>

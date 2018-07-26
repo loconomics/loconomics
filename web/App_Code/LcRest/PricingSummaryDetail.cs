@@ -30,6 +30,11 @@ namespace LcRest
         public string serviceName;
         public string serviceDescription;
         public int numberOfSessions;
+        /// <summary>
+        /// Copied from the service record, whether is a service provided remotely
+        /// (without requiring an address where perform it, like by doing it through phone, video conference, ...)
+        /// </summary>
+        public bool isRemoteService;
         public DateTime createdDate;
         public DateTime updatedDate;
         #endregion
@@ -58,6 +63,7 @@ namespace LcRest
                 serviceName = record.serviceName,
                 serviceDescription = record.serviceDescription,
                 numberOfSessions = record.numberOfSessions,
+                isRemoteService = record.isRemoteService,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
             };
@@ -104,7 +110,8 @@ namespace LcRest
                 serviceName = service.name,
                 serviceDescription = service.description,
                 numberOfSessions = service.numberOfSessions,
-                hourlyPrice = !String.IsNullOrEmpty(service.priceRateUnit) && service.priceRateUnit.ToUpper() == "HOUR" ? service.priceRate : null
+                hourlyPrice = !String.IsNullOrEmpty(service.priceRateUnit) && service.priceRateUnit.ToUpper() == "HOUR" ? service.priceRate : null,
+                isRemoteService = service.isPhone
             };
         }
         #endregion
@@ -124,6 +131,7 @@ namespace LcRest
                 serviceName,
                 serviceDescription,
                 numberOfSessions,
+                isRemoteService,
                 createdDate,
                 updatedDate
             FROM
@@ -157,6 +165,7 @@ namespace LcRest
                 serviceName,
                 serviceDescription,
                 numberOfSessions,
+                isRemoteService,
                 createdDate,
                 updatedDate,
                 modifiedBy
@@ -199,7 +208,8 @@ namespace LcRest
                     data.price,
                     data.serviceDurationMinutes, data.firstSessionDurationMinutes,
                     data.serviceName, data.serviceDescription,
-                    data.numberOfSessions
+                    data.numberOfSessions,
+                    data.isRemoteService
                     ));
             }
             // TODO PricingMod/PricingVariables -> part of code ate SetDataInput, complete and call here?

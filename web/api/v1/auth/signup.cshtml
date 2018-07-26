@@ -52,6 +52,7 @@
                  "returnProfile": false,
                  "jobTitleID": null,
                  "jobTitleName": null,
+                 "isOrganization": false,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }
         },
@@ -70,6 +71,7 @@
                  "returnProfile": false,
                  "jobTitleID": null,
                  "jobTitleName": null,
+                 "isOrganization": false,
                  "isCccMember": true,
                  "institutionID": 222,
                  "fieldOfStudyID": 1,
@@ -156,34 +158,66 @@
             }
         }
 
+        private List<string> AllowedCccUserTypes = new List<string> { "student", "client", "professor", "administrator" };
+
         private void CccMemberValidation()
         {
             if (Request["isCccMember"].AsBool(false))
             {
-                Validation.RequireField("institutionID", "[[[You must select an institution.]]]");
-                Validation.RequireField("cccUserType", "[[[You must select user type.]]]");
-                var isStudent = Request["cccUserType"] == "student";
-                if (isStudent)
+                // adminRequested
+                var type = Request["cccUserType"];
+                if (!AllowedCccUserTypes.Contains(type))
                 {
-                    Validation.RequireField("fieldOfStudyID", "[[[You must select a field of study.]]]");
-                    Validation.RequireField("genderID", "[[[You must select a gender.]]]");
-                    Validation.RequireField("birthDate", "[[[You must denote your birh date.]]]");
+                    ModelState.AddError("cccUserType", "Given user type is not valid");
+                }
+                var isClient = type == "client";
+                if (!isClient)
+                {
+                    Validation.RequireField("institutionID", "[[[You must select an institution.]]]");
+                    Validation.RequireField("cccUserType", "[[[You must select user type.]]]");
+                    var isStudent = type == "student";
+                    if (isStudent)
+                    {
+                        Validation.RequireField("fieldOfStudyID", "[[[You must select a field of study.]]]");
+                        Validation.RequireField("genderID", "[[[You must select a gender.]]]");
+                        Validation.RequireField("birthDate", "[[[You must denote your birh date.]]]");
+                    }
                 }
             }
         }
 
         private void SaveCccMember(LcAuthHelper.LoginResult login)
         {
+            var isClient = Request["cccUserType"] == "client";
+            var isStudent = Request["cccUserType"] == "student";
             using (var db = new LcDatabase())
             {
                 db.Execute("BEGIN TRANSACTION");
                 try
                 {
-                    ResetTrialEndDate(db, login.userID);
-                    InsertExtraUserInfo(db, login.userID);
-                    InsertCccUser(db, login.userID);
-                    InsertUserEducation(db, login.userID);
-                    InsertCccPaymentPlan(db, login.userID);
+                    if (isClient)
+                    {
+                        InsertCccUserTypeClient(db, login);
+                    }
+                    else
+                    {
+                        InsertCccUser(db, login.userID);
+                        if (isStudent)
+                        {
+                            // Only students include auto-add education
+                            InsertUserEducation(db, login.userID);
+                            // We only request gender and birth date to students
+                            InsertExtraUserInfo(db, login.userID);
+                        }
+                        if (login.profile.isServiceProfessional)
+                        {
+                            // Only students should sign-up as service professionals from a CCC landing,
+                            // still we check the flag and apply some specific steps only for CCC users
+                            // that get a free service professional account.
+                            ResetTrialEndDate(db, login.userID);
+                            InsertCccPaymentPlan(db, login.userID);
+                        }
+                    }
                     db.Execute("COMMIT TRANSACTION");
                 }
                 catch
@@ -222,6 +256,16 @@
             var institutionID = Request["institutionID"].AsInt();
             var fieldOfStudyID = Request["fieldOfStudyID"].IsInt() ? (int?)Request["fieldOfStudyID"].AsInt() : null;
             var cccUserType = Request["cccUserType"];
+            // The type should be validated previously as one of allowed, here we will ones that choosen to be
+            // an 'administrator' as 'adminRequested', meaning that has no effects (it's more like a simple user)
+            // until a real 'admin' change it to 'admin' or another based type ('collegeAdmin')
+            // NOTE: even input should only be 'administrator', we take care of prevent a security problem that
+            // could be caused by a misuse of this call or code change that breaks type validation by checking
+            // just if the type contains the word 'admin'.
+            if (cccUserType.Contains("admin"))
+            {
+                cccUserType = "adminRequested";
+            }
             // PlanExpirationDate to 180 days from signUp date #761
             var expiration = DateTime.Today.AddDays(180);
             db.Execute(@"
@@ -239,6 +283,32 @@
                     @4
                 )
             ", userID, institutionID, fieldOfStudyID, expiration, cccUserType);
+        }
+        /// <summary>
+        /// Specific for user type 'client' (GIG posting partners)
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="userID"></param>
+        private void InsertCccUserTypeClient(LcDatabase db, LcAuthHelper.LoginResult logged)
+        {
+            var institutionID = Request["institutionID"].IsInt() ? Request["institutionID"].AsInt() : (int?)null;
+            db.Execute(@"
+                INSERT CCCUsers (
+                    UserID,
+                    InstitutionID,
+                    UserType
+                ) VALUES (
+                    @0,
+                    @1,
+                    @2
+                )
+            ", logged.userID, institutionID, "client");
+
+            // SPECIAL: update onboarding to skip 'welcome' step. This makes this back-end very tight with the front-end organization
+            // hope it takes no long active!
+            db.Execute("UPDATE users SET onboardingStep='public-contact-info' WHERE userID=@0", logged.userID);
+            logged.onboardingStep = "public-contact-info";
+            logged.profile.onboardingStep = logged.onboardingStep;
         }
         private void InsertUserEducation(LcDatabase db, int userID)
         {

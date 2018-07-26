@@ -168,5 +168,16 @@ namespace LcRest
                 return null;
             }
         }
+
+        public static Locale From(int languageID, int countryID)
+        {
+            return new Locale
+            {
+                countryCode = GetCountryCodeByID(countryID),
+                countryID = countryID,
+                languageCode = GetLanguageCodeByID(languageID),
+                languageID = languageID
+            };
+        }
     }
 }

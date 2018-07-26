@@ -71,7 +71,7 @@ exports.getBooking = function getBooking(id) {
 **/
 exports.appointmentToSimplifiedBooking = function(apt) {
     return {
-        bookingID: apt.sourceBooking().bookingID(),
+        bookingID: apt.sourceBooking() && apt.sourceBooking().bookingID(),
         jobTitleID: apt.jobTitleID(),
         clientUserID: apt.clientUserID(),
         serviceAddress: apt.address() ? apt.address().model.toPlainObject() : null,

@@ -1,0 +1,18 @@
+<div class="container-fluid isolated">
+    <script type="text/template" id="test-posting-questions-responses-list">
+        <h2>Responses</h2>
+        <ul data-bind="foreach: $data">
+            <li>
+                [<span data-bind="text: optionID"></span>]
+                <span data-bind="text: option"></span>:
+                <span data-bind="text: userInput"></span>
+            </li>
+        </ul>
+        <em data-bind="ifnot: $data.length">No responses</em>
+    </script>
+    <div data-bind="foreach: questionsResponses">
+        <h2>Question <span data-bind="text: $index"></span></h2>
+        <question-editor params="data: $data"></question-editor>
+        <div data-bind="template: { name: 'test-posting-questions-responses-list', data: responses }"></div>
+    </div>
+</div>

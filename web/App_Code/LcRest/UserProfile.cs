@@ -32,6 +32,17 @@ namespace LcRest
         public bool isServiceProfessional;
         public bool isClient;
         public bool isCollaborator;
+        public bool isAdmin;
+        public bool isOrganization;
+
+        public string orgName;
+        public string orgDescription;
+        public string orgWebsite;
+
+        public string partner;
+        public string partnerUserType;
+        [JsonIgnore]
+        public int? institutionID;
 
         /// <summary>
         /// Used in the app with a different set of names, but the first one is the same: 'welcome'.
@@ -95,6 +106,16 @@ namespace LcRest
                 isServiceProfessional = record.isServiceProfessional,
                 isClient = record.isClient,
                 isCollaborator = record.isCollaborator,
+                isAdmin = record.isAdmin,
+                isOrganization = record.isOrganization,
+
+                orgName = record.orgName,
+                orgDescription = record.orgDescription,
+                orgWebsite = record.orgWebsite,
+
+                partner = record.partner,
+                partnerUserType = record.partnerUserType,
+                institutionID = record.institutionID,
 
                 onboardingStep = record.onboardingStep,
                 accountStatusID = record.accountStatusID,
@@ -129,6 +150,8 @@ namespace LcRest
             ,isProvider as isServiceProfessional
             ,isCustomer as isClient
             ,isCollaborator
+            ,isAdmin
+            ,isOrganization
 
             ,alternativeEmail
             ,mobilePhone as phone
@@ -139,17 +162,31 @@ namespace LcRest
             ,onboardingStep
             ,accountStatusID
             ,createdDate
-            ,updatedDate
+            ,Users.updatedDate
             ,PreferredLanguageID as languageID
             ,PreferredCountryID as countryID
 
             ,ownerStatusID
             ,ownerAnniversaryDate
 
+            ,O.orgName
+            ,O.orgDescription
+            ,O.orgWebsite
+
+            ,CASE WHEN ccc.userID is null THEN null ELSE 'ccc' END as partner
+            ,ccc.userType as partnerUserType
+            ,ccc.institutionID as institutionID
+
         FROM Users
                 INNER JOIN
             UserProfile As UP
                 ON UP.UserID = Users.UserID
+                LEFT JOIN
+            userOrganization As O
+                ON O.userID = Users.UserID
+                LEFT JOIN
+            CCCUsers As ccc
+                ON ccc.userID = Users.UserID
         WHERE Users.UserID = @0
             AND Active = 1
         ";
@@ -167,6 +204,7 @@ namespace LcRest
         ,@CanReceiveSms bit
         ,@BirthMonthDay int
         ,@BirthMonth int
+        ,@IsOrg bit
 
         SET @UserID = @0
         SET @FirstName = @1
@@ -178,6 +216,7 @@ namespace LcRest
         SET @CanReceiveSms = @7
         SET @BirthMonthDay = @8
         SET @BirthMonth = @9
+        SET @IsOrg = @10
 
         -- Saving all the data and updating verifications
         BEGIN TRAN
@@ -243,6 +282,7 @@ namespace LcRest
                 ,CanReceiveSms = @CanReceiveSms
                 ,BirthMonthDay = @BirthMonthDay
                 ,BirthMonth = @BirthMonth
+                ,IsOrganization = @IsOrg
 
                 ,UpdatedDate = getdate()
                 ,ModifiedBy = 'sys'
@@ -286,7 +326,6 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
-
                 db.Execute(sqlUpdateProfile,
                     profile.userID,
                     profile.firstName,
@@ -297,7 +336,32 @@ namespace LcRest
                     profile.phone,
                     profile.canReceiveSms,
                     profile.birthMonthDay,
-                    profile.birthMonth
+                    profile.birthMonth,
+                    profile.isOrganization
+                );
+            }
+        }
+        public static void SetOrganizationInfo(UserProfile profile)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                db.Execute(@"
+                    UPDATE UserOrganization SET
+                        orgName = @1,
+                        orgDescription = @2,
+                        orgWebsite = @3,
+                        updatedDate = getdate()
+                    WHERE
+                        userID = @0
+
+                    IF @@ROWCOUNT  = 0
+                    INSERT INTO UserOrganization (userID, orgName, orgDescription, orgWebsite, updatedDate)
+                    VALUES (@0, @1, @2, @3, getdate())
+                ",
+                    profile.userID,
+                    profile.orgName,
+                    profile.orgDescription,
+                    profile.orgWebsite
                 );
             }
         }

@@ -15,7 +15,7 @@
         </div>
         <ul data-bind="foreach: serviceProfessionalSearchResult">
             <li>
-                <a data-bind="attr: { href: '/listing/' + userID() }">
+                <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }">
                     <div class="Avatar Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}">
                     </div>
                     <div class="ServiceProfessionalResult-summary">

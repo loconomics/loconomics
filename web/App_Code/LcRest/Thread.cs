@@ -184,7 +184,7 @@ namespace LcRest
                         { "Kind", 4 },
                         { "RequestKey", LcMessaging.SecurityRequestKey },
                         { "EmailTo", clientEmail }
-                    })
+                    }), replyTo: serviceProfessionalEmail
                     );
                 }
                 else
@@ -196,7 +196,7 @@ namespace LcRest
                         { "Kind", 1 },
                         { "RequestKey", LcMessaging.SecurityRequestKey },
                         { "EmailTo", serviceProfessionalEmail }
-                    })
+                    }), replyTo: clientEmail
                     );
                 }
 

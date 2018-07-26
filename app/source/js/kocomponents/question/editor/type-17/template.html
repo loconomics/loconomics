@@ -1,0 +1,24 @@
+<div class="form-group">
+    <label class="control-label" data-bind="
+        text: question.question,
+        attr: {
+            for: questionElementID
+        }
+    "></label>
+    <div class="input-group" style="width:100%">
+        <span class="input-group-addon" data-bind="visible: option.icon">
+            <span data-bind="css: option.icon"></span>
+        </span>
+        <input class="form-control" data-bind="
+            attr: {
+                id: questionElementID,
+                type: option.inputType,
+                placeholder: option.placeholder,
+                title: option.tooltip,
+                step: option.step
+            },
+            textInput: userInput
+        " />
+    </div>
+    <div class="help-block" data-bind="visible: question.helpBlock, text: question.helpBlock"></div>
+</div>

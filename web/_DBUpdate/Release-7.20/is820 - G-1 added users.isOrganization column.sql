@@ -1,0 +1,1 @@
+ALTER TABLE users ADD IsOrganization BIT NOT NULL DEFAULT 0

@@ -34,6 +34,8 @@
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/users/{userID}/{page}/{*urldata}", "~/api/v1/users/{page}.cshtml");
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/auth/{page}/{*urldata}", "~/api/v1/auth/{page}.cshtml");
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/lead-generation/{page}/{*urldata}", "~/api/v1/lead-generation/{page}.cshtml");
+    RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/admin/users/{userID}/{page}/{*urldata}", "~/api/v1/admin/users/{page}.cshtml");
+    RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/admin/{page}/{*urldata}", "~/api/v1/admin/{page}.cshtml");
     // DEPRECATED: Auth alias for previously used REST URLs (originally in the root of the REST URL)
     // TODO This URLs are deprecated, so at some point next 4 alias must be removed
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/facebook-user", "~/api/v1/auth/facebook-user.cshtml");

@@ -2,8 +2,9 @@
     It tracks the onboarding information and methods
     to update views to that state
 **/
-var Model = require('../models/Model');
-var ko = require('knockout');
+import Model from '../models/Model';
+import ko from 'knockout';
+import { data as user } from '../data/userProfile';
 
 /**
  * Definition of steps, in strict order, with settings from available:
@@ -12,33 +13,34 @@ var ko = require('knockout');
  * and accepts that as the first URL segment
  */
 var STEPS = {
-    welcome: {},
-    publicContactInfo: {},
+    welcome: {
+        userFlags: ['isClient', 'isServiceProfessional']
+    },
+    'public-contact-info': {
+        userFlags: ['isClient', 'isServiceProfessional']
+    },
+    'organization-info': {
+        userFlags: ['isOrganization']
+    },
     addJobTitle: {
-        serviceProfessionalOnly: true
+        userFlags: ['isServiceProfessional']
     },
     serviceAddresses: {
-        serviceProfessionalOnly: true,
+        userFlags: ['isServiceProfessional'],
         jobTitleSpecific: true
     }
 };
 var PROFESSIONAL_FINISH_STEP = 'listingEditor';
 var CLIENT_FINISH_STEP = 'home';
+var ORGANIZATION_FINISH_STEP = 'posting';
 
-var PROFESSIONAL_STEPS = Object.keys(STEPS)
-.filter(function(stepName) {
-    return !STEPS[stepName].clientOnly;
-})
-.map(function(stepName) {
-    return stepName;
-});
-var CLIENT_STEPS = Object.keys(STEPS)
-.filter(function(stepName) {
-    return !STEPS[stepName].serviceProfessionalOnly;
-})
-.map(function(stepName) {
-    return stepName;
-});
+function getUserSteps() {
+    return Object.keys(STEPS)
+    .filter(function(stepName) {
+        const step = STEPS[stepName];
+        return !!step.userFlags.some((flag) => user[flag]());
+    });
+}
 
 function OnboardingProgress(values) {
     var stepNumberFinished = -1;
@@ -46,14 +48,13 @@ function OnboardingProgress(values) {
     Model(this);
 
     this.model.defProperties({
-        isServiceProfessional: false,
         stepNumber: stepNumberFinished,
         // Let's set a job title to pass in to jobTitleSpecific steps as URL segment
         selectedJobTitleID: null
     }, values);
 
     this.stepNames = ko.pureComputed(function() {
-        return this.isServiceProfessional() ? PROFESSIONAL_STEPS : CLIENT_STEPS;
+        return getUserSteps();
     }, this);
     /**
      * Gives the name of the step (activity) that should be navigated after finishing
@@ -61,7 +62,11 @@ function OnboardingProgress(values) {
      * @member {KnockoutComputed<string>}
      */
     this.stepAfterFinish = ko.pureComputed(function() {
-        return this.isServiceProfessional() ? PROFESSIONAL_FINISH_STEP : CLIENT_FINISH_STEP;
+        return user.isOrganization() ?
+            ORGANIZATION_FINISH_STEP :
+            user.isServiceProfessional() ?
+            PROFESSIONAL_FINISH_STEP :
+            CLIENT_FINISH_STEP;
     }, this);
 
     this.totalSteps = ko.pureComputed(function() {
@@ -85,8 +90,7 @@ function OnboardingProgress(values) {
 
     this.stepAfter = function(stepName) {
         var nextStep = new OnboardingProgress({
-            selectedJobTitleID: this.selectedJobTitleID(),
-            isServiceProfessional: this.isServiceProfessional()
+            selectedJobTitleID: this.selectedJobTitleID()
         });
         nextStep.setStepByName(stepName);
         nextStep.incrementStep();

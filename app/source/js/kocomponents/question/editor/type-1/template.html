@@ -1,0 +1,32 @@
+<fieldset>
+    <legend data-bind="text: question.question"></legend>
+    <div data-bind="foreach: question.options">
+        <div class="radio">
+            <input type="radio" data-bind="
+                checked: $component.selectedOption,
+                checkedValue: $data,
+                attr: {
+                    id: $component.optionElementID($data),
+                    name: $component.questionElementID
+                }
+                " />
+            <label data-bind="
+                attr: {
+                    for: $component.optionElementID($data),
+                    id: $component.optionElementID($data) + '-label'
+                },
+                text: option"></label>
+            <div class="form-group" data-bind="
+                if: $data.inputType() && $component.selectedOption() === $data">
+                <input class="form-control" data-bind="
+                    attr: {
+                        'aria-labelledby': $component.optionElementID($data) + '-label',
+                        type: $data.inputType
+                    },
+                    textInput: $component.userInput
+                " />
+            </div>
+        </div>
+    </div>
+    <div class="help-block" data-bind="visible: question.helpBlock, text: question.helpBlock"></div>
+</fieldset>

@@ -9,30 +9,44 @@ var ko = require('knockout');
 var clients = require('../data/clients');
 var serviceAddresses = require('../data/serviceAddresses');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
-var Client = require('../models/Client');
+var Client = require('../models/Client').default;
 
 module.exports = function AppointmentView(appointment) {
     if (appointment._isAppointmentView) return appointment;
     appointment._isAppointmentView = true;
 
-    var obsClient = ko.observable(null);
-
-    appointment.client = ko.computed(function() {
+    /**
+     * Data of the client selected at the booking appointment.
+     * @member {KnockoutObservable<Client>}
+     */
+    appointment.client = ko.observable(null);
+    /**
+     * Loads and keeps the client data updated on changes to the selected
+     * booking and client ID.
+     */
+    ko.computed(function() {
         var b = this.sourceBooking();
-        if (!b) return null;
-
-        var cid = this.clientUserID();
-        if (cid) {
-            clients.item(cid)
-            .onceLoaded()
-            .then((data) => {
-                obsClient(new Client(data));
-            });
-            return obsClient();
+        if (b) {
+            var cid = this.clientUserID();
+            if (cid) {
+                clients.item(cid)
+                .onceLoaded()
+                .then((data) => {
+                    // Prevent race condition by ensuring we have the correct client
+                    // (WHY: could select a client that needs remote load and then another
+                    // that has local copy, this last resolves first and when remote comes
+                    // will replace the data of the currently selected client)
+                    if (this.clientUserID() === data.clientUserID) {
+                        appointment.client(new Client(data));
+                    }
+                });
+            }
         }
-        return null;
+        else {
+            appointment.client(null);
+        }
     }, appointment)
-    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 60 } });
 
     ko.computed(function() {
         var add = this.address();

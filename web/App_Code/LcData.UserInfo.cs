@@ -683,7 +683,7 @@ public static partial class LcData
 
         public static string GetUserPublicUrlPath(int userid, int? positionID = null)
         {
-            return LcUrl.AppPath + "#!profile/" + userid + (positionID == null ? "" : "/" + positionID.ToString());
+            return LcUrl.AppPath + "#!listing/" + userid + (positionID == null ? "" : "/" + positionID.ToString());
         }
 
         /// <summary>

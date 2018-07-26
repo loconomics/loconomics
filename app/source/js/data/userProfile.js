@@ -17,8 +17,8 @@ var api = new RemoteModel({
     fetch: function fetch() {
         return remote.get('me/profile');
     },
-    push: function push() {
-        return remote.put('me/profile', this.data.model.toPlainObject());
+    push: function push(data) {
+        return remote.put('me/profile', data || this.data.model.toPlainObject());
     }
 });
 module.exports = api;
@@ -57,5 +57,28 @@ api.becomeServiceProfessional = function() {
         // If success, save persistent local copy of the data to ensure the
         // profile change is saved
         local.setItem(api.localStorageName, api.data.model.toPlainObject());
+    });
+};
+
+/**
+ * @typedef {Object} UserOrganizationInfo
+ * @property {string} orgName
+ * @property {string} orgDescription
+ * @property {string} orgWebsite
+ */
+
+/**
+ * Saves user organization information
+ * @param {UserOrganizationInfo} data
+ * @returns {Promise<models/User>}
+ */
+api.saveOrganizationInfo = function(data) {
+    return remote.put('me/profile/organization', data)
+    .then(function(serverData) {
+        api.data.model.updateWith(serverData, true);
+        // If success, save persistent local copy of the data to ensure the
+        // profile change is saved
+        local.setItem(api.localStorageName, api.data.model.toPlainObject());
+        return api.data;
     });
 };

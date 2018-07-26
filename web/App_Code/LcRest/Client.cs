@@ -179,24 +179,12 @@ namespace LcRest
                 // NOTE: Home address must exists ever, created on sign-up (GetSingleFrom
                 // takes care to return null if not exists, but on this case is not possible
                 // --or must not if not corrupted user profile)
-                return GetSingleFrom(db.Query(
+                return FromDB(db.QuerySingle(
                     sqlSelectOne + sqlFields + sqlAndClientUserID,
                     serviceProfessionalUserID,
                     clientUserID
                 ));
             }
-        }
-
-        private static Client GetSingleFrom(IEnumerable<dynamic> dbRecords)
-        {
-            var add = dbRecords
-                .Select(FromDB)
-                .ToList();
-
-            if (add.Count == 0)
-                return null;
-            else
-                return add[0];
         }
         #endregion
 

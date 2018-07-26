@@ -1,0 +1,38 @@
+<form class="container-fluid LightForm" data-bind="submit: save" aria-describedby="contactInfoEditorInstructions">
+    <app-loading-spinner params="mod: 'row big'"></app-loading-spinner>
+    <p id="contactInfoEditorInstructions" class="help-block">
+        <span data-bind="visible: data.isServiceProfessional()">
+            Only your first name and last name's initial will be shown on your listing. After an appointment is scheduled,
+            the client will see your full name and phone number so they can reach you regarding the appointment.
+        </span>
+        <span data-bind="visible: !data.isServiceProfessional()">
+            Only your first name and last name's initial will be shown on your profile and reviews you make. After an appointment is scheduled, the service professional will see your full name and phone number so they can reach you regarding your appointment.
+        </span>
+    </p>
+    <fieldset>
+        <div class="form-group" data-bind="css: { 'has-error': isFormValidated() && !isFirstNameValid() }">
+            <label for="contactInfo-firstName">First name:</label>
+            <input id="contactInfo-firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: data.firstName, disable: isLocked">
+        </div>
+        <div class="form-group" data-bind="css: { 'has-error': isFormValidated() &&!isLastNameValid() }">
+            <label for="contactInfo-lastName">Last name:</label>
+            <input id="contactInfo-lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: data.lastName, disable: isLocked">
+        </div>
+        <div class="form-group" data-bind="css: { 'has-error': isFormValidated() &&!isPhoneValid() }">
+            <label for="contactInfo-phone">Phone number:</label>
+            <input id="contactInfo-phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: data.phone, disable: isLocked">
+        </div>
+        <div class="form-group">
+            <label for="contactInfo-canReceiveSms">Does this number receive texts?</label>
+            <input id="contactInfo-canReceiveSms" type="checkbox" data-bind="checked: data.canReceiveSms, disable: isLocked" aria-describedby="contactInfo-canReceiveSmsInstructions">
+            <p id="contactInfo-canReceiveSmsInstructions" class="help-block">We may send text notifications about appointments. You can cancel these anytime.</p>
+        </div>
+        <div class="form-group">
+            <label for="signupIsOrganization">I'm hiring on behalf of my business/organization</label>
+            <input type="checkbox" id="signupIsOrganization" data-bind="checked: data.isOrganization, disable: isLocked" />
+        </div>
+    </fieldset>
+    <div class="LightForm-submitBar">
+        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+    </div>
+</form>

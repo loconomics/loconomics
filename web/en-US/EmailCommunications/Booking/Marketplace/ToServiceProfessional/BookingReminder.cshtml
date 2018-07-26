@@ -5,11 +5,11 @@
     Subject: Reminder about your appointment with @(info.client.firstName)  @LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate)
     Send when: 48 hours before info.booking.serviceDate.startTime
     Restrictions: positions.HIPAA=0;
- *@
+*@
 @using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
-    
+
     Layout = "_EmailLayout.cshtml";
 
     // All the data for this email:
@@ -65,9 +65,9 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">This is just a friendly reminder about your <strong>@info.userJobTitle.title</strong> services @(info.client.firstName) @(info.client.lastName) booked are coming up on <strong>@LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate)</strong>. If you need to cancel or reschedule, please do so ASAP by <a href="@(info.viewServiceProfessionalBookingCard)" target="_blank" >clicking here</a>.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">This is just a friendly reminder about your <strong>@info.userJobTitle.title</strong> services @(info.client.firstName) @(info.client.lastName) booked are coming up on <strong>@LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate)</strong>. If you need to cancel or reschedule, please do so ASAP by <a href="@(info.viewServiceProfessionalBookingCard)" target="_blank">clicking here</a>.</td>
                             </tr>
-                            <tr>                               
+                            <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>The Loconomics team</td>
                             </tr>
                         </table>
@@ -98,6 +98,7 @@
 </table>
 @RenderPage("MessageComponents/$PricingSummary.cshtml", info)
 @RenderPage("MessageComponents/$Services.cshtml", info)
+@RenderPage("MessageComponents/$ClientInfo.cshtml", info)
 @RenderPage("MessageComponents/$TimeConfirmed.cshtml", info)
 @RenderPage("MessageComponents/$Location.cshtml", info)
 @RenderPage("MessageComponents/$PaymentStatus.cshtml", info)
@@ -111,25 +112,25 @@
                 <tr>
                     <td>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
-<!--
-                            <tr>
-                                <td>
-                                      
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                        <tr>
-                                            <td align="center" style="font-size: 25px; font-family: Helvetica, Arial, sans-serif; color: #333333; padding: 30px 0 20px 0;" class="padding-copy">Frequently Asked Questions</td>
-                                        </tr>
-                                        <tr>
-                                            <td align="left"><a href="#" target="_blank" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #d75560;" class="padding-copy">When will my appointment be confirmed?</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td align="left"><a href="#" target="_blank" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #d75560;" class="padding-copy">When will my credit card be charged?</a></td>
-                                        </tr>
+                            <!--
+                                                        <tr>
+                                                            <td>
 
-                                    </table>
-                                </td>
-                            </tr>
--->
+                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                    <tr>
+                                                                        <td align="center" style="font-size: 25px; font-family: Helvetica, Arial, sans-serif; color: #333333; padding: 30px 0 20px 0;" class="padding-copy">Frequently Asked Questions</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="left"><a href="#" target="_blank" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #d75560;" class="padding-copy">When will my appointment be confirmed?</a></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="left"><a href="#" target="_blank" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #d75560;" class="padding-copy">When will my credit card be charged?</a></td>
+                                                                    </tr>
+
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                            -->
                             <tr>
                                 <td align="center">
                                     <!-- BULLETPROOF BUTTON -->
@@ -138,7 +139,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                        <td align="center"><a href="@(info.viewServiceProfessionalHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #d75560; border-top: 15px solid #d75560; border-bottom: 15px solid #d75560; border-left: 25px solid #d75560; border-right: 25px solid #d75560; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>                                                    
+                                                        <td align="center"><a href="@(info.viewServiceProfessionalHelpCenter)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #d75560; border-top: 15px solid #d75560; border-bottom: 15px solid #d75560; border-left: 25px solid #d75560; border-right: 25px solid #d75560; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Visit the Help Center</a></td>
                                                     </tr>
                                                 </table>
                                             </td>

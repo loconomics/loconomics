@@ -1,13 +1,14 @@
 /** Calendar activity **/
 'use strict';
 
+import { events as AppointmentEvent } from '../kocomponents/legacy/appointment-card';
+
 require('../components/DatePicker');
 var $ = require('jquery');
 var moment = require('moment');
 var Appointment = require('../models/Appointment');
 var ko = require('knockout');
 var getDateWithoutTime = require('../utils/getDateWithoutTime');
-var AppointmentCardViewModel = require('../viewmodels/AppointmentCard');
 var Listener = require('../utils/EventEmitterListener');
 var calendar = require('../data/calendar');
 var showError = require('../modals/error').show;
@@ -152,7 +153,6 @@ exports.init = A.init;
 
 A.prototype.registerAppointmentListeners = function() {
     var listeners = [];
-    var events = AppointmentCardViewModel.events;
     var cardView = this.viewModel.appointmentCardView();
     var viewModel = this.viewModel;
     var app = this.app;
@@ -160,17 +160,17 @@ A.prototype.registerAppointmentListeners = function() {
     this.disposeAppointmentListeners();
 
     if(cardView) {
-        listeners.push(new Listener(cardView, events.confirmed, function(appointment) {
+        listeners.push(new Listener(cardView, AppointmentEvent.confirmed, function(appointment) {
             // Go to the confirmed card at the date that was confirmed
             viewModel.setCurrent(null, appointment.sourceBooking().bookingID(), 'booking');
         }));
 
-        listeners.push(new Listener(cardView, events.declined, function(appointment) {
+        listeners.push(new Listener(cardView, AppointmentEvent.declined, function(appointment) {
             // Go to the calendar day of the declined booking at the current appointment day
             app.shell.go('calendar/' + appointment.startTime().toISOString());
         }));
 
-        listeners.push(new Listener(cardView, events.cancelled, function(appointment) {
+        listeners.push(new Listener(cardView, AppointmentEvent.cancelled, function(appointment) {
             // Go to the calendar day of the cancelled booking at the appointment day
             app.shell.go('calendar/' + appointment.startTime().toISOString());
         }));

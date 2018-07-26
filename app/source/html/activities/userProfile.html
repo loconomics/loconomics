@@ -11,10 +11,18 @@
                 </h2>
                 <ul class="TilesList TilesList--openEnd">
                     <li>
-                        <a class="IconContentItem" href="/publicContactInfo?mustReturn=userProfile&returnText=Your profile">
+                        <a class="IconContentItem" href="/public-contact-info?mustReturn=userProfile&returnText=Your profile">
                             <icon-dec class="Item-icon" params="icon: 'ion-ios-telephone-outline'"></icon-dec>
                             <div class="Item-content">
                                 <p>Contact information</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li data-bind="visible: isOrganization">
+                        <a class="IconContentItem" href="/organization-info?mustReturn=userProfile&returnText=Your profile">
+                            <icon-dec class="Item-icon" params="icon: 'ion-briefcase'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Organization information</p>
                             </div>
                         </a>
                     </li>

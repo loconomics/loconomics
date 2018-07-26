@@ -17,7 +17,7 @@ var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 var DEFAULT_BACK_LINK = '/listingEditor';
 var showError = require('../modals/error').show;
-var Client = require('../models/Client');
+var Client = require('../models/Client').default;
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 

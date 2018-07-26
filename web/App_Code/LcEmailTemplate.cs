@@ -556,4 +556,65 @@ public static class LcEmailTemplate
         return "http://maps.google.com/?q=" + Uri.EscapeDataString(GetLocationForGoogleMaps(address));
     }
     #endregion
+
+    #region Posting
+    public class PostingEmailInfo : BasicEmailInfo
+    {
+        public int serviceProfessionalID;
+
+        public LcRest.UserPosting posting;
+
+        private LcRest.PublicUserProfile _serviceProfessional;
+        public LcRest.PublicUserProfile serviceProfessional
+        {
+            get
+            {
+                if (_serviceProfessional == null)
+                    _serviceProfessional = LcRest.PublicUserProfile.GetForInternalUse(serviceProfessionalID);
+                return _serviceProfessional;
+            }
+        }
+
+        private LcRest.PublicUserProfile _client;
+        public LcRest.PublicUserProfile client
+        {
+            get
+            {
+                if (_client == null)
+                    _client = LcRest.PublicUserProfile.GetForInternalUse(posting.userID);
+                return _client;
+            }
+        }
+
+        public string serviceProfessionalMessage
+        {
+            get
+            {
+                return LcRest.UserPosting.GetServiceProfessionalReactionMessage(posting.userPostingID, serviceProfessionalID);
+            }
+        }
+
+        public string viewAuthorPostingURL
+        {
+            get
+            {
+                return LcUrl.AppUrl + "posting/" + posting.userPostingID;
+            }
+        }
+
+        public PostingEmailInfo(int userID, int userPostingID, int serviceProfessionalID)
+        {
+            posting = LcRest.UserPosting.Get(userID, userPostingID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), false);
+            this.serviceProfessionalID = serviceProfessionalID;
+        }
+    }
+
+    public static PostingEmailInfo GetPostingInfo()
+    {
+        var userID = Request["userID"].AsInt();
+        var postid = Request["userPostingID"].AsInt();
+        var pid = Request["serviceProfessionalUserID"].AsInt();
+        return new PostingEmailInfo(userID, postid, pid);
+    }
+    #endregion
 }

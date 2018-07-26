@@ -1,0 +1,38 @@
+﻿@using WebMatrix.WebData;
+@*
+    Retrieving all (external) Platforms registered (it's a public list, but still limited to logged users)
+
+    IMPORTANT: When making an optimal list
+
+    Options:
+
+    - GET /
+
+    - @Result LcRest.Platform
+
+    EXAMPLE {
+        "Platforms (all registered)": {
+            "url": "/api/v1/en-US/platforms",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestPlatforms: RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 0)
+            {
+                // Full list
+                var locale = LcRest.Locale.Current;
+                return LcRest.Platform.GetFullList(locale.languageID, locale.countryID);
+            }
+            return base.Get();
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.LoggedUser);
+    new RestPlatforms().JsonResponse(this);
+}

@@ -18,6 +18,7 @@ CREATE PROC [dbo].[InsertUserProfilePositions]
 AS
 
 DECLARE @ResultMessage varchar(50)
+DECLARE @userListingID int
 
 BEGIN TRY
 
@@ -28,11 +29,13 @@ BEGIN TRY
 		@UserID,@PositionID,@LanguageID,@CountryID, GETDATE(), GETDATE(), 'sys', 1, 2, @Intro, @CancellationPolicyID, @InstantBooking,
 		@collectPaymentAtBookMeButton, @title
 	)
+
+	SET @userListingID = @@Identity
 	
 	-- Check alerts for the position to get its state updated
 	EXEC TestAllUserAlerts @UserID, @PositionID
 
-	SELECT  'Success' as Result
+	SELECT 'Success' as Result, @userListingID as userListingID
 
 END TRY
 
@@ -40,6 +43,8 @@ BEGIN CATCH
 
  SET @ResultMessage =  ERROR_MESSAGE();
 
+-- TODO This needs refactor, since this error never happens now since userListingID exists
+-- (may be different message per unique index on positionID) may be the source of the issue #840
 IF @ResultMessage like 'Violation of PRIMARY KEY%'
  
 BEGIN
@@ -71,7 +76,12 @@ BEGIN
 		-- Check alerts for the position to get its state updated
 		EXEC TestAllUserAlerts @UserID, @PositionID
 
-		SELECT  'Success' as Result
+		SELECT @userListingID = userListingID FROM UserProfilePositions
+		WHERE 
+			UserID = @UserID AND PositionID = @PositionID
+			AND LanguageID = @LanguageID AND CountryID = @CountryID
+
+		SELECT 'Success' as Result, @userListingID as userListingID
 	END
 END
 
