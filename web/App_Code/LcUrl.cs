@@ -29,6 +29,7 @@ public static class LcUrl
             // and is Not in our real domain (loconomics.com) we must enforce to use that
             // domain (loconomics.com) with or without subdomain depending on the channel
             // (no subdomain for live, but yes for everything else)
+            // TODO i18n fix for other app domains. eg loconomics.com.au
             var domain = context.Request.Url.Authority;
             if (domain.Contains(".com") && 
                 !domain.Contains("loconomics.com"))

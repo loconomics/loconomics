@@ -42,25 +42,25 @@ public partial class LcPayment
                 {
                     var card = saved as CreditCard;
                     info.ExpirationDate = DateTimeOffset.Parse(card.ExpirationDate);
-                    info.Description = card.CardType.ToString() + " ends in " + card.LastFour;
+                    info.Description = string.Format("{0} ends in {1}", card.CardType.ToString(), card.LastFour);
                 }
                 else if (saved is ApplePayCard)
                 {
                     var apple = saved as ApplePayCard;
                     info.ExpirationDate = DateTimeOffset.Parse(apple.ExpirationYear + "/" + apple.ExpirationMonth + "/01");
-                    info.Description = apple.CardType + " ends in " + apple.Last4;
+                    info.Description = string.Format("{0} ends in {1}", apple.CardType, apple.Last4);
                 }
                 else if (saved is PayPalAccount)
                 {
                     var paypal = saved as PayPalAccount;
                     info.ExpirationDate = null;
-                    info.Description = "Paypal account for " + paypal.Email;
+                    info.Description = string.Format("Paypal account for {0}", paypal.Email);
                 }
                 else if (saved is AndroidPayCard)
                 {
                     var android = saved as AndroidPayCard;
                     info.ExpirationDate = DateTimeOffset.Parse(android.ExpirationYear + "/" + android.ExpirationMonth + "/01");
-                    info.Description = android.CardType + " ends in " + android.Last4;
+                    info.Description = string.Format("{0} ends in {1}", android.CardType, android.Last4);
                 }
                 else
                 {

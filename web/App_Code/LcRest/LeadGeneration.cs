@@ -22,7 +22,7 @@ namespace LcRest
 
             if (emailExists)
             {
-                throw new Exception("Email is already registered, please log-in or request a password reset");
+                throw new Exception("[[[Email is already registered, please log-in or request a password reset]]]");
             }
 
             using (var db = new LcDatabase())
@@ -116,7 +116,7 @@ namespace LcRest
             var existentUserID = Client.CheckEmailAvailability(email);
             if (existentUserID != userID)
             {
-                throw new Exception("Invalid user");
+                throw new Exception("[[[Invalid user]]]");
             }
             using (var db = new LcDatabase())
             {

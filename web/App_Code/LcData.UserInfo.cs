@@ -855,6 +855,7 @@ public static partial class LcData
                 return r;
             }
         }
+        
         public static string GetFormatedUserResponseTime(dynamic ResponseTimeMinutes)
         {
             var responseTime = "N/A";

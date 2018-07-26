@@ -162,7 +162,7 @@
                 }
             }
 
-            throw new HttpException(404, "Event not found.");
+            throw new HttpException(404, "[[[Event not found.]]]");
         }
         
         public dynamic DelItem(int eventID)
@@ -176,7 +176,7 @@
                     return item;
                 }
 
-                throw new HttpException(404, "Event not found.");
+                throw new HttpException(404, "[[[Event not found.]]]");
             }
             catch (ConstraintException delEx)
             {
@@ -195,11 +195,11 @@
             Validation.RequireField("EndTime", LcRessources.RequiredField("End Date"));
             Validation.RequireField("EventTypeID", LcRessources.RequiredField("Type"));
             Validation.RequireField("AvailabilityTypeID", LcRessources.RequiredField("Availability"));
-            Validation.Add("StartTime", Validator.DateTime("Start date/time is not valid"));
-            Validation.Add("EndDate", Validator.DateTime("End date/time is not valid"));
-            Validation.Add("RecurrenceRule[Interval]", Validator.Integer("'Repeat every' must be a number"));
-            Validation.Add("RecurrenceRule[Count]", Validator.Integer("Number of occurrences must be a number"));
-            Validation.Add("RecurrenceRule[Until]", Validator.DateTime("Repetition End Date is not valid"));
+            Validation.Add("StartTime", Validator.DateTime("[[[Start date/time is not valid]]]"));
+            Validation.Add("EndDate", Validator.DateTime("[[[End date/time is not valid]]]"));
+            Validation.Add("RecurrenceRule[Interval]", Validator.Integer("[[['Repeat every' must be a number]]]"));
+            Validation.Add("RecurrenceRule[Count]", Validator.Integer("[[[Number of occurrences must be a number]]]"));
+            Validation.Add("RecurrenceRule[Until]", Validator.DateTime("[[[Repetition End Date is not valid]]]"));
             
             if (!Validation.IsValid()) {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
@@ -251,7 +251,7 @@
                 );
                 
                 if (eventID < 0) {
-                    throw new HttpException(404, "Event not found.");
+                    throw new HttpException(404, "[[[Event not found.]]]");
                 }
             }
             catch (ConstraintException delEx)
@@ -267,7 +267,7 @@
         public override dynamic Post()
         {
             if (UrlData.Count > 0)
-                throw new HttpException(405, "Method not allowed.");
+                throw new HttpException(405, "[[[Method not allowed.]]]");
 
             return SetItem(0);
         }
@@ -280,9 +280,9 @@
 
             if (updated == null) {
                 if (UrlData.Count == 0)
-                    throw new HttpException(405, "Method not allowed.");
+                    throw new HttpException(405, "[[[Method not allowed.]]]");
                 else
-                    throw new HttpException(404, "Event not found.");
+                    throw new HttpException(404, "[[[Event not found.]]]");
             }
 
             return updated;
@@ -296,9 +296,9 @@
 
             if (deleted == null) {
                 if (UrlData.Count == 0)
-                    throw new HttpException(405, "Method not allowed.");
+                    throw new HttpException(405, "[[[Method not allowed.]]]");
                 else
-                    throw new HttpException(404, "Event not found.");
+                    throw new HttpException(404, "[[[Event not found.]]]");
             }
           
             return deleted;

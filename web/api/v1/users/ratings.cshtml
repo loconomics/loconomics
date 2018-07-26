@@ -40,7 +40,7 @@
             var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
             if (userID <= 0)
             {
-                throw new HttpException(404, "User Not Found");
+                throw new HttpException(404, "[[[User Not Found]]]");
             }
             
             // All user rating:
@@ -58,13 +58,13 @@
                     jobTitleID = UrlData[0].AsInt();
                 }
                 else {
-                    throw new HttpException(404, "User Not Found");
+                    throw new HttpException(404, "[[[User Not Found]]]");
                 }
             }
 
             var data = LcRest.PublicUserRating.Get(userID, jobTitleID);
             if (data == null) {
-                throw new HttpException(404, "User Not Found");
+                throw new HttpException(404, "[[[User Not Found]]]");
             }
 
             return data;

@@ -562,7 +562,7 @@ public static partial class LcData
             }
             else
             {
-                throw new Exception("A photo stream or a photo ID is required");
+                throw new Exception("[[[A photo stream or a photo ID is required]]]");
             }
 
             // Save on database

@@ -549,7 +549,7 @@ namespace LcRest
             if (!String.IsNullOrEmpty(address.postalCode) && !AutosetByCountryPostalCode(address))
             {
                 // TODO l10n
-                throw new ValidationException("Invalid postal code", "postalCode", "address");
+                throw new ValidationException("[[[Invalid postal code]]]", "postalCode", "address");
             }
 
             // GPS
@@ -588,7 +588,7 @@ namespace LcRest
                 String.IsNullOrWhiteSpace(address.addressName))
             {
                 // TODO l10n preset address name for service area addresses
-                address.addressName = "Service Area";
+                address.addressName = "[[[Service Area]]]";
             }
 
             using (var db = new LcDatabase(sharedDb))
@@ -673,7 +673,7 @@ namespace LcRest
                 if (String.IsNullOrWhiteSpace(address.countryCode))
                 {
                     // TODO l10n
-                    throw new ValidationException("Address must contain a country code or country ID", "countryCode", "address");
+                    throw new ValidationException("[[[Address must contain a country code or country ID]]]", "countryCode", "address");
                 }
                 address.countryID = LcRest.Locale.GetCountryIDByCode(address.countryCode);
             }
@@ -691,7 +691,7 @@ namespace LcRest
                 if (String.IsNullOrWhiteSpace(address.postalCode))
                 {
                     // TODO l10n
-                    throw new ValidationException("Address must contain a postal code", "postalCode", "address");
+                    throw new ValidationException("[[[Address must contain a postal code]]]", "postalCode", "address");
                 }
 
                 // Get the information by postal code and country from database

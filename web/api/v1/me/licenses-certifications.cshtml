@@ -123,7 +123,7 @@
                     {
                         printMax = LcHelpers.PrettyFileSize(max * 1024);
 
-                        errMsg = "The file is too large, maximum file size is " + printMax;
+                        errMsg = string.Format("The file is too large, maximum file size is {0}", printMax);
                     }
                     else
                     {

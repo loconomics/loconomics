@@ -32,12 +32,12 @@
             var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
             if (userID <= 0)
             {
-                throw new HttpException(404, "User Not Found");
+                throw new HttpException(404, "[[[User Not Found]]]");
             }
             
             var profile = LcRest.PublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
             if (profile == null)
-                throw new HttpException(404, "User Not Found");
+                throw new HttpException(404, "[[[User Not Found]]]");
 
             return profile;
         }

@@ -44,7 +44,7 @@
             var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
             if (userID <= 0)
             {
-                throw new HttpException(404, "User Not Found");
+                throw new HttpException(404, "[[[User Not Found]]]");
             }
             
             var startDate = DateTimeOffsetFromISO(Request["start"]) ?? DateTime.Today;
@@ -63,7 +63,7 @@
                 return LcCalendar.GetAvailability.Times(userID, startDate, endDate, useAdvanceTime);
             }
             
-            throw new HttpException(404, "User Not Found");
+            throw new HttpException(404, "[[[User Not Found]]]");
         }
     }
 }

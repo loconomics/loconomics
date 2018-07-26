@@ -176,6 +176,7 @@ namespace LcRest
                 // NOTE: the Kind possible values are in the template.
                 if (SentByFreelancer)
                 {
+                    // TODO: i18n
                     LcMessaging.SendMail(clientEmail, "A Message From a Loconomics Freelancer",
                         LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                         new Dictionary<string, object> {

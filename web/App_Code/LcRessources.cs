@@ -8,14 +8,14 @@ using System.Web;
 /// </summary>
 public static class LcRessources
 {
-    public const string ValidationSummaryTitle = "Please fix these issues and try again:";
-    public const string DataSaved = "Great work!";
-    public const string OK = "OK";
-    public const string ShortDataSaved = "Saved";
-    public const string RequestSent = "Request sent!";
-    public const string MessageSent = "Message was sent";
-    public const string FieldXIsRequired = "{0} is required";
-    public const string InvalidValueForField = "{0} has a not valid value";
+    public const string ValidationSummaryTitle = "[[[Please fix these issues and try again:]]]";
+    public const string DataSaved = "[[[Great work!]]]";
+    public const string OK = "[[[OK]]]";
+    public const string ShortDataSaved = "[[[Saved]]]";
+    public const string RequestSent = "[[[Request sent!]]]";
+    public const string MessageSent = "[[[Message was sent]]]";
+    public const string FieldXIsRequired = "[[[%0 is required|||{0}]]]";
+    public const string InvalidValueForField = "[[[%0 has a not valid value|||{0}]]]";
     public const string MoneySymbolPrefix = "$"; // For Spain: ""
     public const string MoneySymbolSufix = ""; // For Spain: "€"
 
@@ -63,6 +63,7 @@ public static class LcRessources
         return String.Format(InvalidValueForField, fieldLabel.Capitalize());
     }
     #region Dates, time, calendaring
+    //TODO i18n 
     public class DayOfWeekRecord
     {
         public int ID;
