@@ -63,11 +63,23 @@ namespace LcRest
         public decimal firstTimeServiceFeeMinimum;
 
         /// <summary>
-        /// True if no details or all details/services are for phone service only.
+        /// True if no details or all details/services are for remote service only.
         /// This means that at a booking, no address will be required.
-        /// NOTE: Maybe better, for further future options, a 'isRemoteServicesOnly'?
         /// </summary>
-        public bool isPhoneServiceOnly = true;
+        public bool isRemoteService
+        {
+            get
+            {
+                foreach (var detail in details)
+                {
+                    if (!detail.isRemoteService)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
         #endregion
 
         #region Links
@@ -234,10 +246,6 @@ namespace LcRest
                     data.firstTimeServiceFeeMinimum
                 ));
 
-                // Copy the pre-computed flag, to prevent it from having
-                // a wrong default value
-                newData.isPhoneServiceOnly = data.isPhoneServiceOnly;
-
                 if (data.details != null)
                 {
                     // Set original with details,
@@ -289,13 +297,11 @@ namespace LcRest
             var details = new List<PricingSummaryDetail>();
             var jobTitleID = 0;
 
-            isPhoneServiceOnly = true;
             foreach (var service in ServiceProfessionalService.GetListByIds(serviceProfessionalUserID, services))
             {
                 if (jobTitleID == 0)
                     jobTitleID = service.jobTitleID;
-                if (!service.isPhone)
-                    isPhoneServiceOnly = false;
+
                 details.Add(PricingSummaryDetail.FromServiceProfessionalService(service));
             }
 
