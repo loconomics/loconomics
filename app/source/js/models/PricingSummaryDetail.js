@@ -5,7 +5,7 @@
 var Model = require('./Model');
 
 function PricingSummaryDetail(values) {
-    
+
     Model(this);
 
     this.model.defProperties({
@@ -21,6 +21,7 @@ function PricingSummaryDetail(values) {
         serviceName: '',
         serviceDescription: null,
         numberOfSessions: 1,
+        isRemoteService: false,
         createdDate: null,
         updatedDate: null
     }, values);
@@ -42,6 +43,7 @@ PricingSummaryDetail.fromServiceProfessionalService = function(service) {
         firstSessionDurationMinutes: service.serviceDurationMinutes(),
         price: service.price(),
         serviceProfessionalServiceID: service.serviceProfessionalServiceID(),
-        hourlyPrice: (service.priceRateUnit() || '').toUpperCase() === 'HOUR' ? service.priceRate() : null
+        hourlyPrice: (service.priceRateUnit() || '').toUpperCase() === 'HOUR' ? service.priceRate() : null,
+        isRemoteService: service.isPhone()
     });
 };
