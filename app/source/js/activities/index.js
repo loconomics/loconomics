@@ -25,6 +25,7 @@ function createRedirect(toPath) {
 const activities = {
     'publicContactInfo': createRedirect('public-contact-info'),
     'userProfile': createRedirect('user-profile'),
+    'downloadApp': createRedirect('download-app')
 };
 
 /**

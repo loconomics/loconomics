@@ -6,7 +6,6 @@
 'use strict';
 
 module.exports = {
-    'downloadApp': require('./activities/downloadApp'),
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),
