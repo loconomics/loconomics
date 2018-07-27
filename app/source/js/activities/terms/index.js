@@ -11,6 +11,7 @@ import * as activities from '../index';
 import Activity from '../../components/Activity';
 import ko from 'knockout';
 import shell from '../../app.shell';
+import style from './style.styl';
 import template from './template.html';
 
 const ROUTE_NAME = 'terms';
@@ -19,6 +20,8 @@ const DEFAULT_TAB = 'terms-of-service';
 export default class TermsActivity extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);
