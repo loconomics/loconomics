@@ -42,7 +42,6 @@ module.exports = {
     'home': require('./activities/home'),
     'learnMoreProfessionals': require('./activities/learnMoreProfessionals'),
     'booking': require('./activities/booking'),
-    'terms': require('./activities/terms'),
     'payments': require('./activities/payments'),
     'userFees': require('./activities/userFees'),
     'performance': require('./activities/performance'),
