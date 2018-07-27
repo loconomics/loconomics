@@ -24,7 +24,6 @@ module.exports = {
     'help': require('./activities/help'),
     'feedbackForm': require('./activities/feedbackForm'),
     'contactForm': require('./activities/contactForm'),
-    'cms': require('./activities/cms'),
     'clientEditor': require('./activities/clientEditor'),
     'schedulingPreferences': require('./activities/schedulingPreferences'),
     'calendarSyncing': require('./activities/calendarSyncing'),
