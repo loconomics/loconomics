@@ -8,7 +8,7 @@
     Layout = "_TestLayout.cshtml";
     
     float delay = Request["delayMinutes"].AsFloat(0);
-    var to = Request["to"] ?? "iagosrl@gmail.com";
+    var to = Request["to"];
     var subject = "LC Test Email: ";
     var q = Request["q"].AsInt(0);
     var series = Request["series"] ?? "A";

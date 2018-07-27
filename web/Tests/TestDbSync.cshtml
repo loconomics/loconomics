@@ -1,4 +1,13 @@
-﻿@using System.Text.RegularExpressions;
+﻿@*
+    Allows to generate SQL scripts for content based on templates and
+    execute SQL scripts that import data or upgrade the database scheme.
+
+    For a while, the upgrade scripts are being executed through the database tools and
+    not using this.
+    TODO: review this if may help with fully automation of the process.
+*@
+@using WebMatrix.Data;
+@using System.Text.RegularExpressions;
 @{
     LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
