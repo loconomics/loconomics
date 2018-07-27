@@ -6,7 +6,7 @@
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/userProfile" data-bind="attr: { href: navBar.leftAction().link }">
+                        <a href="/user-profile" data-bind="attr: { href: navBar.leftAction().link }">
                             <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
                             <span data-bind="text: navBar.leftAction().text"></span>
                         </a>
@@ -32,7 +32,7 @@
                                     <span data-bind="visible: fromYearAttended() || toYearAttended()"><span data-bind="text: fromYearAttended"></span> - <span data-bind="text: toYearAttended"></span></span>
                                 </em>
                             </div>
-                            <div class="Item-action"> 
+                            <div class="Item-action">
                                 <a class="btn btn-icon-link" data-bind="attr: { href: '/educationForm/' + educationID(),'aria-label': 'Edit '+ institutionName }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
                             </div>
                         </li>

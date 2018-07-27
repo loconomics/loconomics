@@ -60,7 +60,6 @@ module.exports = {
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
-    'userProfile': require('./activities/userProfile'),
     'upgrade': require('./activities/upgrade'),
     'listingEditor': require('./activities/listingEditor'),
     'publicBio': require('./activities/publicBio'),

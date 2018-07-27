@@ -23,7 +23,8 @@ function createRedirect(toPath) {
  * @private {Object}
  */
 const activities = {
-    'publicContactInfo': createRedirect('public-contact-info')
+    'publicContactInfo': createRedirect('public-contact-info'),
+    'userProfile': createRedirect('user-profile'),
 };
 
 /**

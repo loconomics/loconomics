@@ -15,7 +15,7 @@ var A = Activity.extend(function EducationActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Profile', {
-        backLink: '/userProfile' , helpLink: this.viewModel.helpLink
+        backLink: '/user-profile' , helpLink: this.viewModel.helpLink
     });
     this.title('Education');
     // Share navBar with desktop nav through viewModel

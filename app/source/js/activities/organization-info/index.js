@@ -30,7 +30,7 @@ export default class OrganizationInfoActivity extends Activity {
 
         this.helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
         this.navBar = Activity.createSubsectionNavBar('Edit listing', {
-            backLink: '/userProfile',
+            backLink: '/user-profile',
             helpLink: this.helpLink
         });
         this.title = "Your organization's info";
