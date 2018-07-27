@@ -28,7 +28,6 @@ module.exports = {
     'schedulingPreferences': require('./activities/schedulingPreferences'),
     'calendarSyncing': require('./activities/calendarSyncing'),
     'bookMeButton': require('./activities/bookMeButton'),
-    'community': require('./activities/community'),
     'privacySettings': require('./activities/privacySettings'),
     'addJobTitle': require('./activities/addJobTitle'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
