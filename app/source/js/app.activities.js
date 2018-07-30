@@ -39,7 +39,6 @@ module.exports = {
     'licensesCertifications': require('./activities/licensesCertifications'),
     'licensesCertificationsForm': require('./activities/licensesCertificationsForm'),
     'workPhotos': require('./activities/workPhotos'),
-    'learnMoreProfessionals': require('./activities/learnMoreProfessionals'),
     'booking': require('./activities/booking'),
     'payments': require('./activities/payments'),
     'userFees': require('./activities/userFees'),
