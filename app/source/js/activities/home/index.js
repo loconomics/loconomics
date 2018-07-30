@@ -10,6 +10,7 @@
 import '../../kocomponents/location-autocomplete';
 import '../../kocomponents/lead-generation/newsletter';
 import '../../kocomponents/lead-generation/refer';
+import '../../kocomponents/nav/website-footer';
 import * as activities from '../index';
 import $ from 'jquery';
 //import { ActionForValue } from '../kocomponents/home/search-box';

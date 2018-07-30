@@ -5,6 +5,7 @@
  * @module activities/learn-more-professionals
  */
 
+import '../../kocomponents/nav/website-footer';
 import * as activities from '../index';
 import { ActionForValue } from '../../kocomponents/job-title-autocomplete';
 import Activity from '../../components/Activity';
