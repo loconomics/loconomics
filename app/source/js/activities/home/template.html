@@ -1,0 +1,125 @@
+<div class="home-main">
+    <section class="home-search">
+        <h1 class="home-title" data-bind="text: title"></h1>
+        <p class="home-tagline">Independent service professionals at your service.</p>
+        <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
+            <div class="col-sm-5">
+                <location-autocomplete params="value: 'San Francisco, CA', onSelect: onPlaceSelect"></location-autocomplete>
+            </div>
+            <div class="col-sm-7">
+                <!--<home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading, onSelect: onSelect"></home-search-box>-->
+                <job-title-autocomplete params="target: 'search', suggestionButtonText: 'Go', onSelect: onSelect, id: 'home-jobTitleAutocomplete', visuallyHiddenLabel: true"></job-title-autocomplete>
+            </div>
+        </form>
+    </section>
+    <section id="home-hiw" class="home-hiw">
+        <h2 class="home-section-title">How Loconomics works:</h2>
+        <div class="container home-section-listing">
+            <ul class="row list-unstyled">
+                <li class="col-sm-4">
+                    <i aria-hidden="true" class="fa ion ion-ios-search"></i>
+                    <h3>Search &amp; schedule </h3>
+                    <p>Find the perfect professional. Listings include clear pricing and verified reviews.</p>
+                </li>
+                <li class="col-sm-4">
+                    <i aria-hidden="true" class="fa ion ion-bowtie"></i>
+                    <h3>Service completed</h3>
+                    <p>Let the professional do the work and enjoy the time and stress you've saved.</p>
+                </li>
+                <li class="col-sm-4">
+                    <i aria-hidden="true" class="fa ion ion-ios-star"></i>
+                    <h3>Review &amp; repeat</h3>
+                    <p>Help improve your professional's services by sharing your experience. Karma is good.</p>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <section id="home-categories" class="home-categories">
+        <h2 class="home-section-title">Browse by category</h2>
+        <div class="home-section-listing">
+            <ul class="list-unstyled">
+                <li class="SearchCategory-home">
+                    <h3>Home Care</h3>
+                    <div class="SearchCategoryBackground Icon-home"></div>
+                    <p>Need some help around the house? Painters, housekeepers, handymen and more await you.</p>
+                    <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule home care professionals">View &amp; schedule</a>
+                </li>
+                <li class="SearchCategory-children">
+                    <h3>Child Care</h3>
+                    <div class="SearchCategoryBackground Icon-child"></div>
+                    <p>Give yourself a night out on the town, help your child learn a language, or play an instrument.</p>
+                    <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule child care professionals">View &amp; schedule</a>
+                </li>
+                <li class="SearchCategory-pet">
+                    <h3>Pet Care</h3>
+                    <div class="SearchCategoryBackground Icon-pet"></div>
+                    <p>Throw your dog a bone. Treat your pet to grooming services, walkers, sitters, and more.</p>
+                    <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule pet care professionals">View &amp; schedule</a>
+                </li>
+                <li class="SearchCategory-self">
+                    <h3>Self Care</h3>
+                    <div class="SearchCategoryBackground Icon-self"></div>
+                    <p>You need a massage. Personal trainers, music teachers, and a number of therapists are here.</p>
+                    <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule self care professionals">View &amp; schedule</a>
+                </li>
+                <li class="SearchCategory-transport">
+                    <h3>Transport</h3>
+                    <div class="SearchCategoryBackground Icon-transport"></div>
+                    <p>Mechanics, bicycle repairers, and car detailers all ready to help you get where you need to go.</p>
+                    <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule transport care professionals">View &amp; schedule</a>
+                </li>
+                <li class="SearchCategory-office">
+                    <h3>Office</h3>
+                    <div class="SearchCategoryBackground Icon-office"></div>
+                    <p>Tax season have you nervous? Get some help for your business or family matters.</p>
+                    <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule office professionals">View &amp; schedule</a>
+                </li>
+                <li class="SearchCategory-senior">
+                    <h3>Senior Care</h3>
+                    <div class="SearchCategoryBackground Icon-senior"></div>
+                    <p>Do you or a family member need a little extra help around the house? Help make life easier.</p>
+                    <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule senior care professionals">View &amp; schedule</a>
+                </li>
+                <li class="SearchCategory-celebration">
+                    <h3>Celebration</h3>
+                    <div class="SearchCategoryBackground Icon-celebration"></div>
+                    <p>Make your next celebration a real blowout with help from some very talented professionals.</p>
+                    <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule celebration professionals">View &amp; schedule</a>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <section class="home-community">
+        <h2 class="home-section-title">Help your community thrive</h2>
+        <div class="home-section-listing">
+            <ul class="list-unstyled">
+                <li>
+                    <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
+                    <h3>No middle-men</h3>
+                    <p>Your local professionals own Loconomics. 100% of your dollars stay local. No commissions.</p>
+                </li>
+                <li>
+                    <icon-dec params="icon: 'ion-android-home'"></icon-dec>
+                    <h3>Support small business</h3>
+                    <p>Professionals are their own boss and masters in their field. Help support their ambition.</p>
+                </li>
+                <li>
+                    <icon-dec params="icon: 'ion-earth'"></icon-dec>
+                    <h3>Environmentally friendly</h3>
+                    <p>Enrich the lives of you and your community by purchasing services. Stop buying stuff.</p>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <section class="home-lead-generation clearfix">
+        <ul class="list-unstyled">
+            <li data-bind="visible: isAnonymous()" class="col-xs-12 col-md-4 col-md-offset-2">
+                <lead-generation-newsletter></lead-generation-newsletter>
+            </li>
+            <li data-bind="css: {'col-md-offset-4':!isAnonymous()}" class="col-xs-12 col-md-4">
+                <lead-generation-refer></lead-generation-refer>
+            </li>
+        </ul>
+    </section>
+</div>
+<div>@render('parts/WebsiteFooter.html')</div>
