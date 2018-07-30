@@ -182,6 +182,7 @@ namespace LcRest
                 @9, -- service name
                 @10, -- service description
                 @11, -- number of sessions
+                @12, -- remote service
                 getdate(), getdate(), 'sys'
             )
 
