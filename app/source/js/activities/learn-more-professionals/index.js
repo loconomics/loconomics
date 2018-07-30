@@ -11,6 +11,7 @@ import { ActionForValue } from '../../kocomponents/job-title-autocomplete';
 import Activity from '../../components/Activity';
 import SignupVM from '../../viewmodels/Signup';
 import ko from 'knockout';
+import snapPoints from '../../utils/snapPoints';
 import style from './style.styl';
 import template from './template.html';
 import { data as user } from '../../data/userProfile';
@@ -38,6 +39,20 @@ export default class LearnMoreProfessionalsActivity extends Activity {
 
         this.isServiceProfessional = user.isServiceProfessional;
         this.isClient = user.isClient;
+
+        this.registerHandler({
+            target: this.$activity,
+            event: 'scroll-fixed-header',
+            handler: (e, what) => {
+                var cs = this.navBar.additionalNavClasses();
+                if (what === 'after') {
+                    this.navBar.additionalNavClasses(cs + ' is-fixed');
+                }
+                else {
+                    this.navBar.additionalNavClasses(cs.replace('is-fixed', ''));
+                }
+            }
+        });
 
         ///
         /// Signup
@@ -123,6 +138,21 @@ export default class LearnMoreProfessionalsActivity extends Activity {
                 value: ActionForValue.clear
             };
         }.bind(this);
+    }
+
+    _registerSnapPoints() {
+        var pointsEvents = {
+            // Just after start scrolling
+            0: 'scroll-fixed-header'
+        };
+
+        snapPoints(this.$activity, pointsEvents);
+    }
+
+    show(state) {
+        super.show(state);
+
+        this._registerSnapPoints();
     }
 }
 
