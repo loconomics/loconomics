@@ -1,43 +1,46 @@
 /**
-    backgroundCheck activity
-**/
-'use strict';
+ * backgroundCheck activity
+ *
+ * @module activities/background-check
+ *
+ * FIXME: Complete jsdocs, description
+ * TODO: Quick460 Must complete refactoring
+ */
 
-var ko = require('knockout');
-var Activity = require('../components/Activity');
+import * as activities from '../index';
+import Activity from '../../components/Activity';
+import Model from '../../models/Model';
+import UserType from '../../enums/UserType';
+import ko from 'knockout';
+import template from './template.html';
 
-var A = Activity.extend(function BackgroundCheckActivity() {
+const ROUTE_NAME = 'background-check';
 
-    Activity.apply(this, arguments);
+export default class BackgroundCheckActivity extends Activity {
 
-    this.accessLevel = this.app.UserType.loggedUser;
-    this.viewModel = new ViewModel(this.app);
-    // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
-        backLink: '/listings'
-    });
-    this.title(' Your background checks');
+    static get template() { return template; }
 
-});
+    constructor($activity, app) {
+        super($activity, app);
 
-exports.init = A.init;
+        this.accessLevel = UserType.loggedUser;
+        this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
+            backLink: '/listings'
+        });
+        this.title(' Your background checks');
 
-A.prototype.show = function show(options) {
-    Activity.prototype.show.call(this, options);
+        //this.isSyncing = backgroundCheck.state.isSyncing;
+        this.isSyncing = ko.observable(false);
+        this.isLoading = ko.observable(false);
+        this.isSaving = ko.observable(false);
 
-};
-
-function ViewModel(/*app*/) {
-
-    //this.isSyncing = backgroundCheck.state.isSyncing;
-    this.isSyncing = ko.observable(false);
-    this.isLoading = ko.observable(false);
-    this.isSaving = ko.observable(false);
-
-    this.list = ko.observableArray(testdata());
+        this.list = ko.observableArray(testdata());
+    }
 }
 
+activities.register(ROUTE_NAME, BackgroundCheckActivity);
 
+/// Auxiliar inlined code
 // IMPORTANT Background Check uses verification statuses
 var Verification = function() {};
 Verification.status = {
@@ -86,8 +89,6 @@ function testdata() {
     ];
 }
 
-
-var Model = require('../models/Model');
 // TODO Incomplete Model for UI mockup
 function UserBackgroundCheck(values) {
     Model(this);

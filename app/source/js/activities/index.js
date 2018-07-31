@@ -28,7 +28,8 @@ const activities = {
     'downloadApp': createRedirect('download-app'),
     'learnMoreProfessionals': createRedirect('learn-more-professionals'),
     'addJobTitle': createRedirect('add-job-title'),
-    'addressEditor': createRedirect('address-editor')
+    'addressEditor': createRedirect('address-editor'),
+    'backgroundCheck': createRedirect('background-check'),
 };
 
 /**
