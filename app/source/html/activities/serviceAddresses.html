@@ -22,14 +22,14 @@
                     <!-- ko ifnot: isInOnboarding --><div data-bind="template: { name: 'addresses-list-template', data: serviceAddresses }"></div><!-- /ko -->
                 </div>
                 <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID() && !serviceAddresses.hasAddresses()">
-                    <a class="IconContentItem" data-bind="attr: { href: '#!addressEditor/service/' + jobTitleID() + '/serviceLocation' }">
+                    <a class="IconContentItem" data-bind="attr: { href: '#!address-editor/service/' + jobTitleID() + '/serviceLocation' }">
                         <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                         <div class="Item-content">
                             <p>Add a new service location</p>
                         </div>
                     </a>
                     <a class="IconContentItem" data-bind="visible: !serviceAddresses.isSelectionMode(),
-                        attr: { href: '#!addressEditor/service/' + jobTitleID() + '/serviceArea' }">
+                        attr: { href: '#!address-editor/service/' + jobTitleID() + '/serviceArea' }">
                         <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                         <div class="Item-content">
                             <p>Add a new service area</p>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
                     <a class="IconContentItem" data-bind="visible: serviceAddresses.isSelectionMode() && clientUserID(),
-                        attr: { href: '#!addressEditor/service/' +jobTitleID() + '/clientLocation/' + clientUserID() }">
+                        attr: { href: '#!address-editor/service/' +jobTitleID() + '/clientLocation/' + clientUserID() }">
                         <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                         <div class="Item-content">
                             <p>Add a new location for this client</p>

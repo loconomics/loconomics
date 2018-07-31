@@ -148,7 +148,7 @@ A.prototype.show = function show(options) {
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
 
-    // Check if it comes from an addressEditor that
+    // Check if it comes from an address-editor that
     // received the flag 'returnNewAsSelected': we were in selection mode->creating address->must
     // return the just created address to the previous page
     if (options.returnNewAsSelected === true) {
@@ -267,7 +267,7 @@ function ViewModel(app) {
             );
         }
         else {
-            app.shell.go('addressEditor/service/' +
+            app.shell.go('address-editor/service/' +
                 this.jobTitleID() +
                 '/' + selectedAddress.addressID()
             );
@@ -291,7 +291,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.addServiceLocation = function() {
-        var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceLocation';
+        var url = '#!address-editor/service/' + this.jobTitleID() + '/serviceLocation';
         var request = $.extend({}, this.requestData, {
             returnNewAsSelected: this.serviceAddresses.isSelectionMode()
         });
@@ -299,7 +299,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.addServiceArea = function() {
-        var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceArea';
+        var url = '#!address-editor/service/' + this.jobTitleID() + '/serviceArea';
         var request = $.extend({}, this.requestData, {
             returnNewAsSelected: this.serviceAddresses.isSelectionMode()
         });
@@ -307,7 +307,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.addClientLocation = function() {
-        var url = '#!addressEditor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientUserID();
+        var url = '#!address-editor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientUserID();
         var request = $.extend({}, this.requestData, {
             returnNewAsSelected: this.serviceAddresses.isSelectionMode()
         });
