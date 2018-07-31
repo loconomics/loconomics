@@ -16,7 +16,6 @@ module.exports = {
     'login': require('./activities/login'),
     'logout': require('./activities/logout'),
     'signup': require('./activities/signup'),
-    'welcome': require('./activities/welcome'),
     'addressEditor': require('./activities/addressEditor'),
     'inbox': require('./activities/inbox'),
     'conversation': require('./activities/conversation'),
