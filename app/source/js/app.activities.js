@@ -27,7 +27,6 @@ module.exports = {
     'calendarSyncing': require('./activities/calendarSyncing'),
     'bookMeButton': require('./activities/bookMeButton'),
     'privacySettings': require('./activities/privacySettings'),
-    'addJobTitle': require('./activities/addJobTitle'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),

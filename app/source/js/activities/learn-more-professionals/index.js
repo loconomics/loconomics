@@ -117,7 +117,7 @@ export default class LearnMoreProfessionalsActivity extends Activity {
                 }
                 else {
                     // For logged users, assist them to add the job title:
-                    url = 'addJobTitle?s=' + encodeURIComponent(jobTitle.singularName()) +
+                    url = 'add-job-title?s=' + encodeURIComponent(jobTitle.singularName()) +
                         '&id=' + encodeURIComponent(jobTitle.jobTitleID()) +
                         "&autoAddNew=true";
                     app.shell.go(url);
@@ -129,8 +129,8 @@ export default class LearnMoreProfessionalsActivity extends Activity {
                     app.shell.scrollTo(SIGNUP_ELEMENT_SELECTOR, true);
                 }
                 else {
-                    // Go to addJobTitle
-                    url = 'addJobTitle?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
+                    // Go to add job title
+                    url = 'add-job-title?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
                     app.shell.go(url);
                 }
             }

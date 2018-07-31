@@ -26,7 +26,8 @@ const activities = {
     'publicContactInfo': createRedirect('public-contact-info'),
     'userProfile': createRedirect('user-profile'),
     'downloadApp': createRedirect('download-app'),
-    'learnMoreProfessionals': createRedirect('learn-more-professionals')
+    'learnMoreProfessionals': createRedirect('learn-more-professionals'),
+    'addJobTitle': createRedirect('add-job-title')
 };
 
 /**
