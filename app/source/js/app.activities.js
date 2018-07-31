@@ -12,7 +12,6 @@ module.exports = {
     'serviceProfessionalService': require('./activities/serviceProfessionalService'),
     'serviceAddresses': require('./activities/serviceAddresses'),
     'dashboard': require('./activities/dashboard'),
-    'appointment': require('./activities/appointment'),
     'login': require('./activities/login'),
     'logout': require('./activities/logout'),
     'signup': require('./activities/signup'),
