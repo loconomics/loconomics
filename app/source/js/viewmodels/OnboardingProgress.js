@@ -22,7 +22,7 @@ var STEPS = {
     'organization-info': {
         userFlags: ['isOrganization']
     },
-    addJobTitle: {
+    'add-job-title': {
         userFlags: ['isServiceProfessional']
     },
     serviceAddresses: {

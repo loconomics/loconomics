@@ -1,8 +1,7 @@
-<!-- Activity backgroundCheck -->
-<div data-activity="backgroundCheck" class="Boxes-sm animated">
+<div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -11,7 +10,7 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h1><icon-dec params="icon: 'ion-ios-checkmark'"></icon-dec> <span data-bind="text: title"></span></h1>  
+                <h1><icon-dec params="icon: 'ion-ios-checkmark'"></icon-dec> <span data-bind="text: title"></span></h1>
                 <h2 class="SectionTitle">Completed and pending</h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -39,5 +38,4 @@
             </div>
         </div>
     </div>
-</div>    
-
+</div>
