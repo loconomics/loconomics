@@ -294,6 +294,8 @@ namespace LcRest
             // Fees:
             var summary = new PricingSummary();
             booking.pricingSummary = summary;
+            // empty details
+            booking.pricingSummary.details = new List<PricingSummaryDetail>();
             var flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(jobTitleID, langID, countryID);
 
             var type = BookingType.Get(booking.bookingTypeID);
@@ -2333,7 +2335,7 @@ namespace LcRest
         /// An address may not be required, and then serviceAddressID being set to null, if the service(s) is phone-only.
         /// 
         /// Must be executed after proper booking initialization/load. That includes to use 'CreatePricing' or
-        /// 'pricingSummary.SetDetailServices', that sets properly the flag 'booking.pricingSummary.isPhoneServiceOnly'.
+        /// 'pricingSummary.SetDetailServices', that sets properly the flag 'booking.pricingSummary.isRemoteService'.
         /// Throws ConstraintException if ownership of the addressID fails for the booking.
         /// </summary>
         /// <param name="serviceAddress"></param>

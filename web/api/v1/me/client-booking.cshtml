@@ -264,7 +264,7 @@
             var pricingSummary = new LcRest.PricingSummary();
             pricingSummary.SetDetailServices(booking.serviceProfessionalUserID, servicesIds);
             LcRest.Address serviceAddress = null;
-            if (!pricingSummary.isPhoneServiceOnly)
+            if (!pricingSummary.isRemoteService)
             {
                 serviceAddress = GetFormServiceAddress(clientUserID, locale);
                 // In case a new address is given (need to be created)
@@ -362,7 +362,7 @@
             var pricingSummary = new LcRest.PricingSummary();
             pricingSummary.SetDetailServices(serviceProfessionalUserID, servicesIds);
             LcRest.Address serviceAddress = null;
-            if (!pricingSummary.isPhoneServiceOnly) {
+            if (!pricingSummary.isRemoteService) {
                 serviceAddress = GetFormServiceAddress(userID, locale);
                 if (serviceAddress.IsNewAddress())
                 {

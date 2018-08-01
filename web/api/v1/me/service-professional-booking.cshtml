@@ -160,7 +160,7 @@
             var pricingSummary = new LcRest.PricingSummary();
             pricingSummary.SetDetailServices(serviceProfessionalUserID, servicesIds);
             LcRest.Address serviceAddress = null;
-            if (!pricingSummary.isPhoneServiceOnly)
+            if (!pricingSummary.isRemoteService)
             {
                 serviceAddress = GetFormServiceAddress(locale);
                 // In case a new address is given (need to be created)
