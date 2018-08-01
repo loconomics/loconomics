@@ -38,7 +38,7 @@ shell.on(shell.events.itemReady, function() {
  * @param {Object} options
  * @param {string} options.step The step where the user left the process or starts with.
  * @param {number} [options.jobTitleID] The jobTitleID selected at a previous
- * signup form or saved after the addJobTitle step.
+ * signup form or saved after the add-job-title step.
  */
 api.setup = function(options) {
     var step = options.step;

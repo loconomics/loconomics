@@ -1,0 +1,80 @@
+<div role="main">
+    <div class="coop-search">
+        <h1 class="coop-title" data-bind="text: title"></h1>
+        <p class="coop-tagline">Scheduling, marketing, invoicing, and client management tools. Grow and manage your business on your terms.</p>
+        <form id="coop-search" class="row">
+            <!--class="col-sm-12" -->
+            <job-title-autocomplete params="
+                target: 'addJobTitle',
+                suggestionButtonText: suggestionButtonText,
+                onSelect: onSelectJobTitle,
+                id: 'learnMoreProfessionals-autocomplete',
+                visuallyHiddenLabel: true"></job-title-autocomplete>
+        </form>
+        <div class="coop-join-up">
+            <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
+        </div>
+    </div>
+    <div id="coop-hiw" class="coop-hiw">
+        <h2 class="coop-section-title">What Loconomics offers:</h2>
+        <div class="container coop-section-listing">
+            <ul class="row list-unstyled">
+                <li class="col-sm-4">
+                    <i aria-hidden="true" class="fa ion ion-ios-list-outline"></i>
+                    <h3>Free listing</h3>
+                    <p>Clients find your listing using our search with 0% commissions. Your first listing is free.</p>
+                </li>
+                <li class="col-sm-4">
+                    <i aria-hidden="true" class="fa fa-handshake-o"></i>
+                    <h3>Referrals</h3>
+                    <p>Our cooperative thrives on recommendations. Meet other Bay Area professionals.</p>
+                </li>
+                <li class="col-sm-4" href="#coop-ownership">
+                    <i aria-hidden="true" class="fa ion ion-social-usd"></i>
+                    <h3>Profit-sharing</h3>
+                    <p>Owner plans start from $19/mo. Get access to exclusive events, resources, and dividends.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="coop-ownership" class="coop-ownership">
+        <h2 class="coop-section-title">How Loconomics ownership works:</h2>
+        <div class="container coop-section-listing">
+            <ul class="row list-unstyled">
+                <li class="col-sm-4">
+                    <i aria-hidden="true" class="fa ion ion-android-contact"></i>
+                    <h3>Join up</h3>
+                    <p>You remain independent, but also a member-owner of Loconomics. The better we all do, the better you do. No middle-men and no millionaires.</p>
+                </li>
+                <li class="col-sm-4">
+                    <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
+                    <h3>Help make decisions</h3>
+                    <p>You elect our board members (or maybe you get elected!). You choose how active you want to be in making decisions about Loconomics. No fat cats or invisible investors pulling the strings here.</p>
+                </li>
+                <li class="col-sm-4">
+                    <i aria-hidden="true" class="fa ion ion-arrow-graph-up-right"></i>
+                    <h3>Grow professionally</h3>
+                    <p>Become a better businessperson, keep up on trends, and be successful in what you do.</p>
+                </li>
+            </ul>
+        </div>
+        <div class="coop-join-up">
+            <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
+        </div>
+    </div>
+    <div id="coop-pricing" class="clearfix coop-pricing">
+        <h2 class="coop-section-title">0% commissions on all plans. No bidding.</h2>
+        <app-payment-plans></app-payment-plans>
+    </div>
+    <div id="learnMoreProfessionals-signup" class="coop-signup" data-bind="visible: !isServiceProfessional()">
+        <h1 class="coop-title">Join up.</h1>
+        <p class="coop-tagline">Provide local services? Work for yourself? Become a Loconomics owner.</p>
+        <div data-bind="visible: !isClient()">
+            <app-signup params="api: signup, onSignedUp: signupRedirect">
+            </app-signup>
+        </div>
+        <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div>
+        <a href="/add-job-title" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a listing</a>
+    </div>
+</div>
+<nav-website-footer></nav-website-footer>

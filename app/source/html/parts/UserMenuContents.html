@@ -4,8 +4,8 @@
 <li data-bind="visible: isAnonymous, css: cssIfActive('login')">
     <a href="/login">Sign in</a>
 </li>
-<li data-bind="visible: !isApp(), css: cssIfActive('downloadApp')" class="go-download">
-    <a href="/downloadApp">Download the app</a>
+<li data-bind="visible: !isApp(), css: cssIfActive('download-app')" class="go-download">
+    <a href="/download-app">Download the app</a>
 </li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('home-hiw')">
     <a href="/home/home-hiw">How it works</a>
@@ -42,8 +42,8 @@
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'earnings' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/earnings' }"><i class="fa fa-fw ion-social-usd-outline" aria-hidden="true"></i> Earnings</a>
 </li>
-<li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'userProfile' }">
-    <a data-bind="attr: { href: isInOnboarding() ? null : '/userProfile' }"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Profile</a></li>
+<li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'user-profile' }">
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/user-profile' }"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Profile</a></li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'account' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/account' }"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a>
 </li>

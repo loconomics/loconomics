@@ -23,7 +23,13 @@ function createRedirect(toPath) {
  * @private {Object}
  */
 const activities = {
-    'publicContactInfo': createRedirect('public-contact-info')
+    'publicContactInfo': createRedirect('public-contact-info'),
+    'userProfile': createRedirect('user-profile'),
+    'downloadApp': createRedirect('download-app'),
+    'learnMoreProfessionals': createRedirect('learn-more-professionals'),
+    'addJobTitle': createRedirect('add-job-title'),
+    'addressEditor': createRedirect('address-editor'),
+    'backgroundCheck': createRedirect('background-check'),
 };
 
 /**

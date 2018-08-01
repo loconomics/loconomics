@@ -1,0 +1,41 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="row">
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/listings"></a>Listing</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h1><icon-dec params="icon: 'ion-ios-checkmark'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <h2 class="SectionTitle">Completed and pending</h2>
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
+                <ul class="TilesList" data-bind="foreach: list">
+                    <li>
+                        <div class="ListingSummaryItem">
+                            <div class="Item-content">
+                                <h3 data-bind="text: backgroundCheck().name() || 'Background check'"></h3>
+                                <p><span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
+                                <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span></p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <a class="IconContentItem" href="/addBackgroundCheck">
+                    <icon-dec  class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Add a background check</p>
+                    </div>
+                </a>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <h1 data-bind="text: title"></h1>
+        <div class="row">
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle" data-bind="visible: isServiceProfessional">Payouts</h2>
+                <ul class="TilesList TilesList--openEnd" data-bind="visible: isServiceProfessional">
+                    <li>
+                        <a class="IconContentItem" href="/payoutPreference">
+                            <icon-dec class="Item-icon" params="icon: 'ion-cash'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Payout preferences</p>
+                            </div>
+                        </a>
+                    </li>
+<!--
+                    <li>
+                        <a class="IconContentItem" href="/userFees">
+                            <icon-dec class="Item-icon" params="icon: 'fa-bank'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Payout history</p>
+                            </div>
+                        </a>
+                    </li>
+-->
+                </ul>
+                <h2 class="SectionTitle" data-bind="visible: isServiceProfessional">Billing</h2>
+                <ul class="TilesList TilesList--openEnd" data-bind="visible: isServiceProfessional">
+                    <li>
+                        <a class="IconContentItem" href="/userFees">
+                            <icon-dec class="Item-icon" params="icon: 'ion-levels'"></icon-dec>
+                            <!-- ko if: activePaymentPlan() -->
+                            <div class="Item-content" data-bind="visible: !activeUserPaymentPlan.isNew()">
+                                <div>Plan: <strong data-bind="text: activePaymentPlan().name"></strong></div>
+                                <!-- ko ifnot: activePaymentPlan().partnership -->
+                                <em>Billed to <span data-bind="text: activeUserPaymentPlan.paymentMethod"></em>
+                                <!-- /ko -->
+                                <!-- ko if: activePaymentPlan().partnership -->
+                                <em>Expires on <span data-bind="text: activeUserPaymentPlan.nextPaymentDueDate, format: { type: 'datetime', format: 'LL' }"></em>
+                                <!-- /ko -->
+                            </div>
+                            <!-- /ko -->
+                            <div class="Item-content" data-bind="visible: activeUserPaymentPlan.isNew">
+                                <p>Choose a plan</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li data-bind="visible: activeUserPaymentPlan.paymentMethod">
+                        <a class="IconContentItem" href="/userFees">
+                            <icon-dec class="Item-icon" params="icon: 'fa-dollar'"></icon-dec>
+                            <div class="Item-content">
+                                <div>Next payment: <span data-bind="text: activeUserPaymentPlan.nextPaymentAmount, format: { type: 'number', format: '$0,0.00' }"></span></div>
+                                <em>On <span data-bind="text: activeUserPaymentPlan.nextPaymentDueDate, format: { type: 'datetime', format: 'MMMM Do, YYYY' }"></span></em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="IconContentItem" href="/userFeePayments">
+                            <icon-dec class="Item-icon" params="icon: 'ion-card'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Payment history</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="IconContentItem" href="/ownerAcknowledgment">
+                            <icon-dec class="Item-icon" params="icon: 'ion-ios-list-outline'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Owner acknowledgment</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <h2 class="SectionTitle has-HelpPoint">Your privacy</h2>
+                <ul class="TilesList TilesList--openEnd">
+                    <li>
+                        <a class="IconContentItem" href="/privacySettings">
+                            <icon-dec class="Item-icon" params="icon: 'ion-ios-eye-outline'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Privacy settings</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'general'"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>
