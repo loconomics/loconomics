@@ -1926,6 +1926,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 db.Execute("BEGIN TRANSACTION");
+
                 try
                 {
                     // Persists changes in the pricing (cancellation fees and new totals) generating
@@ -1940,7 +1941,7 @@ namespace LcRest
                 catch (Exception ex)
                 {
                     LcMessaging.NotifyError("Booking payment was refunded and/or cancellation fee applied, but database couldn't get updated", "", "");
-                    throw ex;
+                    throw new Exception("Booking.RefundPayment failed", ex);
                 }
             }
         }
