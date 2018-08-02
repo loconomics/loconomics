@@ -16,7 +16,9 @@
     "watch": "grunt watch",
     "build": "grunt",
     "lint": "eslint ./source/js --fix",
-    "browserslist": "browserslist"
+    "browserslist": "browserslist",
+    "release-tags": "git tag | grep 'releases/release-' | sort -V",
+    "app-release-tags": "git tag | grep 'releases/app-' | sort -V"
   },
   "repository": "loconomics/loconomics",
   "private": true,
