@@ -30,6 +30,7 @@ const activities = {
     'addJobTitle': createRedirect('add-job-title'),
     'addressEditor': createRedirect('address-editor'),
     'backgroundCheck': createRedirect('background-check'),
+    'bookingPolicies': createRedirect('booking-policies'),
 };
 
 /**

@@ -29,7 +29,6 @@ module.exports = {
     'verifications': require('./activities/verifications'),
     'education': require('./activities/education'),
     'educationForm': require('./activities/educationForm'),
-    'bookingPolicies': require('./activities/bookingPolicies'),
     'licensesCertifications': require('./activities/licensesCertifications'),
     'licensesCertificationsForm': require('./activities/licensesCertificationsForm'),
     'workPhotos': require('./activities/workPhotos'),
