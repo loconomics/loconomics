@@ -31,6 +31,7 @@ const activities = {
     'addressEditor': createRedirect('address-editor'),
     'backgroundCheck': createRedirect('background-check'),
     'bookingPolicies': createRedirect('booking-policies'),
+    'bookMeButton': createRedirect('book-me-button'),
 };
 
 /**
