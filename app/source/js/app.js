@@ -555,8 +555,13 @@ var appInit = function appInit() {
      * tasks like 'shell.run' (or accessControl checks will fail)
      * and 'onboarding' (or will not be able to resume from locally stored
      * onboarding step)
+     * @param {data/session/UserAuthorization} userAuthorization Authorization
+     * data, or null when anonymous
      */
-    var preloadUserProfile = function() {
+    var preloadUserProfile = function(userAuthorization) {
+        // IMPORTANT: Check if is anonymous throug authorization, since user.isAnonymous could
+        // lead to true just when no profile data is available even if an authorization/session exists
+        const isAnonymous = userAuthorization !== null;
         // REQUIRED FOR ONBOARDING DETAILS:
         // This is needed to detect and resume an onboarding, like happens
         // if a user closes and go back to the app/site, or when coming
@@ -572,7 +577,7 @@ var appInit = function appInit() {
         .then(function() {
             // we have a global reference to 'user' in place that
             // got updated with loadFromLocal
-            if (!user.isAnonymous()) {
+            if (!isAnonymous) {
                 userProfile.sync();
             }
         });
