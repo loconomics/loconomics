@@ -561,7 +561,7 @@ var appInit = function appInit() {
     var preloadUserProfile = function(userAuthorization) {
         // IMPORTANT: Check if is anonymous throug authorization, since user.isAnonymous could
         // lead to true just when no profile data is available even if an authorization/session exists
-        const isAnonymous = userAuthorization !== null;
+        const isAnonymous = userAuthorization === null;
         // REQUIRED FOR ONBOARDING DETAILS:
         // This is needed to detect and resume an onboarding, like happens
         // if a user closes and go back to the app/site, or when coming
