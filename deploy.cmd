@@ -69,6 +69,12 @@ call :ExecuteCmd %NODE_EXE% -v
 echo NPM version
 call :ExecuteCmd %NPM_CMD% -v
 
+:: Excluding files from syncing
+:: Default list by KuduSync (deploy related files)
+SET IGNORE_DEPLOY_FILES=.git;.hg;.deployment;deploy.cmd
+:: Extended list, with our specific content that must not be copied into wwwroot
+SET IGNORE_LIST=%IGNORE_DEPLOY_FILES%;.gitignore;packages.config
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Custom steps
 :: ----------
@@ -101,7 +107,7 @@ IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%\web" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%\web" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i "%IGNORE_LIST%"
   IF !ERRORLEVEL! NEQ 0 goto error
 )
 
