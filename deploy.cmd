@@ -72,13 +72,15 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 :: .a Install Yarn
 echo Verifying Yarn Install
 call :ExecuteCmd !NPM_CMD! install yarn -g
-:: .b Install Dependencies
+:: .b Enter app dir
 pushd %DEPLOYMENT_SOURCE%\app
+:: .c Install Dependencies
 call :ExecuteCmd yarn install
 IF !ERRORLEVEL! NEQ 0 goto error
-popd
-:: .c Build Webapp (already copy contents on the /web dir)
+:: .e Build Webapp (already copy contents on the /web dir)
 call :ExecuteCmd yarn run build-web-release
+:: .f Exit app dir (restore previous location)
+popd
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
