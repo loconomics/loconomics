@@ -17,6 +17,10 @@ IF %ERRORLEVEL% NEQ 0 (
 
 SET NPM_CMD=npm
 SET NODE_EXE=node
+echo Node version
+call :ExecuteCmd !NODE_CMD! -v
+echo NPM version
+call :ExecuteCmd !NPM_CMD! -v
 
 :: Setup
 :: -----
