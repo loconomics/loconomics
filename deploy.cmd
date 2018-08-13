@@ -73,7 +73,7 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 echo Verifying Yarn Install
 call :ExecuteCmd !NPM_CMD! install yarn -g
 :: .b Install Dependencies
-pushd %DEPLOYMENT_SOURCE%\..\app
+pushd %DEPLOYMENT_SOURCE%\app
 call :ExecuteCmd yarn install
 IF !ERRORLEVEL! NEQ 0 goto error
 popd
