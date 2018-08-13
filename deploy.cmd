@@ -15,12 +15,6 @@ IF %ERRORLEVEL% NEQ 0 (
   goto error
 )
 
-SET NPM_CMD=npm
-SET NODE_EXE=node
-echo Node version
-call :ExecuteCmd !NODE_EXE! -v
-echo NPM version
-call :ExecuteCmd !NPM_CMD! -v
 :: Setup
 :: -----
 
@@ -67,6 +61,14 @@ IF DEFINED MSBUILD_PATH goto MsbuildPathDefined
 SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 :MsbuildPathDefined
 
+:: Node set-up
+SET NPM_CMD=npm
+SET NODE_EXE=node
+echo Node version
+call :ExecuteCmd %NODE_EXE% -v
+echo NPM version
+call :ExecuteCmd %NPM_CMD% -v
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Custom steps
 :: ----------
@@ -74,7 +76,7 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 :: 1. Build Webapp
 :: .a Install Yarn
 echo Prepare environment to build WebApp
-call :ExecuteCmd !NPM_CMD! install yarn -g
+call :ExecuteCmd %NPM_CMD% install yarn -g
 :: .b Enter app dir
 pushd %DEPLOYMENT_SOURCE%\app
 :: .c Install Dependencies
