@@ -46,14 +46,14 @@
             var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
             if (userID <= 0)
             {
-                throw new HttpException(404, "User Not Found");
+                throw new HttpException(404, "[[[User Not Found]]]");
             }
 
             var includeFullJobTitleID = Request.QueryString["includeFullJobTitleID"].AsInt(0);
 
             var profile = LcRest.PublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
             if (profile == null)
-                throw new HttpException(404, "User Not Found");
+                throw new HttpException(404, "[[[User Not Found]]]");
 
             // when service professional, gets only job-titles related rating (-2), otherwise client rating only (0)
             var rating = LcRest.PublicUserRating.Get(userID, profile.isServiceProfessional ? -2 : 0);

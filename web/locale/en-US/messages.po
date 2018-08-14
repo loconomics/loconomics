@@ -1,0 +1,2617 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-04-03 22:05+10:00\n"
+"PO-Revision-Date: 2018-04-03 22:05+10:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: i18n.POTGenerator\n"
+
+#: api\v1\Test.cshtml:50
+#: App_Code\LcRest\Booking.cs:1554
+msgid "%0 %1's phone number: %2"
+msgstr ""
+
+#. TRANSLATORS: format is number of days
+#: App_Code\LcHelpers.cshtml:293
+msgid "%0 days"
+msgstr ""
+
+#: App_Code\LcRessources.cs:18
+msgid "%0 has a not valid value"
+msgstr ""
+
+#. TRANSLATORS: format is number of hours
+#: App_Code\LcHelpers.cshtml:298
+msgid "%0 hours"
+msgstr ""
+
+#: App_Code\LcRessources.cs:17
+msgid "%0 is required"
+msgstr ""
+
+#. TRANSLATORS: format is number of milliseconds
+#: App_Code\LcHelpers.cshtml:313
+msgid "%0 milliseconds"
+msgstr ""
+
+#. TRANSLATORS: format is number of minutes
+#: App_Code\LcHelpers.cshtml:303
+msgid "%0 minutes"
+msgstr ""
+
+#. TRANSLATORS: format is number of seconds
+#: App_Code\LcHelpers.cshtml:308
+msgid "%0 seconds"
+msgstr ""
+
+#. TRANSLATORS: format is the job title
+#: App_Code\LcRest\Booking.cs:2144
+msgid "%0 services"
+msgstr ""
+
+#. TRANSLATORS: format is the job title
+#: App_Code\LcRest\Booking.cs:2676
+msgid "%0 services "
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:136
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:179
+msgid "(enter 0.00 if free)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:62
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:99
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:226
+msgid "(this should be all-inclusive)"
+msgstr ""
+
+#: api\v1\Test.cshtml:47
+#: App_Code\LcRest\UserJobTitleServiceAttributes.cs:222
+msgid "\\"%0\\" requires at least one selection"
+msgstr "\"%0\" requires at least one selection"
+
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:196
+msgid "{0} ({2} consultation)"
+msgstr ""
+
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:149
+msgid "{0} ({2} estimate)"
+msgstr ""
+
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:35
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:75
+msgid "{0}, {1}"
+msgstr ""
+
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:197
+msgid "{0}, {1} ({3} consultation)"
+msgstr ""
+
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:150
+msgid "{0}, {1} ({3} estimation)"
+msgstr ""
+
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:76
+msgid "{0}, {2} appointments - {1} each"
+msgstr ""
+
+#. TRANSLATORS: format is client based
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:74
+msgid "{1} appointments - {0} each"
+msgstr ""
+
+#: App_Code\LcHelpers.cshtml:295
+msgid "1 day"
+msgstr ""
+
+#: App_Code\LcHelpers.cshtml:300
+msgid "1 hour"
+msgstr ""
+
+#: App_Code\LcHelpers.cshtml:315
+msgid "1 millisecond"
+msgstr ""
+
+#: App_Code\LcHelpers.cshtml:305
+msgid "1 minute"
+msgstr ""
+
+#: App_Code\LcHelpers.cshtml:310
+msgid "1 second"
+msgstr ""
+
+#: App_Code\RestPages\RestUserJobProfile.cs:181
+msgid "A Job Title is required"
+msgstr ""
+
+#: App_Code\LcData.Photo.cs:565
+msgid "A photo stream or a photo ID is required"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2478
+msgid "A valid date must be chosen to confirm the booking request"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:170
+msgid "Add a consultation"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:54
+msgid "Add a package"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:217
+msgid "Add a service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:92
+msgid "Add an add-on service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:127
+msgid "Add an estimate visit"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:319
+msgid "Add deep cleaning services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:23
+msgid "Add hourly services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:251
+msgid "Add light cleaning services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:285
+msgid "Add routine cleaning services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:105
+msgid "Add/Edit add-ons"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:194
+msgid "Add/Edit consultations"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:147
+msgid "Add/Edit estimates"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:71
+msgid "Add/Edit packages"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:32
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:263
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:297
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:331
+msgid "Add/Edit pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:232
+msgid "Add/Edit services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:89
+msgid "Add-On"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:104
+msgid "Add-on removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:90
+msgid "Add-Ons"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:338
+#: api\v1\me\client-booking.cshtml:208
+#: api\v1\me\service-professional-booking.cshtml:100
+msgid "Address Line 1 must be fewer than 100 characters."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:339
+#: api\v1\me\client-booking.cshtml:209
+#: api\v1\me\service-professional-booking.cshtml:101
+msgid "Address Line 2 must be fewer than 100 characters."
+msgstr ""
+
+#: App_Code\LcRest\Address.cs:676
+msgid "Address must contain a country code or country ID"
+msgstr ""
+
+#: App_Code\LcRest\Address.cs:694
+msgid "Address must contain a postal code"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:337
+#: api\v1\me\client-booking.cshtml:210
+#: api\v1\me\service-professional-booking.cshtml:102
+msgid "Address Name must be fewer than 50 characters."
+msgstr ""
+
+#: App_Code\LcRest\ServiceProfessionalService.cs:189
+msgid "All services must be selected from the same job title"
+msgstr ""
+
+#: api\v1\me\profile.cshtml:126
+msgid "Already a service professional"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:343
+msgid "Alternative date and time 1 is not valid"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:350
+msgid "Alternative date and time 2 is not valid"
+msgstr ""
+
+#: api\v1\lead-generation\referral.cshtml:191
+msgid "An email or phone number is required"
+msgstr ""
+
+# api\v1\Test.cshtml:138
+#: api\v1\Test.cshtml:148
+#, api\v1\Test.cshtml:138
+msgid "An Item ID is required at the URL"
+msgstr ""
+
+#: App_Code\LcCalendar.cs:395
+msgid "Appointment generated by the Monthly Schedule calendar"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:176
+msgid "Approx. length of consultation:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:133
+msgid "Approximate length of visit:"
+msgstr ""
+
+#: api\v1\me\external-listings.cshtml:72
+msgid "At least 1 related job title must be specified"
+msgstr ""
+
+#: App_Code\LcRest\UserPaymentPlan.cs:38
+msgid "Bad stored payment plan"
+msgstr ""
+
+#: api\v1\me\profile.cshtml:156
+msgid "Birth Day must be an number (day of the month)"
+msgstr ""
+
+#: api\v1\me\clients.cshtml:166
+msgid "Birth Month Day must be a number between 1 and 31"
+msgstr ""
+
+#: api\v1\me\clients.cshtml:164
+msgid "Birth Month must be a number between 1 and 12"
+msgstr ""
+
+#: api\v1\me\profile.cshtml:157
+msgid "Birth Month must be an number"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2533
+# App_Code\LcRest\Booking.cs:2829
+# App_Code\LcRest\Booking.cs:2853
+#: App_Code\LcRest\Booking.cs:2533
+#: App_Code\LcRest\Booking.cs:2829
+#: App_Code\LcRest\Booking.cs:2853
+#, App_Code\LcRest\Booking.cs:2533
+#, App_Code\LcRest\Booking.cs:2829
+#, App_Code\LcRest\Booking.cs:2853
+msgid "Booking cannot be cancelled. Status:"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2460
+#: App_Code\LcRest\Booking.cs:2460
+#, App_Code\LcRest\Booking.cs:2460
+msgid "Booking cannot be confirmed. Status: "
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2557
+#: App_Code\LcRest\Booking.cs:2557
+#, App_Code\LcRest\Booking.cs:2557
+msgid "Booking cannot be declined. Status:"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2898
+#: App_Code\LcRest\Booking.cs:2898
+#, App_Code\LcRest\Booking.cs:2898
+msgid "Booking cannot be updated"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2064
+#: App_Code\LcRest\Booking.cs:2064
+#, App_Code\LcRest\Booking.cs:2064
+msgid "Booking cannot set as expired. Status: "
+msgstr ""
+
+#: api\v1\me\bookings.cshtml:50
+#: api\v1\me\client-booking.cshtml:177
+#: api\v1\me\service-professional-booking.cshtml:73
+#: api\v1\me\service-professional-booking.cshtml:272
+msgid "Booking not found."
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1296
+msgid "Booking update not allowed"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:81
+msgid "Bookings by Phone preference is required"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:80
+msgid "Bookings by SMS preference is required"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2121
+# App_Code\LcRest\Booking.cs:2131
+# App_Code\LcRest\Booking.cs:2248
+# App_Code\LcRest\Booking.cs:2260
+# App_Code\LcRest\Booking.cs:2640
+# App_Code\LcRest\Booking.cs:2651
+# App_Code\LcRest\Booking.cs:2909
+# App_Code\LcRest\Booking.cs:2920
+#: App_Code\LcRest\Booking.cs:2121
+#: App_Code\LcRest\Booking.cs:2131
+#: App_Code\LcRest\Booking.cs:2248
+#: App_Code\LcRest\Booking.cs:2260
+#: App_Code\LcRest\Booking.cs:2640
+#: App_Code\LcRest\Booking.cs:2651
+#: App_Code\LcRest\Booking.cs:2909
+#: App_Code\LcRest\Booking.cs:2920
+#, App_Code\LcRest\Booking.cs:2121
+#, App_Code\LcRest\Booking.cs:2131
+#, App_Code\LcRest\Booking.cs:2248
+#, App_Code\LcRest\Booking.cs:2260
+#, App_Code\LcRest\Booking.cs:2640
+#, App_Code\LcRest\Booking.cs:2651
+#, App_Code\LcRest\Booking.cs:2909
+#, App_Code\LcRest\Booking.cs:2920
+msgid "Bookings require the selection of at least one service"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:866
+msgid "BookingTypeID must be set before calling FillUserJobTitle"
+msgstr ""
+
+#: api\v1\me\marketplace-profile.cshtml:72
+msgid "Business name must be fewer than 145 characters"
+msgstr ""
+
+#: App_Code\LcCalendar.GetAvailability.cs:21
+msgid "busy"
+msgstr ""
+
+#: App_Code\LcCalendar.cs:1472
+msgid "Calendar Import error on UserID:%0 : Internal error processing iCalendar"
+msgstr ""
+
+#: App_Code\LcCalendar.cs:1451
+msgid "Calendar Import error on UserID:%0 : URL is not valid '%1'"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1561
+#: App_Code\LcRest\Booking.cs:1561
+#, App_Code\LcRest\Booking.cs:1561
+msgid "Call Loconomics for help: (415) 735-6025"
+msgstr ""
+
+#: App_Code\LcCalendar.cs:1001
+msgid "Cannot be deleted"
+msgstr ""
+
+#: App_Code\LcCalendar.cs:923
+msgid "Cannot be inserted/updated"
+msgstr ""
+
+#: App_Code\LcPayment.cs:199
+msgid "Cannot charge booking cancellation fee because there is no payment method."
+msgstr ""
+
+# api\v1\Test.cshtml:68
+#: api\v1\Test.cshtml:78
+#, api\v1\Test.cshtml:68
+msgid "Cannot POST to an item"
+msgstr ""
+
+#: App_Code\LcPayment.InputPaymentMethod.cs:70
+msgid "Card expiration month is required"
+msgstr ""
+
+#: App_Code\LcPayment.InputPaymentMethod.cs:74
+msgid "Card expiration year is required"
+msgstr ""
+
+#: App_Code\LcPayment.InputPaymentMethod.cs:62
+msgid "Card number is required"
+msgstr ""
+
+#: api\v1\me\payment-plan.cshtml:69
+msgid "Choose a plan"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:224
+#: api\v1\me\client-booking.cshtml:230
+#: api\v1\me\service-professional-booking.cshtml:116
+#: api\v1\me\service-professional-booking.cshtml:122
+msgid "Choose at least one service"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1640
+# App_Code\LcRest\UserPaymentPlan.cs:297
+#: App_Code\LcRest\Booking.cs:1640
+#: App_Code\LcRest\UserPaymentPlan.cs:297
+#, App_Code\LcRest\Booking.cs:1640
+#, App_Code\LcRest\UserPaymentPlan.cs:297
+msgid "Chosen payment method has expired"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2129
+#: App_Code\LcRest\Booking.cs:2649
+msgid "Chosen services does not belong to the Job Title"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:136
+#: api\v1\me\service-professional-services.cshtml:157
+msgid "Client not found"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:88
+msgid "Co-branded promotions preference is required"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:167
+msgid "Consultation"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:193
+msgid "Consultation removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:187
+msgid "Consultation type:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:168
+msgid "Consultations"
+msgstr ""
+
+#: App_Code\LcPayment.InputPaymentMethod.cs:66
+msgid "CVV code is required"
+msgstr ""
+
+#: _specialRoutes\app.html:107
+#: _specialRoutes\app.html:206
+#: _specialRoutes\app.html:3957
+#: _specialRoutes\app.html:9764
+msgid "Dashboard"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:316
+msgid "Deep cleaning service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:317
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:324
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:325
+msgid "Deep cleaning services"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:616
+msgid "DELETE is not allowed"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:218
+msgid "Describe the service you offer, the price, and the time it'll take, and we'll do the rest to get you clients. Please include any products that come with the service."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:102
+msgid "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:93
+msgid "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:320
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:326
+msgid "Describe to your potential clients in detail the deep cleaning services you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:252
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:258
+msgid "Describe to your potential clients in detail the light cleaning services you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:286
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:292
+msgid "Describe to your potential clients in detail the routine cleaning services you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:227
+msgid "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:24
+msgid "Describe to your potential clients in detail the service you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:66
+msgid "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:55
+msgid "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:29
+msgid "Describe to your potential clients in detail the services you provide and include what makes your services unique."
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:197
+msgid "Description must be fewer than 1000 characters."
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:205
+msgid "Duration must be the number of minutes without decimals"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:64
+msgid "Duration:"
+msgstr ""
+
+#: App_Code\LcAuthHelper.cs:461
+msgid "E-mail address is already in use."
+msgstr ""
+
+#: App_Code\LcRest\LeadGeneration.cs:25
+msgid "Email is already registered, please log-in or request a password reset"
+msgstr ""
+
+#: api\v1\me\events.cshtml:199
+msgid "End date/time is not valid"
+msgstr ""
+
+#: api\v1\me\education.cshtml:129
+msgid "End year is invalid, please re-enter"
+msgstr ""
+
+#: api\v1\me\profile-picture.cshtml:160
+msgid "Error, you need to upload an image first"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:124
+msgid "Estimate"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:146
+msgid "Estimate removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:125
+msgid "Estimates"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:144
+msgid "Estimation type:"
+msgstr ""
+
+# api\v1\me\events.cshtml:165
+# api\v1\me\events.cshtml:179
+# api\v1\me\events.cshtml:254
+# api\v1\me\events.cshtml:285
+# api\v1\me\events.cshtml:301
+# api\vx\icalendar\events.cshtml:89
+#: api\v1\me\events.cshtml:165
+#: api\v1\me\events.cshtml:179
+#: api\v1\me\events.cshtml:254
+#: api\v1\me\events.cshtml:285
+#: api\v1\me\events.cshtml:301
+#: api\vx\icalendar\events.cshtml:89
+#, api\v1\me\events.cshtml:165
+#, api\v1\me\events.cshtml:179
+#, api\v1\me\events.cshtml:254
+#, api\v1\me\events.cshtml:285
+#, api\v1\me\events.cshtml:301
+#, api\vx\icalendar\events.cshtml:89
+msgid "Event not found."
+msgstr ""
+
+#: api\v1\me\external-listings.cshtml:54
+#: api\v1\me\external-listings.cshtml:142
+#: api\v1\me\external-listings.cshtml:165
+msgid "External Listing not found."
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:392
+#: App_Code\LcAuthHelper.cs:392
+#, App_Code\LcAuthHelper.cs:392
+msgid "Facebook account already connected. Sign in."
+msgstr ""
+
+#: App_Code\LcAuthHelper.cs:510
+msgid "Facebook account does not exists."
+msgstr ""
+
+#: App_Code\LcRest\UserPaymentPlan.cs:392
+msgid "Failed subscription"
+msgstr ""
+
+#: api\v1\me\clients.cshtml:167
+msgid "First Name must be fewer than 50 characters."
+msgstr ""
+
+#: App_Code\LcCalendar.GetAvailability.cs:22
+msgid "free"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1562
+msgid "Full details at "
+msgstr ""
+
+#: api\v1\Test.cshtml:38
+msgid "Give me an error"
+msgstr ""
+
+#: App_Code\LcRessources.cs:12
+msgid "Great work!"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:116
+msgid "Here you can add additional services that clients can request with a service allowing them to customize their experience with you."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:240
+msgid "Here you can add each individual service you provide and communicate to clients the time you'll need and the price you charge. Add a package if you'd also like to bundle services or offer discounts for multiple appointments."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:81
+msgid "Here you can communicate a bundle of services that occur in a single appointment or multiple appointments of a service. For example, you could offer six appointments for a discounted price."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:40
+msgid "Here you can create one or more hourly services that you offer. If you have more than one, tell clients how they differ."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:153
+msgid "Here you can discuss with clients your services and assess an accurate price estimate for their individual needs. You and your client will then determine next steps together (we're currently working on ways to help you out with this)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:200
+msgid "Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:259
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:293
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:327
+msgid "Hourly rate"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:20
+msgid "Hourly service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:21
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:28
+msgid "Hourly services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:140
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:183
+msgid "I prefer not to state"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:158
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:205
+msgid ""
+"If you decline to state your hourly rate, we'll display this as 'Pricing will be disclosed during consultation'.\n"
+"                    We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1449
+#: App_Code\LcRest\Booking.cs:1449
+#, App_Code\LcRest\Booking.cs:1449
+msgid "Impossible to calculate payment without pricing summary values"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2258
+# App_Code\LcRest\Booking.cs:2918
+#: App_Code\LcRest\Booking.cs:2258
+#: App_Code\LcRest\Booking.cs:2918
+#, App_Code\LcRest\Booking.cs:2258
+#, App_Code\LcRest\Booking.cs:2918
+msgid "Impossible to change the services of a booking to another Job Title"
+msgstr ""
+
+#: App_Code\LcCalendar.GetAvailability.cs:501
+msgid "Impossible to compute availability."
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2126
+# App_Code\LcRest\Booking.cs:2645
+#: App_Code\LcRest\Booking.cs:2126
+#: App_Code\LcRest\Booking.cs:2645
+#, App_Code\LcRest\Booking.cs:2126
+#, App_Code\LcRest\Booking.cs:2645
+msgid "Impossible to create a booking for that Job Title."
+msgstr ""
+
+#: App_Code\LcPayment.cs:168
+#: api\v1\Test.cshtml:51
+msgid "Impossible to know transaction details, please contact support. BookingID #%0"
+msgstr ""
+
+#: App_Code\LcRest\ServiceProfessionalService.cs:175
+msgid "Impossible to retrieve information for the ServiceID:"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2252
+#: App_Code\LcRest\Booking.cs:2913
+msgid "Impossible to update the booking for that Job Title."
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:86
+msgid "Include my profile in search listings preference is required"
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:588
+#: App_Code\LcAuthHelper.cs:589
+#, App_Code\LcAuthHelper.cs:588
+msgid "Incorrect user"
+msgstr ""
+
+#. TRANSLATORS: format is username
+#: api\v1\auth\reset-password.cshtml:47
+msgid "Instructions to reset your password have been sent to %0. Please check your spam folder if you don't see it."
+msgstr ""
+
+#: App_Code\RestPages\RestUserJobProfile.cs:285
+msgid "Invalid cancellation policy"
+msgstr ""
+
+#: api\v1\auth\change-password.cshtml:45
+msgid "Invalid email address or password"
+msgstr ""
+
+#: App_Code\Facebook.cshtml:241
+msgid "Invalid Facebook cookie."
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:603
+#: App_Code\LcAuthHelper.cs:604
+#, App_Code\LcAuthHelper.cs:603
+msgid "Invalid Facebook credentials"
+msgstr ""
+
+#: api\v1\pricing-types.cshtml:158
+msgid "Invalid format for the Pricing Type ID"
+msgstr ""
+
+#: App_Code\LcRest\UserExternalListing.cs:121
+#: App_Code\RestPages\RestUserJobProfile.cs:117
+#: App_Code\RestPages\RestUserJobProfile.cs:259
+msgid "Invalid Job Title ID"
+msgstr ""
+
+#: api\v1\me\payment-plan.cshtml:114
+msgid "Invalid payment plan"
+msgstr ""
+
+#: App_Code\LcRest\Address.cs:552
+msgid "Invalid postal code"
+msgstr ""
+
+#: App_Code\LcRest\UserPaymentPlan.cs:430
+msgid "Invalid subscription plan for a partnership"
+msgstr ""
+
+#: App_Code\LcRest\LeadGeneration.cs:119
+msgid "Invalid user"
+msgstr ""
+
+#: api\v1\lead-generation\newsletter.cshtml:73
+#: api\v1\lead-generation\referral.cshtml:249
+msgid "Is required to indicate whether is service professional or not"
+msgstr ""
+
+#: App_Code\LcRest\PaymentAccount.cs:176
+msgid "It looks like you already have an account set up with Braintree. Please contact us, and we can help."
+msgstr ""
+
+#: App_Code\RestPages\RestUserJobProfile.cs:284
+msgid "Job title introduction must be fewer than 2000 characters"
+msgstr ""
+
+#: App_Code\RestPages\RestUserJobProfile.cs:269
+msgid "Job Title not found"
+msgstr ""
+
+#: api\v1\job-titles.cshtml:56
+#: App_Code\RestPages\RestUserJobProfile.cs:30
+#: api\v1\users\job-profile.cshtml:78
+msgid "Job Title not found."
+msgstr ""
+
+#: api\v1\me\clients.cshtml:168
+msgid "Last Name must be fewer than 145 characters."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:334
+#: api\v1\me\client-booking.cshtml:212
+#: api\v1\me\service-professional-booking.cshtml:104
+msgid "Latitude must be a number"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:154
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:201
+msgid "learn more"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:115
+msgid "Learn more about add-on pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:199
+msgid "Learn more about consultation pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:338
+msgid "Learn more about deep cleaning services pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:152
+msgid "Learn more about estimate pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:39
+msgid "Learn more about hourly service pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:270
+msgid "Learn more about light cleaning services pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:80
+msgid "Learn more about package pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:304
+msgid "Learn more about routine cleaning services pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:239
+msgid "Learn more about service pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:100
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:223
+msgid "Length of service:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:248
+msgid "Light cleaning service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:249
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:256
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:257
+msgid "Light cleaning services"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:82
+msgid "Loconomics community messages preference is required"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:87
+msgid "Loconomics marketing messages preference is required"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:335
+#: api\v1\me\client-booking.cshtml:213
+#: api\v1\me\service-professional-booking.cshtml:105
+msgid "Longitude must be a number"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:83
+msgid "Marketing e-mails about Loconomics Service Providers preference is required"
+msgstr ""
+
+#: api\v1\me\profile-picture.cshtml:126
+#: api\v1\me\work-photos.cshtml:119
+msgid "Maximum request length exceeded"
+msgstr ""
+
+#: App_Code\LcRessources.cs:16
+msgid "Message was sent"
+msgstr ""
+
+#: api\v1\me\calendar-syncing.cshtml:74
+msgid "Method not allowed"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:163
+#: api\v1\me\client-booking.cshtml:175
+#: api\v1\me\events.cshtml:270
+#: api\v1\me\events.cshtml:283
+#: api\v1\me\events.cshtml:299
+#: api\v1\me\service-professional-booking.cshtml:259
+#: api\v1\me\service-professional-booking.cshtml:270
+#: api\v1\me\service-professional-services.cshtml:285
+#: api\v1\me\service-professional-services.cshtml:304
+#: api\v1\me\service-professional-services.cshtml:342
+msgid "Method not allowed."
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:231
+msgid "Must be a client ID or one of the predefined constants"
+msgstr ""
+
+#: api\v1\me\external-listings.cshtml:90
+msgid "Must specify the platform"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:138
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:141
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:181
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:184
+msgid "My rates start at:"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:194
+msgid "Name must be fewer than 50 characters."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:171
+msgid "Need to speak or meet with your client before determining a price? We'll help you facilitate an in-person meeting or phone call to discuss your services."
+msgstr ""
+
+#: App_Code\Facebook.cshtml:144
+msgid "No Facebook user is authenticated."
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:288
+#: App_Code\LcAuthHelper.cs:288
+#, App_Code\LcAuthHelper.cs:288
+msgid "Not allowed"
+msgstr ""
+
+#: api\v1\search.cshtml:225
+#: App_Code\RestPages\RestUserJobProfile.cs:74
+#: App_Code\RestPages\RestUserJobProfile.cs:87
+#: App_Code\RestPages\RestUserJobProfile.cs:112
+#: App_Code\RestPages\RestUserJobProfile.cs:121
+#: api\v1\me\addresses.cshtml:229
+#: api\v1\me\addresses.cshtml:241
+#: api\v1\me\addresses.cshtml:328
+#: api\v1\me\addresses.cshtml:477
+#: api\v1\me\addresses.cshtml:518
+#: api\v1\me\addresses.cshtml:571
+#: api\v1\me\addresses.cshtml:621
+#: api\v1\me\calendar-syncing.cshtml:48
+#: api\v1\me\calendar-syncing.cshtml:77
+#: api\v1\me\marketplace-profile.cshtml:56
+#: api\v1\me\marketplace-profile.cshtml:65
+#: api\v1\me\messaging.cshtml:125
+#: api\v1\me\messaging.cshtml:144
+#: api\v1\me\messaging.cshtml:151
+#: api\v1\me\messaging.cshtml:167
+#: api\v1\me\messaging.cshtml:178
+#: api\v1\me\messaging.cshtml:263
+#: api\v1\me\messaging.cshtml:270
+#: api\v1\me\owner-acknowledgment.cshtml:29
+#: api\v1\me\owner-acknowledgment.cshtml:37
+#: api\v1\me\payment-account.cshtml:55
+#: api\v1\me\payment-account.cshtml:64
+#: api\v1\me\payment-plan.cshtml:57
+#: api\v1\me\payment-plan.cshtml:63
+#: api\v1\me\privacy-settings.cshtml:64
+#: api\v1\me\privacy-settings.cshtml:73
+#: api\v1\me\profile-picture.cshtml:182
+#: api\v1\me\profile.cshtml:99
+#: api\v1\me\profile.cshtml:135
+#: api\v1\me\profile.cshtml:141
+#: api\v1\me\profile.cshtml:148
+#: api\v1\me\scheduling-preferences.cshtml:42
+#: api\v1\me\scheduling-preferences.cshtml:51
+msgid "Not found"
+msgstr ""
+
+#: api\v1\job-titles.cshtml:59
+#: api\v1\postal-codes.cshtml:43
+#: App_Code\RestPages\RestUserJobProfile.cs:38
+#: App_Code\RestPages\RestUserJobProfile.cs:263
+#: api\v1\auth\change-password.cshtml:48
+#: api\v1\auth\login.cshtml:58
+#: api\v1\auth\signup.cshtml:102
+#: api\v1\me\client-booking.cshtml:111
+#: api\v1\me\client-booking.cshtml:122
+#: api\v1\me\client-booking.cshtml:147
+#: api\v1\me\clients.cshtml:97
+#: api\v1\me\clients.cshtml:145
+#: api\v1\me\clients.cshtml:194
+#: api\v1\me\education.cshtml:64
+#: api\v1\me\education.cshtml:112
+#: api\v1\me\education.cshtml:154
+#: api\v1\me\service-professional-booking.cshtml:238
+#: api\v1\me\service-professional-services.cshtml:160
+#: api\v1\me\weekly-schedule.cshtml:125
+#: api\v1\users\job-profile.cshtml:55
+#: api\v1\users\service-addresses.cshtml:74
+#: api\v1\users\service-professional-services.cshtml:74
+msgid "Not Found"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:157
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:204
+msgid "not recommended"
+msgstr ""
+
+#: api\v1\Test.cshtml:120
+msgid "Num must be a number"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:209
+msgid "Number of appointments included must be a number without decimals"
+msgstr ""
+
+#: api\v1\me\events.cshtml:201
+msgid "Number of occurrences must be a number"
+msgstr ""
+
+#: App_Code\LcRessources.cs:13
+#: api\v1\me\profile.cshtml:131
+msgid "OK"
+msgstr ""
+
+#: api\v1\lead-generation\referral.cshtml:207
+msgid "Only registered users can refer professionals"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:51
+msgid "Package"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:70
+msgid "Package removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:52
+msgid "Packages"
+msgstr ""
+
+#: _specialRoutes\Login.cshtml:15
+msgid "Password"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1601
+#: App_Code\LcRest\Booking.cs:1601
+#, App_Code\LcRest\Booking.cs:1601
+msgid "Payment already collected for this booking"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1807
+#: App_Code\LcRest\Booking.cs:1807
+#, App_Code\LcRest\Booking.cs:1807
+msgid "Payment authorized for this booking already"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1805
+#: App_Code\LcRest\Booking.cs:1805
+#, App_Code\LcRest\Booking.cs:1805
+msgid "Payment not collected for this booking, cannot be authorized"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1873
+#: App_Code\LcRest\Booking.cs:1873
+#, App_Code\LcRest\Booking.cs:1873
+msgid "Payment not collected for this booking, cannot be released"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1840
+#: App_Code\LcRest\Booking.cs:1840
+#, App_Code\LcRest\Booking.cs:1840
+msgid "Payment not collected for this booking, cannot be settle"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1599
+#: App_Code\LcRest\Booking.cs:1599
+#, App_Code\LcRest\Booking.cs:1599
+msgid "Payment not enabled for this booking"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:139
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:142
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:182
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:185
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:139
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:142
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:182
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:185
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:139
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:142
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:182
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:185
+msgid "per"
+msgstr ""
+
+# api\v1\me\platforms.cshtml:42
+#: api\v1\me\platforms.cshtml:42
+#, api\v1\me\platforms.cshtml:42
+msgid "Platform not found."
+msgstr ""
+
+# api\v1\auth\reset-password.cshtml:52
+#: api\v1\auth\reset-password.cshtml:52
+#, api\v1\auth\reset-password.cshtml:52
+msgid "Please enter a new password."
+msgstr ""
+
+# App_Code\LcRessources.cs:11
+#: App_Code\LcRessources.cs:11
+#, App_Code\LcRessources.cs:11
+msgid "Please fix these issues and try again:"
+msgstr ""
+
+# api\v1\auth\reset-password.cshtml:51
+#: api\v1\auth\reset-password.cshtml:51
+#, api\v1\auth\reset-password.cshtml:51
+msgid "Please provide a valid reset token."
+msgstr ""
+
+# api\v1\me\messaging.cshtml:216
+#: api\v1\me\messaging.cshtml:216
+#, api\v1\me\messaging.cshtml:216
+msgid "Please, don't send messages to yourself :-)"
+msgstr ""
+
+# api\v1\me\work-photos.cshtml:114
+#: api\v1\me\work-photos.cshtml:114
+#, api\v1\me\work-photos.cshtml:114
+msgid "Please, include a photo"
+msgstr ""
+
+# App_Code\LcRest\PaymentAccount.cs:127
+#: App_Code\LcRest\PaymentAccount.cs:127
+#, App_Code\LcRest\PaymentAccount.cs:127
+msgid "Postal Code is not valid."
+msgstr ""
+
+# api\v1\postal-codes.cshtml:40
+#: api\v1\postal-codes.cshtml:40
+#, api\v1\postal-codes.cshtml:40
+msgid "Postal Code Not Valid."
+msgstr ""
+
+# api\v1\me\client-booking.cshtml:339
+#: api\v1\me\client-booking.cshtml:339
+#, api\v1\me\client-booking.cshtml:339
+msgid "Preferred start date and time is not valid"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:339
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:339
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:339
+msgid "Price and list your services for what you consider a deep cleaning of a home. We're talking about the client's mother coming to visit or a spring cleaning. Customize by selecting attributes above."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:271
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:271
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:271
+msgid "Price and list your services for what you consider a light cleaning of a home. Some clients just want a quick clean and aren't too concerned about spring cleaning. Customize by selecting attributes above."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:305
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:305
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:305
+msgid "Price and list your services for what you consider a routine cleaning of a home. It's more than making the beds but isn't a spring cleaning either. Customize by selecting attributes above."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:98
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:98
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:98
+msgid "Price for add-on service:"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:178
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:178
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:178
+msgid "Price for consultation:"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:135
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:135
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:135
+msgid "Price for estimate:"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:61
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:61
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:61
+msgid "Price for package:"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:225
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:225
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:225
+msgid "Price for service:"
+msgstr ""
+
+# api\v1\me\service-professional-services.cshtml:202
+#: api\v1\me\service-professional-services.cshtml:202
+#, api\v1\me\service-professional-services.cshtml:202
+msgid "Price must be a number and not contain the $ symbol."
+msgstr ""
+
+# api\v1\me\service-professional-services.cshtml:173
+# api\v1\me\service-professional-services.cshtml:306
+# api\v1\me\service-professional-services.cshtml:323
+# api\v1\me\service-professional-services.cshtml:344
+#: api\v1\me\service-professional-services.cshtml:173
+#: api\v1\me\service-professional-services.cshtml:306
+#: api\v1\me\service-professional-services.cshtml:323
+#: api\v1\me\service-professional-services.cshtml:344
+#, api\v1\me\service-professional-services.cshtml:173
+#, api\v1\me\service-professional-services.cshtml:306
+#, api\v1\me\service-professional-services.cshtml:323
+#, api\v1\me\service-professional-services.cshtml:344
+msgid "Pricing not found."
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1555
+#: App_Code\LcRest\Booking.cs:1555
+#, App_Code\LcRest\Booking.cs:1555
+msgid "Pricing summary:"
+msgstr ""
+
+# api\v1\pricing-types.cshtml:153
+#: api\v1\pricing-types.cshtml:153
+#, api\v1\pricing-types.cshtml:153
+msgid "Pricing Type not found."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:143
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:186
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:143
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:186
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:143
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:186
+msgid "Pricing will be disclosed during consultation."
+msgstr ""
+
+# api\v1\me\marketplace-profile.cshtml:71
+#: api\v1\me\marketplace-profile.cshtml:71
+#, api\v1\me\marketplace-profile.cshtml:71
+msgid "Public Bio must be fewer than 4000 characters"
+msgstr ""
+
+# api\v1\lead-generation\referral.cshtml:229
+#: api\v1\lead-generation\referral.cshtml:229
+#, api\v1\lead-generation\referral.cshtml:229
+msgid "Referral failed"
+msgstr ""
+
+# api\v1\me\events.cshtml:200
+#: api\v1\me\events.cshtml:200
+#, api\v1\me\events.cshtml:200
+msgid "'Repeat every' must be a number"
+msgstr ""
+
+# api\v1\me\events.cshtml:202
+#: api\v1\me\events.cshtml:202
+#, api\v1\me\events.cshtml:202
+msgid "Repetition End Date is not valid"
+msgstr ""
+
+# App_Code\LcRessources.cs:15
+#: App_Code\LcRessources.cs:15
+#, App_Code\LcRessources.cs:15
+msgid "Request sent!"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:282
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:282
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:282
+msgid "Routine cleaning service"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:283
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:290
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:291
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:283
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:290
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:291
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:283
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:290
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:291
+msgid "Routine cleaning services"
+msgstr ""
+
+# App_Code\LcRessources.cs:14
+#: App_Code\LcRessources.cs:14
+#, App_Code\LcRessources.cs:14
+msgid "Saved"
+msgstr ""
+
+# api\v1\me\clients.cshtml:169
+#: api\v1\me\clients.cshtml:169
+#, api\v1\me\clients.cshtml:169
+msgid "Second Last Name must be fewer than 145 characters."
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2353
+# App_Code\LcRest\Booking.cs:2736
+# App_Code\LcRest\Booking.cs:2968
+#: App_Code\LcRest\Booking.cs:2353
+#: App_Code\LcRest\Booking.cs:2736
+#: App_Code\LcRest\Booking.cs:2968
+#, App_Code\LcRest\Booking.cs:2353
+#, App_Code\LcRest\Booking.cs:2736
+#, App_Code\LcRest\Booking.cs:2968
+msgid "Selected location is not valid."
+msgstr ""
+
+# api\v1\me\addresses.cshtml:258
+#: api\v1\me\addresses.cshtml:258
+#, api\v1\me\addresses.cshtml:258
+msgid "Server Error: Address Kind not managed."
+msgstr ""
+
+# api\v1\me\addresses.cshtml:436
+#: api\v1\me\addresses.cshtml:436
+#, api\v1\me\addresses.cshtml:436
+msgid "Server Error: impossible to create the address at this time."
+msgstr ""
+
+# api\v1\me\addresses.cshtml:404
+# api\v1\me\addresses.cshtml:460
+#: api\v1\me\addresses.cshtml:404
+#: api\v1\me\addresses.cshtml:460
+#, api\v1\me\addresses.cshtml:404
+#, api\v1\me\addresses.cshtml:460
+msgid "Server Error: Invalid address Kind specified."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:214
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:214
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:214
+msgid "Service"
+msgstr ""
+
+# App_Code\LcRest\Address.cs:591
+#: App_Code\LcRest\Address.cs:591
+#, App_Code\LcRest\Address.cs:591
+msgid "Service Area"
+msgstr ""
+
+# api\v1\me\addresses.cshtml:336
+#: api\v1\me\addresses.cshtml:336
+#, api\v1\me\addresses.cshtml:336
+msgid "Service Radius must be a number"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:31
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:231
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:262
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:296
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:330
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:31
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:231
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:262
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:296
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:330
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:31
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:231
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:262
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:296
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:330
+msgid "Service removed successfully"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:215
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:215
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:215
+msgid "Services"
+msgstr ""
+
+# api\v1\Test.cshtml:108
+#: api\v1\Test.cshtml:118
+#, api\v1\Test.cshtml:108
+msgid "Short must be 5 or less"
+msgstr ""
+
+# api\v1\me\service-professional-services.cshtml:244
+#: api\v1\me\service-professional-services.cshtml:244
+#, api\v1\me\service-professional-services.cshtml:244
+msgid "Some specified attributes are wrong"
+msgstr ""
+
+# api\v1\me\client-booking.cshtml:239
+# api\v1\me\service-professional-booking.cshtml:131
+#: api\v1\me\client-booking.cshtml:239
+#: api\v1\me\service-professional-booking.cshtml:131
+#, api\v1\me\client-booking.cshtml:239
+#, api\v1\me\service-professional-booking.cshtml:131
+msgid "Some specified services are incorrect"
+msgstr ""
+
+# api\v1\me\client-booking.cshtml:138
+#: api\v1\me\client-booking.cshtml:138
+#, api\v1\me\client-booking.cshtml:138
+msgid "Something goes wrong"
+msgstr ""
+
+# api\v1\me\addresses.cshtml:340
+# api\v1\me\client-booking.cshtml:211
+# api\v1\me\service-professional-booking.cshtml:103
+#: api\v1\me\addresses.cshtml:340
+#: api\v1\me\client-booking.cshtml:211
+#: api\v1\me\service-professional-booking.cshtml:103
+#, api\v1\me\addresses.cshtml:340
+#, api\v1\me\client-booking.cshtml:211
+#, api\v1\me\service-professional-booking.cshtml:103
+msgid "Special instructions must be fewer than 1,000 characters."
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:1557
+#: App_Code\LcRest\Booking.cs:1557
+#, App_Code\LcRest\Booking.cs:1557
+msgid "Special instructions:"
+msgstr ""
+
+# api\v1\me\client-booking.cshtml:258
+# api\v1\me\client-booking.cshtml:334
+#: api\v1\me\client-booking.cshtml:258
+#: api\v1\me\client-booking.cshtml:334
+#, api\v1\me\client-booking.cshtml:258
+#, api\v1\me\client-booking.cshtml:334
+msgid "Start date and time is not valid"
+msgstr ""
+
+# api\v1\me\events.cshtml:198
+# api\v1\me\service-professional-booking.cshtml:154
+#: api\v1\me\events.cshtml:198
+#: api\v1\me\service-professional-booking.cshtml:154
+#, api\v1\me\events.cshtml:198
+#, api\v1\me\service-professional-booking.cshtml:154
+msgid "Start date/time is not valid"
+msgstr ""
+
+# api\v1\me\education.cshtml:128
+#: api\v1\me\education.cshtml:128
+#, api\v1\me\education.cshtml:128
+msgid "Start year is invalid, please re-enter"
+msgstr ""
+
+# api\v1\lead-generation\newsletter.cshtml:90
+# api\v1\lead-generation\referral.cshtml:269
+#: api\v1\lead-generation\newsletter.cshtml:90
+#: api\v1\lead-generation\referral.cshtml:269
+#, api\v1\lead-generation\newsletter.cshtml:90
+#, api\v1\lead-generation\referral.cshtml:269
+msgid "Subscription failed"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:180
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:180
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:180
+msgid "Tell your clients what they can expect during the consultation and what to prepare."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:137
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:137
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:137
+msgid "Tell your clients what they can expect when you speak with them and what to prepare."
+msgstr ""
+
+#: App_Code\LcCalendar.GetAvailability.cs:24
+msgid "tentative"
+msgstr ""
+
+# api\v1\me\clients.cshtml:170
+#: api\v1\me\clients.cshtml:170
+#, api\v1\me\clients.cshtml:170
+msgid "That e-mail is not valid"
+msgstr ""
+
+# api\v1\me\profile.cshtml:155
+#: api\v1\me\profile.cshtml:155
+#, api\v1\me\profile.cshtml:155
+msgid "The alternative email is not valid."
+msgstr ""
+
+#: App_Code\Facebook.cshtml:148
+msgid "The authenticated Facebook user is already associated to a membership account."
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2141
+#: App_Code\LcRest\Booking.cs:2141
+#, App_Code\LcRest\Booking.cs:2141
+msgid "The chosen time is not available, it conflicts with a recent appointment!"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2274
+#: App_Code\LcRest\Booking.cs:2274
+#, App_Code\LcRest\Booking.cs:2274
+msgid "The chosen time is unavailable, it conflicts with a recent appointment!"
+msgstr ""
+
+# api\v1\me\marketplace-profile.cshtml:77
+#: api\v1\me\marketplace-profile.cshtml:77
+#, api\v1\me\marketplace-profile.cshtml:77
+msgid "The custom URL is too long, please keep it under 80 characters."
+msgstr ""
+
+# api\v1\me\marketplace-profile.cshtml:73
+#: api\v1\me\marketplace-profile.cshtml:73
+#, api\v1\me\marketplace-profile.cshtml:73
+msgid "The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes"
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:362
+# api\v1\lead-generation\newsletter.cshtml:70
+# api\v1\lead-generation\referral.cshtml:186
+# api\v1\lead-generation\referral.cshtml:246
+#: App_Code\LcAuthHelper.cs:362
+#: api\v1\lead-generation\newsletter.cshtml:70
+#: api\v1\lead-generation\referral.cshtml:186
+#: api\v1\lead-generation\referral.cshtml:246
+#, App_Code\LcAuthHelper.cs:362
+#, api\v1\lead-generation\newsletter.cshtml:70
+#, api\v1\lead-generation\referral.cshtml:186
+#, api\v1\lead-generation\referral.cshtml:246
+msgid "The email is not valid."
+msgstr ""
+
+# api\v1\me\licenses-certifications.cshtml:131
+# api\v1\me\work-photos.cshtml:161
+#: api\v1\me\work-photos.cshtml:161
+#, api\v1\me\licenses-certifications.cshtml:131
+#, api\v1\me\work-photos.cshtml:161
+msgid "The file is too large"
+msgstr ""
+
+#: api\v1\me\work-photos.cshtml:157
+msgid "The file is too large, maximum file size is %0"
+msgstr ""
+
+# App_Code\LcRest\Client.cs:369
+#: App_Code\LcRest\Client.cs:369
+#, App_Code\LcRest\Client.cs:369
+msgid "The given e-mail already exists for other client at loconomics.com and cannot be saved."
+msgstr ""
+
+# api\v1\Test.cshtml:148
+#: api\v1\Test.cshtml:158
+#, api\v1\Test.cshtml:148
+msgid "The Item ID must be an integer"
+msgstr ""
+
+# api\v1\users\job-profile.cshtml:52
+# api\v1\users\service-addresses.cshtml:71
+# api\v1\users\service-professional-services.cshtml:71
+#: App_Code\RestPages\RestUserJobProfile.cs:34
+#: api\v1\users\job-profile.cshtml:52
+#: api\v1\users\service-addresses.cshtml:71
+#: api\v1\users\service-professional-services.cshtml:71
+#, api\v1\users\job-profile.cshtml:52
+#, api\v1\users\service-addresses.cshtml:71
+#, api\v1\users\service-professional-services.cshtml:71
+msgid "The Job Title ID has bad format (must be an integer number)"
+msgstr ""
+
+# api\v1\me\owner-acknowledgment.cshtml:63
+#: api\v1\me\owner-acknowledgment.cshtml:63
+#, api\v1\me\owner-acknowledgment.cshtml:63
+msgid "The name is not correct"
+msgstr ""
+
+# api\v1\auth\reset-password.cshtml:63
+#: api\v1\auth\reset-password.cshtml:63
+#, api\v1\auth\reset-password.cshtml:63
+msgid "The password reset token is incorrect or may be expired"
+msgstr ""
+
+# api\v1\me\messaging.cshtml:237
+#: api\v1\me\messaging.cshtml:237
+#, api\v1\me\messaging.cshtml:237
+msgid "The recipient does not exists."
+msgstr ""
+
+#: App_Code\RestPages\RestUserJobProfile.cs:288
+msgid "The scheduling option must be a boolean (true for instant booking)"
+msgstr ""
+
+# api\v1\me\addresses.cshtml:346
+#: api\v1\me\addresses.cshtml:346
+#, api\v1\me\addresses.cshtml:346
+msgid "The service address must be a service location or a service area."
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2578
+msgid "The time %0 is not available, it conflicts with a recent appointment!"
+msgstr ""
+
+#: App_Code\LcCalendar.cs:1376
+msgid "The URL doesn't contains icalendar information, is the correct URL?"
+msgstr ""
+
+#: App_Code\LcCalendar.cs:1398
+msgid "The UserID %0 doesn't exist on database, only its calendar URL %1"
+msgstr ""
+
+# api\v1\me\marketplace-profile.cshtml:86
+#: api\v1\me\marketplace-profile.cshtml:86
+#, api\v1\me\marketplace-profile.cshtml:86
+msgid "The Website URL is not valid, check that is complete"
+msgstr ""
+
+# api\v1\me\marketplace-profile.cshtml:92
+#: api\v1\me\marketplace-profile.cshtml:92
+#, api\v1\me\marketplace-profile.cshtml:92
+msgid "The Website URL is too long, please keep it under 2000 characters."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:188
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:189
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:188
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:189
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:188
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:189
+msgid "This consultation is available to first-time clients only"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:67
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:68
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:67
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:68
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:67
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:68
+msgid "This package is available to first-time clients only"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:228
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:229
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:228
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:229
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:228
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:229
+msgid "This service is available to first-time clients only"
+msgstr ""
+
+# api\v1\me\external-listings.cshtml:71
+#: api\v1\me\external-listings.cshtml:71
+#, api\v1\me\external-listings.cshtml:71
+msgid "Title is required"
+msgstr ""
+
+#: App_Code\LcPayment.cs:104
+msgid "To authorize a booking payment is required a price to charge."
+msgstr ""
+
+#: App_Code\LcCalendar.GetAvailability.cs:23
+msgid "transparent"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:97
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:97
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:97
+msgid "Type the name of the add-on service (be descriptive and creative)"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:175
+#. TRANSLATORS: do not escape speech mark
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:175
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:175
+msgid "Type the name of the consultation, e.g. \\"Initial consultation\\", \\"Introductory meeting\\"."
+msgstr "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\"."
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:132
+#. TRANSLATORS: do not escape speech mark
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:132
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:132
+msgid "Type the name of the estimate visit, e.g. \\"Work assessment visit\\", \\"Pricing estimate visit\\""
+msgstr "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:59
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:59
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:59
+msgid "Type the name of the package (be descriptive and creative)"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:222
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:222
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:222
+msgid "Type the name of the service (be descriptive and creative)"
+msgstr ""
+
+# api\v1\me\owner-acknowledgment.cshtml:54
+#: api\v1\me\owner-acknowledgment.cshtml:54
+#, api\v1\me\owner-acknowledgment.cshtml:54
+msgid "Type your full name as acknowlegment"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2534
+# App_Code\LcRest\Booking.cs:2558
+# App_Code\LcRest\Booking.cs:2830
+# App_Code\LcRest\Booking.cs:2854
+#: App_Code\LcRest\Booking.cs:2534
+#: App_Code\LcRest\Booking.cs:2558
+#: App_Code\LcRest\Booking.cs:2830
+#: App_Code\LcRest\Booking.cs:2854
+#, App_Code\LcRest\Booking.cs:2534
+#, App_Code\LcRest\Booking.cs:2558
+#, App_Code\LcRest\Booking.cs:2830
+#, App_Code\LcRest\Booking.cs:2854
+msgid "Type:"
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2119
+# App_Code\LcRest\Booking.cs:2246
+# App_Code\LcRest\Booking.cs:2638
+# App_Code\LcRest\Booking.cs:2907
+#: App_Code\LcRest\Booking.cs:2119
+#: App_Code\LcRest\Booking.cs:2246
+#: App_Code\LcRest\Booking.cs:2638
+#: App_Code\LcRest\Booking.cs:2907
+#, App_Code\LcRest\Booking.cs:2119
+#, App_Code\LcRest\Booking.cs:2246
+#, App_Code\LcRest\Booking.cs:2638
+#, App_Code\LcRest\Booking.cs:2907
+msgid "Unable to retrieve the client's info. Their profile may no longer exist."
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2117
+# App_Code\LcRest\Booking.cs:2244
+# App_Code\LcRest\Booking.cs:2636
+# App_Code\LcRest\Booking.cs:2905
+#: App_Code\LcRest\Booking.cs:2117
+#: App_Code\LcRest\Booking.cs:2244
+#: App_Code\LcRest\Booking.cs:2636
+#: App_Code\LcRest\Booking.cs:2905
+#, App_Code\LcRest\Booking.cs:2117
+#, App_Code\LcRest\Booking.cs:2244
+#, App_Code\LcRest\Booking.cs:2636
+#, App_Code\LcRest\Booking.cs:2905
+msgid "Unable to retrieve the service professional's info. Their profile may no longer exist."
+msgstr ""
+
+#: App_Code\LcCalendar.GetAvailability.cs:25
+msgid "unavailable"
+msgstr ""
+
+# api\v1\auth\facebook-user.cshtml:47
+#: api\v1\auth\facebook-user.cshtml:47
+#, api\v1\auth\facebook-user.cshtml:47
+msgid "User doesn't exists"
+msgstr ""
+
+# api\v1\users\availability.cshtml:47
+# api\v1\users\availability.cshtml:66
+# api\v1\users\index.cshtml:46
+# api\v1\users\index.cshtml:53
+# api\v1\users\profile.cshtml:35
+# api\v1\users\profile.cshtml:40
+# api\v1\users\ratings.cshtml:43
+# api\v1\users\ratings.cshtml:61
+# api\v1\users\ratings.cshtml:67
+# api\v1\users\reviews.cshtml:46
+# api\v1\users\reviews.cshtml:57
+# api\v1\users\service-attributes.cshtml:21
+# api\v1\users\service-attributes.cshtml:29
+# api\v1\users\verifications-summary.cshtml:62
+# api\v1\users\verifications-summary.cshtml:81
+# api\v1\users\verifications-summary.cshtml:87
+#: api\v1\users\availability.cshtml:47
+#: api\v1\users\availability.cshtml:66
+#: api\v1\users\index.cshtml:46
+#: api\v1\users\index.cshtml:53
+#: api\v1\users\profile.cshtml:35
+#: api\v1\users\profile.cshtml:40
+#: api\v1\users\ratings.cshtml:43
+#: api\v1\users\ratings.cshtml:61
+#: api\v1\users\ratings.cshtml:67
+#: api\v1\users\reviews.cshtml:46
+#: api\v1\users\reviews.cshtml:57
+#: api\v1\users\service-attributes.cshtml:21
+#: api\v1\users\service-attributes.cshtml:29
+#: api\v1\users\verifications-summary.cshtml:62
+#: api\v1\users\verifications-summary.cshtml:81
+#: api\v1\users\verifications-summary.cshtml:87
+#, api\v1\users\availability.cshtml:47
+#, api\v1\users\availability.cshtml:66
+#, api\v1\users\index.cshtml:46
+#, api\v1\users\index.cshtml:53
+#, api\v1\users\profile.cshtml:35
+#, api\v1\users\profile.cshtml:40
+#, api\v1\users\ratings.cshtml:43
+#, api\v1\users\ratings.cshtml:61
+#, api\v1\users\ratings.cshtml:67
+#, api\v1\users\reviews.cshtml:46
+#, api\v1\users\reviews.cshtml:57
+#, api\v1\users\service-attributes.cshtml:21
+#, api\v1\users\service-attributes.cshtml:29
+#, api\v1\users\verifications-summary.cshtml:62
+#, api\v1\users\verifications-summary.cshtml:81
+#, api\v1\users\verifications-summary.cshtml:87
+msgid "User Not Found"
+msgstr ""
+
+# _specialRoutes\Login.cshtml:14
+#: _specialRoutes\Login.cshtml:14
+#, _specialRoutes\Login.cshtml:14
+msgid "Username"
+msgstr ""
+
+# api\v1\Test.cshtml:126
+# api\v1\Test.cshtml:136
+# api\v1\Test.cshtml:146
+#: api\v1\Test.cshtml:136
+#: api\v1\Test.cshtml:146
+#: api\v1\Test.cshtml:156
+#, api\v1\Test.cshtml:126
+#, api\v1\Test.cshtml:136
+#, api\v1\Test.cshtml:146
+msgid "Validation rules"
+msgstr ""
+
+#: App_Code\LcHelpers.cshtml:995
+msgid "view map and directions"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:128
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:128
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:128
+msgid "We know you're not psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate."
+msgstr ""
+
+#: App_Code\LcAuthHelper.cs:243
+msgid ""
+"We see one of our service professionals has already scheduled services for you in the past.\n"
+"        We've just sent an invitation to create your account to %0.\n"
+"        Please follow its instructions. We can't wait to get you on board!"
+msgstr ""
+
+#: App_Code\LcAuthHelper.cs:248
+msgid ""
+"We see you have subscribed previously to our newsletter or referrenced a service professional.\n"
+"        We've just sent an invitation to create your account to %0.\n"
+"        Please follow its instructions. We can't wait to get you on board!"
+msgstr ""
+
+# api\v1\me\client-booking.cshtml:433
+#: api\v1\me\client-booking.cshtml:433
+#, api\v1\me\client-booking.cshtml:433
+msgid "We weren't able to process your payment, please review"
+msgstr ""
+
+#: api\v1\Test.cshtml:48
+#: api\v1\Test.cshtml:49
+msgid "welcome %1, today is %0"
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:202
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:202
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:202
+msgid ""
+"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.\n"
+"                    You can discuss your full pricing during the consultation and add any materials/parts required to get the job done right."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:155
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:155
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:155
+msgid ""
+"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.\n"
+"                    You can discuss your full pricing when you speak and add any materials/parts required to get the job done right."
+msgstr ""
+
+# api\v1\me\marketplace-profile.cshtml:106
+#: api\v1\me\marketplace-profile.cshtml:106
+#, api\v1\me\marketplace-profile.cshtml:106
+msgid "We're sorry, that custom URL is unavailable, please choose other."
+msgstr ""
+
+# api\v1\me\owner-acknowledgment.cshtml:47
+#: api\v1\me\owner-acknowledgment.cshtml:47
+#, api\v1\me\owner-acknowledgment.cshtml:47
+msgid "You already submitted your acknowlegment of this disclosure"
+msgstr ""
+
+# api\v1\lead-generation\referral.cshtml:242
+#: api\v1\lead-generation\referral.cshtml:242
+#, api\v1\lead-generation\referral.cshtml:242
+msgid "You are already logged in!"
+msgstr ""
+
+# api\v1\lead-generation\newsletter.cshtml:66
+#: api\v1\lead-generation\newsletter.cshtml:66
+#, api\v1\lead-generation\newsletter.cshtml:66
+msgid "You are already logged in! Review your account preferences to enable the newsletter."
+msgstr ""
+
+# api\v1\auth\reset-password.cshtml:59
+#: api\v1\auth\reset-password.cshtml:59
+#, api\v1\auth\reset-password.cshtml:59
+msgid "You can now log-in with your new password"
+msgstr ""
+
+# App_Code\LcRest\Client.cs:370
+#: App_Code\LcRest\Client.cs:370
+#, App_Code\LcRest\Client.cs:370
+msgid "You can perform a search by that email and add it as your client."
+msgstr ""
+
+# App_Code\LcRest\UserLicenseCertification.cs:207
+#: App_Code\LcRest\UserLicenseCertification.cs:207
+#, App_Code\LcRest\UserLicenseCertification.cs:207
+msgid "You have already registered that license, please try to update it if you want to submit a new file."
+msgstr ""
+
+# api\v1\Test.cshtml:48
+#: api\v1\Test.cshtml:58
+#, api\v1\Test.cshtml:48
+msgid "You have not positions. Logged?"
+msgstr ""
+
+# api\v1\me\payment-account.cshtml:83
+#: api\v1\me\payment-account.cshtml:83
+#, api\v1\me\payment-account.cshtml:83
+msgid "You must agree the terms of service"
+msgstr ""
+
+#: App_Code\RestPages\RestUserJobProfile.cs:100
+msgid "You must complete another %0 steps to activate this profile."
+msgstr ""
+
+#: api\v1\auth\signup.cshtml:170
+msgid "You must denote your birh date."
+msgstr ""
+
+# api\v1\auth\signup.cshtml:168
+#: api\v1\auth\signup.cshtml:168
+#, api\v1\auth\signup.cshtml:168
+msgid "You must select a field of study."
+msgstr ""
+
+#: api\v1\auth\signup.cshtml:169
+msgid "You must select a gender."
+msgstr ""
+
+# api\v1\auth\signup.cshtml:163
+#: api\v1\auth\signup.cshtml:163
+#, api\v1\auth\signup.cshtml:163
+msgid "You must select an institution."
+msgstr ""
+
+# api\v1\auth\signup.cshtml:164
+#: api\v1\auth\signup.cshtml:164
+#, api\v1\auth\signup.cshtml:164
+msgid "You must select user type."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:260
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:294
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:328
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:260
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:294
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:328
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:260
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:294
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:328
+msgid "You must set your hourly rate"
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:71
+# App_Code\LcAuthHelper.cs:379
+#: App_Code\LcAuthHelper.cs:71
+#: App_Code\LcAuthHelper.cs:379
+#, App_Code\LcAuthHelper.cs:71
+#, App_Code\LcAuthHelper.cs:379
+msgid "You must specify a password."
+msgstr ""
+
+# api\v1\me\messaging.cshtml:211
+#: api\v1\me\messaging.cshtml:211
+#, api\v1\me\messaging.cshtml:211
+msgid "You must specify a recipient."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:191
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:191
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:191
+msgid "You must specify a starting rate or check 'I prefer not to state'"
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:70
+#: App_Code\LcAuthHelper.cs:70
+#, App_Code\LcAuthHelper.cs:70
+msgid "You must specify a user name."
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:359
+#: App_Code\LcAuthHelper.cs:359
+#, App_Code\LcAuthHelper.cs:359
+msgid "You must specify an email."
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:400
+#: App_Code\LcAuthHelper.cs:400
+#, App_Code\LcAuthHelper.cs:400
+msgid "You must specify your first name."
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:401
+#: App_Code\LcAuthHelper.cs:401
+#, App_Code\LcAuthHelper.cs:401
+msgid "You must specify your last name."
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:399
+#: App_Code\LcAuthHelper.cs:399
+#, App_Code\LcAuthHelper.cs:399
+msgid "You must specify your mobile phone number."
+msgstr ""
+
+# App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:192
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:192
+#, App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:192
+msgid "You need to specify a price unit along with your rate or mark 'I prefer not to state'"
+msgstr ""
+
+#: App_Code\LcAuth.cs:35
+msgid "Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password"
+msgstr ""
+
+# App_Code\LcAuthHelper.cs:200
+#: App_Code\LcAuthHelper.cs:200
+#, App_Code\LcAuthHelper.cs:200
+msgid "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent."
+msgstr ""
+
+# _specialRoutes\Login.cshtml:14
+#: _specialRoutes\Login.cshtml:14
+#, _specialRoutes\Login.cshtml:14
+msgid "Your e-mail"
+msgstr ""
+
+# api\v1\auth\change-password.cshtml:38
+#: api\v1\auth\change-password.cshtml:38
+#, api\v1\auth\change-password.cshtml:38
+msgid "Your password has been updated. Please log in again with your new password"
+msgstr ""
+
+# api\v1\me\weekly-schedule.cshtml:192
+#: api\v1\me\weekly-schedule.cshtml:192
+#, api\v1\me\weekly-schedule.cshtml:192
+msgid "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \\"all days/times\\"."
+msgstr ""
+
+# App_Code\LcRest\Booking.cs:2490
+# App_Code\LcRest\Booking.cs:2478
+# api\v1\me\addresses.cshtml:338 api\v1\me\client-booking.cshtml:208
+# api\v1\me\addresses.cshtml:338
+# api\v1\me\client-booking.cshtml:208
+# api\v1\me\addresses.cshtml:339 api\v1\me\client-booking.cshtml:209
+# api\v1\me\addresses.cshtml:339
+# api\v1\me\client-booking.cshtml:209
+# api\v1\me\addresses.cshtml:337 api\v1\me\client-booking.cshtml:210
+# api\v1\me\addresses.cshtml:337
+# api\v1\me\client-booking.cshtml:210
+# api\v1\me\bookings.cshtml:50 api\v1\me\client-booking.cshtml:177
+# api\v1\me\bookings.cshtml:50
+# api\v1\me\client-booking.cshtml:177
+# App_Code\LcRest\Booking.cs:1308
+# App_Code\LcRest\Booking.cs:1296
+# App_Code\LcRest\Booking.cs:878
+# App_Code\LcRest\Booking.cs:866
+# api\v1\me\client-booking.cshtml:224 api\v1\me\client-booking.cshtml:230
+# api\v1\me\client-booking.cshtml:224
+# api\v1\me\client-booking.cshtml:230
+# App_Code\LcRest\Booking.cs:2141 App_Code\LcRest\Booking.cs:2661
+# App_Code\LcRest\Booking.cs:2129
+# App_Code\LcRest\Booking.cs:2649
+# _specialRoutes\app.html:107 _specialRoutes\app.html:206
+# _specialRoutes\app.html:3957 _specialRoutes\app.html:9764
+# _specialRoutes\app.html:107
+# _specialRoutes\app.html:206
+# _specialRoutes\app.html:3957
+# _specialRoutes\app.html:9764
+# App_Code\LcAuthHelper.cs:452
+# App_Code\LcAuthHelper.cs:461
+# api\v1\me\external-listings.cshtml:54 api\v1\me\external-listings.cshtml:142
+# api\v1\me\external-listings.cshtml:54
+# api\v1\me\external-listings.cshtml:142
+# App_Code\LcAuthHelper.cs:501
+# App_Code\LcAuthHelper.cs:509
+# App_Code\LcRest\Booking.cs:1574
+# App_Code\LcRest\Booking.cs:1562
+# App_Code\LcRest\Booking.cs:2264 App_Code\LcRest\Booking.cs:2925
+# App_Code\LcRest\Booking.cs:2252
+# App_Code\LcRest\Booking.cs:2913
+# api\v1\pricing-types.cshtml:134
+# api\v1\pricing-types.cshtml:158
+# App_Code\LcRest\UserExternalListing.cs:121
+# App_Code\RestPages\RestUserJobProfile.cs:117
+# App_Code\RestPages\RestUserJobProfile.cs:267
+# api\v1\job-titles.cshtml:60 App_Code\RestPages\RestUserJobProfile.cs:30
+# api\v1\users\job-profile.cshtml:77
+# api\v1\job-titles.cshtml:56
+# api\v1\users\job-profile.cshtml:78
+# api\v1\me\addresses.cshtml:334 api\v1\me\client-booking.cshtml:212
+# api\v1\me\addresses.cshtml:334
+# api\v1\me\client-booking.cshtml:212
+# api\v1\me\addresses.cshtml:335 api\v1\me\client-booking.cshtml:213
+# api\v1\me\addresses.cshtml:335
+# api\v1\me\client-booking.cshtml:213
+# api\v1\me\profile-picture.cshtml:126 api\v1\me\work-photos.cshtml:119
+# api\v1\me\licenses-certifications.cshtml:93
+# api\v1\me\profile-picture.cshtml:126
+# api\v1\me\work-photos.cshtml:119
+# api\v1\me\client-booking.cshtml:163 api\v1\me\client-booking.cshtml:175
+# api\v1\me\events.cshtml:270 api\v1\me\events.cshtml:283
+# api\v1\me\client-booking.cshtml:163
+# api\v1\me\client-booking.cshtml:175
+# api\v1\me\events.cshtml:270
+# api\v1\me\events.cshtml:283
+# api\v1\search.cshtml:225 App_Code\RestPages\RestUserJobProfile.cs:74
+# App_Code\RestPages\RestUserJobProfile.cs:87
+# App_Code\RestPages\RestUserJobProfile.cs:112
+# App_Code\RestPages\RestUserJobProfile.cs:121 api\v1\me\addresses.cshtml:229
+# api\v1\me\addresses.cshtml:241 api\v1\me\addresses.cshtml:328
+# api\v1\me\addresses.cshtml:477 api\v1\me\addresses.cshtml:518
+# api\v1\me\addresses.cshtml:571 api\v1\me\addresses.cshtml:621
+# api\v1\me\calendar-syncing.cshtml:48 api\v1\me\calendar-syncing.cshtml:77
+# api\v1\me\marketplace-profile.cshtml:56
+# api\v1\me\marketplace-profile.cshtml:65 api\v1\me\messaging.cshtml:125
+# api\v1\me\messaging.cshtml:144 api\v1\me\messaging.cshtml:151
+# api\v1\me\messaging.cshtml:167 api\v1\me\messaging.cshtml:178
+# api\v1\me\messaging.cshtml:263 api\v1\me\messaging.cshtml:270
+# api\v1\me\owner-acknowledgment.cshtml:29
+# api\v1\me\owner-acknowledgment.cshtml:37 api\v1\me\payment-account.cshtml:55
+# api\v1\me\payment-account.cshtml:64 api\v1\me\payment-plan.cshtml:57
+# api\v1\me\payment-plan.cshtml:63 api\v1\me\privacy-settings.cshtml:64
+# api\v1\me\privacy-settings.cshtml:73 api\v1\me\profile-picture.cshtml:182
+# api\v1\me\profile.cshtml:99 api\v1\me\profile.cshtml:135
+# api\v1\me\profile.cshtml:141 api\v1\me\profile.cshtml:148
+# api\v1\search.cshtml:225
+# api\v1\me\addresses.cshtml:229
+# api\v1\me\addresses.cshtml:241
+# api\v1\me\addresses.cshtml:328
+# api\v1\me\addresses.cshtml:477
+# api\v1\me\addresses.cshtml:518
+# api\v1\me\addresses.cshtml:571
+# api\v1\me\addresses.cshtml:621
+# api\v1\me\calendar-syncing.cshtml:48
+# api\v1\me\calendar-syncing.cshtml:77
+# api\v1\me\marketplace-profile.cshtml:65
+# api\v1\me\messaging.cshtml:125
+# api\v1\me\messaging.cshtml:144
+# api\v1\me\messaging.cshtml:151
+# api\v1\me\messaging.cshtml:167
+# api\v1\me\messaging.cshtml:178
+# api\v1\me\messaging.cshtml:263
+# api\v1\me\messaging.cshtml:270
+# api\v1\me\owner-acknowledgment.cshtml:37
+# api\v1\me\payment-account.cshtml:55
+# api\v1\me\payment-account.cshtml:64
+# api\v1\me\payment-plan.cshtml:57
+# api\v1\me\payment-plan.cshtml:63
+# api\v1\me\privacy-settings.cshtml:64
+# api\v1\me\privacy-settings.cshtml:73
+# api\v1\me\profile-picture.cshtml:182
+# api\v1\me\profile.cshtml:99
+# api\v1\me\profile.cshtml:135
+# api\v1\me\profile.cshtml:141
+# api\v1\me\profile.cshtml:148
+# api\v1\job-titles.cshtml:63 api\v1\postal-codes.cshtml:43
+# App_Code\RestPages\RestUserJobProfile.cs:38
+# App_Code\RestPages\RestUserJobProfile.cs:271
+# api\v1\auth\change-password.cshtml:48 api\v1\auth\login.cshtml:58
+# api\v1\auth\signup.cshtml:102 api\v1\me\client-booking.cshtml:111
+# api\v1\me\client-booking.cshtml:122 api\v1\me\client-booking.cshtml:147
+# api\v1\me\clients.cshtml:97 api\v1\me\clients.cshtml:145
+# api\v1\me\clients.cshtml:194 api\v1\me\education.cshtml:64
+# api\v1\me\education.cshtml:112 api\v1\me\education.cshtml:154
+# api\v1\me\service-professional-booking.cshtml:238
+# api\v1\me\service-professional-services.cshtml:160
+# api\v1\me\weekly-schedule.cshtml:125 api\v1\users\job-profile.cshtml:54
+# api\v1\job-titles.cshtml:59
+# api\v1\postal-codes.cshtml:43
+# api\v1\auth\change-password.cshtml:48
+# api\v1\auth\login.cshtml:58
+# api\v1\auth\signup.cshtml:102
+# api\v1\me\client-booking.cshtml:111
+# api\v1\me\client-booking.cshtml:122
+# api\v1\me\client-booking.cshtml:147
+# api\v1\me\clients.cshtml:97
+# api\v1\me\clients.cshtml:145
+# api\v1\me\clients.cshtml:194
+# api\v1\me\education.cshtml:64
+# api\v1\me\education.cshtml:112
+# api\v1\me\education.cshtml:154
+# api\v1\me\weekly-schedule.cshtml:125
+# api\v1\users\job-profile.cshtml:55
+# api\v1\Test.cshtml:120
+# api\v1\Test.cshtml:110
+# App_Code\LcRessources.cs:13 api\v1\me\profile.cshtml:131
+# App_Code\LcRessources.cs:13
+# api\v1\me\profile.cshtml:131
+#. TRANSLATORS: format is client based
+#. App_Code\LcRest\Booking.cs:2490
+#. App_Code\LcRest\Booking.cs:2478
+#. api\v1\me\addresses.cshtml:338 api\v1\me\client-booking.cshtml:208
+#. api\v1\me\addresses.cshtml:338
+#. api\v1\me\client-booking.cshtml:208
+#. api\v1\me\addresses.cshtml:339 api\v1\me\client-booking.cshtml:209
+#. api\v1\me\addresses.cshtml:339
+#. api\v1\me\client-booking.cshtml:209
+#. api\v1\me\addresses.cshtml:337 api\v1\me\client-booking.cshtml:210
+#. api\v1\me\addresses.cshtml:337
+#. api\v1\me\client-booking.cshtml:210
+#. api\v1\me\bookings.cshtml:50 api\v1\me\client-booking.cshtml:177
+#. api\v1\me\bookings.cshtml:50
+#. api\v1\me\client-booking.cshtml:177
+#. App_Code\LcRest\Booking.cs:1308
+#. App_Code\LcRest\Booking.cs:1296
+#. App_Code\LcRest\Booking.cs:878
+#. App_Code\LcRest\Booking.cs:866
+#. api\v1\me\client-booking.cshtml:224 api\v1\me\client-booking.cshtml:230
+#. api\v1\me\client-booking.cshtml:224
+#. api\v1\me\client-booking.cshtml:230
+#. App_Code\LcRest\Booking.cs:2141 App_Code\LcRest\Booking.cs:2661
+#. App_Code\LcRest\Booking.cs:2129
+#. App_Code\LcRest\Booking.cs:2649
+#. _specialRoutes\app.html:107 _specialRoutes\app.html:206
+#. _specialRoutes\app.html:3957 _specialRoutes\app.html:9764
+#. _specialRoutes\app.html:107
+#. _specialRoutes\app.html:206
+#. _specialRoutes\app.html:3957
+#. _specialRoutes\app.html:9764
+#. App_Code\LcAuthHelper.cs:452
+#. App_Code\LcAuthHelper.cs:461
+#. api\v1\me\external-listings.cshtml:54 api\v1\me\external-listings.cshtml:142
+#. api\v1\me\external-listings.cshtml:54
+#. api\v1\me\external-listings.cshtml:142
+#. App_Code\LcAuthHelper.cs:501
+#. App_Code\LcAuthHelper.cs:509
+#. App_Code\LcRest\Booking.cs:1574
+#. App_Code\LcRest\Booking.cs:1562
+#. App_Code\LcRest\Booking.cs:2264 App_Code\LcRest\Booking.cs:2925
+#. App_Code\LcRest\Booking.cs:2252
+#. App_Code\LcRest\Booking.cs:2913
+#. api\v1\pricing-types.cshtml:134
+#. api\v1\pricing-types.cshtml:158
+#. App_Code\LcRest\UserExternalListing.cs:121
+#. App_Code\RestPages\RestUserJobProfile.cs:117
+#. App_Code\RestPages\RestUserJobProfile.cs:267
+#. api\v1\job-titles.cshtml:60 App_Code\RestPages\RestUserJobProfile.cs:30
+#. api\v1\users\job-profile.cshtml:77
+#. api\v1\job-titles.cshtml:56
+#. api\v1\users\job-profile.cshtml:78
+#. api\v1\me\addresses.cshtml:334 api\v1\me\client-booking.cshtml:212
+#. api\v1\me\addresses.cshtml:334
+#. api\v1\me\client-booking.cshtml:212
+#. api\v1\me\addresses.cshtml:335 api\v1\me\client-booking.cshtml:213
+#. api\v1\me\addresses.cshtml:335
+#. api\v1\me\client-booking.cshtml:213
+#. api\v1\me\profile-picture.cshtml:126 api\v1\me\work-photos.cshtml:119
+#. api\v1\me\licenses-certifications.cshtml:93
+#. api\v1\me\profile-picture.cshtml:126
+#. api\v1\me\work-photos.cshtml:119
+#. api\v1\me\client-booking.cshtml:163 api\v1\me\client-booking.cshtml:175
+#. api\v1\me\events.cshtml:270 api\v1\me\events.cshtml:283
+#. api\v1\me\client-booking.cshtml:163
+#. api\v1\me\client-booking.cshtml:175
+#. api\v1\me\events.cshtml:270
+#. api\v1\me\events.cshtml:283
+#. api\v1\search.cshtml:225 App_Code\RestPages\RestUserJobProfile.cs:74
+#. App_Code\RestPages\RestUserJobProfile.cs:87
+#. App_Code\RestPages\RestUserJobProfile.cs:112
+#. App_Code\RestPages\RestUserJobProfile.cs:121 api\v1\me\addresses.cshtml:229
+#. api\v1\me\addresses.cshtml:241 api\v1\me\addresses.cshtml:328
+#. api\v1\me\addresses.cshtml:477 api\v1\me\addresses.cshtml:518
+#. api\v1\me\addresses.cshtml:571 api\v1\me\addresses.cshtml:621
+#. api\v1\me\calendar-syncing.cshtml:48 api\v1\me\calendar-syncing.cshtml:77
+#. api\v1\me\marketplace-profile.cshtml:56
+#. api\v1\me\marketplace-profile.cshtml:65 api\v1\me\messaging.cshtml:125
+#. api\v1\me\messaging.cshtml:144 api\v1\me\messaging.cshtml:151
+#. api\v1\me\messaging.cshtml:167 api\v1\me\messaging.cshtml:178
+#. api\v1\me\messaging.cshtml:263 api\v1\me\messaging.cshtml:270
+#. api\v1\me\owner-acknowledgment.cshtml:29
+#. api\v1\me\owner-acknowledgment.cshtml:37 api\v1\me\payment-account.cshtml:55
+#. api\v1\me\payment-account.cshtml:64 api\v1\me\payment-plan.cshtml:57
+#. api\v1\me\payment-plan.cshtml:63 api\v1\me\privacy-settings.cshtml:64
+#. api\v1\me\privacy-settings.cshtml:73 api\v1\me\profile-picture.cshtml:182
+#. api\v1\me\profile.cshtml:99 api\v1\me\profile.cshtml:135
+#. api\v1\me\profile.cshtml:141 api\v1\me\profile.cshtml:148
+#. api\v1\search.cshtml:225
+#. api\v1\me\addresses.cshtml:229
+#. api\v1\me\addresses.cshtml:241
+#. api\v1\me\addresses.cshtml:328
+#. api\v1\me\addresses.cshtml:477
+#. api\v1\me\addresses.cshtml:518
+#. api\v1\me\addresses.cshtml:571
+#. api\v1\me\addresses.cshtml:621
+#. api\v1\me\calendar-syncing.cshtml:48
+#. api\v1\me\calendar-syncing.cshtml:77
+#. api\v1\me\marketplace-profile.cshtml:65
+#. api\v1\me\messaging.cshtml:125
+#. api\v1\me\messaging.cshtml:144
+#. api\v1\me\messaging.cshtml:151
+#. api\v1\me\messaging.cshtml:167
+#. api\v1\me\messaging.cshtml:178
+#. api\v1\me\messaging.cshtml:263
+#. api\v1\me\messaging.cshtml:270
+#. api\v1\me\owner-acknowledgment.cshtml:37
+#. api\v1\me\payment-account.cshtml:55
+#. api\v1\me\payment-account.cshtml:64
+#. api\v1\me\payment-plan.cshtml:57
+#. api\v1\me\payment-plan.cshtml:63
+#. api\v1\me\privacy-settings.cshtml:64
+#. api\v1\me\privacy-settings.cshtml:73
+#. api\v1\me\profile-picture.cshtml:182
+#. api\v1\me\profile.cshtml:99
+#. api\v1\me\profile.cshtml:135
+#. api\v1\me\profile.cshtml:141
+#. api\v1\me\profile.cshtml:148
+#. api\v1\job-titles.cshtml:63 api\v1\postal-codes.cshtml:43
+#. App_Code\RestPages\RestUserJobProfile.cs:38
+#. App_Code\RestPages\RestUserJobProfile.cs:271
+#. api\v1\auth\change-password.cshtml:48 api\v1\auth\login.cshtml:58
+#. api\v1\auth\signup.cshtml:102 api\v1\me\client-booking.cshtml:111
+#. api\v1\me\client-booking.cshtml:122 api\v1\me\client-booking.cshtml:147
+#. api\v1\me\clients.cshtml:97 api\v1\me\clients.cshtml:145
+#. api\v1\me\clients.cshtml:194 api\v1\me\education.cshtml:64
+#. api\v1\me\education.cshtml:112 api\v1\me\education.cshtml:154
+#. api\v1\me\service-professional-booking.cshtml:238
+#. api\v1\me\service-professional-services.cshtml:160
+#. api\v1\me\weekly-schedule.cshtml:125 api\v1\users\job-profile.cshtml:54
+#. api\v1\job-titles.cshtml:59
+#. api\v1\postal-codes.cshtml:43
+#. api\v1\auth\change-password.cshtml:48
+#. api\v1\auth\login.cshtml:58
+#. api\v1\auth\signup.cshtml:102
+#. api\v1\me\client-booking.cshtml:111
+#. api\v1\me\client-booking.cshtml:122
+#. api\v1\me\client-booking.cshtml:147
+#. api\v1\me\clients.cshtml:97
+#. api\v1\me\clients.cshtml:145
+#. api\v1\me\clients.cshtml:194
+#. api\v1\me\education.cshtml:64
+#. api\v1\me\education.cshtml:112
+#. api\v1\me\education.cshtml:154
+#. api\v1\me\weekly-schedule.cshtml:125
+#. api\v1\users\job-profile.cshtml:55
+#. api\v1\Test.cshtml:120
+#. api\v1\Test.cshtml:110
+#. App_Code\LcRessources.cs:13 api\v1\me\profile.cshtml:131
+#. App_Code\LcRessources.cs:13
+#. api\v1\me\profile.cshtml:131
+#, App_Code\LcRest\Booking.cs:2490
+#, App_Code\LcRest\Booking.cs:2478
+#, api\v1\me\addresses.cshtml:338 api\v1\me\client-booking.cshtml:208
+#, api\v1\me\addresses.cshtml:338
+#, api\v1\me\client-booking.cshtml:208
+#, api\v1\me\addresses.cshtml:339 api\v1\me\client-booking.cshtml:209
+#, api\v1\me\addresses.cshtml:339
+#, api\v1\me\client-booking.cshtml:209
+#, api\v1\me\addresses.cshtml:337 api\v1\me\client-booking.cshtml:210
+#, api\v1\me\addresses.cshtml:337
+#, api\v1\me\client-booking.cshtml:210
+#, api\v1\me\bookings.cshtml:50 api\v1\me\client-booking.cshtml:177
+#, api\v1\me\bookings.cshtml:50
+#, api\v1\me\client-booking.cshtml:177
+#, App_Code\LcRest\Booking.cs:1308
+#, App_Code\LcRest\Booking.cs:1296
+#, App_Code\LcRest\Booking.cs:878
+#, App_Code\LcRest\Booking.cs:866
+#, api\v1\me\client-booking.cshtml:224 api\v1\me\client-booking.cshtml:230
+#, api\v1\me\client-booking.cshtml:224
+#, api\v1\me\client-booking.cshtml:230
+#, App_Code\LcRest\Booking.cs:2141 App_Code\LcRest\Booking.cs:2661
+#, App_Code\LcRest\Booking.cs:2129
+#, App_Code\LcRest\Booking.cs:2649
+#, _specialRoutes\app.html:107 _specialRoutes\app.html:206
+#, _specialRoutes\app.html:3957 _specialRoutes\app.html:9764
+#, _specialRoutes\app.html:107
+#, _specialRoutes\app.html:206
+#, _specialRoutes\app.html:3957
+#, _specialRoutes\app.html:9764
+#, App_Code\LcAuthHelper.cs:452
+#, App_Code\LcAuthHelper.cs:461
+#, api\v1\me\external-listings.cshtml:54 api\v1\me\external-listings.cshtml:142
+#, api\v1\me\external-listings.cshtml:54
+#, api\v1\me\external-listings.cshtml:142
+#, App_Code\LcAuthHelper.cs:501
+#, App_Code\LcAuthHelper.cs:509
+#, App_Code\LcRest\Booking.cs:1574
+#, App_Code\LcRest\Booking.cs:1562
+#, App_Code\LcRest\Booking.cs:2264 App_Code\LcRest\Booking.cs:2925
+#, App_Code\LcRest\Booking.cs:2252
+#, App_Code\LcRest\Booking.cs:2913
+#, api\v1\pricing-types.cshtml:134
+#, api\v1\pricing-types.cshtml:158
+#, App_Code\LcRest\UserExternalListing.cs:121
+#, App_Code\RestPages\RestUserJobProfile.cs:117
+#, App_Code\RestPages\RestUserJobProfile.cs:267
+#, api\v1\job-titles.cshtml:60 App_Code\RestPages\RestUserJobProfile.cs:30
+#, api\v1\users\job-profile.cshtml:77
+#, api\v1\job-titles.cshtml:56
+#, api\v1\users\job-profile.cshtml:78
+#, api\v1\me\addresses.cshtml:334 api\v1\me\client-booking.cshtml:212
+#, api\v1\me\addresses.cshtml:334
+#, api\v1\me\client-booking.cshtml:212
+#, api\v1\me\addresses.cshtml:335 api\v1\me\client-booking.cshtml:213
+#, api\v1\me\addresses.cshtml:335
+#, api\v1\me\client-booking.cshtml:213
+#, api\v1\me\profile-picture.cshtml:126 api\v1\me\work-photos.cshtml:119
+#, api\v1\me\licenses-certifications.cshtml:93
+#, api\v1\me\profile-picture.cshtml:126
+#, api\v1\me\work-photos.cshtml:119
+#, api\v1\me\client-booking.cshtml:163 api\v1\me\client-booking.cshtml:175
+#, api\v1\me\events.cshtml:270 api\v1\me\events.cshtml:283
+#, api\v1\me\client-booking.cshtml:163
+#, api\v1\me\client-booking.cshtml:175
+#, api\v1\me\events.cshtml:270
+#, api\v1\me\events.cshtml:283
+#, api\v1\search.cshtml:225 App_Code\RestPages\RestUserJobProfile.cs:74
+#, App_Code\RestPages\RestUserJobProfile.cs:87
+#, App_Code\RestPages\RestUserJobProfile.cs:112
+#, App_Code\RestPages\RestUserJobProfile.cs:121 api\v1\me\addresses.cshtml:229
+#, api\v1\me\addresses.cshtml:241 api\v1\me\addresses.cshtml:328
+#, api\v1\me\addresses.cshtml:477 api\v1\me\addresses.cshtml:518
+#, api\v1\me\addresses.cshtml:571 api\v1\me\addresses.cshtml:621
+#, api\v1\me\calendar-syncing.cshtml:48 api\v1\me\calendar-syncing.cshtml:77
+#, api\v1\me\marketplace-profile.cshtml:56
+#, api\v1\me\marketplace-profile.cshtml:65 api\v1\me\messaging.cshtml:125
+#, api\v1\me\messaging.cshtml:144 api\v1\me\messaging.cshtml:151
+#, api\v1\me\messaging.cshtml:167 api\v1\me\messaging.cshtml:178
+#, api\v1\me\messaging.cshtml:263 api\v1\me\messaging.cshtml:270
+#, api\v1\me\owner-acknowledgment.cshtml:29
+#, api\v1\me\owner-acknowledgment.cshtml:37 api\v1\me\payment-account.cshtml:55
+#, api\v1\me\payment-account.cshtml:64 api\v1\me\payment-plan.cshtml:57
+#, api\v1\me\payment-plan.cshtml:63 api\v1\me\privacy-settings.cshtml:64
+#, api\v1\me\privacy-settings.cshtml:73 api\v1\me\profile-picture.cshtml:182
+#, api\v1\me\profile.cshtml:99 api\v1\me\profile.cshtml:135
+#, api\v1\me\profile.cshtml:141 api\v1\me\profile.cshtml:148
+#, api\v1\search.cshtml:225
+#, api\v1\me\addresses.cshtml:229
+#, api\v1\me\addresses.cshtml:241
+#, api\v1\me\addresses.cshtml:328
+#, api\v1\me\addresses.cshtml:477
+#, api\v1\me\addresses.cshtml:518
+#, api\v1\me\addresses.cshtml:571
+#, api\v1\me\addresses.cshtml:621
+#, api\v1\me\calendar-syncing.cshtml:48
+#, api\v1\me\calendar-syncing.cshtml:77
+#, api\v1\me\marketplace-profile.cshtml:65
+#, api\v1\me\messaging.cshtml:125
+#, api\v1\me\messaging.cshtml:144
+#, api\v1\me\messaging.cshtml:151
+#, api\v1\me\messaging.cshtml:167
+#, api\v1\me\messaging.cshtml:178
+#, api\v1\me\messaging.cshtml:263
+#, api\v1\me\messaging.cshtml:270
+#, api\v1\me\owner-acknowledgment.cshtml:37
+#, api\v1\me\payment-account.cshtml:55
+#, api\v1\me\payment-account.cshtml:64
+#, api\v1\me\payment-plan.cshtml:57
+#, api\v1\me\payment-plan.cshtml:63
+#, api\v1\me\privacy-settings.cshtml:64
+#, api\v1\me\privacy-settings.cshtml:73
+#, api\v1\me\profile-picture.cshtml:182
+#, api\v1\me\profile.cshtml:99
+#, api\v1\me\profile.cshtml:135
+#, api\v1\me\profile.cshtml:141
+#, api\v1\me\profile.cshtml:148
+#, api\v1\job-titles.cshtml:63 api\v1\postal-codes.cshtml:43
+#, App_Code\RestPages\RestUserJobProfile.cs:38
+#, App_Code\RestPages\RestUserJobProfile.cs:271
+#, api\v1\auth\change-password.cshtml:48 api\v1\auth\login.cshtml:58
+#, api\v1\auth\signup.cshtml:102 api\v1\me\client-booking.cshtml:111
+#, api\v1\me\client-booking.cshtml:122 api\v1\me\client-booking.cshtml:147
+#, api\v1\me\clients.cshtml:97 api\v1\me\clients.cshtml:145
+#, api\v1\me\clients.cshtml:194 api\v1\me\education.cshtml:64
+#, api\v1\me\education.cshtml:112 api\v1\me\education.cshtml:154
+#, api\v1\me\service-professional-booking.cshtml:238
+#, api\v1\me\service-professional-services.cshtml:160
+#, api\v1\me\weekly-schedule.cshtml:125 api\v1\users\job-profile.cshtml:54
+#, api\v1\job-titles.cshtml:59
+#, api\v1\postal-codes.cshtml:43
+#, api\v1\auth\change-password.cshtml:48
+#, api\v1\auth\login.cshtml:58
+#, api\v1\auth\signup.cshtml:102
+#, api\v1\me\client-booking.cshtml:111
+#, api\v1\me\client-booking.cshtml:122
+#, api\v1\me\client-booking.cshtml:147
+#, api\v1\me\clients.cshtml:97
+#, api\v1\me\clients.cshtml:145
+#, api\v1\me\clients.cshtml:194
+#, api\v1\me\education.cshtml:64
+#, api\v1\me\education.cshtml:112
+#, api\v1\me\education.cshtml:154
+#, api\v1\me\weekly-schedule.cshtml:125
+#, api\v1\users\job-profile.cshtml:55
+#, api\v1\Test.cshtml:120
+#, api\v1\Test.cshtml:110
+#, App_Code\LcRessources.cs:13 api\v1\me\profile.cshtml:131
+#, App_Code\LcRessources.cs:13
+#, api\v1\me\profile.cshtml:131
+#~ msgid ""
+#~ msgstr ""
+
+#~ msgid "\\"{0}\\" requires at least one selection"
+#~ msgstr ""
+
+#~ msgid "{0} {1}'s phone number: {2}"
+#~ msgstr ""
+
+#~ msgid "{0} has a not valid value"
+#~ msgstr ""
+
+#~ msgid "{0} is required"
+#~ msgstr ""
+
+#~ msgid "{0} services"
+#~ msgstr ""
+
+#~ msgid "Home Page"
+#~ msgstr "US website"
+
+#~ msgid "I specialize in"
+#~ msgstr ""
+
+#~ msgid "Incorrect username or password."
+#~ msgstr ""
+
+#~ msgid "Instructions to reset your password have been sent to {0}. Please check your spam folder if you don't see it."
+#~ msgstr ""
+
+#~ msgid "Job Title not found or disapproved"
+#~ msgstr ""
+
+#~ msgid "Modify this template to jump-start your ASP.NET Web Pages application."
+#~ msgstr ""
+
+#~ msgid "The file is too large, maximum file size is {0}"
+#~ msgstr ""
+
+#~ msgid "The Job Title '%0' is not allowed."
+#~ msgstr ""
+
+#~ msgid "The time {0} is not available, it conflicts with a recent appointment!"
+#~ msgstr ""
+
+#~ msgid "To learn more about ASP.NET Web Pages, visit"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "We see one of our service professionals has already scheduled services for you in the past.\n"
+#~ "        We've just sent an invitation to create your account to {0}.\n"
+#~ "        Please follow its instructions. We can't wait to get you on board!"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "We see you have subscribed previously to our newsletter or referrenced a service professional.\n"
+#~ "        We've just sent an invitation to create your account to {0}.\n"
+#~ "        Please follow its instructions. We can't wait to get you on board!"
+#~ msgstr ""
+
+#~ msgid "You must complete another {0} steps to activate this profile."
+#~ msgstr ""
+

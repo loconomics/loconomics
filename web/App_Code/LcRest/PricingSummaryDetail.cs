@@ -267,6 +267,7 @@ namespace LcRest
             if (String.IsNullOrEmpty(f))
                 f = pricingConfig.NameAndSummaryFormat;
 
+            // TODO: i18n
             if (pricingConfig.InPersonPhoneLabel != null)
                 inpersonphone = service.isPhone
                     ? "phone"

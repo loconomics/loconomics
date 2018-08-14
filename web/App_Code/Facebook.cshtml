@@ -141,11 +141,11 @@
     ///<param name="userId">The user name to associate the current logged-in facebook account to.</param>
     public static void AssociateMembershipAccount(string userName) {
         if (!IsFacebookUserAuthenticated) {
-            throw new InvalidOperationException("No Facebook user is authenticated.");
+            throw new InvalidOperationException("[[[No Facebook user is authenticated.]]]");
         }
         
         if (IsFacebookUserAssociated) {
-            throw new InvalidOperationException("The authenticated Facebook user is already associated to a membership account.");
+            throw new InvalidOperationException("[[[The authenticated Facebook user is already associated to a membership account.]]]");
         }
         
         using (Database db = Database.Open(MembershipDBName)) {
@@ -238,7 +238,7 @@
             var args = HttpUtility.ParseQueryString(value.Replace("\"", ""));
 
             if (!IsFacebookCookieValid(args)) {
-                throw new SecurityException("Invalid Facebook cookie.");
+                throw new SecurityException("[[[Invalid Facebook cookie.]]]");
             }
 
             return args[key];

@@ -18,11 +18,11 @@ public static partial class LcCalendar
         const int MAX_GETTIMELINE_PASSES = 255;
         static readonly Dictionary<int, string> PublicAvailabilityNames = new Dictionary<int, string>
         {
-            { (int)LcCalendar.AvailabilityType.Busy, "busy" },
-            { (int)LcCalendar.AvailabilityType.Free, "free" },
-            { (int)LcCalendar.AvailabilityType.Transparent, "transparent" },
-            { (int)LcCalendar.AvailabilityType.Tentative, "tentative" },
-            { (int)LcCalendar.AvailabilityType.Unavailable, "unavailable" },
+            { (int)LcCalendar.AvailabilityType.Busy, "[[[busy]]]" },
+            { (int)LcCalendar.AvailabilityType.Free, "[[[free]]]" },
+            { (int)LcCalendar.AvailabilityType.Transparent, "[[[transparent]]]" },
+            { (int)LcCalendar.AvailabilityType.Tentative, "[[[tentative]]]" },
+            { (int)LcCalendar.AvailabilityType.Unavailable, "[[[unavailable]]]" },
         };
         static readonly Dictionary<int, int> AvailabilityPriorities = new Dictionary<int, int>
         {
@@ -498,7 +498,7 @@ public static partial class LcCalendar
                 if (needsAnotherPass)
                 {
                     // Stack overflow, excessive passes, control:
-                    if (passNumber + 1 > MAX_GETTIMELINE_PASSES) throw new Exception("Impossible to compute availability.");
+                    if (passNumber + 1 > MAX_GETTIMELINE_PASSES) throw new Exception("[[[Impossible to compute availability.]]]");
                     prevsBuffer = GetTimeline(prevsBuffer.OrderBy(x => x.StartTime), passNumber + 1).ToList();
                 }
             }

@@ -70,7 +70,7 @@
                 return LcRest.Booking.Get(itemID, true, false, userID);
             }
 
-            throw new HttpException(404, "Booking not found.");
+            throw new HttpException(404, "[[[Booking not found.]]]");
         }
 
 
@@ -97,12 +97,12 @@
         {
             Validation.RequireField("serviceAddress[postalCode]", LcRessources.RequiredField("Zip Code"));
             Validation.RequireField("serviceAddress[addressLine1]", LcRessources.RequiredField("Address Line 1"));
-            Validation.Add("serviceAddress[addressLine1]", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
-            Validation.Add("serviceAddress[addressLine2]", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
-            Validation.Add("serviceAddress[addressName]", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
-            Validation.Add("serviceAddress[specialInstructions]", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
-            Validation.Add("serviceAddress[latitude]", Validator.Decimal("Latitude must be a number"));
-            Validation.Add("serviceAddress[longitude]", Validator.Decimal("Longitude must be a number"));
+            Validation.Add("serviceAddress[addressLine1]", Validator.StringLength(100, 0, "[[[Address Line 1 must be fewer than 100 characters.]]]"));
+            Validation.Add("serviceAddress[addressLine2]", Validator.StringLength(100, 0, "[[[Address Line 2 must be fewer than 100 characters.]]]"));
+            Validation.Add("serviceAddress[addressName]", Validator.StringLength(50, 0, "[[[Address Name must be fewer than 50 characters.]]]"));
+            Validation.Add("serviceAddress[specialInstructions]", Validator.StringLength(1000, 0, "[[[Special instructions must be fewer than 1,000 characters.]]]"));
+            Validation.Add("serviceAddress[latitude]", Validator.Decimal("[[[Latitude must be a number]]]"));
+            Validation.Add("serviceAddress[longitude]", Validator.Decimal("[[[Longitude must be a number]]]"));
         }
 
         public List<int> GetFormServices()
@@ -113,13 +113,13 @@
             */
             if (!Request.Form.AllKeys.Contains<string>("services[]"))
             {
-                ModelState.AddError("services", "Choose at least one service");
+                ModelState.AddError("services", "[[[Choose at least one service]]]");
             }
             var services = Request.Form.GetValues("services[]");
             var servicesIds = new List<int>();
             if (services == null || services.Length < 1)
             {
-                ModelState.AddError("services", "Choose at least one service");
+                ModelState.AddError("services", "[[[Choose at least one service]]]");
             }
             else
             {
@@ -128,7 +128,7 @@
                     var sid = serviceItem.AsInt(0);
                     if (sid == 0)
                     {
-                        ModelState.AddError("services", "Some specified services are incorrect");
+                        ModelState.AddError("services", "[[[Some specified services are incorrect]]]");
                         break;
                     }
                     servicesIds.Add(sid);
@@ -151,7 +151,7 @@
             
             var startTime = DateTimeOffsetFromISO(Request["startTime"]);
             if (!startTime.HasValue) {
-                ModelState.AddError("startTime", "Start date/time is not valid");
+                ModelState.AddError("startTime", "[[[Start date/time is not valid]]]");
             }
 
             // Read services
@@ -235,7 +235,7 @@
                 var booking = LcRest.Booking.Get(bookingID, false, true, userID);
                 if (booking == null ||
                     booking.serviceProfessionalUserID != userID) {
-                    throw new HttpException(404, "Not Found");
+                    throw new HttpException(404, "[[[Not Found]]]");
                 }
                 StatusCode = 200;
                 if (UrlData[1] == "cancel") {
@@ -256,7 +256,7 @@
                     return LcRest.Booking.Get(bookingID, true);
                 }
             }
-            throw new HttpException(405, "Method not allowed.");
+            throw new HttpException(405, "[[[Method not allowed.]]]");
         }
 
         public override dynamic Put()
@@ -267,9 +267,9 @@
 
             if (updated == null) {
                 if (UrlData.Count == 0)
-                    throw new HttpException(405, "Method not allowed.");
+                    throw new HttpException(405, "[[[Method not allowed.]]]");
                 else
-                    throw new HttpException(404, "Booking not found.");
+                    throw new HttpException(404, "[[[Booking not found.]]]");
             }
 
             return updated;

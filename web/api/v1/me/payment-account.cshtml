@@ -52,7 +52,7 @@
         public override dynamic Get()
         {
             if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
 
             return GetData();
@@ -61,7 +61,7 @@
         public override dynamic Put()
         {
             if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
 
             var userId = WebSecurity.CurrentUserId;
@@ -80,7 +80,7 @@
 
             if (!Request["agree"].AsBool())
             {
-                ModelState.AddError("agree", "You must agree the terms of service");
+                ModelState.AddError("agree", "[[[You must agree the terms of service]]]");
             }
 
             if (!Request["isVenmo"].AsBool())

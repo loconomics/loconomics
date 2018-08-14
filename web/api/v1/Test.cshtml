@@ -35,17 +35,27 @@
         public override dynamic Get()
         {
             if (!Request["givemeerror"].IsEmpty()) {
-                throw new HttpException(500, Request["givemeerror"]);
+                throw new HttpException(Request["givemeerror"].AsInt(), Request["givemeerror"] + " [[[Give me an error]]]");
             }
-        
+
             if (!UrlData[0].IsEmpty()) {
-                throw new HttpException(404, "Not found: (" + UrlData[0] + ")");
+                throw new HttpException(404, string.Format( "Not found: ({0})", UrlData[0]));
+            }
+
+            if (!Request["i18n"].IsEmpty())
+            {
+                var message = string.Format("[[[\"%0\" requires at least one selection|||{0}]]]", Request["i18n"]);
+                //var message = string.Format("[[[welcome %1, today is %0|||{0}|||{1}]]]", "Tuesday", "Iago");
+                //var message = string.Format("[[[welcome %1, today is %0|||{0}|||{2}]]]", "Tuesday", "Iago", "Sam");
+                //var message = string.Format("[[[%0 %1's phone number: %2|||{0}|||{1}|||{2}]]]\n", "sam", "wa", "0411486180");
+                //var message = string.Format("[[[Impossible to know transaction details, please contact support. BookingID #%0|||{0}]]]", "1");
+                return new { rows = new object[] { }, message = message };
             }
 
             if (Request["name"] == "userpos") {
                 var pos = LcData.UserInfo.GetUserPos();
                 if (pos == null || pos.Count == 0)
-                    return new { rows = new object[]{}, message = "You have not positions. Logged?" };
+                    return new { rows = new object[]{}, message = "[[[You have not positions. Logged?]]]" };
                 else
                     return new { rows = LcData.UserInfo.GetUserPos() };
             }
@@ -65,7 +75,7 @@
                 throw new HttpException(500, Request["givemeerror"]);
             }
             if (!UrlData[0].IsEmpty()) {
-                throw new HttpException(500, "Cannot POST to an item");
+                throw new HttpException(500, "[[[Cannot POST to an item]]]");
             }
 
             return editItem();
@@ -79,11 +89,11 @@
             var v = validateItemID();
             if (v != null)
                 return v;
-                
+
             var updated = editItem();
 
             updated["ItemID"] = UrlData[0];
-        
+
             // OK
             StatusCode = 200;
             return updated;
@@ -102,40 +112,40 @@
             StatusCode = 204;
             return null;
         }
-        
+
         dynamic editItem() {
-        
-            Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
+
+            Validation.Add("short", Validator.StringLength(5, 0, "[[[Short must be 5 or less]]]"));
             Validation.RequireField("name", LcRessources.RequiredField("Name"));
-            Validation.Add("num", Validator.Decimal("Num must be a number"));
-        
+            Validation.Add("num", Validator.Decimal("[[[Num must be a number]]]"));
+
             if (Validation.IsValid()) {
-            
+
                 // Creating a bit of something, an ID and the same input data
                 // TODO: itemData needs to be filtered!
                 var itemData = Request.Form.AllKeys.ToDictionary(key => key, key => Request.Form[key]);
                 itemData["ItemID"] = new Random().Next(0, 100).ToString();
-           
+
                 // HTTP 201: 'Ok, Created'
                 StatusCode = 201;
-            
+
                 return itemData;
             }
             else {
                 // Bad request, input data incorrect because of validation rules
-                throw new HttpException(400, "Validation rules");
+                throw new HttpException(400, "[[[Validation rules]]]");
             }
         }
-    
+
         dynamic validateItemID() {
 
             if (UrlData[0].IsEmpty()) {
                 // Bad Request
                 StatusCode = 400;
                 return new {
-                    errorMessage = "Validation rules",
+                    errorMessage = "[[[Validation rules]]]",
                     errors = new {
-                        id = "An Item ID is required at the URL"
+                        id = "[[[An Item ID is required at the URL]]]"
                     }
                 };
             }
@@ -143,9 +153,9 @@
                 // Bad Request
                 WebPage.Response.StatusCode = 400;
                 return new {
-                    errorMessage = "Validation rules",
+                    errorMessage = "[[[Validation rules]]]",
                     errors = new {
-                        id = "The Item ID must be an integer"
+                        id = "[[[The Item ID must be an integer]]]"
                     }
                 };
             }

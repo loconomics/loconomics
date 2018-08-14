@@ -15,6 +15,16 @@
             System.Web.Helpers.WebMail.SmtpServer = ConfigurationManager.AppSettings["smtpHost"];
             System.Web.Helpers.WebMail.SmtpPort = (int)ConfigurationManager.AppSettings["smtpPort"].AsLong();
             System.Web.Helpers.WebMail.EnableSsl = ConfigurationManager.AppSettings["smtpEnableSsl"] == "true";
+
+            i18n.LocalizedApplication.Current.TweakMessageTranslation = delegate(System.Web.HttpContextBase context, i18n.Helpers.Nugget nugget, i18n.LanguageTag langtag, string message)
+            {
+                switch (context.Response.ContentType)
+                {
+                    case "application/json":
+                        return message.Replace("\"", "\\\"");
+                }
+                return message;
+            };
         }
     }
 
@@ -107,7 +117,7 @@
         // database preferences.
         System.Threading.Thread.CurrentThread.CurrentCulture =
         System.Threading.Thread.CurrentThread.CurrentUICulture =
-        System.Globalization.CultureInfo.CreateSpecificCulture("en-US");
+        System.Globalization.CultureInfo.CreateSpecificCulture(i18n.LocalizedApplication.Current.DefaultLanguage);
 
         // REST OPTIONS preflight request. Be fast and response OK
         // Asp.net will always includes the custom headers from web.config

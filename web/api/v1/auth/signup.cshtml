@@ -100,9 +100,8 @@
                 {
                     return LcAuthHelper.FacebookSignup(this.WebPage);
                 }
-                else
-                {
-                    throw new HttpException(404, "Not Found");
+                else {
+                    throw new HttpException(404, "[[[Not Found]]]");
                 }
             }
             else
@@ -174,14 +173,14 @@
                 var isClient = type == "client";
                 if (!isClient)
                 {
-                    Validation.RequireField("institutionID", "You must select an institution.");
-                    Validation.RequireField("cccUserType", "You must select user type.");
+                    Validation.RequireField("institutionID", "[[[You must select an institution.]]]");
+                    Validation.RequireField("cccUserType", "[[[You must select user type.]]]");
                     var isStudent = type == "student";
                     if (isStudent)
                     {
-                        Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
-                        Validation.RequireField("genderID", "You must select a gender.");
-                        Validation.RequireField("birthDate", "You must denote your birh date.");
+                        Validation.RequireField("fieldOfStudyID", "[[[You must select a field of study.]]]");
+                        Validation.RequireField("genderID", "[[[You must select a gender.]]]");
+                        Validation.RequireField("birthDate", "[[[You must denote your birh date.]]]");
                     }
                 }
             }

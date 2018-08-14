@@ -51,7 +51,7 @@
                     return item;
                 }
 
-                throw new HttpException(404, "External Listing not found.");
+                throw new HttpException(404, "[[[External Listing not found.]]]");
             }
             else if (UrlData.Count == 0)
             {
@@ -68,8 +68,8 @@
         /// <returns>List of job title IDs parsed</returns>
         IEnumerable<int> ValidateEditableFields()
         {
-            Validation.RequireField("title", "Title is required");
-            Validation.RequireField("jobTitles[]", "Almost 1 related job title must be specified");
+            Validation.RequireField("title", "[[[Title is required]]]");
+            Validation.RequireField("jobTitles[]", "[[[At least 1 related job title must be specified]]]");
             if (!Validation.IsValid())
             {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
@@ -87,7 +87,7 @@
             if (UrlData.Count == 0)
             {
                 // Validation
-                Validation.RequireField("platformID", "Must specify the platform");
+                Validation.RequireField("platformID", "[[[Must specify the platform]]]");
                 var jobTitlesList = ValidateEditableFields();
                 // Parameters
                 int userID = WebSecurity.CurrentUserId;
@@ -139,7 +139,7 @@
 
                 if (!LcRest.UserExternalListing.Update(record))
                 {
-                    throw new HttpException(404, "External Listing not found.");
+                    throw new HttpException(404, "[[[External Listing not found.]]]");
                 }
                 return LcRest.UserExternalListing.Get(userID, itemID);
             }
@@ -162,7 +162,7 @@
                 var deleted = LcRest.UserExternalListing.Get(userID, itemID);
                 if (!LcRest.UserExternalListing.Delete(userID, itemID))
                 {
-                    throw new HttpException(404, "External Listing not found.");
+                    throw new HttpException(404, "[[[External Listing not found.]]]");
                 }
                 return deleted;
             }

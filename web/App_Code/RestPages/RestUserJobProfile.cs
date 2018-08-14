@@ -27,15 +27,15 @@ public class RestUserJobProfile : RestWebPage
                 return item;
             }
 
-            throw new HttpException(404, "Job Title not found.");
+            throw new HttpException(404, "[[[Job Title not found.]]]");
         }
         else if (UrlData.Count == 1)
         {
-            throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+            throw new HttpException(400, "[[[The Job Title ID has bad format (must be an integer number)]]]");
         }
         else if (UrlData.Count > 1)
         {
-            throw new HttpException(404, "Not Found");
+            throw new HttpException(404, "[[[Not Found]]]");
         }
 
         return LcRest.UserJobTitle.GetAllByUser(userId);
@@ -71,7 +71,7 @@ public class RestUserJobProfile : RestWebPage
                         // It cannot be done if record not exists, notify:
                         if (!done)
                         {
-                            throw new HttpException(404, "Not found");
+                            throw new HttpException(404, "[[[Not found]]]");
                         }
                         else
                         {
@@ -84,7 +84,7 @@ public class RestUserJobProfile : RestWebPage
                         // Double check if item exists
                         if (LcRest.UserJobTitle.GetItem(userID, jobTitleID) == null)
                         {
-                            throw new HttpException(404, "Not found");
+                            throw new HttpException(404, "[[[Not found]]]");
                         }
                         else
                         {
@@ -97,7 +97,7 @@ public class RestUserJobProfile : RestWebPage
                                 // be that constraints for 'active profile' were not
                                 // fullfilled to allow manual activation.
                                 // Notify about pending steps:
-                                var alertsMsg = "You must complete another {0} steps to activate this profile.";
+                                var alertsMsg = "[[[You must complete another %0 steps to activate this profile.|||{0}]]]";
                                 var alerts = LcRest.Alert.GetActiveRequiredCount(userID, jobTitleID);
                                 throw new HttpException(400, String.Format(alertsMsg, alerts));
                             }
@@ -109,16 +109,16 @@ public class RestUserJobProfile : RestWebPage
                         }
 
                     default:
-                        throw new HttpException(404, "Not found");
+                        throw new HttpException(404, "[[[Not found]]]");
                 }
             }
             else
             {
-                throw new HttpException(400, "Invalid Job Title ID");
+                throw new HttpException(400, "[[[Invalid Job Title ID]]]");
             }
         }
 
-        throw new HttpException(404, "Not found");
+        throw new HttpException(404, "[[[Not found]]]");
     }
 
     /// <summary>
@@ -178,7 +178,7 @@ public class RestUserJobProfile : RestWebPage
             // Name for the job title is required
             if (String.IsNullOrWhiteSpace(jobTitleName))
             {
-                throw new HttpException(400, "A Job Title is required");
+                throw new HttpException(400, "[[[A Job Title is required]]]");
             }
 
             // Search: we try an exact match, just in case we have already the job title (singular or plural) and
@@ -256,17 +256,17 @@ public class RestUserJobProfile : RestWebPage
         }
         else if (UrlData.Count == 1)
         {
-            throw new HttpException(400, "Invalid Job Title ID");
+            throw new HttpException(400, "[[[Invalid Job Title ID]]]");
         }
         else
         {
-            throw new HttpException(404, "Not Found");
+            throw new HttpException(404, "[[[Not Found]]]");
         }
         int userID = WebSecurity.CurrentUserId;
         // Check that the item exists
         if (LcRest.UserJobTitle.GetItem(userID, itemID) == null)
         {
-            throw new HttpException(404, "Job Title not found");
+            throw new HttpException(404, "[[[Job Title not found]]]");
         }
 
         return itemID;
@@ -281,11 +281,11 @@ public class RestUserJobProfile : RestWebPage
     private dynamic GetValidatedItemBodyInput()
     {
         // Validation rules
-        Validation.Add("intro", Validator.StringLength(2000, 0, "Job title introduction must be fewer than 2000 characters"));
-        Validation.Add("cancellationPolicyID", Validator.Integer("Invalid cancellation policy"));
+        Validation.Add("intro", Validator.StringLength(2000, 0, "[[[Job title introduction must be fewer than 2000 characters]]]"));
+        Validation.Add("cancellationPolicyID", Validator.Integer("[[[Invalid cancellation policy]]]"));
         if (!Request["instantBooking"].IsEmpty() && !Request["instantBooking"].IsBool())
         {
-            ModelState.AddError("instantBooking", "The scheduling option must be a boolean (true for instant booking)");
+            ModelState.AddError("instantBooking", "[[[The scheduling option must be a boolean (true for instant booking)]]]");
         }
 
         if (!Validation.IsValid() || !ModelState.IsValid)

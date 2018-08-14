@@ -118,7 +118,7 @@ namespace LcRest
                     ", jobTitleID, languageID, countryID);
                     if (String.IsNullOrEmpty(name))
                     {
-                        throw new ConstraintException("Invalid Job Title ID");
+                        throw new ConstraintException("[[[Invalid Job Title ID]]]");
                     }
                     jobTitles.Add(jobTitleID, name);
                 }

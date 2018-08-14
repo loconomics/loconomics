@@ -68,10 +68,10 @@
                 return LcRest.ServiceProfessionalService.GetList(providerID, jobTitleID, clientVisibility: visibility);
             }
             else if (UrlData.Count == 1) {
-                throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+                throw new HttpException(400, "[[[The Job Title ID has bad format (must be an integer number)]]]");
             }
 
-            throw new HttpException(404, "Not Found");
+            throw new HttpException(404, "[[[Not Found]]]");
         }
     }
 }
