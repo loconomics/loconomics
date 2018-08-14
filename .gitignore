@@ -9,3 +9,4 @@ node_modules/*
 .vscode/settings.json
 
 app/.DS_Store
+/web/PrecompiledWeb

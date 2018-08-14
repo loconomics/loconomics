@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="TransformConfig" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Tasks to deply config files transformed for release environment (versus local debug defaults at the web.config) -->
+  
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.dll"/>
+  
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)'=='' ">Release</Configuration>
+  </PropertyGroup>
+  
+  <Target Name="TransformConfig">
+    
+    <Copy SourceFiles="Web.config" DestinationFiles="Web.temp.config" OverwriteReadOnlyFiles="True" />
+    <TransformXml Source="Web.temp.config" Transform="Web.$(Configuration).config" Destination="Web.config" />
+  
+  </Target>
+
+  <Target Name="CleanTransformConfig">
+
+    <Delete Files="Web.temp.config" />
+
+  </Target>
+  
+</Project>

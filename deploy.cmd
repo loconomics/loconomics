@@ -97,6 +97,10 @@ IF !ERRORLEVEL! NEQ 0 goto error
 :: .f Exit app dir (restore previous location)
 popd
 
+:: 2. Prepare web.config file to deploy with Release settings
+call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:TransformConfig
+call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:CleanTransformConfig
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
 :: ----------
