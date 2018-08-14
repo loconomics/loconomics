@@ -78,7 +78,7 @@ SET IGNORE_DEPLOY_FILES=.git;.hg;.deployment;deploy.cmd
 SET IGNORE_LIST=%IGNORE_DEPLOY_FILES%;.gitignore
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: Custom steps
+:: Building
 :: ----------
 
 :: 1. Build Webapp
@@ -97,21 +97,24 @@ IF !ERRORLEVEL! NEQ 0 goto error
 :: .f Exit app dir (restore previous location)
 popd
 
-:: 2. Prepare web.config file to deploy with Release settings
-call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:TransformConfig
-call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:CleanTransformConfig
-
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
 :: ----------
 
 echo Handling .NET Web Site deployment.
 
-:: 1. Build to the repository path
+:: 1. Prepare web.config file to deploy with Release settings
+call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:TransformConfig
+call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:CleanTransformConfig
+
+:: 2. Restore NuGet packages
+call :ExecuteCmd nuget.exe restore "%DEPLOYMENT_SOURCE%\web\Loconomics.sln"
+
+:: 3. Build to the repository path
 call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\web\Loconomics.sln" /verbosity:m /nologo %SCM_BUILD_ARGS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 2. KuduSync
+:: 4. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
   call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%\web" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i "%IGNORE_LIST%"
   IF !ERRORLEVEL! NEQ 0 goto error
