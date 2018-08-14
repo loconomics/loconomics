@@ -81,21 +81,21 @@ SET IGNORE_LIST=%IGNORE_DEPLOY_FILES%;.gitignore
 :: Building
 :: ----------
 
-:: 1. Build Webapp
-:: .a Install Yarn
-echo Prepare environment to build WebApp
-call :ExecuteCmd %NPM_CMD% install yarn -g
-:: .b Enter app dir
-pushd %DEPLOYMENT_SOURCE%\app
-:: .c Install Dependencies
-call :ExecuteCmd yarn install
-IF !ERRORLEVEL! NEQ 0 goto error
-:: .e Build Webapp (already copy contents on the /web dir)
-echo Building WebApp
-call :ExecuteCmd yarn run build-web-release
-IF !ERRORLEVEL! NEQ 0 goto error
-:: .f Exit app dir (restore previous location)
-popd
+REM :: 1. Build Webapp
+REM :: .a Install Yarn
+REM echo Prepare environment to build WebApp
+REM call :ExecuteCmd %NPM_CMD% install yarn -g
+REM :: .b Enter app dir
+REM pushd %DEPLOYMENT_SOURCE%\app
+REM :: .c Install Dependencies
+REM call :ExecuteCmd yarn install
+REM IF !ERRORLEVEL! NEQ 0 goto error
+REM :: .e Build Webapp (already copy contents on the /web dir)
+REM echo Building WebApp
+REM call :ExecuteCmd yarn run build-web-release
+REM IF !ERRORLEVEL! NEQ 0 goto error
+REM :: .f Exit app dir (restore previous location)
+REM popd
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
@@ -108,7 +108,7 @@ call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p
 call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:CleanTransformConfig
 
 :: 2. Restore NuGet packages
-call :ExecuteCmd nuget.exe restore "%DEPLOYMENT_SOURCE%\web\Loconomics.sln"
+call :ExecuteCmd nuget.exe restore "%DEPLOYMENT_SOURCE%\web\packages.config"
 
 :: 3. Build to the repository path
 call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\web\Loconomics.sln" /verbosity:m /nologo %SCM_BUILD_ARGS%
