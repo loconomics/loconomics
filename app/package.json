@@ -15,6 +15,7 @@
     "test": "grunt test",
     "watch": "grunt watch",
     "build": "grunt",
+    "build-web-release": "grunt build-web-release",
     "lint": "eslint ./source/js --fix",
     "browserslist": "browserslist",
     "release-tags": "git tag | grep 'releases/release-' | sort -V",

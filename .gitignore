@@ -11,7 +11,7 @@
 node_modules/*
 **/node_modules/*
 .idea
-
+/web/PrecompiledWeb
 .vscode/settings.json
 
 app/.DS_Store
@@ -323,3 +323,4 @@ __pycache__/
 
 # OpenCover UI analysis results
 OpenCover/
+

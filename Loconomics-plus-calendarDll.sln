@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "web", ".", "{314F4D2E-CED3-40BF-A0DB-F2F927DBAF4A}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "web", "web", "{314F4D2E-CED3-40BF-A0DB-F2F927DBAF4A}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.2"
 		ProjectReferences = "{06a6c567-a4a8-4954-afa3-6f44e7830191}|CalendarDll.dll;"
@@ -26,7 +26,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "web", ".", "{314F4D2E-CED3-
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarDll", "..\iCalendarLib\CalendarDll\CalendarDll.csproj", "{06A6C567-A4A8-4954-AFA3-6F44E7830191}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarDll", "iCalendarLib\CalendarDll\CalendarDll.csproj", "{06A6C567-A4A8-4954-AFA3-6F44E7830191}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
