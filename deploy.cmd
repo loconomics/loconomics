@@ -76,7 +76,7 @@ SET IGNORE_DEPLOY_FILES=.git;.hg;.deployment;deploy.cmd
 :: note 1: packages.config is needed or will not load required binaries
 :: note 2: TODO to exclude Tests folder on production/live
 SET IGNORE_LIST=%IGNORE_DEPLOY_FILES%;.gitignore
-IF "%CHANNEL%" NEQ "dev" (
+IF "%CHANNEL%" EQU "dev" (
   SET IGNORE_LIST=%IGNORE_LIST%;Tests
 )
 
