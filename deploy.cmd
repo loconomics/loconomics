@@ -83,21 +83,21 @@ IF "%CHANNEL%" EQU "live" (
 :: Building
 :: ----------
 
-REM :: 1. Build Webapp
-REM :: .a Install Yarn
-REM echo Prepare environment to build WebApp
-REM call :ExecuteCmd %NPM_CMD% install yarn -g
-REM :: .b Enter app dir
-REM pushd %DEPLOYMENT_SOURCE%\app
-REM :: .c Install Dependencies
-REM call :ExecuteCmd yarn install
-REM IF !ERRORLEVEL! NEQ 0 goto error
-REM :: .e Build Webapp (already copy contents on the /web dir)
-REM echo Building WebApp
-REM call :ExecuteCmd yarn run build-web-release
-REM IF !ERRORLEVEL! NEQ 0 goto error
-REM :: .f Exit app dir (restore previous location)
-REM popd
+:: 1. Build Webapp
+:: .a Install Yarn
+echo Prepare environment to build WebApp
+call :ExecuteCmd %NPM_CMD% install yarn -g
+:: .b Enter app dir
+pushd %DEPLOYMENT_SOURCE%\app
+:: .c Install Dependencies
+call :ExecuteCmd yarn install
+IF !ERRORLEVEL! NEQ 0 goto error
+:: .e Build Webapp (already copy contents on the /web dir)
+echo Building WebApp
+call :ExecuteCmd yarn run build-web-release
+IF !ERRORLEVEL! NEQ 0 goto error
+:: .f Exit app dir (restore previous location)
+popd
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
