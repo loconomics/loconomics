@@ -1,0 +1,23 @@
+@{
+   var fruitId = Context.GetRouteValue("id").AsInt();
+   
+   // You could use this Id like a regular Request value. 
+   // For e.g. 
+   // var fruit = db.QuerySingle("Select * from Fruits where Id = @0", fruitId);
+   // In this sample I'm going to use a dictionary to look up values
+   var fruitValues = new Dictionary<int, string> {
+        { 1, "Apples" },
+        { 2, "Bananas" },
+        { 3, "Figs" },
+        { 4, "Mangoes" }
+   };
+}
+
+
+@if (fruitValues.ContainsKey(fruitId)) {
+    <h3>@fruitValues[fruitId] are awesome</h3>
+}
+else {
+    <p>That's no fruit!</p>
+}
+

@@ -1,0 +1,39 @@
+<style>
+    li {
+        margin-bottom: 30px;
+    }
+  
+</style>
+<ul>
+    <li>
+        <a href="@Href("~/Account/Login-Here")">Login</a>
+        <br />
+        Url - @Href("~/Account/Login-Here")
+    </li>
+    <li>
+        <a href="@Href("~/User/1/North Pole")">User profile with non-defaults</a>
+        <br />
+        Url - @Href("~/User/1/North Pole")
+    </li>
+    <li>
+        <a href="@Href("~/User/2")">User profile with default location</a>
+        <br />
+        @Href("~/User/2")
+    </li>
+    <li>
+        <a href="@Href("~/User/Foobar")">User profile that won't work. Id needs to be numeric</a>
+        <br />
+        @Href("~/User/Foobar")
+    </li>
+    <li>
+        <a href="@Href("~/Product")">Default Product</a>
+        <br />
+        @Href("~/Product")
+    </li>
+    <li>
+        <a href="@Href("~/Product/3")">Product with id 3</a>
+        <br />
+        @Href("~/Product/3")
+    </li>
+</ul>
+    

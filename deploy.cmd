@@ -108,7 +108,8 @@ call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p
 call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:CleanTransformConfig
 
 :: 2. Restore NuGet packages
-call :ExecuteCmd nuget.exe restore "%DEPLOYMENT_SOURCE%\web\Loconomics.sln" -MSBuildPath "%ProgramFiles(x86)%\MSBuild\14.0\Bin"
+: Disabled since was unable to make it work. No the packages folder is commited into the repo
+REM call :ExecuteCmd nuget.exe restore "%DEPLOYMENT_SOURCE%\web\Loconomics.sln" -MSBuildPath "%ProgramFiles(x86)%\MSBuild\14.0\Bin"
 
 :: 3. Build to the repository path
 call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\web\Loconomics.sln" /verbosity:m /nologo %SCM_BUILD_ARGS%

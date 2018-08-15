@@ -1,0 +1,13 @@
+@using System.Web.Routing
+
+@{    
+    RouteTable.Routes.MapWebPageRoute("Account/Login-Here", "~/Account/Login.cshtml");
+    
+    // Routing with defaults
+    int defaultProduct = 1;
+    RouteTable.Routes.MapWebPageRoute("Product/{id}", "~/Product.cshtml", new { id = defaultProduct });
+    
+    // Routing with defaults and constraints
+    RouteTable.Routes.MapWebPageRoute("User/{id}/{location}", "~/Account/Profile.cshtml", new { location = "Unknown" } , new { id = "\\d+" });
+
+}
