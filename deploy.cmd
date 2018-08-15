@@ -108,7 +108,7 @@ call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p
 call :ExecuteCmd "%MSBUILD_PATH%" web/deploy-config.proj /verbosity:m /nologo /p:Configuration=Release /t:CleanTransformConfig
 
 :: 2. Restore NuGet packages
-call :ExecuteCmd nuget.exe restore "%DEPLOYMENT_SOURCE%\web\packages.config" -SolutionDirectory "%DEPLOYMENT_SOURCE%\web\" -MSBuildPath %MSBUILD_PATH%
+call :ExecuteCmd nuget.exe restore "%DEPLOYMENT_SOURCE%\web\packages.config" -SolutionDirectory "%DEPLOYMENT_SOURCE%\web\" -MSBuildPath "%MSBUILD_PATH%"
 
 :: 3. Build to the repository path
 call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\web\Loconomics.sln" /verbosity:m /nologo %SCM_BUILD_ARGS%
