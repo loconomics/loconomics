@@ -73,10 +73,9 @@ call :ExecuteCmd %NPM_CMD% -v
 :: Default list by KuduSync (deploy related files)
 SET IGNORE_DEPLOY_FILES=.git;.hg;.deployment;deploy.cmd
 :: Extended list, with our specific content that must not be copied into wwwroot
-:: note 1: packages.config is needed or will not load required binaries
-:: note 2: TODO to exclude Tests folder on production/live
+:: note: Excluding additional things, like Tests folder, on production/live
 SET IGNORE_LIST=%IGNORE_DEPLOY_FILES%;.gitignore
-IF "%CHANNEL%" EQU "dev" (
+IF "%CHANNEL%" EQU "live" (
   SET IGNORE_LIST=%IGNORE_LIST%;Tests
 )
 
@@ -120,6 +119,7 @@ IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 4. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
+  echo "KuduSync IgnoreList:" %IGNORE_LIST%
   call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%\web" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i "%IGNORE_LIST%"
   IF !ERRORLEVEL! NEQ 0 goto error
 )
