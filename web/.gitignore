@@ -1,4 +1,5 @@
 !.gitignore
+!bin
 *.suo
 .DS_Store
 _logs/*
