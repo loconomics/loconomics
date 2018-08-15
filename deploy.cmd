@@ -86,15 +86,16 @@ IF "%CHANNEL%" EQU "live" (
 :: 1. Build Webapp
 :: .a Install Yarn
 echo Prepare environment to build WebApp
-call :ExecuteCmd %NPM_CMD% install yarn -g
+call :ExecuteCmd %NPM_CMD% install yarn
+SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\.bin\yarn
 :: .b Enter app dir
 pushd %DEPLOYMENT_SOURCE%\app
 :: .c Install Dependencies
-call :ExecuteCmd yarn install
+call :ExecuteCmd %YARN_PATH% install
 IF !ERRORLEVEL! NEQ 0 goto error
 :: .e Build Webapp (already copy contents on the /web dir)
 echo Building WebApp
-call :ExecuteCmd yarn run build-web-release
+call :ExecuteCmd %YARN_PATH% run build-web-release
 IF !ERRORLEVEL! NEQ 0 goto error
 :: .f Exit app dir (restore previous location)
 popd
