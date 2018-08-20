@@ -303,7 +303,8 @@ public static class LcAuthHelper
             }
             StartOnboardingForUser(userID);
             // send email to let him to confirm it owns the given e-mail
-            LcMessaging.SendWelcomeCustomer(userID, email);
+            var token = WebSecurity.GeneratePasswordResetToken(email);
+            LcMessaging.SendCreateAccountProposal(userID, email, token);
             // Not valid after all, just communicate was was done and needs to do to active its account:
             throw new HttpException(409, errMsg);
         }
@@ -329,7 +330,8 @@ public static class LcAuthHelper
             else
             {
                 // RE-send email to let him to confirm it owns the given e-mail
-                LcMessaging.SendWelcomeCustomer(userID, email);
+                var token = WebSecurity.GeneratePasswordResetToken(email);
+                LcMessaging.SendCreateAccountProposal(userID, email, token);
                 throw new HttpException(409, errMsg);
             }
         }

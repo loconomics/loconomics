@@ -202,7 +202,7 @@ public static class LcAuth
             {
                 using (var db = new LcDatabase())
                 {
-                    db.Execute("UPDATE users SET accountStatusID=1 WHERE userID=@0", userID);
+                    db.Execute("UPDATE users SET accountStatusID = @1 WHERE UserID = @0", userID, LcEnum.AccountStatus.active);
                 }
             }
         }

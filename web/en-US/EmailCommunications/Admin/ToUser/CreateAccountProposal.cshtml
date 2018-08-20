@@ -1,15 +1,20 @@
-@* Email sent to a subscriber user (client or professional) after they've subscribed for newsletter
-    The user is a 'subscriber', so has not an enabled account, not name, just email
+@* Email sent to a user that is not a real account ("ANotEnabledAccount"),
+    but a subscriber or service professional client, that may have just the email,
+    and we welcome them in a special way, proposing to to create an account.
+    May be the same user who triggered this by subscribing to newsletter, or
+    a professional referred through lead generation or by adding it as a client
+    and then the user trying to sign up (we answer with this email, that will
+    allow to set a password confirming email)
 
     Sender e-mail: automated@@loconomics.com
     Sender name: Loconomics Cooperative
     Subject: Welcome to Loconomics!
     Send when: immediate
- *@
+*@
 @using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
-    
+
     Layout = "_EmailLayout.cshtml";
 
     // All the data for this email:
@@ -73,7 +78,7 @@
                                             <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
                                                     <tr>
-                                                    <td align="center"><a href="@(info.viewPasswordResetWithTokenURL)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #d75560; border-top: 15px solid #d75560; border-bottom: 15px solid #d75560; border-left: 25px solid #d75560; border-right: 25px solid #d75560; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Create my account</a></td>
+                                                        <td align="center"><a href="@(info.viewPasswordResetWithTokenURL)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #d75560; border-top: 15px solid #d75560; border-bottom: 15px solid #d75560; border-left: 25px solid #d75560; border-right: 25px solid #d75560; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Create my account</a></td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -81,10 +86,10 @@
                                     </table>
                                 </td>
                             </tr>
-                            <tr>                               
+                            <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">At your service,<br><br>The Loconomics team</td>
                             </tr>
-                         </table>
+                        </table>
                     </td>
                 </tr>
             </table>

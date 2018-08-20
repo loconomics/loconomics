@@ -82,7 +82,8 @@
                     var userID = LcRest.LeadGeneration.SubscribeNewUser(email, isServiceProfessional, marketingSource, LcRest.Locale.Current);
                     if (userID > 0)
                     {
-                        LcMessaging.SendNewsletterSubscription(userID, email);
+                        var token = WebSecurity.GeneratePasswordResetToken(email);
+                        LcMessaging.SendCreateAccountProposal(userID, email, token);
                         return "OK";
                     }
                     else

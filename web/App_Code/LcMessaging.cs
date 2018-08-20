@@ -884,21 +884,17 @@ public class LcMessaging
                 { "passwordResetToken", token }
         }));
     }
-    #endregion
-
     #region Type:Admin Lead Generation
-    public static void SendNewsletterSubscription(int userID, string userEmail)
+    public static void SendCreateAccountProposal(int userID, string userEmail, string token)
     {
         SendMail(userEmail, "Welcome to Loconomics!",
-            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/NewsletterSubscription/",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToUser/CreateAccountProposal/",
             new Dictionary<string, object> {
-                { "userID", userID }
+                { "userID", userID },
+                { "passwordResetToken", token }
         }), "Loconomics Cooperative <automated@loconomics.com>");
     }
-    public static void SendNewsletterSubscriptionFromReferral(int userID, string userEmail)
-    {
-        SendNewsletterSubscription(userID, userEmail);
-    }
+    #endregion
     #endregion
 
     #region Type:Admin ServiceProfessional specifics
