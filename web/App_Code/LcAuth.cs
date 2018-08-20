@@ -194,7 +194,19 @@ public static class LcAuth
             throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
         var userID = WebSecurity.GetUserIdFromPasswordResetToken(token);
-        return WebSecurity.ResetPassword(token, password);
+        var done = WebSecurity.ResetPassword(token, password);
+        if (done)
+        {
+            // For subscribers users, we must switch the account status to active
+            if (LcRest.UserProfile.Get(userID).accountStatusID == (int)LcEnum.AccountStatus.subscriber)
+            {
+                using (var db = new LcDatabase())
+                {
+                    db.Execute("UPDATE users SET accountStatusID=1 WHERE userID=@0", userID);
+                }
+            }
+        }
+        return done;
     }
 
     public static bool ChangePassword(string email, string currentPassword, string newPassword)
