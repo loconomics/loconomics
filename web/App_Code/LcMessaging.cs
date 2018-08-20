@@ -886,6 +886,21 @@ public class LcMessaging
     }
     #endregion
 
+    #region Type:Admin Lead Generation
+    public static void SendNewsletterSubscription(int userID, string userEmail)
+    {
+        SendMail(userEmail, "Welcome to Loconomics!",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/NewsletterSubscription/",
+            new Dictionary<string, object> {
+                { "userID", userID }
+        }), "Loconomics Cooperative <automated@loconomics.com>");
+    }
+    public static void SendNewsletterSubscriptionFromReferral(int userID, string userEmail)
+    {
+        SendNewsletterSubscription(userID, userEmail);
+    }
+    #endregion
+
     #region Type:Admin ServiceProfessional specifics
     public static void SendBackgroundCheckRequestReceived(int userID, string userEmail)
     {
