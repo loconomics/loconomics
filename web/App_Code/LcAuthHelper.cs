@@ -259,13 +259,20 @@ public static class LcAuthHelper
     /// <param name="userID"></param>
     /// <param name="email"></param>
     /// <returns>Token</returns>
-    private static string GenerateNotEnabledAccountActivationToken(int userID, string email)
+    public static string GenerateNotEnabledAccountActivationToken(int userID, string email)
     {
-        if (WebSecurity.GetUserId(email) == 0)
+        // Create a new token, being careful that if membership record don't exist, will throw
+        // and we can create that record and then the token
+        // NOTE: we can not rely on WebSecurity.UserExists because it doesn't check the membership table but userprofile
+        try
+        {
+            return WebSecurity.GeneratePasswordResetToken(email);
+        }
+        catch
         {
             WebSecurity.CreateAccount(email, Guid.NewGuid().ToString(), false);
+            return WebSecurity.GeneratePasswordResetToken(email);
         }
-        return WebSecurity.GeneratePasswordResetToken(email);
     }
     /// <summary>
     /// Convert a user record with 'Not Enabled Account' into a standard enabled account. See IsUserButNotEnabledAccount

@@ -258,7 +258,7 @@
                 var userID = LcRest.LeadGeneration.SubscribeNewUser(email, isServiceProfessional, marketingSource, LcRest.Locale.Current);
                 if (userID > 0)
                 {
-                    var token = WebSecurity.GeneratePasswordResetToken(email);
+                    var token = LcAuthHelper.GenerateNotEnabledAccountActivationToken(userID, email);
                     LcMessaging.SendCreateAccountProposal(userID, email, token);
                     return new
                     {
