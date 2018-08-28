@@ -86,8 +86,10 @@ IF "%CHANNEL%" EQU "live" (
 :: 1. Build Webapp
 :: .a Install Yarn
 echo Prepare environment to build WebApp
-call :ExecuteCmd %NPM_CMD% install yarn --no-save
+call :ExecuteCmd %NPM_CMD% install -g yarn
 SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\.bin\yarn
+IF !ERRORLEVEL! NEQ 0 goto step1b
+:step1b
 :: .b Enter app dir
 pushd %DEPLOYMENT_SOURCE%\app
 :: .c Install Dependencies
