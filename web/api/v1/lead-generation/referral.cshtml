@@ -46,7 +46,7 @@
         - userID:int
 
         ## Triggers
-        - Send e-mail "Subscribed to Loconomics newsletter"  *disabled for now, waiting for later template implementation*
+        - Send e-mail "Subscribed to Loconomics newsletter"
 
         # Referral - Step 2: Update client with name
 
@@ -258,7 +258,8 @@
                 var userID = LcRest.LeadGeneration.SubscribeNewUser(email, isServiceProfessional, marketingSource, LcRest.Locale.Current);
                 if (userID > 0)
                 {
-                    //LcMessaging.SendNewsletterSubscriptionFromReferral(userID, email);
+                    var token = LcAuthHelper.GenerateNotEnabledAccountActivationToken(userID, email);
+                    LcMessaging.SendCreateAccountProposal(userID, email, token);
                     return new
                     {
                         userID = userID

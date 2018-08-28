@@ -425,7 +425,8 @@ public static class LcEmailTemplate
             }
         }
         /// <summary>
-        /// Internal field to set the password reset token, only preset when processing a 'reset password request' email.
+        /// Internal field to set the password reset token, specially available if the template is processed providing
+        /// this name as a query parameter, like at 'reset password request' email and "create account proposal".
         /// </summary>
         public string passwordResetToken;
         /// <summary>

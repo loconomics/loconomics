@@ -251,6 +251,30 @@ public static class LcAuthHelper
         Please follow its instructions. We can't wait to get you on board!|||{0}]]]
     ";
     /// <summary>
+    /// Generates a password recovery token specially for 'users with not enabled account',
+    /// meaning that first time needs to create a Membership record (in order to hold the token)
+    /// and random generate a token, returning it for usage like in an email where user confirms
+    /// them identity.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="email"></param>
+    /// <returns>Token</returns>
+    public static string GenerateNotEnabledAccountActivationToken(int userID, string email)
+    {
+        // Create a new token, being careful that if membership record don't exist, will throw
+        // and we can create that record and then the token
+        // NOTE: we can not rely on WebSecurity.UserExists because it doesn't check the membership table but userprofile
+        try
+        {
+            return WebSecurity.GeneratePasswordResetToken(email);
+        }
+        catch
+        {
+            WebSecurity.CreateAccount(email, Guid.NewGuid().ToString(), false);
+            return WebSecurity.GeneratePasswordResetToken(email);
+        }
+    }
+    /// <summary>
     /// Convert a user record with 'Not Enabled Account' into a standard enabled account. See IsUserButNotEnabledAccount
     /// for more info, and check that value before call this to prevent an error when user has an enabled account.
     /// This supports the cases
@@ -303,7 +327,8 @@ public static class LcAuthHelper
             }
             StartOnboardingForUser(userID);
             // send email to let him to confirm it owns the given e-mail
-            LcMessaging.SendWelcomeCustomer(userID, email);
+            var token = GenerateNotEnabledAccountActivationToken(userID, email);
+            LcMessaging.SendCreateAccountProposal(userID, email, token);
             // Not valid after all, just communicate was was done and needs to do to active its account:
             throw new HttpException(409, errMsg);
         }
@@ -329,7 +354,8 @@ public static class LcAuthHelper
             else
             {
                 // RE-send email to let him to confirm it owns the given e-mail
-                LcMessaging.SendWelcomeCustomer(userID, email);
+                var token = GenerateNotEnabledAccountActivationToken(userID, email);
+                LcMessaging.SendCreateAccountProposal(userID, email, token);
                 throw new HttpException(409, errMsg);
             }
         }
