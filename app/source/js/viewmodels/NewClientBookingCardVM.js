@@ -1,3 +1,4 @@
+// IMPORTANT: Extending the prototype of this class is FORBIDDEN (will broken dependent code)
 'use strict';
 
 var ko = require('knockout');

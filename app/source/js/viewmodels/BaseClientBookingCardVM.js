@@ -1,3 +1,4 @@
+// IMPORTANT: Extending the prototype of this class is FORBIDDEN (will broken dependent code)
 'use strict';
 
 var ko = require('knockout');
@@ -462,78 +463,78 @@ function BaseClientBookingCardVM(app) {
 
         this.progress.stepsList(list);
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+
+    /// Methods
+    // IMPORTANT: Extending the prototype of this class is FORBIDDEN (will broken dependent code)
+    this.loadServices = function() {
+        var b = this.booking();
+        this.serviceProfessionalServices.preSelectedServices(this.booking().pricingSummary().details().map(function(s) {
+            return s.model.toPlainObject();
+        }));
+        var spid = b.serviceProfessionalUserID();
+        var jid = b.jobTitleID();
+        if (this.serviceProfessionalServices.serviceProfessionalID() !== spid ||
+            this.serviceProfessionalServices.jobTitleID() !== jid) {
+
+            var servicesPromise = users.getServiceProfessionalServices(spid, jid);
+
+            return this.serviceProfessionalServices.loadData(spid, jid, servicesPromise);
+        }
+    };
+    this.loadServiceAddresses = function() {
+        // Preselect current, if any
+        var add = this.booking().serviceAddress();
+        if (add && add.addressID()) {
+            this.serviceAddresses.selectedAddress(add);
+        }
+        // Load remote addresses for provider and jobtitle, reset first
+        this.serviceAddresses.sourceAddresses([]);
+        this.isLoadingServiceAddresses(true);
+        return users.getServiceAddresses(this.booking().serviceProfessionalUserID(), this.booking().jobTitleID())
+        .then(function(list) {
+            // Save addresses: the serviceAddresses viewmodel will create separated lists for
+            // selectable (service location) addresses and service areas
+            this.serviceAddresses.sourceAddresses(serviceAddresses.asModel(list));
+            // Load user personal addresses too if the service professional has serviceArea
+            if (this.serviceAddresses.serviceAreas().length &&
+                !this.isAnonymous()) {
+                // jobTitleID:0 for client service addresses.
+                return serviceAddresses.getList(0);
+            }
+            // No client addresses (result for the next 'then'):
+            return null;
+        }.bind(this))
+        .then(function(clientList) {
+            if (clientList) {
+                this.clientAddresses.sourceAddresses(clientList.map(function(a) {
+                    // We wanted it to appear in the widget, must be a service location
+                    // (comes as 'false' from REST service since they are currently user client addresses
+                    // not actual 'service' addresses, even they comes from 'service' API).
+                    a.isServiceLocation = true;
+                    return serviceAddresses.asModel(a);
+                }.bind(this)));
+            }
+            // All finished
+            this.isLoadingServiceAddresses(false);
+        }.bind(this))
+        .catch(function(err) {
+            this.isLoadingServiceAddresses(false);
+            showError({ error: err });
+        }.bind(this));
+    };
+    this.prepareDatePicker = function(fieldToBeSelected) {
+        this.timeFieldToBeSelected(fieldToBeSelected);
+        var picker = this.serviceStartDatePickerView();
+        picker.selectedDatetime(null);
+        picker.userID(this.booking().serviceProfessionalUserID());
+        picker.selectedDate(new Date());
+        var ptz = this.serviceProfessionalInfo().profile().timeZone();
+        picker.specialTimeZones([{
+            id: ptz,
+            label: 'Service Professional\'s Time Zone (' + ptz + ')'
+        }]);
+        picker.timeZone(ptz);
+    };
 }
 
 module.exports = BaseClientBookingCardVM;
-
-BaseClientBookingCardVM.prototype.loadServices = function() {
-    var b = this.booking();
-    this.serviceProfessionalServices.preSelectedServices(this.booking().pricingSummary().details().map(function(s) {
-        return s.model.toPlainObject();
-    }));
-    var spid = b.serviceProfessionalUserID();
-    var jid = b.jobTitleID();
-    if (this.serviceProfessionalServices.serviceProfessionalID() !== spid ||
-        this.serviceProfessionalServices.jobTitleID() !== jid) {
-
-        var servicesPromise = users.getServiceProfessionalServices(spid, jid);
-
-        return this.serviceProfessionalServices.loadData(spid, jid, servicesPromise);
-    }
-};
-
-BaseClientBookingCardVM.prototype.loadServiceAddresses = function() {
-    // Preselect current, if any
-    var add = this.booking().serviceAddress();
-    if (add && add.addressID()) {
-        this.serviceAddresses.selectedAddress(add);
-    }
-    // Load remote addresses for provider and jobtitle, reset first
-    this.serviceAddresses.sourceAddresses([]);
-    this.isLoadingServiceAddresses(true);
-    return users.getServiceAddresses(this.booking().serviceProfessionalUserID(), this.booking().jobTitleID())
-    .then(function(list) {
-        // Save addresses: the serviceAddresses viewmodel will create separated lists for
-        // selectable (service location) addresses and service areas
-        this.serviceAddresses.sourceAddresses(serviceAddresses.asModel(list));
-        // Load user personal addresses too if the service professional has serviceArea
-        if (this.serviceAddresses.serviceAreas().length &&
-            !this.isAnonymous()) {
-            // jobTitleID:0 for client service addresses.
-            return serviceAddresses.getList(0);
-        }
-        // No client addresses (result for the next 'then'):
-        return null;
-    }.bind(this))
-    .then(function(clientList) {
-        if (clientList) {
-            this.clientAddresses.sourceAddresses(clientList.map(function(a) {
-                // We wanted it to appear in the widget, must be a service location
-                // (comes as 'false' from REST service since they are currently user client addresses
-                // not actual 'service' addresses, even they comes from 'service' API).
-                a.isServiceLocation = true;
-                return serviceAddresses.asModel(a);
-            }.bind(this)));
-        }
-        // All finished
-        this.isLoadingServiceAddresses(false);
-    }.bind(this))
-    .catch(function(err) {
-        this.isLoadingServiceAddresses(false);
-        showError({ error: err });
-    }.bind(this));
-};
-
-BaseClientBookingCardVM.prototype.prepareDatePicker = function(fieldToBeSelected) {
-    this.timeFieldToBeSelected(fieldToBeSelected);
-    var picker = this.serviceStartDatePickerView();
-    picker.selectedDatetime(null);
-    picker.userID(this.booking().serviceProfessionalUserID());
-    picker.selectedDate(new Date());
-    var ptz = this.serviceProfessionalInfo().profile().timeZone();
-    picker.specialTimeZones([{
-        id: ptz,
-        label: 'Service Professional\'s Time Zone (' + ptz + ')'
-    }]);
-    picker.timeZone(ptz);
-};
