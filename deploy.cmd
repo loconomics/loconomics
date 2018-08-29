@@ -84,15 +84,21 @@ IF "%CHANNEL%" EQU "live" (
 :: ----------
 
 :: 1. Build Webapp
-:: .a Install Yarn
 echo Prepare environment to build WebApp
-call :ExecuteCmd %NPM_CMD% install -g yarn
-SET YARN_PATH=yarn
-IF !ERRORLEVEL! NEQ 0 goto step1b
-:step1b
-:: .b Enter app dir
+:: .a Enter app dir
 pushd %DEPLOYMENT_SOURCE%\app
+:: .b Install Yarn
+echo Install Yarn locally at app directory
+:: Clean cache as recommended by npm when frequently errors happens on the task, like happens with Yarn
+call :ExecuteCmd %NPM_CMD% cache clean --force
+call :ExecuteCmd %NPM_CMD% install yarn --no-save
+SET YARN_PATH=%DEPLOYMENT_SOURCE%\app\node_modules\.bin\yarn
+:: In case of error, we try the yarn install anyway, may have failed because
+:: was already installed and locked (a weird problem of Yarn set-up on Windows)
+IF !ERRORLEVEL! NEQ 0 goto stepYarnInstall
+:stepYarnInstall
 :: .c Install Dependencies
+echo Install app dependencies
 call :ExecuteCmd %YARN_PATH% install
 IF !ERRORLEVEL! NEQ 0 goto error
 :: .e Build Webapp (already copy contents on the /web dir)
