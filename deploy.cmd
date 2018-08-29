@@ -87,7 +87,7 @@ IF "%CHANNEL%" EQU "live" (
 echo Prepare environment to build WebApp
 :: .a Install Yarn
 echo Install Yarn if unavailable
-SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\.bin\yarn.cmd
+SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\yarn\bin\yarn.cmd
 IF NOT EXIST %YARN_PATH% (
   pushd %DEPLOYMENT_SOURCE%
   call :ExecuteCmd %NPM_CMD% i --no-save yarn
