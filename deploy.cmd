@@ -89,9 +89,9 @@ echo Prepare environment to build WebApp
 pushd %DEPLOYMENT_SOURCE%\app
 :: .b Install Yarn
 echo Install Yarn locally at app directory
-:: Clean cache as recommended by npm when frequently errors happens on the task, like happens with Yarn
-call :ExecuteCmd %NPM_CMD% cache clean --force
-call :ExecuteCmd %NPM_CMD% install yarn --no-save
+:: Clean local node_modules to prevent different kind of errors installing yarn
+call :ExecuteCmd rmdir /S /Q node_modules
+call :ExecuteCmd %NPM_CMD% i --no-save yarn
 SET YARN_PATH=%DEPLOYMENT_SOURCE%\app\node_modules\.bin\yarn
 :: In case of error, we try the yarn install anyway, may have failed because
 :: was already installed and locked (a weird problem of Yarn set-up on Windows)
