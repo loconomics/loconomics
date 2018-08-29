@@ -85,18 +85,17 @@ IF "%CHANNEL%" EQU "live" (
 
 :: 1. Build Webapp
 echo Prepare environment to build WebApp
-:: .a Enter app dir
+:: .a Install Yarn
+echo Install Yarn if unavailable
+SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\.bin\yarn.cmd
+IF NOT EXIST %YARN_PATH% (
+  pushd %DEPLOYMENT_SOURCE%
+  call :ExecuteCmd %NPM_CMD% i --no-save yarn
+  popd
+  IF !ERRORLEVEL! NEQ 0 goto error
+)
+:: .b Enter app dir
 pushd %DEPLOYMENT_SOURCE%\app
-:: .b Install Yarn
-echo Install Yarn locally at app directory
-:: Clean local node_modules to prevent different kind of errors installing yarn
-call :ExecuteCmd rmdir /S /Q node_modules
-call :ExecuteCmd %NPM_CMD% i --no-save yarn
-SET YARN_PATH=%DEPLOYMENT_SOURCE%\app\node_modules\.bin\yarn
-:: In case of error, we try the yarn install anyway, may have failed because
-:: was already installed and locked (a weird problem of Yarn set-up on Windows)
-IF !ERRORLEVEL! NEQ 0 goto stepYarnInstall
-:stepYarnInstall
 :: .c Install Dependencies
 echo Install app dependencies
 call :ExecuteCmd %YARN_PATH% install
