@@ -51,7 +51,6 @@ module.exports = {
         'htmlmin:landingPagesBuild',
         // Task 'publish-landingPages' but without repeating things done by previous tasks in this list
         'bliss:landingPagesWeb',
-        'uglify:appCommon',
         'htmlmin:landingPagesWeb',
         'copyto:landingPages_assets',
         // test all
