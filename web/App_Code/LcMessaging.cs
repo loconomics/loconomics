@@ -986,7 +986,8 @@ public class LcMessaging
     {
         try
         {
-            SendMail("hipaasecurityofficial@loconomics.com", "Account Locked Out",
+            var email = ConfigurationManager.AppSettings["HipaaEmail"];
+            SendMail(email, "Account Locked Out",
                 String.Format("Attempt to log-in ended in 'Account Lock Out' message for userID:{0}, email:{1} at {2}", lockedUserID, lockedEmail, whenHappened)
             );
         }
@@ -996,8 +997,8 @@ public class LcMessaging
     {
         try
         {
-            // TODO: make support email config setting
-            SendMail("support@loconomics.com", LcHelpers.Channel + ": Exception on " + where + ": " + url,
+            var email = ConfigurationManager.AppSettings["SupportEmail"];
+            SendMail(email, LcHelpers.Channel + ": Exception on " + where + ": " + url,
                 exceptionPageContent);
         }
         catch { }
@@ -1007,7 +1008,7 @@ public class LcMessaging
         try
         {
             var channel = LcHelpers.Channel == "live" ? "" : " at " + LcHelpers.Channel;
-            SendMail("support@loconomics.zendesk.com",
+            SendMail(ConfigurationManager.AppSettings["SupportEmail"],
                 "New job title" + channel + ": " + jobTitleName,
                 "Generated new job title with name '" + jobTitleName + "', assigned ID: " + jobTitleID
             );
@@ -1024,7 +1025,7 @@ public class LcMessaging
             );
 
             var channel = LcHelpers.Channel == "live" ? "" : " at " + LcHelpers.Channel;
-            SendMail("support@loconomics.zendesk.com",
+            SendMail(ConfigurationManager.AppSettings["SupportEmail"],
                 "New service attributes" + channel,
                 msg
             );
@@ -1033,7 +1034,7 @@ public class LcMessaging
     }
     public static void SendMerchantAccountNotification(int providerUserID)
     {
-        SendMail("support@loconomics.com", "Marketplace: Merchant Account Notification",
+        SendMail(ConfigurationManager.AppSettings["SupportEmail"], "Marketplace: Merchant Account Notification",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/Internal/EmailProviderPaymentAccountNotification/",
             new Dictionary<string, object> {
                 { "userID", providerUserID}
@@ -1052,7 +1053,7 @@ public class LcMessaging
     }
     public static void SendBackgroundCheckRequest(int userID, int backgroundCheckID)
     {
-        SendMail("support@loconomics.com", "Background Check Request",
+        SendMail(ConfigurationManager.AppSettings["SupportEmail"], "Background Check Request",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/Internal/EmailBackgroundCheckRequest/",
             new Dictionary<string, object> {
                 { "userID", userID },
@@ -1061,7 +1062,7 @@ public class LcMessaging
     }
     public static void SendLicenseVerificationRequest(int userID, int jobTitleID, int licenseCertificationID)
     {
-        SendMail("support@loconomics.com", "License Verification Request",
+        SendMail(ConfigurationManager.AppSettings["SupportEmail"], "License Verification Request",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/Internal/EmailLicenseVerificationRequest/",
             new Dictionary<string, object> {
                 { "userID", userID },

@@ -304,8 +304,7 @@ namespace LcRest
             }
             // TODO: i18n
             var msg = "UserID: " + item.userID + " submitted a photo of their License/Certification to being verified and added. It can be found in the FTP an folder: " + virtualPath;
-            // TODO create config value
-            var email = "support@loconomics.zendesk.com";
+            var email = System.Configuration.ConfigurationManager.AppSettings["SupportEmail"];
             LcMessaging.SendMail(email, "License/Certification Verification Request", msg);
 
             return Set(item);
