@@ -139,6 +139,9 @@ public class LcLogger : IDisposable
                 }
                 catch { }
                 logger.LogEx("Page error details", ex);
+
+                // Send Email too
+                LcMessaging.NotifyError("Catch at logger", Request.RawUrl, logger.ToString());
             }
             catch { }
             logger.Save();
