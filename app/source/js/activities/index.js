@@ -36,6 +36,7 @@ const activities = {
     'calendarSyncing': createRedirect('calendar-syncing'),
     'cancellationPolicies': createRedirect('cancellation-policies'),
     'clientAppointment': createRedirect('client-appointment'),
+    'clientEditor': createRedirect('client-editor'),
 };
 
 /**
