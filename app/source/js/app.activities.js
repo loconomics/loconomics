@@ -12,7 +12,6 @@ module.exports = {
     'logout': require('./activities/logout'),
     'signup': require('./activities/signup'),
     'help': require('./activities/help'),
-    'feedbackForm': require('./activities/feedbackForm'),
     'schedulingPreferences': require('./activities/schedulingPreferences'),
     'privacySettings': require('./activities/privacySettings'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),

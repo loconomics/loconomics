@@ -89,7 +89,7 @@ exports.registerAll = function(app) {
             // Additional specific properties
             vm.vocElement = getObservable(params.vocElement || 'general');
             vm.feedbackLink = ko.pureComputed(function() {
-                return 'feedbackForm/' + this.vocElement();
+                return 'feedback-form/' + this.vocElement();
             }, vm);
             vm.contactLink = ko.pureComputed(function() {
                 return 'contact-form/' + this.vocElement();
@@ -204,7 +204,7 @@ exports.registerAll = function(app) {
 
             this.section = getObservable(params.section || '');
             this.url = ko.pureComputed(function() {
-                return '/feedbackForm/' + this.section();
+                return '/feedback-form/' + this.section();
             }, this);
         }
     });
