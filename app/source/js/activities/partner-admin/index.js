@@ -28,7 +28,7 @@ export default class PartnerAdminActivity extends Activity {
         this.navBar.rightAction(null);
         this.title = 'Admin';
 
-        this.requestReportLink = `/contactForm?subject=${encodeURIComponent(REQUEST_REPORT_SUBJECT)}&message=${encodeURIComponent(REQUEST_REPORT_MESSAGE)}`;
+        this.requestReportLink = `/contact-form?subject=${encodeURIComponent(REQUEST_REPORT_SUBJECT)}&message=${encodeURIComponent(REQUEST_REPORT_MESSAGE)}`;
     }
 }
 

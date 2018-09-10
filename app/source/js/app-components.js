@@ -92,7 +92,7 @@ exports.registerAll = function(app) {
                 return 'feedbackForm/' + this.vocElement();
             }, vm);
             vm.contactLink = ko.pureComputed(function() {
-                return 'contactForm/' + this.vocElement();
+                return 'contact-form/' + this.vocElement();
             }, vm);
 
             // FAQs

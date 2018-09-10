@@ -8,7 +8,7 @@
         We're working with Venmo to set up your merchant account. Please check back in 24 hours for an update.
     </p>
     <div data-bind="visible: data.status() === 'suspended'" class="bg-danger PaddedBox-xs">
-        <p>We're having problems setting up your Venmo account. Please <a href="/contactForm/payments?mustReturn=true">contact us</a> for further assistance.</p>
+        <p>We're having problems setting up your Venmo account. Please <a href="/contact-form/payments?mustReturn=true">contact us</a> for further assistance.</p>
         <div data-bind="visible: data.errors().length">
             <p>Error(s) reported by Venmo:</p>
             <ul data-bind="foreach: data.errors()">

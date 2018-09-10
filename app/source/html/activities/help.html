@@ -21,12 +21,12 @@
                             <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                         </li>
                     </ul>
-                </div> 
+                </div>
             </div>
             <h1 data-bind="text: title"></h1>
             <div class="container-fluid col-md-12 col-sm-reset">
                 <div data-bind="visible: viewType() == 'viewAllCategories'">
-                    <p class="hidden-xs hidden-sm help-block">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm/helpPages?subject=I%20need%20help!" class="text-secondary">send us a note!</a></p>
+                    <p class="hidden-xs hidden-sm help-block">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contact-form/helpPages?subject=I%20need%20help!" class="text-secondary">send us a note!</a></p>
                     <h2 class="SectionTitle">Select a category</h2>
                     <ul class="TilesList" data-bind="foreach: categories">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
@@ -42,9 +42,9 @@
                             </a>
                         </li>
                     </ul>
-                </div>                
+                </div>
                 <div data-bind="visible: viewType() == 'categoryView'">
-                    <p class="hidden-xs hidden-sm help-block" data-bind="html: categories().description"></p> 
+                    <p class="hidden-xs hidden-sm help-block" data-bind="html: categories().description"></p>
                     <h2 class="SectionTitle" data-bind="text: selectedCategory() && selectedCategory().name"></h2>
                     <ul class="TilesList" data-bind="foreach: filteredCategorySections">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
@@ -53,7 +53,7 @@
                         </a></li>
                     </ul>
                 </div>
-                <div data-bind="visible: viewType() == 'sectionView'"> 
+                <div data-bind="visible: viewType() == 'sectionView'">
                     <h2 class="SectionTitle" data-bind="text: selectedSection() && selectedSection().name"></h2>
                     <ul class="TilesList" data-bind="foreach: filteredSectionArticles">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
@@ -75,7 +75,7 @@
                     </ul>
                     <h2 class="SectionTitle">Still need help or have feedback?</h2>
                     <ul class="TilesList TilesList--openEnd">
-                        <li><a class="LinkTile" href="/contactForm/helpPages?subject=I%20need%20help!">
+                        <li><a class="LinkTile" href="/contact-form/helpPages?subject=I%20need%20help!">
                             <div class="Tile-content"><p>Contact us</p></div>
                             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                         </a></li>
@@ -85,14 +85,14 @@
                         </a></li>
                     </ul>
                 </div>
-                <div class="Content" data-bind="visible: viewType() == 'articleView'"> 
+                <div class="Content" data-bind="visible: viewType() == 'articleView'">
                     <div data-bind="with: fullArticleData">
                         <h2 class="SectionTitle SectionTitle--article" data-bind="text: title"></h2>
                         <span data-bind="html: description"></span>
                     </div>
                     <h2 class="SectionTitle">Still need help or have feedback?</h2>
                     <ul class="TilesList TilesList--openEnd">
-                        <li><a class="LinkTile" href="/contactForm/helpPages?subject=I%20need%20help!">
+                        <li><a class="LinkTile" href="/contact-form/helpPages?subject=I%20need%20help!">
                             <div class="Tile-content"><p>Contact us</p></div>
                             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                         </a></li>
@@ -103,7 +103,7 @@
                     </ul>
                 </div>
                 <div data-bind="visible: viewType() == 'helpView'">
-                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm/helpPages?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p>
+                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contact-form/helpPages?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p>
                     <h2 class="SectionTitle">Related help articles</h2>
                     <ul class="TilesList" data-bind="foreach: filteredSectionArticles">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
@@ -121,7 +121,7 @@
                     </a>
                 </div>
                 <div data-bind="visible: viewType() == 'viewAllArticles'">
-                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm/helpPages?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p>
+                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contact-form/helpPages?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p>
                     <div class="isolated inset">
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -140,9 +140,9 @@
                     <div data-bind="visible: !filteredArticles()" class="isolated inset text-center">
                         <div>Nothing on that topic yet...send us a note!</div>
                         <hr>
-                        <a href="/contactForm/helpPages?subject=I%20need%20help!" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
-                    </div>   
-                </div>                             
+                        <a href="/contact-form/helpPages?subject=I%20need%20help!" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
+                    </div>
+                </div>
             </div>
 <!--
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
@@ -150,5 +150,5 @@
             </div>
 -->
         </div>
-    </div>  
-</div> 
+    </div>
+</div>

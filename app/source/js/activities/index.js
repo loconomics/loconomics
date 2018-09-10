@@ -45,6 +45,7 @@ const activities = {
     'cancellationPolicies': createRedirect('cancellation-policies'),
     'clientAppointment': createRedirect('client-appointment'),
     'clientEditor': createRedirect('client-editor'),
+    'contactForm': createRedirect('contact-form'),
 };
 
 /**

@@ -113,7 +113,7 @@ NavAction.goMarketplace = new NavAction({
 });
 
 NavAction.goHelpIndex = new NavAction({
-    link: '/contactForm/general?mustReturn=true',
+    link: '/contact-form/general?mustReturn=true',
     text: 'Contact us',
     isModal: false
 });

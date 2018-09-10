@@ -10,7 +10,7 @@
                 <div data-bind="visible: viewType() == 'blogView'">
                     <p style="text-align: center;">We try and cover topics that will help you be better at whatever you do. Have expertise you'd like to
                         share as a guest blogger?
-                        <a href="/contactForm?subject=I'd%20like%20to%20be%20a%20guest%20blogger!"
+                        <a href="/contact-form?subject=I'd%20like%20to%20be%20a%20guest%20blogger!"
                             class="text-secondary">Send us a note!</a>
                     </p>
                     <div class="isolated inset">
@@ -39,7 +39,7 @@
                     <div data-bind="visible: nothingFound() && !isLoading()" class="isolated inset text-center">
                         <div>Nothing found. Would you like us to cover a topic? Send us a note!</div>
                         <hr>
-                        <a href="/contactForm?subject=Idea%20for%20a%20blog%20topic!" class="btn btn-secondary btn-link">Contact us</a>
+                        <a href="/contact-form?subject=Idea%20for%20a%20blog%20topic!" class="btn btn-secondary btn-link">Contact us</a>
                     </div>
                 </div>
                 <div class="Content" data-bind="visible: viewType() == 'postView', with: fullPostData()">
