@@ -32,6 +32,7 @@ const activities = {
     'backgroundCheck': createRedirect('background-check'),
     'bookingPolicies': createRedirect('booking-policies'),
     'bookMeButton': createRedirect('book-me-button'),
+    'datetimePicker': createRedirect('datetime-picker'),
 };
 
 /**
