@@ -98,12 +98,12 @@ export default class ClientAppointment extends Activity {
                         this.currentItem.load(first);
                         updateListIndex();
                         // Update URL
-                        shell.replaceState(null, null, '/clientAppointment/' + first.bookingID());
+                        shell.replaceState(null, null, '/client-appointment/' + first.bookingID());
                     }
                     else {
                         this.currentIndex(-2);
                         // Update URL
-                        shell.replaceState(null, null, '/clientAppointment');
+                        shell.replaceState(null, null, '/client-appointment');
                     }
                     this.isLoading(false);
                 })
@@ -127,7 +127,7 @@ export default class ClientAppointment extends Activity {
                 var b = this.list()[ni];
                 this.currentItem.load(b);
                 // Update URL
-                shell.replaceState(null, null, '/clientAppointment/' + b.bookingID());
+                shell.replaceState(null, null, '/client-appointment/' + b.bookingID());
             }
         };
         this.goNext = () => {
