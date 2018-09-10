@@ -47,6 +47,7 @@ const activities = {
     'clientEditor': createRedirect('client-editor'),
     'contactForm': createRedirect('contact-form'),
     'educationForm': createRedirect('education-form'),
+    'feedbackForm': createRedirect('feedback-form'),
 };
 
 /**
