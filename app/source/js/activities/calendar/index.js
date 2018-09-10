@@ -20,6 +20,7 @@ import getDateWithoutTime from '../../utils/getDateWithoutTime';
 import ko from 'knockout';
 import moment from 'moment';
 import showError from '../../modals/error';
+import style from './style.styl';
 import template from './template.html';
 import { data as user } from '../../data/userProfile';
 
@@ -28,6 +29,8 @@ const ROUTE_NAME = 'calendar';
 export default class Calendar extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);

@@ -28,6 +28,7 @@ import getDateWithoutTime from '../../utils/getDateWithoutTime';
 import ko from 'knockout';
 import moment from 'moment';
 import { show as showError } from '../../modals/error';
+import style from './style.styl';
 import template from './template.html';
 
 const ROUTE_NAME = 'appointment';
@@ -35,6 +36,8 @@ const ROUTE_NAME = 'appointment';
 export default class AppointmentActivity extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);
