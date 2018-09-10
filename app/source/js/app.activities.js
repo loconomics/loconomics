@@ -18,7 +18,6 @@ module.exports = {
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
-    'education': require('./activities/education'),
     'educationForm': require('./activities/educationForm'),
     'licensesCertifications': require('./activities/licensesCertifications'),
     'licensesCertificationsForm': require('./activities/licensesCertificationsForm'),
