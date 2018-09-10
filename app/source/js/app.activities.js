@@ -12,7 +12,6 @@ module.exports = {
     'login': require('./activities/login'),
     'logout': require('./activities/logout'),
     'signup': require('./activities/signup'),
-    'conversation': require('./activities/conversation'),
     'help': require('./activities/help'),
     'feedbackForm': require('./activities/feedbackForm'),
     'schedulingPreferences': require('./activities/schedulingPreferences'),
