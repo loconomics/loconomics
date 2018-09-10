@@ -6,7 +6,6 @@
 'use strict';
 
 module.exports = {
-    'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),
     'serviceProfessionalService': require('./activities/serviceProfessionalService'),
