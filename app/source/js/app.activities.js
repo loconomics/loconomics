@@ -19,7 +19,6 @@ module.exports = {
     'contactForm': require('./activities/contactForm'),
     'clientEditor': require('./activities/clientEditor'),
     'schedulingPreferences': require('./activities/schedulingPreferences'),
-    'calendarSyncing': require('./activities/calendarSyncing'),
     'privacySettings': require('./activities/privacySettings'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'servicesOverview': require('./activities/servicesOverview'),
