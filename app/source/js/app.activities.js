@@ -6,7 +6,6 @@
 'use strict';
 
 module.exports = {
-    'clients': require('./activities/clients'),
     'serviceProfessionalService': require('./activities/serviceProfessionalService'),
     'serviceAddresses': require('./activities/serviceAddresses'),
     'dashboard': require('./activities/dashboard'),
