@@ -299,7 +299,7 @@ function BaseClientBookingCardVM(app) {
         var info = this.serviceProfessionalInfo();
         info = info && info.selectedJobTitle();
         var id = info && info.cancellationPolicyID() || '';
-        return siteUrl + '#!cancellationPolicies/' + id + '?mustReturn=true';
+        return siteUrl + '#!cancellation-policies/' + id + '?mustReturn=true';
     }, this);
 
     ///

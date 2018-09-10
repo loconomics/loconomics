@@ -34,6 +34,7 @@ const activities = {
     'bookMeButton': createRedirect('book-me-button'),
     'datetimePicker': createRedirect('datetime-picker'),
     'calendarSyncing': createRedirect('calendar-syncing'),
+    'cancellationPolicies': createRedirect('cancellation-policies'),
 };
 
 /**

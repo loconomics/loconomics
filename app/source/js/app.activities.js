@@ -38,7 +38,6 @@ module.exports = {
     'myAppointments': require('./activities/myAppointments'),
     'clientAppointment': require('./activities/clientAppointment'),
     'viewBooking': require('./activities/viewBooking'),
-    'cancellationPolicies': require('./activities/cancellationPolicies'),
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
