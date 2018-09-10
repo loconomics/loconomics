@@ -11,7 +11,15 @@ function createRedirect(toPath) {
         static get template() { return ''; }
 
         show(state) {
-            setTimeout(() => this.app.shell.go(toPath, state, true), 10);
+            // Path should be the place we redirect to plus any
+            // parameters/path attached to it (usually, redirects
+            // are a name change and keep positional and named parameters
+            // otherwise a specilized redirect should be created if
+            // full compatibility is wanted)
+            const fullPath = toPath +
+                (state.route.path || '') +
+                state.route.query.rawOriginalQuery;
+            setTimeout(() => this.app.shell.go(fullPath, state, true), 10);
         }
     };
 }
