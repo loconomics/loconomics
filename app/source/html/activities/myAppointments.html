@@ -7,7 +7,7 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle"
                     data-bind="css: { 'is-syncing': upcomingAppointments.isSyncing(), 'is-loading': upcomingAppointments.isLoading() }">
-                    Upcoming 
+                    Upcoming
                     <!-- ko component: {
                         name: 'app-loading-spinner',
                         params: { mod: 'onRight' }
@@ -15,7 +15,7 @@
                 </h2>
                 <ul class="TilesList">
                     <li data-bind="with: upcomingAppointments.nextOnes">
-                        <a class="InfoTile" href="/clientAppointment" data-bind="attr: { href: $root.getUrlTo('clientAppointment') }">
+                        <a class="InfoTile" href="/client-appointment" data-bind="attr: { href: $root.getUrlTo('client-appointment') }">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-calendar"></span>
                             </div>
@@ -57,7 +57,7 @@
                             <a class="InfoTile" href="/pastAppointments">
                                 <div class="Tile-icon" aria-hidden="true">
                                     <span class="fa ion ion-rewind" aria-hidden="true"></span>
-                                </div>                
+                                </div>
                                 <div class="Tile-content">
                                     <p><span data-bind="text: pastAppointments.count"></span>  past appointments</p>
                                 </div>
@@ -65,7 +65,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>  
+            </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                <app-inline-side-menu params="vocElement: 'booking'"></app-inline-side-menu>
             </div>

@@ -33,7 +33,7 @@ A.prototype.show = function show(state) {
             this.app.shell.go('/appointment/' + booking.serviceDateID(), null, true);
         }
         else {
-            this.app.shell.go('/clientAppointment/' + bookingID, null, true);
+            this.app.shell.go('/client-appointment/' + bookingID, null, true);
         }
     }.bind(this))
     .catch(function(err) {

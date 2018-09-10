@@ -35,6 +35,7 @@ const activities = {
     'datetimePicker': createRedirect('datetime-picker'),
     'calendarSyncing': createRedirect('calendar-syncing'),
     'cancellationPolicies': createRedirect('cancellation-policies'),
+    'clientAppointment': createRedirect('client-appointment'),
 };
 
 /**

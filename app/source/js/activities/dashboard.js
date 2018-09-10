@@ -213,7 +213,7 @@ function ViewModel() {
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
     this.getUrlTo = function(name) {
-        // Sample '/clientAppointment/' + jobTitleID()
+        // Sample '/client-appointment/' + jobTitleID()
         return ko.pureComputed(function() {
             return (
                 '/' + name + '/' + this.upcomingAppointments.nextBooking.bookingID +'?mustReturn=/dashboard/' + '&returnText=' + ' Dashboard'

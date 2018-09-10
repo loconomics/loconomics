@@ -21,7 +21,7 @@
                         </li>
                     </ul>
                     <div class="Box-sm">
-                        <a href="#" data-bind="template: { name: 'service-professional-info-template', data: nextAppointmentServiceProfessionalInfo()}, attr: { href: $root.getUrlTo('clientAppointment') }"></a>
+                        <a href="#" data-bind="template: { name: 'service-professional-info-template', data: nextAppointmentServiceProfessionalInfo()}, attr: { href: $root.getUrlTo('client-appointment') }"></a>
                     </div>
                 </div>
                 <div data-bind="visible: user.isServiceProfessional">
@@ -87,7 +87,7 @@
                     </h2>
                     <div data-bind="visible: upcomingAppointments.items().length, with: upcomingAppointments.nextBooking()">
                         <a href="#" class="LeadTile"
-                           data-bind="attr: { href: $root.getUrlTo('clientAppointment') }">
+                           data-bind="attr: { href: $root.getUrlTo('client-appointment') }">
                             <h3 class="Tile-title">
                                 <div data-bind="text: displayedDate"></div>
                                 <div>

@@ -1,21 +1,22 @@
 /** ClientAppointment activity styles */
+@import '../../../css/utils/styleguideVars.styl';
 
-[data-activity=clientAppointment] {
-    
+[data-activity=client-appointment] {
+
     // Same toolbar, titleBar styles like at appointment.styl
 
     #clientAppointment-toolbar {
         // Needs positioning to avoid an overlay problem with the Cards below
         position: relative;
         z-index: 9999;
-        
+
         // Equal size for buttons, keeping alignment even when switch to edit mode
         .btn {
             height: 34px;
             line-height: 20px;
         }
     }
-    
+
     #clientAppointment-titleBar {
         @media $mediaMaxSm {
             margin-top: 15px;
