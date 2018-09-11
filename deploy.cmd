@@ -94,17 +94,17 @@ SET DEPLOY_META_CURRENT_PACKAGE_JSON=%DEPLOYMENT_SOURCE%\app\package.json
 IF "%AUTO_WEBAPP_BUILD%" EQU "ON" (
 	SET DO_WEBAPP_BUILD=1
 )
-ELSE IF "%AUTO_WEBAPP_BUILD%" EQU "DETECT" (
+IF "%AUTO_WEBAPP_BUILD%" EQU "DETECT" (
 	fc /b %DEPLOY_META_CURRENT_PACKAGE_JSON% %DEPLOY_META_LAST_PACKAGE_JSON%
 	:: Returned program codes:
 	:: 1 means: there are differences between both files
 	:: 0 means: no differences
 	:: 2 means file not found
 	:: -1 means: invalid syntax
-	If "%ERRORLEVEL%"=="-1" (
+	If %ERRORLEVEL% EQU -1 (
 		goto error
 	)
-	ELSE IF %ERRORLEVEL%>0 (
+	IF %ERRORLEVEL% GTR 0 (
 		:: no file (first time) or differences, request build!
 		SET DO_WEBAPP_BUILD=1
 		:: after success build, we will copy the file so it becomes the new 'last' one
