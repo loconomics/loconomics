@@ -48,7 +48,7 @@ var alertPresets = {
         },
         professionallicense: {
             label: 'Submit required credentials',
-            route: new RouteParser('/licensesCertifications/:jobTitleID')
+            route: new RouteParser('/licenses-certifications/:jobTitleID')
         },
         location: {
             label: 'Where do you work?',
@@ -68,7 +68,7 @@ var alertPresets = {
         },
         'required-professionallicense': {
               label: 'Verify your professional license or certification',
-              route: new RouteParser('/licensesCertifications/:jobTitleID')
+              route: new RouteParser('/licenses-certifications/:jobTitleID')
         }
     };
 var undefinedPreset = { label: '', route: { reverse: function() { return ''; } } };

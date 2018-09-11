@@ -64,7 +64,7 @@ export default class CredentialsAddActivity extends Activity {
          */
         this.addCertificationURL = ko.pureComputed(() => {
             const jobTitleID = this.jobTitleID();
-            return `/licensesCertifications/${jobTitleID}?mustReturn=credentials-add/${jobTitleID}&returnText=${encodeURIComponent('Add Credentials')}`;
+            return `/licenses-certifications/${jobTitleID}?mustReturn=credentials-add/${jobTitleID}&returnText=${encodeURIComponent('Add Credentials')}`;
         });
     }
 

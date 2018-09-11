@@ -83,7 +83,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    var link = this.requestData.cancelLink || '/licensesCertifications/';
+    var link = this.requestData.cancelLink || '/licenses-certifications/';
 
     if (this.viewModel.isNew())
         this.convertToCancelAction(this.navBar.leftAction(), link);
