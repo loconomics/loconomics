@@ -82,30 +82,62 @@ IF "%CHANNEL%" EQU "live" (
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Building
 :: ----------
-
-:: 1. Build Webapp
-echo Prepare environment to build WebApp
-:: .a Install Yarn
-echo Install Yarn if unavailable
-SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\yarn\bin\yarn.cmd
-IF NOT EXIST %YARN_PATH% (
-  pushd %DEPLOYMENT_SOURCE%
-  call :ExecuteCmd %NPM_CMD% i --no-save yarn
-  popd
-  IF !ERRORLEVEL! NEQ 0 goto error
+:: 0. Detect if a webapp rebuild is needed: Is it enabled and app package.json has changed?
+:: By default, build is 0, like if AUTO_WEBAPP_BUILD had value "OFF" (or any unsupported value)
+SET DO_WEBAPP_BUILD=0
+SET DEPLOY_META_LAST_PACKAGE_JSON=%DEPLOYMENT_SOURCE%\..\deployments\last-app-package.json
+SET DEPLOY_META_CURRENT_PACKAGE_JSON=%DEPLOYMENT_SOURCE%\app\package.json
+:: NOTE: we have a env var to set this building OFF/ON/DETECT, as we usually set-it as ON (ever rebuild) at
+:: dev channel/others since we don't update app version on changes there (could get triggered by other changes, usually modules or task set-up),
+:: while on live/production we ever must update the version at the app/package.json by rule, so we are in 'DETECT' mode letting us to have 
+:: faster updates when no webapp build needed.
+IF "%AUTO_WEBAPP_BUILD%" EQU "ON" (
+	SET DO_WEBAPP_BUILD=1
 )
-:: .b Enter app dir
-pushd %DEPLOYMENT_SOURCE%\app
-:: .c Install Dependencies
-echo Install app dependencies
-call :ExecuteCmd %YARN_PATH% install
-IF !ERRORLEVEL! NEQ 0 goto error
-:: .e Build Webapp (already copy contents on the /web dir)
-echo Building WebApp
-call :ExecuteCmd %YARN_PATH% run build-web-release
-IF !ERRORLEVEL! NEQ 0 goto error
-:: .f Exit app dir (restore previous location)
-popd
+ELSE IF "%AUTO_WEBAPP_BUILD%" EQU "DETECT" (
+	fc /b %DEPLOY_META_CURRENT_PACKAGE_JSON% %DEPLOY_META_LAST_PACKAGE_JSON%
+	:: Returned program codes:
+	:: 1 means: there are differences between both files
+	:: 0 means: no differences
+	:: 2 means file not found
+	:: -1 means: invalid syntax
+	If "%ERRORLEVEL%"=="-1" (
+		goto error
+	)
+	ELSE IF %ERRORLEVEL%>0 (
+		:: no file (first time) or differences, request build!
+		SET DO_WEBAPP_BUILD=1
+		:: after success build, we will copy the file so it becomes the new 'last' one
+	)
+)
+IF %DO_WEBAPP_BUILD% EQU 1 (
+	:: 1. Build Webapp
+	echo Prepare environment to build WebApp
+	:: .a Install Yarn
+	echo Install Yarn if unavailable
+	SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\yarn\bin\yarn.cmd
+	IF NOT EXIST %YARN_PATH% (
+	  pushd %DEPLOYMENT_SOURCE%
+	  call :ExecuteCmd %NPM_CMD% i --no-save yarn
+	  popd
+	  IF !ERRORLEVEL! NEQ 0 goto error
+	)
+	:: .b Enter app dir
+	pushd %DEPLOYMENT_SOURCE%\app
+	:: .c Install Dependencies
+	echo Install app dependencies
+	call :ExecuteCmd %YARN_PATH% install
+	IF !ERRORLEVEL! NEQ 0 goto error
+	:: .e Build Webapp (already copy contents on the /web dir)
+	echo Building WebApp
+	call :ExecuteCmd %YARN_PATH% run build-web-release
+	IF !ERRORLEVEL! NEQ 0 goto error
+	:: .f Exit app dir (restore previous location)
+	popd
+	:: Z: on success end, copy package file to track future changes
+	copy /Y /V %DEPLOY_META_CURRENT_PACKAGE_JSON% %DEPLOY_META_LAST_PACKAGE_JSON%
+	IF !ERRORLEVEL! NEQ 0 goto error
+)
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
