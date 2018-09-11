@@ -119,7 +119,7 @@ public class ScheduleTask
         // Send Email too if exceptions found
         if (logger.HasExceptions)
         {
-            LcMessaging.NotifyError("ScheduleTask throw Exceptions", "/ScheduledTask", logger.ToString());
+            LcMessaging.NotifyError("ScheduleTask throw Exceptions", "/ScheduledTask", logresult);
         }
         //}catch { }
 
