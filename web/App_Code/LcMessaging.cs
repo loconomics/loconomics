@@ -865,7 +865,7 @@ public class LcMessaging
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/Welcome/",
             new Dictionary<string,object> {
                 { "userID", userID }
-         }), "Loconomics Cooperative <automated@loconomics.com>");
+         }), String.Format("Loconomics Cooperative <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     public static void SendWelcomeCustomer(int userID, string userEmail)
     {
@@ -873,7 +873,7 @@ public class LcMessaging
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/Welcome/",
             new Dictionary<string, object> {
                 { "userID", userID }
-        }), "Loconomics Cooperative <automated@loconomics.com>");
+        }), String.Format("Loconomics Cooperative <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     public static void SendResetPassword(int userID, string userEmail, string token)
     {
@@ -892,7 +892,7 @@ public class LcMessaging
             new Dictionary<string, object> {
                 { "userID", userID },
                 { "passwordResetToken", token }
-        }), "Loconomics Cooperative <automated@loconomics.com>");
+        }), String.Format("Loconomics Cooperative <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     #endregion
     #endregion
@@ -904,7 +904,7 @@ public class LcMessaging
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/BackgroundCheckRequestReceived/",
             new Dictionary<string, object> {
                 { "UserID", userID }
-        }), "Loconomics Marketplace <automated@loconomics.com>");
+        }), String.Format("Loconomics Marketplace <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     public static void SendOptionalCertificationVerificationRequestReceived(int userID, string userEmail)
     {
@@ -912,7 +912,7 @@ public class LcMessaging
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/OptionalCertificationVerificationRequestReceived/",
             new Dictionary<string, object> {
                 { "UserID", userID }
-        }), "Loconomics Marketplace <automated@loconomics.com>");
+        }), String.Format("Loconomics Marketplace <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     public static void SendRequiredLicenseVerificationRequestReceived(int userID, string userEmail)
     {
@@ -920,7 +920,7 @@ public class LcMessaging
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/RequiredLicenseVerificationRequestReceived/",
             new Dictionary<string, object> {
                 { "UserID", userID }
-        }), "Loconomics Marketplace <automated@loconomics.com>");
+        }), String.Format("Loconomics Marketplace <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     /// <summary>
     /// Sended when scheduled task indicates service professional has their marketplace profile activated, and they've completed two bookings
@@ -933,7 +933,7 @@ public class LcMessaging
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/OwnerInvitation/",
             new Dictionary<string, object> {
                 { "UserID", userID }
-        }), "Loconomics Marketplace <automated@loconomics.com>");
+        }), String.Format("Loconomics Marketplace <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     /// <summary>
     /// Sended when scheduled task indicates the professional must be reminded to enter its earnings
@@ -946,7 +946,7 @@ public class LcMessaging
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/EarningsEntryReminder/",
             new Dictionary<string, object> {
                 { "UserID", userID }
-        }), "Loconomics Cooperative <automated@loconomics.com>");
+        }), String.Format("Loconomics Cooperative <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     /// <summary>
     /// Sended when a user creates a user posting, and this user seems to match the requirements so we
@@ -961,7 +961,7 @@ public class LcMessaging
             new Dictionary<string, object> {
                 { "UserID", userID },
                 { "userPostingID", userPostingID }
-        }), "Loconomics Cooperative <automated@loconomics.com>");
+        }), String.Format("Loconomics Cooperative <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]));
     }
     /// <summary>
     /// Sended when a professional answers a GIG posting by 'applying' to it, sending a message to the 
@@ -977,7 +977,7 @@ public class LcMessaging
                 { "UserID", userID },
                 { "userPostingID", userPostingID },
                 { "serviceProfessionalUserID", serviceProfessionalUserID}
-        }), "Loconomics Cooperative <automated@loconomics.com>", professionalEmail);
+        }), String.Format("Loconomics Cooperative <{0}>", ConfigurationManager.AppSettings["AutomatedEmail"]), professionalEmail);
     }
     #endregion
 
@@ -1295,18 +1295,6 @@ public class LcMessaging
             string from = emaildata["emailfrom"];
 
             SendMailNow(emailto, subject, body, from);
-
-            // TODO: Test using the normal API for email sending, trying to solve current problem with
-            // emails not being sent by this way:
-            /*
-                SmtpClient client = new SmtpClient("mail.loconomics.com", 25);
-                client.EnableSsl = false;
-                client.Credentials = new NetworkCredential("automated@loconomics.com", "Loconomic$2011");
-                MailAddress from = new MailAddress(from);
-                MailAddress to = new MailAddress(mail);
-                MailMessage message = new MailMessage(from, to);
-                client.SendAsync(message,"testing");
-             */
         }
         catch (Exception ex)
         {
