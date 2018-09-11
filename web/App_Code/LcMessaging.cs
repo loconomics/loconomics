@@ -997,7 +997,7 @@ public class LcMessaging
     {
         try
         {
-            var email = ConfigurationManager.AppSettings["SupportEmail"];
+            var email = ConfigurationManager.AppSettings["ErrorsNotificationEmail"];
             SendMail(email, LcHelpers.Channel + ": Exception on " + where + ": " + url,
                 exceptionPageContent);
         }
