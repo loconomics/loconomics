@@ -116,6 +116,11 @@ public class ScheduleTask
         // Finishing: save log on disk, per month rotation
         //try {
         logger.Save();
+        // Send Email too if exceptions found
+        if (logger.HasExceptions)
+        {
+            LcMessaging.NotifyError("ScheduleTask throw Exceptions", "/ScheduledTask", logger.ToString());
+        }
         //}catch { }
 
         return logresult;

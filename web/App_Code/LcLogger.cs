@@ -11,6 +11,13 @@ public class LcLogger : IDisposable
 {
     StringBuilder logger;
     string logName;
+
+    public bool HasExceptions
+    {
+        get;
+        private set;
+    }
+
     /// <summary>
     /// Create a new logger.
     /// </summary>
@@ -30,12 +37,15 @@ public class LcLogger : IDisposable
     /// </summary>
     /// <param name="format"></param>
     /// <param name="pars"></param>
-    public void Log(string format, params object[] pars){
+    public void Log(string format, params object[] pars)
+    {
         string str = "";
-        try {
+        try
+        {
             str = String.Format(format.Replace("\n", "  "), pars);
         }
-        catch {
+        catch
+        {
             // Catch invalid format messages
             str = String.IsNullOrEmpty(format) ? "**no log message**" : format.Replace("\n", "  ");
         }
@@ -50,7 +60,9 @@ public class LcLogger : IDisposable
     /// </summary>
     /// <param name="task"></param>
     /// <param name="ex"></param>
-    public void LogEx(string task, Exception ex){
+    public void LogEx(string task, Exception ex)
+    {
+        HasExceptions = true;
         if (ex == null) return;
         Log("{0}: Exception: {1}", task, ex.Message);
         // Exception 'ToString' have full details, exception type, stacktrace, additional data..
@@ -67,18 +79,22 @@ public class LcLogger : IDisposable
     public void LogData(string format, params object[] pars)
     {
         string str = "";
-        try {
+        try
+        {
             str = String.Format(format, pars);
         }
-        catch {
+        catch
+        {
             // Catch invalid format messages
             str = String.IsNullOrEmpty(format) ? "**no log message**" : format;
         }
         if (String.IsNullOrWhiteSpace(str)) return;
         logger.AppendFormat("[LOGDATA[\n{0}\n]LOGDATA]\n", str);
     }
-    string innerExToString(Exception ex){
-        if (ex.InnerException != null) {
+    string innerExToString(Exception ex)
+    {
+        if (ex.InnerException != null)
+        {
             return String.Format("\nInnerException: {0}\n{1}{2}", ex.InnerException.Message, ex.InnerException.ToString(), innerExToString(ex.InnerException));
         }
         return "";
