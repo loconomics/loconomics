@@ -19,6 +19,7 @@ import Activity from '../../components/Activity';
 import MarketplaceSearch from '../../viewmodels/MarketplaceSearch';
 import shell from '../../app.shell';
 import snapPoints from '../../utils/snapPoints';
+import style from './style.styl';
 import template from './template.html';
 import { data as user } from '../../data/userProfile';
 
@@ -27,6 +28,8 @@ const ROUTE_NAME = 'home';
 export default class HomeActivity extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);

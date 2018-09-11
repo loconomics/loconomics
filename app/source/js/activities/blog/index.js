@@ -13,6 +13,7 @@ import Activity from '../../components/Activity';
 import Model from '../../models/Model';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
+import style from './style.styl';
 import template from './template.html';
 
 const ROUTE_NAME = 'blog';
@@ -21,6 +22,8 @@ const BLOG_URL = 'https://public-api.wordpress.com/rest/v1.1/sites/loconomics.wo
 export default class BlogActivity extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);

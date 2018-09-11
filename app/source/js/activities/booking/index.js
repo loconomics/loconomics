@@ -11,6 +11,7 @@ import * as activities from '../index';
 import Activity from '../../components/Activity';
 import NewClientBookingCardVM from '../../viewmodels/NewClientBookingCardVM';
 import ko from 'knockout';
+import style from './style.styl';
 import template from './template.html';
 
 const ROUTE_NAME = 'booking';
@@ -18,6 +19,8 @@ const ROUTE_NAME = 'booking';
 export default class Booking extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);

@@ -24,6 +24,7 @@ import bookings from '../../data/bookings';
 import ko from 'knockout';
 import messaging from '../../data/messaging';
 import { show as showError } from '../../modals/error';
+import style from './style.styl';
 import template from './template.html';
 import { data as user } from '../../data/userProfile';
 import { list as userListings } from '../../data/userListings';
@@ -34,6 +35,8 @@ const ROUTE_NAME = 'dashboard';
 export default class Dashboard extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);

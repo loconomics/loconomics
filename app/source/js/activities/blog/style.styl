@@ -1,20 +1,26 @@
 /**
     Blog activity styles.
 **/
-[data-activity=blog]
-    
+@import '../../../css/utils/styleguideVars.styl';
+
+[data-activity=blog] {
     // Ensure contents don't create horizontal scroll
-    .container
-        background $gray-background
+    .container {
+        background: $gray-background;
         overflow: hidden;
         // Multiline for large words, like links. Seems only needed for Webkit;
         // with and without it, Firefox do it similar and slightly better by default
         word-wrap: break-word;
         padding: 30px;
+
         h1 {
             text-align: center;
         }
-        .nav 
-        &.navbar-nav
+
+        .nav
+        &.navbar-nav {
             margin-top: 30px;
             text-align: right;
+        }
+    }
+}
