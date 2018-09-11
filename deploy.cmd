@@ -91,53 +91,52 @@ SET DEPLOY_META_CURRENT_PACKAGE_JSON=%DEPLOYMENT_SOURCE%\app\package.json
 :: dev channel/others since we don't update app version on changes there (could get triggered by other changes, usually modules or task set-up),
 :: while on live/production we ever must update the version at the app/package.json by rule, so we are in 'DETECT' mode letting us to have 
 :: faster updates when no webapp build needed.
-IF "%AUTO_WEBAPP_BUILD%" EQU "ON" (
-	SET DO_WEBAPP_BUILD=1
-)
-IF "%AUTO_WEBAPP_BUILD%" EQU "DETECT" (
-	fc /b %DEPLOY_META_CURRENT_PACKAGE_JSON% %DEPLOY_META_LAST_PACKAGE_JSON%
-	:: Returned program codes:
+IF /I "%AUTO_WEBAPP_BUILD%" EQU "ON" SET DO_WEBAPP_BUILD=1
+IF /I "%AUTO_WEBAPP_BUILD%" EQU "DETECT" (
+	:: Compare files with FC
+	:: FC returned program codes:
 	:: 1 means: there are differences between both files
 	:: 0 means: no differences
 	:: 2 means file not found
 	:: -1 means: invalid syntax
-	If %ERRORLEVEL% EQU -1 (
-		goto error
-	)
-	IF %ERRORLEVEL% GTR 0 (
-		:: no file (first time) or differences, request build!
-		SET DO_WEBAPP_BUILD=1
-		:: after success build, we will copy the file so it becomes the new 'last' one
-	)
+	:: It is weird, but FC command doesn't set the ERRORLEVEL variable but the special code (used in IF without %_%)
+	:: that has ever a greater-than comparision (see https://ss64.com/nt/errorlevel.html)
+	call fc /LB1 "%DEPLOY_META_CURRENT_PACKAGE_JSON%" "%DEPLOY_META_LAST_PACKAGE_JSON%" 2>NUL >NUL
+	IF ERRORLEVEL 1 SET DO_WEBAPP_BUILD=1
+	:: no file (first time) or differences, request build!
+	:: after success build, we will copy the file so it becomes the new 'last' one
 )
-IF %DO_WEBAPP_BUILD% EQU 1 (
-	:: 1. Build Webapp
-	echo Prepare environment to build WebApp
-	:: .a Install Yarn
-	echo Install Yarn if unavailable
-	SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\yarn\bin\yarn.cmd
-	IF NOT EXIST %YARN_PATH% (
-	  pushd %DEPLOYMENT_SOURCE%
-	  call :ExecuteCmd %NPM_CMD% i --no-save yarn
-	  popd
-	  IF !ERRORLEVEL! NEQ 0 goto error
-	)
-	:: .b Enter app dir
-	pushd %DEPLOYMENT_SOURCE%\app
-	:: .c Install Dependencies
-	echo Install app dependencies
-	call :ExecuteCmd %YARN_PATH% install
-	IF !ERRORLEVEL! NEQ 0 goto error
-	:: .e Build Webapp (already copy contents on the /web dir)
-	echo Building WebApp
-	call :ExecuteCmd %YARN_PATH% run build-web-release
-	IF !ERRORLEVEL! NEQ 0 goto error
-	:: .f Exit app dir (restore previous location)
-	popd
-	:: Z: on success end, copy package file to track future changes
-	copy /Y /V %DEPLOY_META_CURRENT_PACKAGE_JSON% %DEPLOY_META_LAST_PACKAGE_JSON%
-	IF !ERRORLEVEL! NEQ 0 goto error
+
+IF %DO_WEBAPP_BUILD% EQU 0 goto AfterWebappBuild
+
+:: 1. Build Webapp
+echo Prepare environment to build WebApp
+:: .a Install Yarn
+echo Install Yarn if unavailable
+SET YARN_PATH=%DEPLOYMENT_SOURCE%\node_modules\yarn\bin\yarn.cmd
+IF NOT EXIST %YARN_PATH% (
+  pushd %DEPLOYMENT_SOURCE%
+  call :ExecuteCmd %NPM_CMD% i --no-save yarn
+  popd
+  IF !ERRORLEVEL! NEQ 0 goto error
 )
+:: .b Enter app dir
+pushd %DEPLOYMENT_SOURCE%\app
+:: .c Install Dependencies
+echo Install app dependencies
+call :ExecuteCmd %YARN_PATH% install
+IF !ERRORLEVEL! NEQ 0 goto error
+:: .e Build Webapp (already copy contents on the /web dir)
+echo Building WebApp
+call :ExecuteCmd %YARN_PATH% run build-web-release
+IF !ERRORLEVEL! NEQ 0 goto error
+:: .f Exit app dir (restore previous location)
+popd
+:: Z: on success end, copy package file to track future changes
+copy /Y /V %DEPLOY_META_CURRENT_PACKAGE_JSON% %DEPLOY_META_LAST_PACKAGE_JSON%
+IF !ERRORLEVEL! NEQ 0 goto error
+
+:AfterWebappBuild
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
