@@ -10,7 +10,6 @@
 import * as activities from '../index';
 import * as userProfile from '../../data/userProfile';
 import Activity from '../../components/Activity';
-import UserType from '../../enums/UserType';
 import VocElementEnum from '../../models/VocElementEnum';
 import feedback from '../../data/feedback';
 import ko from 'knockout';
