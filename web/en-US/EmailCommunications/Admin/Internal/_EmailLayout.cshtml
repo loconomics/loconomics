@@ -17,6 +17,7 @@
         }
     }
     var isNotAUser = (bool)(PageData["isNotAUser"] ?? false);
+    var automatedEmail = System.Configuration.ConfigurationManager.AppSettings["AutomatedEmail"];
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -132,7 +133,7 @@
                     @if (!isNotAUser) {
                     <text>Visit <a target="_blank" href="@(LcUrl.LangUrl)dashboard/privacy/">alert preferences</a> to manage your email and mobile alerts. </text><br />
                     }
-                    Please add <a href="mailto:automated@loconomics.com">automated@loconomics.com</a> to your address book to ensure delivery of our emails. <br />
+                    Please add <a href="mailto:@(automatedEmail)">@(automatedEmail)</a> to your address book to ensure delivery of our emails. <br />
                     &#0169; @(DateTime.Today.Year) Loconomics, Inc. | All Rights Reserved. <br />
                     3150 18th Street Suite 438, Mailbox 208, San Francisco, CA 94110 <br />
                     <a target="_blank" href="@(LcUrl.LangUrl)About/PrivacyPolicy/">Privacy Policy</a> | <a target="_blank" href="@(LcUrl.LangUrl)About/TermsOfUse/">Terms of Use</a>

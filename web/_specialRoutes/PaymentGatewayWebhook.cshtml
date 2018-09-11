@@ -12,6 +12,14 @@
         var payload = Request["bt_payload"];
         var notification = gw.WebhookNotification.Parse(signature, payload);
 
+        // Detect bad set-up and proper target of the payload by checking that notification is not null
+        // (if the signature received doesn't matches current Braintree keys, that creates the Gateway object,
+        // then something is wrong in the settings).
+        if (notification == null || notification.MerchantAccount == null || notification.MerchantAccount.Id == null)
+        {
+            throw new Exception("Wrong Braintree set-up for received notification");
+        }
+
         // Detecting the channel (from the ID) and the domain on wich this page is executing
         // to stop processing on the case they don't match.
         // Since we have 4 channels and only 2 at Braintree -sandbox and production-, Braintree production
