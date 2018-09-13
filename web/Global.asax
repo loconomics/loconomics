@@ -34,6 +34,7 @@
 
     void Application_Error(object sender, EventArgs e)
     {
+        var logError = true;
         Exception ex = Server.GetLastError();
         // Special cases (each page creates its own log file)
         if (ex is HttpException)
@@ -46,7 +47,8 @@
             // runs its own 'not found/errors' logic far before (and customErrors web.config seems to not
             // work for some reason, maybe needs to be in the root config or something in the rewriting there
             // breaks it or the hosting set-up avoids custom errors on web.config).
-            switch (((HttpException)ex).GetHttpCode()){
+            switch (((HttpException)ex).GetHttpCode())
+            {
                 case 404:
                     // IMPORTANT: To enable splash screen, all not founds goes to index silently
                     //Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
@@ -70,6 +72,7 @@
             Response.StatusCode = 404;
             Response.Write("Not Found");
             Response.End();
+            logError = false;
         }
 
         if (ex is HttpUnhandledException && ex.InnerException != null)
@@ -81,7 +84,10 @@
         {
             try
             {
-                LcLogger.LogAspnetError(ex);
+                if (logError)
+                {
+                    LcLogger.LogAspnetError(ex);
+                }
             }
             catch { }
 

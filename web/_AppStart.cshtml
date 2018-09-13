@@ -46,6 +46,9 @@
     //RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/icalendar/{page}", "~/api/v1/icalendar/{page}.cshtml");
     // Catch-all pages route, will route to any page inmediately in the API folder, or Not Found
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/{page}/{*urldata}", "~/api/v1/{page}.cshtml");
+    // IMPORTANT: All routes that uses a segment to match a cshtml file (like previous one), can fail because of
+    // URLs pointing to non-existent file, throwing an error. That ones are catch at Global.asax so just a NotFound
+    // without error logged is generated.
 
     // ScheduledTask
     RouteTable.Routes.MapWebPageRoute("scheduledtask", "~/_specialRoutes/ScheduledTask.cshtml");
