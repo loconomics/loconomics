@@ -2,12 +2,16 @@
     var response = "";
     var gw = LcPayment.NewBraintreeGateway();
 
-    if (!IsPost) {
+    if (!IsPost)
+    {
         var challenge = Request["bt_challenge"];
-        if (!String.IsNullOrWhiteSpace(challenge)) {
+        if (!String.IsNullOrWhiteSpace(challenge))
+        {
             response = gw.WebhookNotification.Verify(Request["bt_challenge"]);
         }
-    } else {
+    }
+    else
+    {
         var signature = Request["bt_signature"];
         var payload = Request["bt_payload"];
         var notification = gw.WebhookNotification.Parse(signature, payload);
@@ -21,37 +25,21 @@
         }
 
         // Doing the action that fits better:
+        // (Next if block is like a switch(notification.Kind) but the type used by Braintree doesn't allow that syntax)
         //
-
         // Marketplace Merchant Accounts
-        if (notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_APPROVED ||
-            notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_DECLINED) {
+        if (notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_APPROVED)
+        {
             LcPayment.RegisterProviderPaymentAccountCreationNotification(notification, signature, payload);
         }
-        if (notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_DECLINED) {
+        else if (notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_DECLINED)
+        {
+            LcPayment.RegisterProviderPaymentAccountCreationNotification(notification, signature, payload);
             var providerID = LcUtils.ExtractInt(notification.MerchantAccount.Id, 0);
             LcMessaging.SendMerchantAccountNotification(providerID);
         }
-
         // Payment Plan Subscription updates
-        var planNotifications = new List<Braintree.WebhookKind>
-        {
-            // Status Changes
-            Braintree.WebhookKind.SUBSCRIPTION_CANCELED,
-            Braintree.WebhookKind.SUBSCRIPTION_EXPIRED,
-            Braintree.WebhookKind.SUBSCRIPTION_WENT_ACTIVE,
-            Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE,
-            // Payment Changes: it can change the status (past_due on unsuccessfully,
-            // active on successfully if comes from past_due)
-            // and subscription data (NextBilling info).
-            Braintree.WebhookKind.SUBSCRIPTION_CHARGED_SUCCESSFULLY,
-            Braintree.WebhookKind.SUBSCRIPTION_CHARGED_UNSUCCESSFULLY
-            // Trial ended notification is not relevant (status is active before and after
-            // and payment data the same; the actual relevant changes when that happens is
-            // the payment charge, detected with the '_CHARGED_' notifications)
-            //Braintree.WebhookKind.SUBSCRIPTION_TRIAL_ENDED
-        };
-        if (planNotifications.Contains(notification.Kind))
+        else if (PlanSubscriptionNotificationKinds.Contains(notification.Kind))
         {
             var userPlan = LcRest.UserPaymentPlan.GetBySubscriptionID(notification.Subscription.Id);
             if (userPlan == null)
@@ -71,8 +59,34 @@
                 }
             }
         }
-
-        // Other...
+        else if (notification.Kind == Braintree.WebhookKind.CHECK)
+        {
+            response = "OK";
+        }
+        else
+        {
+            throw new HttpException(400, "Not supported BraintreNotification.Kind: " + notification.Kind);
+        }
     }
+}
+@functions
+{
+    List<Braintree.WebhookKind> PlanSubscriptionNotificationKinds = new List<Braintree.WebhookKind>
+    {
+        // Status Changes
+        Braintree.WebhookKind.SUBSCRIPTION_CANCELED,
+        Braintree.WebhookKind.SUBSCRIPTION_EXPIRED,
+        Braintree.WebhookKind.SUBSCRIPTION_WENT_ACTIVE,
+        Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE,
+        // Payment Changes: it can change the status (past_due on unsuccessfully,
+        // active on successfully if comes from past_due)
+        // and subscription data (NextBilling info).
+        Braintree.WebhookKind.SUBSCRIPTION_CHARGED_SUCCESSFULLY,
+        Braintree.WebhookKind.SUBSCRIPTION_CHARGED_UNSUCCESSFULLY
+        // Trial ended notification is not relevant (status is active before and after
+        // and payment data the same; the actual relevant changes when that happens is
+        // the payment charge, detected with the '_CHARGED_' notifications)
+        //Braintree.WebhookKind.SUBSCRIPTION_TRIAL_ENDED
+    };
 }
 @response
