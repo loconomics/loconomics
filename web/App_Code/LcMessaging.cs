@@ -1214,7 +1214,6 @@ public class LcMessaging
     }
     string PerformRequest(string url)
     {
-        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         // Create a new HttpWebRequest object.Make sure that 
         // a default proxy is set if you are behind a firewall.
         HttpWebRequest myHttpWebRequest1 = (HttpWebRequest)WebRequest.Create(url);
