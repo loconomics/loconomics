@@ -1075,6 +1075,13 @@ public class LcMessaging
     #region Template System
     public static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
     {
+        // EVER, specify this global setting, or any request will fail because attempting a TLS 1.0 connection, with the server
+        // closing connection, the WebClient/HttpRequest classes being unable to negotiate it properly (without next line)
+        // and failing every attempt. Recently the server had the TLS 1.0 disabled, and early could get 1.1, so we prepare
+        // this to just attempt 1.2 connections.
+        //System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
         string rtn = "";
 
         using (WebClient w = new WebClient())
@@ -1083,10 +1090,6 @@ public class LcMessaging
 
             // Setup URL
             string completeURL = LcUrl.SiteUrl + LcUrl.GetTheGoodURL(tplUrl);
-            if (LcHelpers.Channel != "live")
-            {
-                completeURL = completeURL.Replace("https:", "http:");
-            }
 
             // First, we need substract from the URL the QueryString to be
             // assigned to the WebClient object, avoiding problems while
@@ -1180,6 +1183,62 @@ public class LcMessaging
         // Removed: (LcHelpers.InLive && !HttpContext.Current.Request.IsLocal)
         if (HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
+    }
+
+    #region Other attempts / alternative to WebClient in ApplyTemplate
+    string ApplyTemplateAlternateTrials(string tplUrl, Dictionary<string, object> data)
+    {
+        //HttpContext.Current.Response.Output = null;
+        //var o = new System.IO.StringWriter();
+        //var r = new System.Web.Hosting.SimpleWorkerRequest(tplUrl, "", o);
+        //Server.Execute();
+        //System.Web.UI.PageParser.GetCompiledPageInstance()
+
+        return PerformRequest(AddDataToTemplateUrl(tplUrl, data));
+    }
+    string AddDataToTemplateUrl(string tplUrl, Dictionary<string, object> data)
+    {
+        string completeURL = LcUrl.SiteUrl + LcUrl.GetTheGoodURL(tplUrl);
+        completeURL = completeURL.Replace("https:/", "http:/");
+
+        var uri = new UriBuilder(completeURL);
+        if (!String.IsNullOrEmpty(uri.Query) && data != null)
+        {
+            foreach (var d in data)
+            {
+                var key = Uri.EscapeDataString(d.Key);
+                var value = Uri.EscapeDataString((d.Value ?? "").ToString());
+                uri.Query += "&" + key + "=" + value;
+            }
+
+            if (!uri.Query.Contains("RequestKey="))
+            {
+                uri.Query += "&RequestKey=abcd3";
+            }
+            completeURL = uri.ToString();
+        }
+        return completeURL;
+    }
+    string PerformRequest(string url)
+    {
+        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        // Create a new HttpWebRequest object.Make sure that 
+        // a default proxy is set if you are behind a firewall.
+        HttpWebRequest myHttpWebRequest1 = (HttpWebRequest)WebRequest.Create(url);
+        myHttpWebRequest1.KeepAlive = false;
+        myHttpWebRequest1.AllowAutoRedirect = true;
+        myHttpWebRequest1.AutomaticDecompression = DecompressionMethods.Deflate & DecompressionMethods.GZip;
+        myHttpWebRequest1.Timeout = 6000;
+        // Assign the response object of HttpWebRequest to a HttpWebResponse variable.
+        HttpWebResponse myHttpWebResponse1 = (HttpWebResponse)myHttpWebRequest1.GetResponse();
+
+        using (var streamResponse = myHttpWebResponse1.GetResponseStream())
+        using (var streamRead = new System.IO.StreamReader(streamResponse))
+        {
+            var result = streamRead.ReadToEnd();
+            streamResponse.Flush();
+            return result;
+        }
     }
     #endregion
 
