@@ -26,6 +26,14 @@
                 return message;
             };
         }
+
+        // EVER, specify this global setting, or any clien thttp request will fail because attempting a TLS 1.0 connection, with the server
+        // closing connection, the WebClient/HttpRequest classes being unable to negotiate it properly (without next line)
+        // and failing every attempt. Recently the server had the TLS 1.0 disabled, and early could get 1.1, so we prepare
+        // this to just attempt 1.2 connections. Needed for code like LcMessaging.ApplyTemplate, but place globally so
+        // affects consistently to every usage from the very beggining of the server startup.
+        //System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
     }
 
     void Application_End(object sender, EventArgs e)

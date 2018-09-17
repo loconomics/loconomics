@@ -1075,13 +1075,6 @@ public class LcMessaging
     #region Template System
     public static string ApplyTemplate(string tplUrl, Dictionary<string, object> data)
     {
-        // EVER, specify this global setting, or any request will fail because attempting a TLS 1.0 connection, with the server
-        // closing connection, the WebClient/HttpRequest classes being unable to negotiate it properly (without next line)
-        // and failing every attempt. Recently the server had the TLS 1.0 disabled, and early could get 1.1, so we prepare
-        // this to just attempt 1.2 connections.
-        //System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
         string rtn = "";
 
         using (WebClient w = new WebClient())
