@@ -140,7 +140,7 @@ namespace LcRest
         public static bool MeetsOwnsershipRequirement(int userID)
         {
             var sql = @"
-            DECLARE @UserID = @0
+            DECLARE @UserID int = @0
             DECLARE @hasAcknowledgment bit = 0
 
 			IF EXISTS (

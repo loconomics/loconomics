@@ -579,7 +579,7 @@ namespace LcRest
         /// <returns></returns>
         public static IEnumerable<UserPaymentPlan> QueryActiveSubscriptions(bool onlyPaymentEnabled, LcDatabase db)
         {
-            var sql = (sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1, @2)");
+            var sql = (sqlSelectAll + " WHERE planStatus IN (@0, @1, @2) ") + sqlConditionOnlyActivePlans;
             if (onlyPaymentEnabled)
             {
                 sql += " AND paymentMethod <> ''";
