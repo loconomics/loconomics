@@ -1234,6 +1234,7 @@ public class LcMessaging
         }
     }
     #endregion
+    #endregion
 
     #region Send Mail wrapper function
     private static bool LogSuccessSendMail
