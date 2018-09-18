@@ -1,2 +1,2 @@
 [config]
-command = ./devops/deploy.cmd
+command = devops/deploy.cmd
