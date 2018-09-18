@@ -13,8 +13,12 @@ App Engine instance and variables made available by the Azure deploy system.
 This process is working at the Azure hosting, almost for dev and live (production) slots, connected with the branches of the
 same name at GitHub.
 
-In order to get executed automatically when a push is detected by Azure, a file named `.deployment` pointing to this must exist
-at the repository root folder (that's why is placed out of this folder).
+In order to get executed automatically when a push is detected by Azure, a file named `.deployment` must exist
+at the repository root folder (that's why is placed out of this folder). Additionally, the Azure runner that executes the
+command defined in that file, does not allow relative paths, so a file named `deploy.cmd` exists at the root, which solely
+proposal is to call to this file. Initially that contained all the script, but in order to organize it properly this was
+moved to this folder and that one line file was found as required after several trials (maybe that gets fixed in the future
+at the Azure Kudu system).
 
 The process is self documented, but in short:
 - It prepares variables, folders, check tools versions and installs KuduSync

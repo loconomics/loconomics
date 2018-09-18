@@ -1,0 +1,1 @@
+.\devops\azure-deploy.cmd
