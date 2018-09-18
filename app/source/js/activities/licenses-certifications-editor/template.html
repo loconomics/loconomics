@@ -1,5 +1,4 @@
-<!-- licensesCertificationsForm activity -->
-<div data-activity="licensesCertificationsForm" class="Boxes-sm animated">
+<div class="Boxes-sm">
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container" data-bind="css: { 'is-loading': isLoading }">
@@ -99,23 +98,23 @@
                                 <div data-bind="visible: isNew">
                                     <label>Upload yours for us to verify:</label>
                                     <p>Upload a photo, document, or
-                                        <a class="text-info" data-toggle="collapse" href="#licensesCertificationsForm-screenshotInstructions"
-                                            aria-expanded="false" aria-controls="licensesCertificationsForm-screenshotInstructions" role="button">
+                                        <a class="text-info" data-toggle="collapse" href="#licensesCertificationsEditor-screenshotInstructions"
+                                            aria-expanded="false" aria-controls="licensesCertificationsEditor-screenshotInstructions" role="button">
                                             <strong>screenshot</strong>
                                         </a> (if your licensing board has a website) of your license/certification, and we'll do our best to verify it.</p>
                                 </div>
                                 <div data-bind="visible: !isNew()">
                                     <label>Submit an update:</label>
-                                    <div data-bind="visible: item() && item().submittedImageLocalURL()" id="licensesCertificationsForm-submittedImage" class="isolated">
+                                    <div data-bind="visible: item() && item().submittedImageLocalURL()" id="licensesCertificationsEditor-submittedImage" class="isolated">
                                         <img data-bind="attr: { src: item() && item().submittedImageLocalURL() }" alt="License Image" />
                                     </div>
                                     <p>Upload a photo, document, or
-                                        <a class="text-info" data-toggle="collapse" href="#licensesCertificationsForm-screenshotInstructions"
-                                            aria-expanded="false" aria-controls="licensesCertificationsForm-screenshotInstructions" role="button">
+                                        <a class="text-info" data-toggle="collapse" href="#licensesCertificationsEditor-screenshotInstructions"
+                                            aria-expanded="false" aria-controls="licensesCertificationsEditor-screenshotInstructions" role="button">
                                             <strong>screenshot</strong>
                                         </a>  (if your licensing board has a website) of your updated license/certification.</p>
                                 </div>
-                                <div id="licensesCertificationsForm-screenshotInstructions" class="collapse">
+                                <div id="licensesCertificationsEditor-screenshotInstructions" class="collapse">
                                     <label>Windows and Linux:</label>
                                     <ol>
                                         <li>Press PrtSc button</li>
@@ -133,19 +132,19 @@
                                     </ol>
                                 </div>
                                 <button
-                                        type="button" class="btn btn-default btn-block licensesCertificationsForm-uploadBtn"
-                                        data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet"
+                                        type="button" class="btn btn-default btn-block licensesCertificationsEditor-uploadBtn"
+                                        data-toggle="ActionSheet" data-target="licensesCertificationsEditor-photoSheet"
                                         data-bind="visible: $root.takePhotoSupported, disable: $root.isLocked">
                                     Upload/take photo
                                 </button>
                                 <button-file
-                                    class="btn btn-default btn-block licensesCertificationsForm-uploadBtn"
+                                    class="btn btn-default btn-block licensesCertificationsEditor-uploadBtn"
                                     data-bind="visible: !takePhotoSupported()"
-                                    params="disabled: isLocked, id: 'licensesCertificationsForm-photoFile', inputElement: inputElement, accept: 'image/*'">
-                                    <label for="licensesCertificationsForm-uploadPhoto">Upload/take photo</label>
+                                    params="disabled: isLocked, id: 'licensesCertificationsEditor-photoFile', inputElement: inputElement, accept: 'image/*'">
+                                    <label for="licensesCertificationsEditor-uploadPhoto">Upload/take photo</label>
                                 </button-file>
                             </div>
-                            <div data-bind="with: item" id="licensesCertificationsForm-preview">
+                            <div data-bind="with: item" id="licensesCertificationsEditor-preview">
                                 <img alt="License Preview" data-bind="visible: localTempPhotoPreviewUrl, attr: { src: localTempPhotoPreviewUrl }" />
                                 <div data-label="License Preview" data-bind="visible: localTempPhotoPreview, domElement: localTempPhotoPreview"></div>
                                 <strong data-bind="text: localTempFileName, visible: localTempFileName() && !localTempPhotoPreview()"></strong>
@@ -156,7 +155,7 @@
                         </form>
                     </div>
                     <div class="ActionSheetBackdrop"></div>
-                    <div class="ActionSheet" id="licensesCertificationsForm-photoSheet" hidden="hidden">
+                    <div class="ActionSheet" id="licensesCertificationsEditor-photoSheet" hidden="hidden">
                         <ul>
                             <li><a href="#takePhoto" data-bind="click: takePhotoForNew">Take a photo</a></li>
                             <li><a href="#pickPhoto" data-bind="click: pickPhotoForNew">Select a photo</a></li>

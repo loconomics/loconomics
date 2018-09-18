@@ -154,7 +154,7 @@ export default class LicensesCertifications extends Activity {
 
     __defViewMethods() {
         this.addNew = (item) => {
-            var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID();
+            var url = '#!licenses-certifications-editor/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID();
             var cancelUrl = shell.currentRoute.url;
             var request = $.extend({}, this.requestData, {
                 cancelLink: cancelUrl
@@ -163,7 +163,7 @@ export default class LicensesCertifications extends Activity {
         };
 
         this.selectItem = (item) => {
-            var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
+            var url = '/licenses-certifications-editor/' + this.jobTitleID() + '/' +
                 item.userLicenseCertificationID() + '?mustReturn=' +
                 encodeURIComponent(shell.currentRoute.url) +
                 '&returnText=' + encodeURIComponent('Licenses/certifications');

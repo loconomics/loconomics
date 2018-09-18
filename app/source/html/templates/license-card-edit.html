@@ -5,8 +5,8 @@
                 <h5 data-bind="text: licenseCertification().name"></h5>
                 <p data-bind="text: licenseCertification().authority"></p>
             </div>
-            <div class="Card-action"> 
-                <a class="btn btn-icon-link" data-bind="attr: {href: '#!licensesCertificationsForm/' + jobTitleID() + '/' + userLicenseCertificationID() + $root.returnLinkGeneralActivity(),'aria-label': 'Update '+ licenseCertification().name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+            <div class="Card-action">
+                <a class="btn btn-icon-link" data-bind="attr: {href: '#!licenses-certifications-editor/' + jobTitleID() + '/' + userLicenseCertificationID() + $root.returnLinkGeneralActivity(),'aria-label': 'Update '+ licenseCertification().name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
             </div>
         </div>
         <div class="Card-description">
