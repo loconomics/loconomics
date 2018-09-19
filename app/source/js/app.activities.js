@@ -17,7 +17,6 @@ module.exports = {
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
     'workPhotos': require('./activities/workPhotos'),
-    'payments': require('./activities/payments'),
     'userFees': require('./activities/userFees'),
     'performance': require('./activities/performance'),
     'searchJobTitle': require('./activities/searchJobTitle'),
