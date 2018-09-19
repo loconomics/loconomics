@@ -110,6 +110,7 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
                 // IMPORTANT: There are still cases where the file seems to not have ended writting/flushing when
                 // reaching this point for very few bytes, we put a small timeout to try give
                 // it some more time (that includes another js cycle).
+                // TODO: Try a branch that seems to fix this buggy behavior, at https://github.com/browserify/factor-bundle/commit/686b806aa521f092f9d8d27ea2b8266b4080eb0d
                 setTimeout(function() {
                     grunt.verbose.writeln('>> Bundle', bundleSettings.dest, 'created (factor-bundle).');
                     resolve();
