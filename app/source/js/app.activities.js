@@ -24,7 +24,6 @@ module.exports = {
     'paymentAccount': require('./activities/paymentAccount'),
     'payoutPreference': require('./activities/payoutPreference'),
     'myAppointments': require('./activities/myAppointments'),
-    'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
     'publicBio': require('./activities/publicBio'),
