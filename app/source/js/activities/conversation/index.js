@@ -72,7 +72,7 @@ export default class Conversation extends Activity {
                 return null;
             }
         });
-        this.linkToBooking = ko.pureComputed(() => '#!/viewBooking/' + this.bookingID());
+        this.linkToBooking = ko.pureComputed(() => '#!/view-booking/' + this.bookingID());
     }
 
     updateNavBarState() {

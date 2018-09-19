@@ -51,6 +51,7 @@ const activities = {
     'licensesCertifications': createRedirect('licenses-certifications'),
     'licensesCertificationsForm': createRedirect('licenses-certifications-editor'),
     'listingEditor': createRedirect('listing-editor'),
+    'viewBooking': createRedirect('view-booking'),
 };
 
 /**
