@@ -51,7 +51,7 @@ export default class HomeActivity extends Activity {
         MarketplaceSearch.call(this);
 
         this.getJobTitleUrl = function(id) {
-            return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
+            return '/search-job-title/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
         }.bind(this);
         this.getSearchCategoryUrl = function(categoryID) {
             return '/searchCategory/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();

@@ -52,6 +52,7 @@ const activities = {
     'licensesCertificationsForm': createRedirect('licenses-certifications-editor'),
     'listingEditor': createRedirect('listing-editor'),
     'viewBooking': createRedirect('view-booking'),
+    'searchJobTitle': createRedirect('search-job-title'),
 };
 
 /**
