@@ -53,6 +53,7 @@ const activities = {
     'listingEditor': createRedirect('listing-editor'),
     'viewBooking': createRedirect('view-booking'),
     'searchJobTitle': createRedirect('search-job-title'),
+    'searchCategory': createRedirect('search-category'),
 };
 
 /**

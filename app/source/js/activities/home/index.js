@@ -54,7 +54,7 @@ export default class HomeActivity extends Activity {
             return '/search-job-title/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
         }.bind(this);
         this.getSearchCategoryUrl = function(categoryID) {
-            return '/searchCategory/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
+            return '/search-category/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
         }.bind(this);
 
         this.onSelect = function(textValue, data) {

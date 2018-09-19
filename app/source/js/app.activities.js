@@ -18,7 +18,6 @@ module.exports = {
     'verifications': require('./activities/verifications'),
     'workPhotos': require('./activities/workPhotos'),
     'userFees': require('./activities/userFees'),
-    'searchCategory': require('./activities/searchCategory'),
     'paymentAccount': require('./activities/paymentAccount'),
     'payoutPreference': require('./activities/payoutPreference'),
     'myAppointments': require('./activities/myAppointments'),

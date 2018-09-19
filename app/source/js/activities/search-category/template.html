@@ -1,11 +1,9 @@
-<!-- Search Category activity -->
-     <!-- categories internal menu -->
-<div data-activity="searchCategory">
+<div>
     <div class="PageMenu">
-        <tab-list params="prefix: '#searchCategory-', active: activeTabName, data: $data">
+        <tab-list params="prefix: '#search-category-', active: activeTabName, data: $data">
             <div class="PageMenu-list"><ul data-bind="foreach: data().categories">
                 <li><a data-bind="
-                    attr: { href: '#searchCategory-' + id },
+                    attr: { href: '#search-category-' + id },
                     css: { active: $parents[1].categoryID() == id },
                     text: name"></a>
                 </li>
@@ -17,7 +15,7 @@
                 </button>
                 <ul class="dropdown-menu" data-bind="foreach: data().categories">
                     <li><a class="dropdown-item" data-bind="
-                        attr: { href: '#searchCategory-' + id },
+                        attr: { href: '#search-category-' + id },
                         css: { active: $parents[1].categoryID() == id },
                         text: name"></a>
                     </li>
@@ -26,7 +24,7 @@
         </tab-list>
     </div>
     <div class="SearchResults">
-        <div data-bind="attr: { id: 'searchCategory-' + categoryID(), 'aria-busy': isLoading }">
+        <div data-bind="attr: { id: 'search-category-' + categoryID(), 'aria-busy': isLoading }">
             <div data-bind="with: categorySearchResult">
                 <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
                     <div class="SearchResultsBackground-text">
