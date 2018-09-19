@@ -36,5 +36,4 @@ module.exports = {
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
     'serviceProfessionalBusinessInfo': require('./activities/serviceProfessionalBusinessInfo'),
     'userBirthDay': require('./activities/userBirthDay'),
-    'listing': require('./activities/listing')
 };

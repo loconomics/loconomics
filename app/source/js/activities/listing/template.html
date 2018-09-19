@@ -1,5 +1,4 @@
-<!-- Activity listing -->
-<div data-activity="listing" class="Listing" data-bind="css: { 'is-loading': isLoading }">
+<div class="Boxes-sm">
     <app-message-bar params="editListing: editListing, jobTitle: listingTitle, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone" title="Alert">
         <p>
             <span data-bind="ifnot:isActive"><icon-dec class="text-danger" params="icon: 'ion-alert-circled'"></icon-dec> Your <span data-bind="text: jobTitle"></span> listing is <strong>inactive.</strong></span>
