@@ -19,6 +19,7 @@ import { expandUserBadges } from '../../data/userBadges';
 import ko from 'knockout';
 import shell from '../../app.shell';
 import { show as showError } from '../../modals/error';
+import style from './style.styl';
 import template from './template.html';
 import { data as user } from '../../data/userProfile';
 import users from '../../data/users';
@@ -29,13 +30,14 @@ export default class Listing extends Activity {
 
     static get template() { return template; }
 
+    static get style() { return style; }
+
     constructor($activity, app) {
         super($activity, app);
 
         // Everybody
         this.accessLevel = null;
         this.navBar = Activity.createSectionNavBar(null);
-        // Title depends on view properties, need to be defined after them
         this.title = ko.pureComputed(() => {
             const user = this.user();
             if (user) {
