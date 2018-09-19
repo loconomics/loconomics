@@ -30,7 +30,6 @@ module.exports = {
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
     'upgrade': require('./activities/upgrade'),
-    'listingEditor': require('./activities/listingEditor'),
     'publicBio': require('./activities/publicBio'),
     'publicProfilePicture': require('./activities/publicProfilePicture'),
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),

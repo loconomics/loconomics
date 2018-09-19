@@ -50,6 +50,7 @@ const activities = {
     'feedbackForm': createRedirect('feedback-form'),
     'licensesCertifications': createRedirect('licenses-certifications'),
     'licensesCertificationsForm': createRedirect('licenses-certifications-editor'),
+    'listingEditor': createRedirect('listing-editor'),
 };
 
 /**
