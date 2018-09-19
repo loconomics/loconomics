@@ -3,9 +3,10 @@
 **/
 'use strict';
 
+import weeklySchedule from '../data/weeklySchedule';
+
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var weeklySchedule = require('../data/weeklySchedule');
 var schedulingPreferences = require('../data/schedulingPreferences');
 var showError = require('../modals/error').show;
 

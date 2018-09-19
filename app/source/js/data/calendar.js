@@ -36,6 +36,8 @@
 // TODO store-jsdocs
 'use strict';
 
+import weeklySchedule from './weeklySchedule';
+
 var Appointment = require('../models/Appointment');
 var DateAvailability = require('../models/DateAvailability');
 var DateCache = require('./helpers/DateCache');
@@ -43,7 +45,6 @@ var session = require('./session');
 var SingleEvent = require('../utils/SingleEvent').default;
 var calendarEvents = require('./calendarEvents');
 var bookings = require('./bookings');
-var weeklySchedule = require('./weeklySchedule');
 var schedulingPreferences = require('./schedulingPreferences');
 
 var cache = new DateCache({
