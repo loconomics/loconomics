@@ -27,5 +27,4 @@ module.exports = {
     'publicProfilePicture': require('./activities/publicProfilePicture'),
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
     'serviceProfessionalBusinessInfo': require('./activities/serviceProfessionalBusinessInfo'),
-    'userBirthDay': require('./activities/userBirthDay'),
 };
