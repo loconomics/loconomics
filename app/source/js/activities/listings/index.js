@@ -29,7 +29,7 @@ export default class ListingsActivity extends Activity {
         this.viewModel = new UserJobProfileViewModel(app);
 
         this.viewModel.showMarketplaceInfo(true);
-        this.viewModel.baseUrl('/listingEditor');
+        this.viewModel.baseUrl('/listing-editor');
     }
 }
 

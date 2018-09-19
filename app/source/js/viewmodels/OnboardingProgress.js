@@ -30,7 +30,7 @@ var STEPS = {
         jobTitleSpecific: true
     }
 };
-var PROFESSIONAL_FINISH_STEP = 'listingEditor';
+var PROFESSIONAL_FINISH_STEP = 'listing-editor';
 var CLIENT_FINISH_STEP = 'home';
 var ORGANIZATION_FINISH_STEP = 'posting';
 

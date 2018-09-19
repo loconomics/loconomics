@@ -58,7 +58,7 @@ export default class _TestBadgeActivity extends Activity {
      */
     getBadgeEditURL(userBadge) {
         if (userBadge.createdBy !== 'user') return null;
-        else return `/badge-edit/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
+        else return `/badge-edit/${userBadge.userBadgeID}?mustReturn=listing-editor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
     }
 
     /**
@@ -68,7 +68,7 @@ export default class _TestBadgeActivity extends Activity {
      * @returns {string}
      */
     getBadgeDetailsURL(userBadge) {
-        return `/badge-view/${userBadge.userBadgeID}?mustReturn=listingEditor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
+        return `/badge-view/${userBadge.userBadgeID}?mustReturn=listing-editor/${userBadge.jobTitleID}&returnText=${encodeURIComponent('Listing Editor')}`;
     }
 }
 

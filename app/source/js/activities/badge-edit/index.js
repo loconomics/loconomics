@@ -56,7 +56,7 @@ export default class BadgeEditActivity extends Activity {
          */
         this.onSaved = () => {
             app.successSave({
-                link: '/listingEditor/' + this.jobTitleID()
+                link: '/listing-editor/' + this.jobTitleID()
             });
         };
 
@@ -67,7 +67,7 @@ export default class BadgeEditActivity extends Activity {
         this.onDeleted = () => {
             app.successSave({
                 message: 'Successfully deleted',
-                link: '/listingEditor/' + this.jobTitleID()
+                link: '/listing-editor/' + this.jobTitleID()
             });
         };
         this.__setupNavbar();
@@ -83,7 +83,7 @@ export default class BadgeEditActivity extends Activity {
                 settings = Object.assign({}, settings, {
                     leftAction: {
                         text: `${text} Listing`,
-                        link: `/listingEditor/${id}?mustReturn=listings&returnText=Listings`,
+                        link: `/listing-editor/${id}?mustReturn=listings&returnText=Listings`,
                         isShell: false
                     }
                 });

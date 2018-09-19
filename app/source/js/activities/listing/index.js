@@ -237,7 +237,7 @@ export default class Listing extends Activity {
             this.showMessageBar(false);
         };
         this.editListing = () => {
-            shell.go('/listingEditor/' + this.selectedJobTitle().jobTitleID());
+            shell.go('/listing-editor/' + this.selectedJobTitle().jobTitleID());
         };
         /**
          * Returns a URL to where to view details of the badge assigned to the user, with a return

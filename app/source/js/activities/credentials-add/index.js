@@ -31,7 +31,7 @@ export default class CredentialsAddActivity extends Activity {
 
         this.jobTitleID = ko.observable();
         this.jobTitleID.subscribe((id) => {
-            this.navBar.leftAction().link(`/listingEditor/${id}`);
+            this.navBar.leftAction().link(`/listing-editor/${id}`);
             this.navBar.leftAction().text('Listing Editor');
         });
 

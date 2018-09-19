@@ -22,7 +22,7 @@ import template from './template.html';
 import userLicensesCertifications from '../../data/userLicensesCertifications';
 
 const ROUTE_NAME = 'licenses-certifications';
-const DEFAULT_BACK_LINK = '/listingEditor';
+const DEFAULT_BACK_LINK = '/listing-editor';
 const DEFAULT_BACK_TEXT = 'Back';
 
 export default class LicensesCertifications extends Activity {

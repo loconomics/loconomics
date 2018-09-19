@@ -50,7 +50,7 @@ export default class BadgeAddActivity extends Activity {
          */
         this.onSaved = () => {
             app.successSave({
-                link: '/listingEditor/' + this.jobTitleID()
+                link: '/listing-editor/' + this.jobTitleID()
             });
         };
 
@@ -67,7 +67,7 @@ export default class BadgeAddActivity extends Activity {
                 settings = Object.assign({}, settings, {
                     leftAction: {
                         text: `${text} Listing`,
-                        link: `/listingEditor/${id}?mustReturn=listings&returnText=Listings`,
+                        link: `/listing-editor/${id}?mustReturn=listings&returnText=Listings`,
                         isShell: false
                     }
                 });

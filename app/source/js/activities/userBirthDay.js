@@ -17,7 +17,7 @@ var A = Activity.extend(function UserBirthDay() {
     this.accessLevel = this.app.UserType.loggedUser;
 
     // Defaults settings for navBar.
-    var backLink = user.isServiceProfessional() ? '/listingEditor' : '/user-profile';
+    var backLink = user.isServiceProfessional() ? '/listing-editor' : '/user-profile';
     this.navBar = Activity.createSubsectionNavBar('Edit listing', {
         backLink: backLink, helpLink: this.viewModel.helpLink
     });

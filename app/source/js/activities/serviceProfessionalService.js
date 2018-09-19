@@ -15,7 +15,7 @@ var serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories
 var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
-var DEFAULT_BACK_LINK = '/listingEditor';
+var DEFAULT_BACK_LINK = '/listing-editor';
 var showError = require('../modals/error').show;
 var Client = require('../models/Client').default;
 

@@ -24,19 +24,19 @@ var alertPresets = {
         },
         availability: {
             label: 'What hours do you work?',
-            route: new RouteParser('/schedulingPreferences?mustReturn=listingEditor/:jobTitleID')
+            route: new RouteParser('/schedulingPreferences?mustReturn=listing-editor/:jobTitleID')
         },
         personalinfo: {
             label: 'How do clients reach you?',
-            route: new RouteParser('/public-contact-info?mustReturn=listingEditor/:jobTitleID')
+            route: new RouteParser('/public-contact-info?mustReturn=listing-editor/:jobTitleID')
         },
         photo: {
             label: 'Add your profile photo',
-            route: new RouteParser('/publicProfilePicture?mustReturn=listingEditor/:jobTitleID')
+            route: new RouteParser('/publicProfilePicture?mustReturn=listing-editor/:jobTitleID')
         },
         payment: {
             label: 'How do you want to be paid?',
-            route: new RouteParser('/payoutPreference?mustReturn=listingEditor/:jobTitleID')
+            route: new RouteParser('/payoutPreference?mustReturn=listing-editor/:jobTitleID')
         },
         pricingdetails: {
             label: 'Create a bookable offering',
@@ -44,7 +44,7 @@ var alertPresets = {
         },
         publicbio: {
             label: 'Add a personal bio',
-            route: new RouteParser('/publicBio?mustReturn=listingEditor/:jobTitleID')
+            route: new RouteParser('/publicBio?mustReturn=listing-editor/:jobTitleID')
         },
         professionallicense: {
             label: 'Submit required credentials',
@@ -56,11 +56,11 @@ var alertPresets = {
         },
         'add-education': {
             label: 'Add training or education',
-            route: new RouteParser('/education?mustReturn=listingEditor/:jobTitleID')
+            route: new RouteParser('/education?mustReturn=listing-editor/:jobTitleID')
         },
         verifyemail: {
               label: 'Verify your account (check your e-mail)',
-              route: new RouteParser('/verifications?mustReturn=listingEditor/:jobTitleID')
+              route: new RouteParser('/verifications?mustReturn=listing-editor/:jobTitleID')
         },
         showcasework: {
             label: 'Add photos of your work',

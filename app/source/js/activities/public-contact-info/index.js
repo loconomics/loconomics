@@ -29,7 +29,7 @@ export default class PublicContactInfoActivity extends Activity {
 
         this.accessLevel = UserType.loggedUser;
 
-        var backLink = user.isServiceProfessional() ? '/listingEditor' : '/user-profile';
+        var backLink = user.isServiceProfessional() ? '/listing-editor' : '/user-profile';
         this.helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
         this.navBar = Activity.createSubsectionNavBar('Edit listing', {
             backLink: backLink,

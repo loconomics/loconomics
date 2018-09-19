@@ -32,7 +32,7 @@ export default class BookingPolicies extends Activity {
         this.accessLevel = UserType.serviceProfessional;
         this.helpLink = '/help/sections/202884403-Setting-Your-Booking-Policies';
         this.navBar = Activity.createSubsectionNavBar('Listing', {
-            backLink: 'listingEditor',
+            backLink: 'listing-editor',
             helpLink: this.helpLink
         });
         this.title = ko.pureComputed(() => `${this.listingTitle()} booking policies`);

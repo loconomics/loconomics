@@ -98,7 +98,7 @@ export default class AddJobTitleActivity extends Activity {
                     }
                     else {
                         // Go to edit the just added listing
-                        app.shell.go('/listingEditor/' + result.jobTitleID);
+                        app.shell.go('/listing-editor/' + result.jobTitleID);
                     }
                 };
                 if (becomingProfessional) {

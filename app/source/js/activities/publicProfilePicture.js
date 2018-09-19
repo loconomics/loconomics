@@ -15,17 +15,17 @@ var A = Activity.extend(function PublicProfilePicture() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     var helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
-    
+
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Edit listing', {
-        backLink: '/listingEditor', helpLink: helpLink
+        backLink: '/listing-editor', helpLink: helpLink
     });
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
     this.title = ko.pureComputed(function() {
         return ' Your profile picture';
     }, this.viewModel);
-    
+
     this.viewModel.helpLink = helpLink;
 });
 
@@ -72,7 +72,7 @@ function ViewModel(app) {
     this.sync = function() {
         this.profilePicture.sync();
     };
-   
+
     this.isLoading = this.profilePicture.isLoading;
     this.isSaving = this.profilePicture.isSaving;
     this.isSyncing = this.profilePicture.isSyncing;

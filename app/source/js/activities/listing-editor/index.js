@@ -320,7 +320,7 @@ export default class ListingEditor extends Activity {
          */
         this.getBadgeEditURL = (userBadge) => {
             if (userBadge.createdBy !== 'user') return null;
-            else return `/badge-edit/${userBadge.userBadgeID}?jobTitleID=${this.jobTitleID()}&mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
+            else return `/badge-edit/${userBadge.userBadgeID}?jobTitleID=${this.jobTitleID()}&mustReturn=listing-editor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
         };
         /**
          * Returns a URL to where to view details of the badge assigned to the user, with a return
@@ -328,7 +328,7 @@ export default class ListingEditor extends Activity {
          * @param {OpenBadgesV2/Assertion} assertion data for an assertion
          * @returns {string}
          */
-        this.getBadgeDetailsURL = (assertion) => `/badge-view/${encodeURIComponent(assertion.id)}?mustReturn=listingEditor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
+        this.getBadgeDetailsURL = (assertion) => `/badge-view/${encodeURIComponent(assertion.id)}?mustReturn=listing-editor/${this.jobTitleID()}&returnText=${encodeURIComponent('Listing Editor')}`;
     }
 
     loadData(jobTitleID) {

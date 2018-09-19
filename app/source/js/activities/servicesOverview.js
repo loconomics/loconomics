@@ -10,7 +10,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var serviceAttributes = require('../data/serviceAttributes');
 var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
-var DEFAULT_BACK_LINK = '/listingEditor';
+var DEFAULT_BACK_LINK = '/listing-editor';
 var DEFAULT_BACK_TEXT = 'Back';
 require('../kocomponents/servicesOverview/attributes-combobox');
 var showError = require('../modals/error').show;

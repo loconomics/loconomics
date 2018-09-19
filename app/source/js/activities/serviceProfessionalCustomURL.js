@@ -13,10 +13,10 @@ var A = Activity.extend(function ServiceProfessionalBusinessInfo() {
     this.viewModel = new ListingVM(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     var helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
-    
+
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Edit listing', {
-        backLink: '/listingEditor', helpLink: helpLink
+        backLink: '/listing-editor', helpLink: helpLink
     });
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;

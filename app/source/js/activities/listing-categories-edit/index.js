@@ -48,7 +48,7 @@ export default class ListingCategoriesEditActivity extends Activity {
          * Automatic back link based on listing
          * @member {KnockoutComputed<string>}
          */
-        this.navBackLink = ko.pureComputed(() => `/listingEditor/${this.jobTitleID()}`);
+        this.navBackLink = ko.pureComputed(() => `/listing-editor/${this.jobTitleID()}`);
         // Connect back link and listingTitle to the navbar
         this.navBackLink.subscribe(this.navBar.leftAction().link);
         this.navBackLink.subscribe(() => this.navBar.leftAction().isShell(false));
