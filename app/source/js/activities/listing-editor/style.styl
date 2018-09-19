@@ -5,5 +5,13 @@
 @import '../../../css/views/Listing.styl';
 
 [data-activity=listing-editor] {
-
+    // IMPORTANT: Generated Browserify builds fails because after generate
+    // the CSS and minify/clean-up empty code like this block, it ends being
+    // equal to the listing/style.syl result, and looks like is aliased
+    // wrongly in the resulting bundle causing runtime error.
+    // Because of that, this single, styling unneeded line is added to prevent
+    // that result (but on the moment different styles are added here that
+    // make a difference with listing, or when the bug is fixed, can get
+    // removed).
+    opacity: 1;
 }
