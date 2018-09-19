@@ -29,7 +29,6 @@ module.exports = {
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
-    'upgrade': require('./activities/upgrade'),
     'publicBio': require('./activities/publicBio'),
     'publicProfilePicture': require('./activities/publicProfilePicture'),
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
