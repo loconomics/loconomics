@@ -8,11 +8,16 @@
  */
 
 import * as activities from '../index';
+//import * as userProfile from '../../data/userProfile';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
 import template from './template.html';
-import userProfile from '../../data/userProfile';
+
+// TODO: Remove this and uncomment the equivalent import line above ones the module
+// gets completely converted to ES6, so the 'Prototype lost' bug gets fixed,
+// check details at https://github.com/loconomics/loconomics/issues/744#issuecomment-423107797
+const userProfile = require('../../data/userProfile');
 
 const ROUTE_NAME = 'user-birth-day';
 const user = userProfile.data;
@@ -55,7 +60,7 @@ export default class UserBirthDay extends Activity {
         this.isLocked = userProfile.isLocked;
         // User Profile
         var profileVersion = userProfile.newVersion();
-        this.__profileVersion = profileVersion
+        this.__profileVersion = profileVersion;
         profileVersion.isObsolete.subscribe((itIs) => {
             if (itIs) {
                 // new version from server while editing
@@ -120,7 +125,7 @@ export default class UserBirthDay extends Activity {
             this.__profileVersion.pull({ evenIfNewer: true });
         };
         this.sync = () => {
-            this.__userProfile.sync();
+            userProfile.sync();
         };
     }
 
