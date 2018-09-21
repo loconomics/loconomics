@@ -4,16 +4,25 @@
  * cannot be generated this way, that keeps working as before included
  * inside the App entry point)
  * @param {Grunt} grunt
+ * @param {boolean} dev Whether enable development mode, or production. This
+ * have an impact in filtering the activities, since someones are only for
+ * development mode, removing the need to carry with unneeded files to
+ * production builds.
  * @returns {Object} paths to activities folders and files
  */
-exports.query = function(grunt) {
+exports.query = function(grunt, dev) {
     const buildActivitiesBasePath = './build/assets/js/activities/';
     const activitiesBasePath = './source/js/activities/';
     // Gets all folder based activities, with path including the index.js filename
-    const appCommonActivities = grunt.file.expand({
+    let appCommonActivities = grunt.file.expand({
         cwd: activitiesBasePath,
         filter: grunt.file.isFile
     }, ['*/index.js']);
+    // All activities starting with an underscore are meant to be for development
+    // only (trials, demos, reference).
+    if (!dev) {
+        appCommonActivities = appCommonActivities.filter((activityPath) => !/^_/.test(activityPath));
+    }
 
     const folderNameFromPath = function(activityPath) {
         // Each one is like 'about/index.js' thanks to the set-up
