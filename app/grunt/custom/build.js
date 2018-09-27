@@ -14,6 +14,7 @@ const TASK_NAME = 'build';
  * @const {Array<string>}
  */
 const PRODUCTION_TASKS = [
+    'mkdir:build-assets-js',
     //// Using parallel mode:
     //'parallel:build-app'
     // Using standard sequential mode:
