@@ -1,7 +1,7 @@
 /**
  * MockupHouseCleanerServiceEditor
  *
- * @module activities/mockup-house-cleaner-service-editor
+ * @module activities/_mockup-house-cleaner-service-editor
  */
 
 import * as activities from '../index';
@@ -9,9 +9,9 @@ import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import template from './template.html';
 
-const ROUTE_NAME = 'mockup-house-cleaner-service-editor';
+const ROUTE_NAME = '_mockup-house-cleaner-service-editor';
 
-export default class MockupHouseCleanerServiceEditor extends Activity {
+export default class _MockupHouseCleanerServiceEditor extends Activity {
 
     static get template() { return template; }
 
@@ -27,4 +27,4 @@ export default class MockupHouseCleanerServiceEditor extends Activity {
     }
 }
 
-activities.register(ROUTE_NAME, MockupHouseCleanerServiceEditor);
+activities.register(ROUTE_NAME, _MockupHouseCleanerServiceEditor);
