@@ -113,7 +113,15 @@ FROM            userprofileserviceattributes
 where userid =  @UserId
 
 delete
+FROM			UserSolution
+where userid =  @UserId
+
+delete
 FROM            userprofilepositions
+where userid =  @UserId
+
+delete
+FROM            CCCUsers
 where userid =  @UserId
 
 delete
