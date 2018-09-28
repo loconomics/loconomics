@@ -219,10 +219,11 @@
                 text: $component.saveButtonText"></button>
             <p class="help-block isolated" data-bind="visible: isEditable()">Please review carefully before submitting.</p>
             <p class="isolated" data-bind="visible: !$component.isNew() && isEditable()">
-                <button type="button" class="btn btn-link" data-bind="
+                <!--<button type="button" class="btn btn-link" data-bind="
                     text: $component.deleteButtonText,
                     disable: $component.isLocked,
                     click: $component.confirmDelete.bind($component)"></button>
+                -->
                 <button type="button" class="btn btn-link" data-bind="
                     text: $component.closeButtonText,
                     disable: $component.isLocked,
