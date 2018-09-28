@@ -5,6 +5,8 @@
 // TODO store-jsdocs
 'use strict';
 
+import { list as userListings } from './userListings';
+
 var MarketplaceProfile = require('../models/MarketplaceProfile');
 var session = require('./session');
 var RemoteModel = require('./helpers/RemoteModel');
@@ -25,4 +27,13 @@ module.exports = api;
 
 session.on.cacheCleaningRequested.subscribe(function() {
     api.clearCache();
+});
+
+// A marketplace profile change may change the status of listings and bookMeButtonReady
+// and alerts, like profile picture (this data module may not allow upload but is ever
+// used behind a picture upload, in order to update URL)
+const save = api.save.bind(api);
+api.save = (data) => save(data).then((result) => {
+    userListings.invalidateCache();
+    return result;
 });
