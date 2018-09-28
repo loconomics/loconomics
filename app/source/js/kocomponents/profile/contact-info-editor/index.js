@@ -147,7 +147,7 @@ export default class ProfileContactInfoEditor extends Komponent {
     validate() {
         var errors = {};
         if (!this.isFirstNameValid()) {
-            errors.firstName = 'First name is two short';
+            errors.firstName = 'First name is too short';
         }
         if (!this.isLastNameValid()) {
             errors.lastName = 'Last name is too short';

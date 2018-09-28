@@ -76,6 +76,10 @@ export default [
         "name": "San Diego Continuing Education"
     },
     {
+        "institutionID": 517,
+        "name": "San Joaquin Delta College"
+    },
+    {
         "institutionID": 521,
         "name": "San Jose City College"
     },

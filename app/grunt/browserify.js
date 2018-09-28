@@ -90,7 +90,7 @@ module.exports = function(grunt) {
         appCommonActivities,
         activitiesBasePath,
         buildPathForActivity
-    } = queryActivities.query(grunt);
+    } = queryActivities.query(grunt, dev);
     // We convert the array of activities files into BundleSettings,
     // and are appended to the bundles collection
     appCommonBundles.push(...appCommonActivities.map((activityPath) => {

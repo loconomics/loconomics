@@ -14,6 +14,7 @@ const TASK_NAME = 'build';
  * @const {Array<string>}
  */
 const PRODUCTION_TASKS = [
+    'prepare-for-build',
     //// Using parallel mode:
     //'parallel:build-app'
     // Using standard sequential mode:
