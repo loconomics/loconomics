@@ -6,6 +6,8 @@
 **/
 'use strict';
 
+import SingleEvent from '../../utils/SingleEvent';
+
 var ko = require('knockout');
 var IndexedGroupListCache = require('./IndexedGroupListCache');
 
@@ -38,6 +40,15 @@ function GroupListRemoteModel(settings) {
         groupIdField: settings.groupIdField,
         itemIdField: settings.itemIdField
     });
+
+    /**
+     * Notificies when a create, update or delete operation happens on any item.
+     * It is NOT related to management of cache but about manipulating data
+     * that was just successfully sent to remote.
+     * It includes a plain object copy of the model record, as sent by remote.
+     * @property {SingleEvent<Object>}
+     */
+    this.onChangedData = new SingleEvent(this);
 
     this.clearCache = cache.clearCache;
 
@@ -194,6 +205,8 @@ function GroupListRemoteModel(settings) {
             }
             api.state.isSaving(false);
 
+            api.onChangedData.emit(serverData);
+
             return serverData;
         }.bind(this))
         .catch(function(err) {
@@ -219,6 +232,8 @@ function GroupListRemoteModel(settings) {
             this.pushGroupToLocal(groupID, cache.getGroupCache(groupID).list);
 
             api.state.isDeleting(false);
+
+            api.onChangedData.emit(removedData);
 
             return removedData;
         }.bind(this))

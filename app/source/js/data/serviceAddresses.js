@@ -5,6 +5,8 @@
 // TODO store-jsdocs
 'use strict';
 
+import { list as userListings } from './userListings';
+
 var Address = require('../models/Address');
 var GroupListRemoteModel = require('./helpers/GroupListRemoteModel');
 var session = require('./session');
@@ -24,4 +26,10 @@ api.addRestSupport(remote, 'me/addresses/service/');
 
 session.on.cacheCleaningRequested.subscribe(function() {
     api.clearCache();
+});
+
+// A change on service address may change the status of listings and bookMeButtonReady
+// since there is an alert for addreses
+api.onChangedData.subscribe(() => {
+    userListings.invalidateCache();
 });
