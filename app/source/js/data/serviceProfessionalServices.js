@@ -6,6 +6,8 @@
 // TODO store-jsdocs
 'use strict';
 
+import { list as userListings } from './userListings';
+
 var ServiceProfessionalService = require('../models/ServiceProfessionalService');
 var GroupListRemoteModel = require('./helpers/GroupListRemoteModel');
 var session = require('./session');
@@ -27,6 +29,12 @@ api.addRestSupport(remote, restUrlPrefix);
 
 session.on.cacheCleaningRequested.subscribe(function() {
     api.clearCache();
+});
+
+// A change on services may change the status of listings and bookMeButtonReady
+// since there is an alert for services
+api.onChangedData.subscribe(() => {
+    userListings.invalidateCache();
 });
 
 // Override GroupListRemoteModel's implementation until it
