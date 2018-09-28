@@ -60,6 +60,9 @@ export default class ListingEditor extends Activity {
             }
         });
 
+        this.__defViewProperties();
+        this.__defViewMethods();
+
         // DOM Event handler
         this.registerHandler({
             event: 'layoutUpdate',
