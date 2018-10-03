@@ -1,7 +1,7 @@
 <div class="Listing" data-bind="css: { 'is-loading': isLoading }">
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <div class="col-xs-12 col-sm-reset Listing-editorHeader">
-        <a class="col-xs-2 hidden-xs hidden-sm" href="/listings">
+        <a class="Listing-backLink col-xs-2 hidden-xs hidden-sm" href="/listings">
             <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
             <span> Listings</span>
         </a>
@@ -22,6 +22,10 @@
                         <switch-checkbox params="id: 'listingStatus-checkbox', checked: isActiveStatus"></switch-checkbox>
                     </div>
                 </div>
+            </div>
+            <div class="Listing-publicLink" data-bind="visible: publicListingUrl">
+                <a target="listing" class="btn btn-primary" data-bind="
+                    attr: { href: publicListingUrl  }">Copy listing URL</a>
             </div>
         </div>
     </div>

@@ -115,7 +115,21 @@ export default class ListingEditor extends Activity {
             else {
                 return '';
             }
-        }, this);
+        });
+        /**
+         * Generates a relative URL to the public listing page for current user and listing
+         * @member {KnockoutComputed<string>}
+         */
+        this.publicListingUrl = ko.pureComputed(() => {
+            const userID = user.userID();
+            const jobTitleID = this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID();
+            if (userID && jobTitleID) {
+                return `#!/listing/${userID}/${jobTitleID}`;
+            }
+            else {
+                return '';
+            }
+        });
          /// Related models information
          this.submittedUserLicensesCertifications = ko.observableArray([]);
 
