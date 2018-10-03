@@ -1,6 +1,6 @@
 {
   "name": "LoconomicsApp",
-  "version": "1.13.7",
+  "version": "1.13.8",
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
   "appId": "com.loconomics.app",
@@ -20,7 +20,7 @@
     "browserslist": "browserslist",
     "release-tags": "git tag | grep 'releases/release-' | sort -V",
     "app-release-tags": "git tag | grep 'releases/app-' | sort -V",
-    "bump-patch": "LAST_APP_VERSION=$(npm version patch) && git add package.json && git commit -m ${LAST_APP_VERSION} && ",
+    "bump-patch": "LAST_APP_VERSION=$(npm version patch) && git add package.json && git commit -m ${LAST_APP_VERSION}",
     "bump-minor": "LAST_APP_VERSION=$(npm version minor) && git add package.json && git commit -m ${LAST_APP_VERSION}",
     "recommended-windows-shell": "npm config set script-shell \"C:\\Program Files\\git\\bin\\bash.exe\""
   },
