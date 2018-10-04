@@ -18,7 +18,6 @@ module.exports = {
     'payoutPreference': require('./activities/payoutPreference'),
     'myAppointments': require('./activities/myAppointments'),
     'userFeePayments': require('./activities/userFeePayments'),
-    'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
     'publicBio': require('./activities/publicBio'),
     'publicProfilePicture': require('./activities/publicProfilePicture'),
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),

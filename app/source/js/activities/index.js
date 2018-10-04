@@ -56,6 +56,7 @@ const activities = {
     'searchCategory': createRedirect('search-category'),
     'userBirthDay': createRedirect('user-birth-day'),
     'schedulingPreferences': createRedirect('scheduling-preferences'),
+    'ownerAcknowledgment': createRedirect('owner-acknowledgment'),
 };
 
 /**
