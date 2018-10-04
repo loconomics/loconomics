@@ -281,7 +281,6 @@ var facebookLogin = function() {
         });
     }
     else {
-        // email,user_about_me
         return fb.login({ scope: 'email' });
     }
 };
