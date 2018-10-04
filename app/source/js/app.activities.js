@@ -8,7 +8,6 @@
 module.exports = {
     'serviceProfessionalService': require('./activities/serviceProfessionalService'),
     'serviceAddresses': require('./activities/serviceAddresses'),
-    'signup': require('./activities/signup'),
     'privacySettings': require('./activities/privacySettings'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'servicesOverview': require('./activities/servicesOverview'),
