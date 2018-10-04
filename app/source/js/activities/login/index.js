@@ -19,6 +19,7 @@ import onboarding from '../../data/onboarding';
 import shell from '../../app.shell';
 import { show as showError } from '../../modals/error';
 import { show as showNotification } from '../../modals/notification';
+import style from './style.styl';
 import template from './template.html';
 import { data as user } from '../../data/userProfile';
 
@@ -27,6 +28,8 @@ const ROUTE_NAME = 'login';
 export default class Login extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);
