@@ -24,7 +24,7 @@ var alertPresets = {
         },
         availability: {
             label: 'What hours do you work?',
-            route: new RouteParser('/schedulingPreferences?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/scheduling-preferences?mustReturn=listing-editor/:jobTitleID')
         },
         personalinfo: {
             label: 'How do clients reach you?',

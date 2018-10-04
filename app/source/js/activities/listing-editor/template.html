@@ -158,8 +158,8 @@
             <section id="listing-editor-hours" class="row" title="">
                 <div class="container-fluid SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec> Hours  <span class="label label-danger" data-bind="visible: !weeklySchedule().timeZone()">Required</span></h2>
-                    <a data-bind="visible: weeklySchedule().timeZone, attr: {href: '#!schedulingPreferences' + $root.returnLinkGeneralActivity(),'aria-label': 'Edit your hours and scheduling preferences' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !weeklySchedule().timeZone(), attr: {href: '#!schedulingPreferences' + $root.returnLinkGeneralActivity(),'aria-label': 'Add your hours and scheduling preferences' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: weeklySchedule().timeZone, attr: {href: '#!scheduling-preferences' + $root.returnLinkGeneralActivity(),'aria-label': 'Edit your hours and scheduling preferences' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !weeklySchedule().timeZone(), attr: {href: '#!scheduling-preferences' + $root.returnLinkGeneralActivity(),'aria-label': 'Add your hours and scheduling preferences' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="container-fluid">
                     <em data-bind="visible: !weeklySchedule().timeZone()" class="text-muted">When can clients book you?</em>

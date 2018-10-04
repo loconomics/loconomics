@@ -55,6 +55,7 @@ const activities = {
     'searchJobTitle': createRedirect('search-job-title'),
     'searchCategory': createRedirect('search-category'),
     'userBirthDay': createRedirect('user-birth-day'),
+    'schedulingPreferences': createRedirect('scheduling-preferences'),
 };
 
 /**

@@ -111,7 +111,7 @@ A.prototype.applyOwnNavbarRules = function() {
 
         var jid = this.viewModel.jobTitleID();
         var jname = this.viewModel.listingTitle() || 'Scheduler';
-        var url = this.mustReturnTo || (jid && '/listing-editor/' + jid || '/schedulingPreferences');
+        var url = this.mustReturnTo || (jid && '/listing-editor/' + jid || '/scheduling-preferences');
 
         this.navBar.leftAction().link(url);
         this.navBar.leftAction().text(this.requestData.navTitle || jname);
