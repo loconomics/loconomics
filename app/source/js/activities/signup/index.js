@@ -12,6 +12,7 @@ import Activity from '../../components/Activity';
 import SignupVM from '../../viewmodels/Signup';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
+import style from './style.styl';
 import template from './template.html';
 
 const ROUTE_NAME = 'signup';
@@ -19,6 +20,8 @@ const ROUTE_NAME = 'signup';
 export default class Signup extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);
