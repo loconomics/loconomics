@@ -41,7 +41,7 @@ exports.load = function() {
             completeVerification: function () { return !!window.FB; },
             complete: function () {
                 // Initialize (Facebook registers itself as global 'FB')
-                window.FB.init({ appId: settings.appId, status: true, cookie: true, xfbml: false, version: 'v2.8' });
+                window.FB.init({ appId: settings.appId, status: true, cookie: true, xfbml: false, version: 'v2.12' });
 
                 // Is ready
                 apiStatus.ready(true);
