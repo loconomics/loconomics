@@ -13,15 +13,15 @@
                                 <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
                                 <p data-bind="text: service.offeringPrice"></p>
                             </div>
-                            <div class="Item-action"> 
-                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + service.id(),'aria-label': 'Edit '+ service.name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                            <div class="Item-action">
+                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!service-professional-service-editor/' + jobTitleID() + '/' + service.id(),'aria-label': 'Edit '+ service.name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
                             </div>
                         </div>
                     </li>
                 <!-- /ko -->
                 <!-- ko foreach: newButtons -->
                     <li>
-                        <a class="IconContentItem" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + service.pricingTypeID() + '/new','aria-label': 'Add new '+ service.pricingTypeName() }"> <!-- needs switch statement for client-specific -->
+                        <a class="IconContentItem" data-bind="attr: {href: '#!service-professional-service-editor/' + jobTitleID() + '/' + service.pricingTypeID() + '/new','aria-label': 'Add new '+ service.pricingTypeName() }"> <!-- needs switch statement for client-specific -->
                             <icon-dec params="icon: 'ion-plus'"></icon-dec>
                             <div class="Item-content">
                                 <p data-bind="text: label"></p>
@@ -50,7 +50,7 @@
                                 <p data-bind="text: offeringPrice"></p>
                             </label>
                             <div class="Item-action" data-bind="click: $root.tapService">
-                                <span role="checkbox" data-bind="visible: $root.isSelectionMode, attr: { id: 'offering' + id(), 'aria-pressed': isSelected, 'aria-label':  'Select ' +  name() }"><i data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }" aria-hidden="true"></i></span> 
+                                <span role="checkbox" data-bind="visible: $root.isSelectionMode, attr: { id: 'offering' + id(), 'aria-pressed': isSelected, 'aria-label':  'Select ' +  name() }"><i data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }" aria-hidden="true"></i></span>
                                 <span role="button" data-bind="visible: !$root.isSelectionMode(), click: $root.tapService, attr: {'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                 <!-- /ko -->
                 <!-- ko foreach: newButtons -->
                     <li>
-                        <a class="IconContentItem" href="#!serviceProfessionalServiceEditor/" data-bind="click: $root.tapNewService">
+                        <a class="IconContentItem" href="#!service-professional-service-editor/" data-bind="click: $root.tapNewService">
                             <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                             <div class="Item-content">
                                 <p data-bind="text: label"></p>

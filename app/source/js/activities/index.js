@@ -58,6 +58,7 @@ const activities = {
     'schedulingPreferences': createRedirect('scheduling-preferences'),
     'ownerAcknowledgment': createRedirect('owner-acknowledgment'),
     'serviceProfessionalService': createRedirect('service-professional-service'),
+    'serviceProfessionalServiceEditor': createRedirect('service-professional-service-editor'),
 };
 
 /**

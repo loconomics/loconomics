@@ -141,7 +141,7 @@ export default class ServiceProfessionalServices extends Activity {
         var baseNewServiceURL = this.newServiceURL.bind(this);
         this.newServiceURL = (jobTitleID, pricingTypeID, isClientSpecific) => {
             if(isClientSpecific) {
-                return `#!serviceProfessionalServiceEditor/${jobTitleID}/pricingType/${pricingTypeID}/client/${this.clientID()}/new`;
+                return `#!service-professional-service-editor/${jobTitleID}/pricingType/${pricingTypeID}/client/${this.clientID()}/new`;
             }
             else {
                 return baseNewServiceURL(jobTitleID, pricingTypeID);
