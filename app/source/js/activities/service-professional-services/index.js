@@ -241,7 +241,7 @@ export default class ServiceProfessionalServices extends Activity {
         return (shell.referrerRoute && shell.referrerRoute.url) || '/';
     }
 
-    serviceEditorCancelLink(isAdditionMode) {
+    getServiceEditorCancelLink(isAdditionMode) {
         if (isAdditionMode) {
             // Sets referrer as cancel link
             return this.referrerURL();
@@ -289,7 +289,7 @@ export default class ServiceProfessionalServices extends Activity {
                 // Update navbar (may indicate the listing title)
                 this.updateNavBarState();
                 // May depend on current URL, will change with job title
-                this.serviceEditorCancelLink(this.serviceEditorCancelLink(this.isAdditionMode()));
+                this.serviceEditorCancelLink(this.getServiceEditorCancelLink(this.isAdditionMode()));
             });
             this.subscribeTo(listingDataProvider.onDataError, (error) => {
                 showError({
@@ -327,7 +327,7 @@ export default class ServiceProfessionalServices extends Activity {
         }
         // Addition Mode
         const isAdditionMode = params.isNew;
-        this.serviceEditorCancelLink(this.serviceEditorCancelLink(isAdditionMode));
+        this.serviceEditorCancelLink(this.getServiceEditorCancelLink(isAdditionMode));
         if (isAdditionMode) {
             state.cancelLink = this.referrerURL();
         }
