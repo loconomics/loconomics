@@ -20,7 +20,7 @@ var RouteParser = require('../utils/Router').RouteParser;
 var alertPresets = {
         positionservices: {
             label: 'Add details to your listing',
-            route: new RouteParser('/servicesOverview/:jobTitleID')
+            route: new RouteParser('/services-overview/:jobTitleID')
         },
         availability: {
             label: 'What hours do you work?',

@@ -67,7 +67,7 @@
                             <p>
                                 Experience:
                                 <span data-bind="text: name"></span>
-                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your experience level' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!services-overview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your experience level' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
                             </p>
                         </div>
                     </div>
@@ -97,8 +97,8 @@
             <section id="listing-editor-services-overview" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="container-fluid SectionHeading" >
                     <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview</h2>
-                    <a data-bind="visible: $root.hasServicesOverview, attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the overview of your services' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.hasServicesOverview(), attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add an overview of your '+ title() + ' services' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: $root.hasServicesOverview, attr: {href: '#!services-overview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the overview of your services' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.hasServicesOverview(), attr: {href: '#!services-overview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add an overview of your '+ title() + ' services' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="container-fluid">
                     <div data-bind="visible: !$root.hasServicesOverview()">

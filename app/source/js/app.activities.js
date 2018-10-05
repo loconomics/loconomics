@@ -7,7 +7,6 @@
 
 module.exports = {
     'privacySettings': require('./activities/privacySettings'),
-    'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
     'workPhotos': require('./activities/workPhotos'),
     'userFees': require('./activities/userFees'),

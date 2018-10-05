@@ -1,5 +1,4 @@
-<!-- Activity servicesOverview -->
-<div data-activity="servicesOverview" class="Boxes-sm animated">
+<div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
@@ -17,7 +16,7 @@
                 <h1>
                     <icon-dec params="icon: 'ion-clipboard'"></icon-dec> <span data-bind="text: title"></span>
                 </h1>
-                <form id="servicesOverviewForm" class="container-fluid LightForm" role="form" data-bind="submit: save" aria-describedby="servicesOverviewFormInstructions">
+                <form id="servicesOverviewForm" class="container-fluid LightForm" role="form" data-bind="submit: save.bind($data)" aria-describedby="servicesOverviewFormInstructions">
                     <p id="servicesOverviewFormInstructions" class="help-block">Let clients know all about your <span class="text-lowercase" data-bind="text: listingTitle"></span> services and what sets yours apart from others. You can always update these details as you gain new skills and experience.</p>
                     <div data-bind="css: { 'is-loading': isLoading }">
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>

@@ -60,6 +60,7 @@ const activities = {
     'serviceProfessionalService': createRedirect('service-professional-service'),
     'serviceProfessionalServiceEditor': createRedirect('service-professional-service-editor'),
     'serviceAddresses': createRedirect('service-addresses'),
+    'servicesOverview': createRedirect('services-overview'),
 };
 
 /**
