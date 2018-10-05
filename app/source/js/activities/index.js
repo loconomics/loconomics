@@ -61,6 +61,7 @@ const activities = {
     'serviceProfessionalServiceEditor': createRedirect('service-professional-service-editor'),
     'serviceAddresses': createRedirect('service-addresses'),
     'servicesOverview': createRedirect('services-overview'),
+    'paymentAccount': createRedirect('payment-account'),
 };
 
 /**
