@@ -20,6 +20,7 @@ import PublicUser from '../../models/PublicUser';
 import PublicUserJobTitle from '../../models/PublicUserJobTitle';
 import UserJobTitle from '../../models/UserJobTitle';
 import UserType from '../../enums/UserType';
+import clipboard from '../../utils/clipboard';
 import ko from 'knockout';
 import shell from '../../app.shell';
 import { show as showConfirm } from '../../modals/confirm';
@@ -306,6 +307,26 @@ export default class ListingEditor extends Activity {
         this.reset = () => {
             this.user(null);
             this.listingTitle('Job Title');
+        };
+        this.copyPublicListingUrl = () => {
+            const url = window.location.origin + this.publicListingUrl();
+            // Try to copy
+            const error = clipboard.copy(url);
+            if (error) {
+                showError({
+                    title: 'Copying listing URL',
+                    error: `Automatic copy failed, but you can select and copy it here: ${url}`
+                });
+            }
+            else {
+                showNotification({
+                    title: 'Copying listing URL',
+                    message: `Copied: ${url}`,
+                    buttonText: 'Done'
+                });
+            }
+            // Do not prevent default:
+            return true;
         };
         this.deleteJobTitle = () => {
             var jid = this.jobTitleID();
