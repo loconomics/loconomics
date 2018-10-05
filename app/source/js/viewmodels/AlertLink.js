@@ -24,7 +24,7 @@ var alertPresets = {
         },
         availability: {
             label: 'What hours do you work?',
-            route: new RouteParser('/schedulingPreferences?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/scheduling-preferences?mustReturn=listing-editor/:jobTitleID')
         },
         personalinfo: {
             label: 'How do clients reach you?',
@@ -40,7 +40,7 @@ var alertPresets = {
         },
         pricingdetails: {
             label: 'Create a bookable offering',
-            route: new RouteParser('/serviceProfessionalService/:jobTitleID')
+            route: new RouteParser('/service-professional-services/:jobTitleID')
         },
         publicbio: {
             label: 'Add a personal bio',

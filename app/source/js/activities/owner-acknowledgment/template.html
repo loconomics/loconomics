@@ -1,4 +1,4 @@
-<div data-activity="ownerAcknowledgment" class="Boxes-sm animated">
+<div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
@@ -53,7 +53,7 @@
                         </div>
                     </fieldset>
                     <div class="LightForm-submitBar">
-                        <button type="button" data-bind="click: acknowledge" class="btn btn-primary btn-block">Submit</button>
+                        <button type="button" data-bind="click: acknowledge.bind($data)" class="btn btn-primary btn-block">Submit</button>
                     </div>
                 </form>
                 <div class="container-fluid LightForm" data-bind="visible: acknowledgment.isSigned">

@@ -1,5 +1,4 @@
-<!-- ServiceProfessionalService activity -->
-<div data-activity="serviceProfessionalService" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
+<div class="Boxes-sm" data-bind="css: { 'is-loading': isLoading }">
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
@@ -34,14 +33,14 @@
                                                 <p data-bind="text: offeringPrice"></p>
                                             </div>
                                             <div class="Item-action">
-                                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + id(),'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!service-professional-service-editor/' + jobTitleID() + '/' + id(),'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
                                             </div>
                                         </div>
                                     </li>
                                 <!-- /ko -->
                                 <!-- ko foreach: newButtons -->
                                     <li>
-                                        <a class="IconContentItem" href="#!serviceProfessionalServiceEditor/" data-bind="click: $root.tapNewService">
+                                        <a class="IconContentItem" href="#!service-professional-service-editor/" data-bind="click: $root.tapNewService">
                                             <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                                             <div class="Item-content">
                                                 <p data-bind="text: label"></p>
