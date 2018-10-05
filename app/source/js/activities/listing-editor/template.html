@@ -122,8 +122,8 @@
             <section id="listing-editor-offerings" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="container-fluid SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings  <span class="label label-danger" data-bind="visible: !publicServices().length">Required</span></h2>
-                    <a data-bind="visible: publicServices().length, attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ title() + ' offerings' }" class="btn btn-default pull-right" aria-label="Edit offerings">Edit</a>
-                    <a data-bind="visible: !publicServices().length, attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add your  '+ title() + ' offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
+                    <a data-bind="visible: publicServices().length, attr: {href: '#!service-professional-services/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ title() + ' offerings' }" class="btn btn-default pull-right" aria-label="Edit offerings">Edit</a>
+                    <a data-bind="visible: !publicServices().length, attr: {href: '#!service-professional-services/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add your  '+ title() + ' offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
                 </div>
                 <div class="container-fluid">
                     <em data-bind="visible: !publicServices().length" class="text-muted">List here what <span data-bind="text: title()"></span> services you offer along with descriptions and pricing. You must add at least one for your listing to be active in the marketplace.</em>

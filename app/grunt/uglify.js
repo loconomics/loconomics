@@ -42,7 +42,8 @@ var conservativeOptions = {
     // Reduce variable names
     // IMPORTANT: Disabled because it causes bugs, even now that keep_fnames:true fixes #709 seems to
     // break other things. Continue reviewing
-    // Know problem: entering the serviceProfessionalService activity shows bug of 'double knockout binding'
+    // Know problem: entering the service-professional-services activity shows bug of 'double knockout binding'
+    // Double check if after some refactories, this keeps happening or not
     mangle: false
 };
 

@@ -40,7 +40,7 @@ var alertPresets = {
         },
         pricingdetails: {
             label: 'Create a bookable offering',
-            route: new RouteParser('/serviceProfessionalService/:jobTitleID')
+            route: new RouteParser('/service-professional-services/:jobTitleID')
         },
         publicbio: {
             label: 'Add a personal bio',

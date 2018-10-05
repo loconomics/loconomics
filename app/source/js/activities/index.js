@@ -57,6 +57,7 @@ const activities = {
     'userBirthDay': createRedirect('user-birth-day'),
     'schedulingPreferences': createRedirect('scheduling-preferences'),
     'ownerAcknowledgment': createRedirect('owner-acknowledgment'),
+    'serviceProfessionalService': createRedirect('service-professional-service'),
 };
 
 /**

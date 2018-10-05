@@ -75,7 +75,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    var link = this.requestData.cancelLink || '/serviceProfessionalService/' + this.viewModel.jobTitleID();
+    var link = this.requestData.cancelLink || '/service-professional-services/' + this.viewModel.jobTitleID();
 
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
