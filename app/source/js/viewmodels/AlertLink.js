@@ -52,7 +52,7 @@ var alertPresets = {
         },
         location: {
             label: 'Where do you work?',
-            route: new RouteParser('/serviceAddresses/:jobTitleID')
+            route: new RouteParser('/service-addresses/:jobTitleID')
         },
         'add-education': {
             label: 'Add training or education',

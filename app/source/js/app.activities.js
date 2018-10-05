@@ -6,7 +6,6 @@
 'use strict';
 
 module.exports = {
-    'serviceAddresses': require('./activities/serviceAddresses'),
     'privacySettings': require('./activities/privacySettings'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),

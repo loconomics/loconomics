@@ -242,7 +242,7 @@ export default class AddressEditorActivity extends Activity {
     }
 
     updateNavBarState() {
-        var link = this.requestData.cancelLink || '/serviceAddresses/' + this.jobTitleID();
+        var link = this.requestData.cancelLink || '/service-addresses/' + this.jobTitleID();
         this.convertToCancelAction(this.navBar.leftAction(), link);
     }
 

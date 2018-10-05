@@ -169,8 +169,8 @@
             <section id="listing-editor-weekly-schedule" data-bind="with: selectedJobTitle" class="row" title="">
                 <div class="container-fluid SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Location  <span class="label label-danger" data-bind="visible: !$root.serviceAddresses().length">Required</span></h2>
-                    <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ title() + ' locations' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ title() + ' locations' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!service-addresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ title() + ' locations' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!service-addresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ title() + ' locations' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="container-fluid" data-bind="visible: !$root.serviceAddresses().length">
                     <em class="text-muted">Add a location or service area where you clients can book your <span data-bind="text: title()"></span> offerings. You must add one for your listing to be active in the marketplace.</em>

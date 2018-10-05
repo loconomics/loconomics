@@ -579,7 +579,7 @@ export default function ComponentViewModel(params) {
     this.pickLocation = function pickLocation() {
         if (this.isLocked()) return;
 
-        editFieldOn('serviceAddresses/' + this.item().jobTitleID(), {
+        editFieldOn('service-addresses/' + this.item().jobTitleID(), {
             selectAddress: true,
             selectedAddressID: this.item().address() ? this.item().address().addressID() : 0,
             clientUserID: this.item().clientUserID()

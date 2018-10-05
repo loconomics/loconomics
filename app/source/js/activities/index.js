@@ -59,6 +59,7 @@ const activities = {
     'ownerAcknowledgment': createRedirect('owner-acknowledgment'),
     'serviceProfessionalService': createRedirect('service-professional-service'),
     'serviceProfessionalServiceEditor': createRedirect('service-professional-service-editor'),
+    'serviceAddresses': createRedirect('service-addresses'),
 };
 
 /**
