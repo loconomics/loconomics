@@ -135,8 +135,8 @@
             <section id="listing-editor-photos" class="row Listing-photos" data-bind="with: selectedJobTitle" title="">
                 <div class="container-fluid  SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
-                    <a data-bind="visible: $root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the photos of your '+ title() + ' work' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add photos your '+ title() + ' work' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: $root.workPhotos().length, attr: {href: '#!work-photos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the photos of your '+ title() + ' work' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.workPhotos().length, attr: {href: '#!work-photos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add photos your '+ title() + ' work' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="container-fluid">
                     <em data-bind="visible: !$root.workPhotos().length" class="text-muted">Upload here some photos you think clients will want to see pertaining to your <span data-bind="text: title()"></span> work.</em>

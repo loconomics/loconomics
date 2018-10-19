@@ -63,6 +63,7 @@ const activities = {
     'servicesOverview': createRedirect('services-overview'),
     'paymentAccount': createRedirect('payment-account'),
     'privacySettings': createRedirect('privacy-settings'),
+    'workPhotos': createRedirect('work-photos'),
 };
 
 /**

@@ -64,7 +64,7 @@ var alertPresets = {
         },
         showcasework: {
             label: 'Add photos of your work',
-            route: new RouteParser('/workPhotos/:jobTitleID')
+            route: new RouteParser('/work-photos/:jobTitleID')
         },
         'required-professionallicense': {
               label: 'Verify your professional license or certification',
