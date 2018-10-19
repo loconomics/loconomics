@@ -32,7 +32,7 @@ var alertPresets = {
         },
         photo: {
             label: 'Add your profile photo',
-            route: new RouteParser('/publicProfilePicture?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/public-profile-picture?mustReturn=listing-editor/:jobTitleID')
         },
         payment: {
             label: 'How do you want to be paid?',

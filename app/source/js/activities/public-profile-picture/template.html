@@ -1,5 +1,4 @@
-<!-- Activity publicProfilePicture -->
-<div data-activity="publicProfilePicture">
+<div>
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
@@ -19,7 +18,7 @@
                     data-bind="event: { submit: save }">
                     <!-- ko with: profilePicture -->
                     <fieldset class="LightForm-tool">
-                        <p class="help-block"><span data-bind="visible: user.isServiceProfessional()">Upload a clear, professional-looking photo of you for clients to see.</span><span data-bind="visible: !user.isServiceProfessional()">Upload a clear photo of you for service professionals to see.</span></p>
+                        <p class="help-block"><span data-bind="visible: isServiceProfessional()">Upload a clear, professional-looking photo of you for clients to see.</span><span data-bind="visible: !isServiceProfessional()">Upload a clear photo of you for service professionals to see.</span></p>
                         <div data-bind="visible: !localPhotoPreview()">
                             <div class="Avatar Avatar--lg" data-bind="attr: { style: photoRotationStyle }"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }"/></div>
                         </div>
@@ -42,7 +41,7 @@
                             </label>
                         </button-file>
                         <div class="LightForm-submitBar">
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="text: $root.submitText, disable: isLocked"></button>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
                         </div>
                     </fieldset>
                     <!-- /ko -->

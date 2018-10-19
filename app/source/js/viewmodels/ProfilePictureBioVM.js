@@ -23,6 +23,7 @@ module.exports = function ProfilePictureBioVM(app) {
     ListingVM.call(this, app);
 
     this.user = user;
+    this.isServiceProfessional = user.isServiceProfessional;
     this.photoUploadUrl = remote.baseUrl + 'me/profile-picture';
     this.photoEditRestUrl = 'me/profile-picture/edit';
     this.photoUploadFieldName = 'profilePicture';
