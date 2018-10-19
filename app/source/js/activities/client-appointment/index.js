@@ -32,7 +32,7 @@ export default class ClientAppointment extends Activity {
         this.accessLevel = UserType.loggedUser;
         this.helpLink = '/help/relatedArticles/201983163-making-changes-canceling-appointments';
         this.navBar = Activity.createSubsectionNavBar('', {
-            backLink: '/myAppointments',
+            backLink: '/my-appointments',
             helpLink: this.helpLink
         });
         this.title('Your appointments');

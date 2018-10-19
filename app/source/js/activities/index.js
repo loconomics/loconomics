@@ -66,6 +66,7 @@ const activities = {
     'workPhotos': createRedirect('work-photos'),
     'userFees': createRedirect('user-fees'),
     'payoutPreference': createRedirect('payout-preference'),
+    'myAppointments': createRedirect('my-appointments'),
 };
 
 /**
