@@ -67,6 +67,7 @@ const activities = {
     'userFees': createRedirect('user-fees'),
     'payoutPreference': createRedirect('payout-preference'),
     'myAppointments': createRedirect('my-appointments'),
+    'userFeePayments': createRedirect('user-fee-payments'),
 };
 
 /**

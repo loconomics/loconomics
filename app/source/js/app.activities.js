@@ -6,7 +6,6 @@
 'use strict';
 
 module.exports = {
-    'userFeePayments': require('./activities/userFeePayments'),
     'publicBio': require('./activities/publicBio'),
     'publicProfilePicture': require('./activities/publicProfilePicture'),
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
