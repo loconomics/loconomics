@@ -94,16 +94,3 @@ export function register(routeName, ActivityClass) {
 export function get(routeName) {
     return activities[routeName];
 }
-
-/**
- * It registers all activities from the given dictionary of 'name:Activity'.
- * It's basically a 'registerMany' but expected to be used only once with
- * the proposal of preload a bunch of activities with the app entry point.
- * @param {Object} activitiesByName Follows the same format as the internal
- * dictionary, route or activity name as key and activity class as value.
- */
-export function preload(activitiesByName) {
-    Object.keys(activitiesByName).forEach(function(name) {
-        register(name, activitiesByName[name]);
-    });
-}

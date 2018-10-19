@@ -22,9 +22,6 @@ var onboarding = require('./data/onboarding');
 var ga = require('./data/googleAnalytics');
 
 var activities = require('./activities');
-// activities.preload({
-//     home: require('./activities/home')
-// });
 
 // Register the special locale
 require('./locales/en-US-LC');
