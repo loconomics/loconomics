@@ -6,7 +6,6 @@
 'use strict';
 
 module.exports = {
-    'privacySettings': require('./activities/privacySettings'),
     'verifications': require('./activities/verifications'),
     'workPhotos': require('./activities/workPhotos'),
     'userFees': require('./activities/userFees'),

@@ -1,5 +1,4 @@
-<!-- PrivacySettings activity -->
-<div data-activity="privacySettings" class="Boxes-sm animated">
+<div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
@@ -51,7 +50,7 @@
                                         disable: isLocked
                         } }"></div>
                     </fieldset>
-                    <fieldset class="isolated" data-bind="visible: user.isServiceProfessional">
+                    <fieldset class="isolated" data-bind="visible: isServiceProfessional">
                         <legend>Marketing your listing:</legend>
                         <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
                                         id: 'profileSeoPermission',
@@ -66,7 +65,7 @@
                                         disable: isLocked
                         } }"></div>
                     </fieldset>
-                    <fieldset class="isolated" data-bind="visible: user.isServiceProfessional">
+                    <fieldset class="isolated" data-bind="visible: isServiceProfessional">
                         <legend>Co-branding partners:</legend>
                         <div data-bind="template: { name: 'privacySettings-optionCheck', data: {
                                         id: 'coBrandedPartnerPermissions',

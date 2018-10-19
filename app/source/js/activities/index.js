@@ -62,6 +62,7 @@ const activities = {
     'serviceAddresses': createRedirect('service-addresses'),
     'servicesOverview': createRedirect('services-overview'),
     'paymentAccount': createRedirect('payment-account'),
+    'privacySettings': createRedirect('privacy-settings'),
 };
 
 /**
