@@ -6,6 +6,5 @@
 'use strict';
 
 module.exports = {
-    'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
     'serviceProfessionalBusinessInfo': require('./activities/serviceProfessionalBusinessInfo'),
 };
