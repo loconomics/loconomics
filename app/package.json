@@ -22,7 +22,9 @@
     "app-release-tags": "git tag | grep 'releases/app-' | sort -V",
     "bump-patch": "LAST_APP_VERSION=$(npm version patch) && git add package.json && git commit -m ${LAST_APP_VERSION}",
     "bump-minor": "LAST_APP_VERSION=$(npm version minor) && git add package.json && git commit -m ${LAST_APP_VERSION}",
-    "recommended-windows-shell": "npm config set script-shell \"C:\\Program Files\\git\\bin\\bash.exe\""
+    "recommended-windows-shell": "npm config set script-shell \"C:\\Program Files\\git\\bin\\bash.exe\"",
+    "analize-js:common": "discify ./build/assets/js/common.js -O",
+    "analize-js:app": "discify ./build/assets/js/app.js -O"
   },
   "repository": "loconomics/loconomics",
   "private": true,
@@ -44,6 +46,7 @@
     "common-shakeify": "^0.5.1",
     "deepmerge": "^2.0.1",
     "detect_swipe": "^2.1.4",
+    "discify": "^1.6.3",
     "eslint": "^4.17.0",
     "eslint-plugin-compat": "^2.2.0",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
