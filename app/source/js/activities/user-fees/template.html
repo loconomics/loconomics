@@ -1,5 +1,4 @@
-<!-- Activity userFees -->
-<div data-activity="userFees" class="Boxes-sm animated">
+<div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
@@ -35,7 +34,7 @@
                     <div data-bind="if: activePaymentPlan() && !activePaymentPlan().partnership()">
                         <h2>Your payment information:</h2>
                         <ul class="TilesList TilesList--openEnd" data-bind="visible: !isNew(), with: activeUserPaymentPlan">
-                            <li class="InfoTile" href="/userFees">
+                            <li class="InfoTile">
                                 <div class="Tile-icon" aria-hidden="true">
                                     <span class="fa ion ion-card" aria-hidden="true"></span>
                                 </div>

@@ -16,7 +16,7 @@
                     </li>
 <!--
                     <li>
-                        <a class="IconContentItem" href="/userFees">
+                        <a class="IconContentItem" href="/user-fees">
                             <icon-dec class="Item-icon" params="icon: 'fa-bank'"></icon-dec>
                             <div class="Item-content">
                                 <p>Payout history</p>
@@ -28,7 +28,7 @@
                 <h2 class="SectionTitle" data-bind="visible: isServiceProfessional">Billing</h2>
                 <ul class="TilesList TilesList--openEnd" data-bind="visible: isServiceProfessional">
                     <li>
-                        <a class="IconContentItem" href="/userFees">
+                        <a class="IconContentItem" href="/user-fees">
                             <icon-dec class="Item-icon" params="icon: 'ion-levels'"></icon-dec>
                             <!-- ko if: activePaymentPlan() -->
                             <div class="Item-content" data-bind="visible: !activeUserPaymentPlan.isNew()">
@@ -47,7 +47,7 @@
                         </a>
                     </li>
                     <li data-bind="visible: activeUserPaymentPlan.paymentMethod">
-                        <a class="IconContentItem" href="/userFees">
+                        <a class="IconContentItem" href="/user-fees">
                             <icon-dec class="Item-icon" params="icon: 'fa-dollar'"></icon-dec>
                             <div class="Item-content">
                                 <div>Next payment: <span data-bind="text: activeUserPaymentPlan.nextPaymentAmount, format: { type: 'number', format: '$0,0.00' }"></span></div>
