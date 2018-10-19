@@ -44,7 +44,7 @@ var alertPresets = {
         },
         publicbio: {
             label: 'Add a personal bio',
-            route: new RouteParser('/publicBio?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/public-bio?mustReturn=listing-editor/:jobTitleID')
         },
         professionallicense: {
             label: 'Submit required credentials',
