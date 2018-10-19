@@ -71,6 +71,7 @@ const activities = {
     'publicBio': createRedirect('public-bio'),
     'publicProfilePicture': createRedirect('public-profile-picture'),
     'serviceProfessionalCustomURL': createRedirect('service-professional-custom-url'),
+    'serviceProfessionalBusinessInfo': createRedirect('service-professional-business-info'),
 };
 
 /**

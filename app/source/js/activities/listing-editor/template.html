@@ -61,7 +61,7 @@
                     <h2><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().title()"></span></h2>
                     <p><span data-bind="visible: profile().businessName(), text: profile().businessName()"></span><span class="text-muted" data-bind="visible: !profile().businessName()"><em>Your business name</em></span></p>
                     <p><span data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl()"></span><span class="text-muted" data-bind="visible: !profile().serviceProfessionalWebsiteUrl()"><em>Your business website</em></span></p>
-                    <a data-bind="attr: {href: '#!serviceProfessionalBusinessInfo' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your your business info">Edit business info</a>
+                    <a data-bind="attr: {href: '#!service-professional-business-info' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your your business info">Edit business info</a>
                     <div data-bind="with: selectedJobTitle">
                         <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
                             <p>

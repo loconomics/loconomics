@@ -1,5 +1,4 @@
-<!-- Activity serviceProfessionalBusinessInfo -->
-<div data-activity="serviceProfessionalBusinessInfo">
+<div>
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
@@ -19,6 +18,7 @@
                     <h1><icon-dec params="icon: 'ion-android-globe'"></icon-dec> <span data-bind="text: title"></span></h1>
                     <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                     <p id="businessInfoFormInstructions" class="help-block">List for your clients the name and website of your business where they can learn more about you and your services.</p>
+                    <!-- ko with: data -->
                     <fieldset>
                         <div class="form-group">
                             <label for="businessName">Business name:</label>
@@ -32,6 +32,7 @@
                     <div class="LightForm-submitBar">
                         <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
                     </div>
+                    <!-- /ko -->
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
