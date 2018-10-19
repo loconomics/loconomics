@@ -36,7 +36,7 @@ var alertPresets = {
         },
         payment: {
             label: 'How do you want to be paid?',
-            route: new RouteParser('/payoutPreference?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/payout-preference?mustReturn=listing-editor/:jobTitleID')
         },
         pricingdetails: {
             label: 'Create a bookable offering',

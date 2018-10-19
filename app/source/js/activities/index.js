@@ -65,6 +65,7 @@ const activities = {
     'privacySettings': createRedirect('privacy-settings'),
     'workPhotos': createRedirect('work-photos'),
     'userFees': createRedirect('user-fees'),
+    'payoutPreference': createRedirect('payout-preference'),
 };
 
 /**
