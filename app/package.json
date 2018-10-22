@@ -32,6 +32,7 @@
     "aliasify": "^2.1.0",
     "autoprefixer": "8.1.0",
     "babel-core": "6.26",
+    "babel-eslint": "^10.0.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babelify": "8.0.0",
