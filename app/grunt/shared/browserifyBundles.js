@@ -212,7 +212,16 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
                     // Output take strictkly the same order than listed
                     // source files, so they match the expected name-content
                     'factor-bundle', {
-                        output: bundles.map((bundle) => bundle.dest)
+                        output: bundles.map((bundle) => bundle.dest),
+                        // TODO: Done some research and tests (with helper grunt/shared/readFilesSizes)
+                        // and found that a value of 5 is better than 10 as threshold,
+                        // in order to get a smaller main bundle size
+                        // while not increasing too much the activities (because of duplication)
+                        // BUT it webapp starts failing when entering /dashboard (should happen
+                        // on more places), needs more research since is really interesting
+                        // to be able to fine-tune size/performance with this, but letting
+                        // this documented and the default value of 1 explicit for now:
+                        threshold: 1
                     }
                 ]
             ]
