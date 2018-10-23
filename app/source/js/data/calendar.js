@@ -70,6 +70,9 @@ session.on.cacheCleaningRequested.subscribe(exports.clearCache);
 // Reset cache on new/updated/deleted bookings
 bookings.onDataChanges.subscribe(exports.clearCache);
 
+// We need to recompute availability as side effect of schedule
+weeklySchedule.onDataChanged.subscribe(exports.clearCache);
+
 /**
     Get a generic calendar appointment object, made of events and/or bookings,
     depending on the given ID in the ids object.
