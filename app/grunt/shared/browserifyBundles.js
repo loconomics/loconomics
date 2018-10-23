@@ -213,15 +213,33 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
                     // source files, so they match the expected name-content
                     'factor-bundle', {
                         output: bundles.map((bundle) => bundle.dest),
-                        // TODO: Done some research and tests (with helper grunt/shared/readFilesSizes)
+                        // FAILED OPTIMIZATION:
+                        // FINE-TUNE: Done some research and tests (with helper grunt/shared/readFilesSizes)
                         // and found that a value of 5 is better than 10 as threshold,
                         // in order to get a smaller main bundle size
                         // while not increasing too much the activities (because of duplication)
-                        // BUT it webapp starts failing when entering /dashboard (should happen
-                        // on more places), needs more research since is really interesting
-                        // to be able to fine-tune size/performance with this, but letting
-                        // this documented and the default value of 1 explicit for now:
-                        threshold: 1
+                        // and not getting a much increasing size of the whole app. Higher values
+                        // (specially high ones, trying to keep just most used, heavy third party used everywhere
+                        // just at common.js for a smaller start-up while increasing activities; values of 50, 80, 100)
+                        // generates a so big app.js that compensates the reduce at common.js and even make the sum
+                        // of both bigger on some situations (this results are counterintuitive to me) and still
+                        // leads to the problems commented below that make it impossible to use.
+                        // BUG: Problem comes with this leading to situations where not all modules may be
+                        // available at runtime based on the number of occurrences and dependencies:
+                        // example: data/calendar.js not included at common.js (or each activity needing it)
+                        // while a module that requires that, data/bookings.js, it is included
+                        // at common.js; it's inconsistent because means bookings.js cannot be loaded without
+                        // calendar.js, leading to null module and crashes; I think is a BUG in factor-bundle.
+                        // FOUND that by removing the circular reference that exists between both modules fixes
+                        // the problem, but need to find a realistic way to break that without leading to cache problems.
+                        // ADDITIONALLY, other activities fail to load because a shared component is already registered
+                        // (just because the module is being included in more than one activity, but not enough times to
+                        // get into a single at common.js, so for the runtime they are like two different modules). Could
+                        // study the possibility to do an unregister-register, a try-catch register or some check for name
+                        // already taken, but should ensure that's not happens because of a mistake on names referencing two
+                        // real different components (we need info on that so problems can be caught, rather than shadowed).
+                        // CONCLUSION: We cannot use this feature now, that would allow a good fine tunning for performance
+                        //threshold: 5
                     }
                 ]
             ]
