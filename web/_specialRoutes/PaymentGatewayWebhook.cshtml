@@ -44,7 +44,21 @@
             var userPlan = LcRest.UserPaymentPlan.GetBySubscriptionID(notification.Subscription.Id);
             if (userPlan == null)
             {
-                throw new Exception("UserPaymentPlan subscription not found (" + notification.Subscription.Id + ")");
+                // If was a removal (cancellation/expiration) and wasn't found, we understand that was already removed
+                // from database, BUT we should not remove but keep it for history purpose with proper status, for now
+                // rather than automatically create a record (under consideration), send an error email but return
+                // a correct result to Braintree so it stops notifying us about this.
+                if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_CANCELED || notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_EXPIRED)
+                {
+                    LcMessaging.NotifyError("Braintree payment notification", "/PaymentGatewayWebhook", "UserPaymentPlan subscription not found (" + notification.Subscription.Id + ") while Braintree notified a kind of removal (" + notification.Kind.ToString() + "). Notifications will stop here, please review it " + 
+                        "manually to ensure this is working as expected and if a registration of the removed payment subscription should be done.");
+                    // Let Braintree stop notifing us as if we managed this correctly.
+                    response = "OK";
+                }
+                else
+                {
+                    throw new Exception("UserPaymentPlan subscription not found (" + notification.Subscription.Id + ")");
+                }
             }
             else
             {
