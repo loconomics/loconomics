@@ -7,10 +7,11 @@
 
 import UserJobTitle from '../models/UserJobTitle';
 import ko from 'knockout';
+import shell from '../app.shell';
 import { show as showError } from '../modals/error';
 import { list as userListings } from '../data/userListings';
 
-function UserJobProfileViewModel(app) {
+function UserJobProfileViewModel() {
 
     this.showMarketplaceInfo = ko.observable(false);
 
@@ -70,7 +71,7 @@ function UserJobProfileViewModel(app) {
 
     this.selectJobTitle = function(jobTitle) {
         // Gollow the next link:
-        app.shell.go(this.baseUrl() + '/' + jobTitle.jobTitleID());
+        shell.go(this.baseUrl() + '/' + jobTitle.jobTitleID());
         // This function can be replaced by custom handling.
         // Stop events
         return false;

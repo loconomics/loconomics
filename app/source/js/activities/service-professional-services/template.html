@@ -1,0 +1,66 @@
+<div class="Boxes-sm" data-bind="css: { 'is-loading': isLoading }">
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
+    <div class="container">
+        <div class="row">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
+                <h1><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
+                <p class="help-block" data-bind="visible: !$root.isSelectionMode()">Clients will be able to schedule the offerings you create here. Need to speak to clients first? Add a consultation.</p>
+                <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
+                <div data-bind="visible: jobTitleID() > 0">
+                    <div class="ServiceListGroup" data-bind="foreach: serviceListGroups">
+                        <h2 class="ServiceListGroup-title" data-bind="visible: title.length > 0, text: title"></h2>
+                        <div data-bind="foreach: serviceLists()">
+                            <h3 class="SectionTitle" data-bind="visible: !$root.isAdditionMode() && title.length > 0">
+                                <span data-bind="text: title"></span>
+                            </h3>
+                            <ul class="TilesList TilesList--openEnd" data-bind="">
+                                <!-- ko foreach: services -->
+                                    <li>
+                                        <div class="OfferingItem" data-bind="attr: { id: 'offering' + id() }">
+                                            <div class="Item-content">
+                                                <p><strong data-bind="text: name"></strong><p>
+                                                <p data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></p>
+                                                <p data-bind="text: offeringPrice"></p>
+                                            </div>
+                                            <div class="Item-action">
+                                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!service-professional-service-editor/' + jobTitleID() + '/' + id(),'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <!-- /ko -->
+                                <!-- ko foreach: newButtons -->
+                                    <li>
+                                        <a class="IconContentItem" href="#!service-professional-service-editor/" data-bind="click: $root.tapNewService">
+                                            <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
+                                            <div class="Item-content">
+                                                <p data-bind="text: label"></p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="help-block isolated" data-bind="visible: clientManagerLink">Looking for special pricings for clients? <a data-bind="attr: { href: clientManagerLink }" class="btn btn-link btn-default">Select a client</a>
+                    </p>
+                </div>
+                <div class="isolated inset" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
+                    <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>

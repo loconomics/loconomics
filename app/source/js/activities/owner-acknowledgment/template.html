@@ -1,0 +1,70 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="row">
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/account"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Account</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h1 data-bind="text: title"></h1>
+                <div class="container-fluid">
+                    <p>
+                        <strong>Introduction</strong>
+                    </p>
+                    <p>
+                        Upon acceptance, this disclosure serves as a receipt of your Ownership in Loconomics Cooperative, Inc., a California cooperative corporation. A copy of our articles and bylaws can be found here or furnished, without charge, to Owners or prospective Owners by a written request mailed to:
+                    </p>
+                    <p>
+                        Loconomics Cooperative, Inc.<br>
+                        3150 18th Street, Suite 438<br>
+                        Mailbox 208<br>
+                        San Francisco, CA 94110
+                    </p>
+                    <p>
+                        <strong>Transfer of Ownership</strong>
+                    </p>
+                    <p>
+                       An Ownership Interest is personal to an Owner. No Owner may transfer her or his Ownership Interest, and except as otherwise provided, no Owner may transfer any right arising from Ownership Interest. Except as otherwise provided, any attempted assignment or transfer of an Ownership Interest shall be void, and will not confer rights on the intended assignee or transferee.
+                    </p>
+                    <p>
+                        <strong>Requirements of Ownership</strong>
+                    </p>
+                    <p>
+                       To become an Owner of Loconomics, a Service Professional must do each of the following:
+                    </p>
+                    <ul type="disc">
+                        <li><strong>Create a profile.</strong> Create an online profile on the Loconomics Marketplace describing the Owner and the services that the Owner provides.</li>
+                        <li><strong>Complete two bookings with positive reviews.</strong> Complete Services for at least two bookings through the Loconomics Marketplace or online scheduler with a Client review of 3 stars or higher. Service Professionals regulated by HIPAA are exempt from the positive reviews requirement.</li>
+                        <li><strong>Complete Owner Acknowledgment.</strong> Complete an Owner Acknowledgment in order to acknowledge, among other things, that the Owner has had an opportunity to <a class="text-secondary" href="https://loconomics.gitbooks.io/loconomics-cooperative-bylaws/content/">view and agrees to these Bylaws</a>, the Loconomics <a class="text-secondary" href="/terms" target="_blank">Terms of Service</a>, and any other policies or resolutions adopted by Loconomics.</li>
+                        <li><strong>Provide Owner Information.</strong> Complete an informational form to provide Loconomics with an email address, a second email address (if available) for back-up purposes, a phone number, and mailing address.</li>
+                        <li><strong>Pay User Fee.</strong> <a href="/user-fees" target="_blank">Pay any User Fee</a> associated with use of the Platform, if applicable, as determined from time to time by the Board of Directors.</li>
+                    </ul>
+                </div>
+                <form id="ownerAcknowledgment" class="container-fluid LightForm" data-bind="visible: !acknowledgment.isSigned()">
+                    <fieldset>
+                        <legend>Type your full name as acknowledgment</legend>
+                        <div class="form-group">
+                            <label for="ownerSignature">Signature</label>
+                            <input id="ownerSignature" type="text" class="form-control" data-bind="textInput: ownerFullName" placeholder="First and last name"/>
+                        </div>
+                    </fieldset>
+                    <div class="LightForm-submitBar">
+                        <button type="button" data-bind="click: acknowledge.bind($data)" class="btn btn-primary btn-block">Submit</button>
+                    </div>
+                </form>
+                <div class="container-fluid LightForm" data-bind="visible: acknowledgment.isSigned">
+                    <div class="form-group">
+                        <p>You submitted your acknowledgment of this disclosure on: <span data-bind="text: acknowledgment.dateAcknowledged, format: { type: 'datetime', format: 'MMMM Do, YYYY [at] h:mm a' }"></span> from IP Address: <span data-bind="text: acknowledgment.acknowledgedFromIP"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>

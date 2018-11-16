@@ -12,6 +12,7 @@ import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import onboarding from '../../data/onboarding';
 import { pureComputed } from 'knockout';
+import style from './style.styl';
 import template from './template.html';
 import userProfile from '../../data/userProfile';
 
@@ -21,6 +22,8 @@ const user = userProfile.data;
 export default class WelcomeActivity extends Activity {
 
     static get template() { return template; }
+
+    static get style() { return style; }
 
     constructor($activity, app) {
         super($activity, app);

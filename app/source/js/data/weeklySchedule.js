@@ -5,13 +5,23 @@
 // TODO store-jsdocs
 'use strict';
 
-import calendar from './calendar';
+import SingleEvent from '../utils/SingleEvent';
 import { list as userListings } from './userListings';
 
 var WeeklySchedule = require('../models/WeeklySchedule');
 var RemoteModel = require('./helpers/RemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
+
+/**
+ * @private {SingleEvent}
+ */
+const onDataChanged = new SingleEvent();
+/**
+ * Notifies when a change was pushed successfully to the server
+ * @member {SingleEvent}
+ */
+exports.onDataChanged = onDataChanged.subscriber;
 
 var api = new RemoteModel({
     data: new WeeklySchedule(),
@@ -23,8 +33,7 @@ var api = new RemoteModel({
     push: function push() {
         return remote.put('me/weekly-schedule', this.data.model.toPlainObject(true))
         .then(function(result) {
-            // We need to recompute availability as side effect of schedule
-            calendar.clearCache();
+            onDataChanged.emit();
             // Forward the result
             return result;
         });

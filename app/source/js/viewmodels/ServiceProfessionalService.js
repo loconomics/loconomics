@@ -4,6 +4,9 @@
     @deprecated Needs refactoring as components and new data modules, along with the
     only place is used right now, the activity with the same name and
     MUST NOT be used in more places.
+
+    IMPORTANT: this class is used as a mixim, so NO member should be defined
+    in the prototype, just in the constructor.
 **/
 'use strict';
 
@@ -19,7 +22,15 @@ var showError = require('../modals/error').show;
 
 function ServiceProfessionalServiceViewModel(app) {
     /* eslint max-statements:"off" */
-    EventEmitter.call(this);
+    // Create emitter and alias needed public methods, this way we don't need
+    // to inherit from the emitter and usage of this ViewModel as a mixim is
+    // easy
+    const emitter = new EventEmitter();
+    this.emit = emitter.emit.bind(this);
+    this.addListener = emitter.on.bind(this);
+    this.on = emitter.on.bind(this);
+    this.removeListener = emitter.removeListener.bind(this);
+    this.off = emitter.removeListener.bind(this);
 
     this.list = ko.observableArray([]);
     this.jobTitleID = ko.observable(0);
@@ -100,7 +111,7 @@ function ServiceProfessionalServiceViewModel(app) {
     }.bind(this);
 
     this.editServiceURL = function(jobTitleID, serviceID) {
-        return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/' + serviceID;
+        return '#!service-professional-service-editor/' + jobTitleID + '/' + serviceID;
     }.bind(this);
 
     // Override in implementing viewmodel
@@ -139,7 +150,7 @@ function ServiceProfessionalServiceViewModel(app) {
     }.bind(this);
 
     this.newServiceURL = function(jobTitleID, pricingTypeID) {
-        return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricingType/' + pricingTypeID + '/new';
+        return '#!service-professional-service-editor/' + jobTitleID + '/pricingType/' + pricingTypeID + '/new';
     }.bind(this);
 
     // Override in implementing viewmodel

@@ -1,0 +1,6 @@
+<div>
+    <h1 class="text-center" data-bind="text: title"></h1>
+    <app-signup params="api: signup, onSignedUp: redirect, onSignUpError: focusWrongField.bind($data)">
+    </app-signup>
+    <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div>
+</div>

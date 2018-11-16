@@ -20,11 +20,11 @@ var RouteParser = require('../utils/Router').RouteParser;
 var alertPresets = {
         positionservices: {
             label: 'Add details to your listing',
-            route: new RouteParser('/servicesOverview/:jobTitleID')
+            route: new RouteParser('/services-overview/:jobTitleID')
         },
         availability: {
             label: 'What hours do you work?',
-            route: new RouteParser('/schedulingPreferences?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/scheduling-preferences?mustReturn=listing-editor/:jobTitleID')
         },
         personalinfo: {
             label: 'How do clients reach you?',
@@ -32,19 +32,19 @@ var alertPresets = {
         },
         photo: {
             label: 'Add your profile photo',
-            route: new RouteParser('/publicProfilePicture?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/public-profile-picture?mustReturn=listing-editor/:jobTitleID')
         },
         payment: {
             label: 'How do you want to be paid?',
-            route: new RouteParser('/payoutPreference?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/payout-preference?mustReturn=listing-editor/:jobTitleID')
         },
         pricingdetails: {
             label: 'Create a bookable offering',
-            route: new RouteParser('/serviceProfessionalService/:jobTitleID')
+            route: new RouteParser('/service-professional-services/:jobTitleID')
         },
         publicbio: {
             label: 'Add a personal bio',
-            route: new RouteParser('/publicBio?mustReturn=listing-editor/:jobTitleID')
+            route: new RouteParser('/public-bio?mustReturn=listing-editor/:jobTitleID')
         },
         professionallicense: {
             label: 'Submit required credentials',
@@ -52,7 +52,7 @@ var alertPresets = {
         },
         location: {
             label: 'Where do you work?',
-            route: new RouteParser('/serviceAddresses/:jobTitleID')
+            route: new RouteParser('/service-addresses/:jobTitleID')
         },
         'add-education': {
             label: 'Add training or education',
@@ -64,7 +64,7 @@ var alertPresets = {
         },
         showcasework: {
             label: 'Add photos of your work',
-            route: new RouteParser('/workPhotos/:jobTitleID')
+            route: new RouteParser('/work-photos/:jobTitleID')
         },
         'required-professionallicense': {
               label: 'Verify your professional license or certification',

@@ -22,7 +22,6 @@ var onboarding = require('./data/onboarding');
 var ga = require('./data/googleAnalytics');
 
 var activities = require('./activities');
-activities.preload(require('./app.activities'));
 
 // Register the special locale
 require('./locales/en-US-LC');
@@ -165,10 +164,12 @@ app.successSave = function successSave(settings) {
     this.showNavBarNotification(settings);
 
     // requested link or current activity go back
-    if (settings.link)
+    if (settings.link) {
         this.shell.go(settings.link);
-    else
+    }
+    else {
         this.performsNavBarBack({ silentMode: true });
+    }
 };
 
 /**

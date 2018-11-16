@@ -55,6 +55,23 @@ const activities = {
     'searchJobTitle': createRedirect('search-job-title'),
     'searchCategory': createRedirect('search-category'),
     'userBirthDay': createRedirect('user-birth-day'),
+    'schedulingPreferences': createRedirect('scheduling-preferences'),
+    'ownerAcknowledgment': createRedirect('owner-acknowledgment'),
+    'serviceProfessionalService': createRedirect('service-professional-service'),
+    'serviceProfessionalServiceEditor': createRedirect('service-professional-service-editor'),
+    'serviceAddresses': createRedirect('service-addresses'),
+    'servicesOverview': createRedirect('services-overview'),
+    'paymentAccount': createRedirect('payment-account'),
+    'privacySettings': createRedirect('privacy-settings'),
+    'workPhotos': createRedirect('work-photos'),
+    'userFees': createRedirect('user-fees'),
+    'payoutPreference': createRedirect('payout-preference'),
+    'myAppointments': createRedirect('my-appointments'),
+    'userFeePayments': createRedirect('user-fee-payments'),
+    'publicBio': createRedirect('public-bio'),
+    'publicProfilePicture': createRedirect('public-profile-picture'),
+    'serviceProfessionalCustomURL': createRedirect('service-professional-custom-url'),
+    'serviceProfessionalBusinessInfo': createRedirect('service-professional-business-info'),
 };
 
 /**
@@ -76,17 +93,4 @@ export function register(routeName, ActivityClass) {
  */
 export function get(routeName) {
     return activities[routeName];
-}
-
-/**
- * It registers all activities from the given dictionary of 'name:Activity'.
- * It's basically a 'registerMany' but expected to be used only once with
- * the proposal of preload a bunch of activities with the app entry point.
- * @param {Object} activitiesByName Follows the same format as the internal
- * dictionary, route or activity name as key and activity class as value.
- */
-export function preload(activitiesByName) {
-    Object.keys(activitiesByName).forEach(function(name) {
-        register(name, activitiesByName[name]);
-    });
 }

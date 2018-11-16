@@ -8,13 +8,14 @@
 // TODO store-jsdocs
 'use strict';
 
+import SingleEvent from '../utils/SingleEvent';
+
 var Booking = require('../models/Booking');
 var moment = require('moment');
 var ko = require('knockout');
 var remote = require('./drivers/restClient');
 var clientAddresses = require('./clientAddresses');
 var serviceAddresses = require('./serviceAddresses');
-var calendar = require('./calendar');
 
 var getBookings = function(filters) {
     return remote.get('me/bookings', filters)
@@ -116,6 +117,17 @@ exports.bookingToSimplifiedBooking = function(booking) {
 };
 
 /**
+ * @private {SingleEvent}
+ */
+const onDataChanges = new SingleEvent();
+/**
+ * Notifies when a change was pushed successfully to the server (like a new booking
+ * or an update)
+ * @member {SingleEvent}
+ */
+exports.onDataChanges = onDataChanges.subscriber;
+
+/**
     Creates/updates a booking by a service professional, given a simplified booking
     object or an Appointment model or a Booking model
 **/
@@ -147,6 +159,7 @@ exports.setServiceProfessionalBooking = function setServiceProfessionalBooking(b
                 serviceAddresses.removeGroupFromLocalCache(booking.jobTitleID);
             }
         }
+        onDataChanges.emit();
         return new Booking(serverBooking);
     });
 };
@@ -154,8 +167,7 @@ exports.setServiceProfessionalBooking = function setServiceProfessionalBooking(b
 exports.declineBookingByServiceProfessional = function declineBookingByServiceProfessional(bookingID) {
     return remote.post('me/service-professional-booking/' + bookingID + '/deny')
     .then(function(serverBooking) {
-        // Reset calendar availability cache
-        calendar.clearCache();
+        onDataChanges.emit();
         return new Booking(serverBooking);
     });
 };
@@ -163,8 +175,7 @@ exports.declineBookingByServiceProfessional = function declineBookingByServicePr
 exports.cancelBookingByServiceProfessional = function cancelBookingByServiceProfessional(bookingID) {
     return remote.post('me/service-professional-booking/' + bookingID + '/cancel')
     .then(function(serverBooking) {
-        // Reset calendar availability cache
-        calendar.clearCache();
+        onDataChanges.emit();
         return new Booking(serverBooking);
     });
 };
@@ -172,6 +183,7 @@ exports.cancelBookingByServiceProfessional = function cancelBookingByServiceProf
 exports.cancelBookingByClient = function cancelBookingByClient(bookingID) {
     return remote.post('me/client-booking/' + bookingID + '/cancel')
     .then(function(serverBooking) {
+        onDataChanges.emit();
         return new Booking(serverBooking);
     });
 };
@@ -179,6 +191,7 @@ exports.cancelBookingByClient = function cancelBookingByClient(bookingID) {
 exports.declineBookingByClient = function declineBookingByClient(bookingID) {
     return remote.post('me/client-booking/' + bookingID + '/deny')
     .then(function(serverBooking) {
+        onDataChanges.emit();
         return new Booking(serverBooking);
     });
 };
@@ -187,8 +200,7 @@ exports.declineBookingByClient = function declineBookingByClient(bookingID) {
 exports.confirmBookingRequest = function confirmBookingRequest(bookingID, dateType) {
     return remote.post('me/service-professional-booking/' + bookingID + '/confirm', { dateType: dateType })
     .then(function(serverBooking) {
-        // Reset calendar availability cache
-        calendar.clearCache();
+        onDataChanges.emit();
         return new Booking(serverBooking);
     });
 };
@@ -249,7 +261,10 @@ var createClientBookingRequest = function(booking, requestOptions, paymentMethod
 **/
 exports.requestClientBooking = function requestClientBooking(booking, requestOptions, billingAddress, paymentMethod) {
     var data = createClientBookingRequest(booking, requestOptions, billingAddress, paymentMethod);
-    return remote.post('me/client-booking', data);
+    return remote.post('me/client-booking', data).then((result) => {
+        onDataChanges.emit();
+        return result;
+    });
 };
 
 /**
@@ -284,5 +299,8 @@ var createClientBookingUpdateObject = function(booking) {
     };
 };
 exports.setClientBooking = function setClientBooking(booking) {
-    return remote.put('me/client-booking/' + booking.bookingID(), createClientBookingUpdateObject(booking));
+    return remote.put('me/client-booking/' + booking.bookingID(), createClientBookingUpdateObject(booking)).then((result) => {
+        onDataChanges.emit();
+        return result;
+    });
 };

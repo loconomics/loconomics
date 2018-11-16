@@ -558,7 +558,7 @@ export default function ComponentViewModel(params) {
     this.pickService = function pickService() {
         if (this.isLocked()) return;
 
-        var activity = 'serviceProfessionalService/' + this.item().jobTitleID() + '/client/' + this.item().clientUserID();
+        var activity = 'service-professional-services/' + this.item().jobTitleID() + '/client/' + this.item().clientUserID();
         editFieldOn(activity, {
             selectPricing: true,
             selectedServices: this.item().pricing()
@@ -579,7 +579,7 @@ export default function ComponentViewModel(params) {
     this.pickLocation = function pickLocation() {
         if (this.isLocked()) return;
 
-        editFieldOn('serviceAddresses/' + this.item().jobTitleID(), {
+        editFieldOn('service-addresses/' + this.item().jobTitleID(), {
             selectAddress: true,
             selectedAddressID: this.item().address() ? this.item().address().addressID() : 0,
             clientUserID: this.item().clientUserID()

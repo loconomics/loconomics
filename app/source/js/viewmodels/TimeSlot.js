@@ -66,7 +66,7 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
     if (apt.id() === Appointment.specialIds.preparationTime) {
         // Special link case: it goes to scheduling preferences to allow quick edit
         // the preparation time slots
-        link = '#!schedulingPreferences?mustReturn=1';
+        link = '#!scheduling-preferences?mustReturn=1';
     }
 
     var classNames = '';

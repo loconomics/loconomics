@@ -1,0 +1,71 @@
+<div>
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="row">
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/listing-editor" data-bind="attr: { href: navBar.leftAction().link }">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                            <span data-bind="text: navBar.leftAction().text"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h1><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <form id="profileForm" class="container-fluid LightForm" role="form" aria-describedby="profileFormInstructions"
+                    data-bind="event: { submit: save }">
+                    <!-- ko with: profilePicture -->
+                    <fieldset class="LightForm-tool">
+                        <p class="help-block"><span data-bind="visible: isServiceProfessional()">Upload a clear, professional-looking photo of you for clients to see.</span><span data-bind="visible: !isServiceProfessional()">Upload a clear photo of you for service professionals to see.</span></p>
+                        <div data-bind="visible: !localPhotoPreview()">
+                            <div class="Avatar Avatar--lg" data-bind="attr: { style: photoRotationStyle }"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }"/></div>
+                        </div>
+                        <div data-bind="visible: localPhotoPreview">
+                            <div class="Avatar Avatar--lg" data-bind="domElement: localPhotoPreview, attr: { style: photoRotationStyle }"></div>
+                        </div>
+                        <button type="button" class="btn btn-default btn-block" data-bind="visible: hasPhoto, disable: isLocked, click: rotatePhoto"><span class="ion-ios-refresh-empty" aria-hidden="true"></span><span> Rotate photo</span></button>
+                        <button type="button" class="btn btn-default btn-block"
+                            data-bind="visible: takePhotoSupported, disable: isLocked"
+                            data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet">
+                            <icon-dec params="icon: 'ion-ios-camera-outline fa-lg'"></icon-dec>
+                            <span data-bind="text: uploadButtonText"></span>
+                        </button>
+                        <button-file class="btn btn-default btn-block"
+                            data-bind="visible: !takePhotoSupported()"
+                            params="disabled: isLocked, id: 'profilePicture-photoFile', inputElement: inputElement, accept: 'image/*'">
+                            <label for="profilePicture-photoFile">
+                                <icon-dec params="icon: 'ion-ios-camera-outline fa-lg'"></icon-dec>
+                                <span data-bind="text: $parentContext.$parent.uploadButtonText"></span>
+                            </label>
+                        </button-file>
+                        <div class="LightForm-submitBar">
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+                        </div>
+                    </fieldset>
+                    <!-- /ko -->
+                </form>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'general', helpLink: helpLink"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+    <div class="ActionSheetBackdrop"></div>
+    <div class="ActionSheet" id="profilePictureBio-photoSheet" hidden="hidden" data-bind="with: profilePicture">
+        <ul>
+            <li>
+                <a href="#takePhoto" data-bind="click: takePhoto">Take a photo</a>
+            </li>
+            <li>
+                <a href="#pickPhoto" data-bind="click: pickPhoto">Select a photo</a>
+            </li>
+        </ul>
+        <ul class="ActionSheet-close">
+            <li>
+                <a href="#close">Cancel</a>
+            </li>
+        </ul>
+    </div>
+</div>

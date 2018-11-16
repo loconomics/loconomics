@@ -1,0 +1,75 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="row">
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/listing-editor/" data-bind="attr: { href: '/listing-editor/' + jobTitleID() }">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                            <span></span> Back
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <div class="SmartNavView">
+                    <form id="workPhotosForm" class="SmartNavContent container-fluid">
+                        <h1><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
+                        <ul class="list-unstyled WorkPhotos"
+                            data-bind="foreach: list">
+                            <li>
+                                <div class="WorkPhotos-imgBtn">
+                                    <img alt="Work photo" class="WorkPhotos-img" data-bind="attr: { src: url, alt: caption, style: photoRotationStyle, hidden: localTempPhotoPreview }" />
+                                    <div data-label="Work photo" class="WorkPhotos-img" data-bind="domElement: localTempPhotoPreview, attr: { style: photoRotationStyle, hidden: !localTempPhotoPreview() }"></div>
+                                </div>
+                                <label data-bind="attr: { 'for': 'workPhotos-item-' + $index() }">Photo caption</label>
+                                <input class="form-control" type="text" required data-bind="textInput: caption, disable: $parent.state.isLocked, attr: { 'id': 'workPhotos-item-' + $index(), name: 'photoCaption-' + $index() }"/>
+                                <div class="WorkPhotos-toolbar">
+                                    <button type="button" class="btn btn-link WorkPhotos-rotateBtn" data-bind="click: $root.rotateImg">
+                                        <span class="glyphicon glyphicon-repeat"></span>
+                                        <span>Rotate</span>
+                                    </button>
+                                    <button type="button" class="btn btn-link WorkPhotos-removeBtn" data-bind="click: $root.removeImg">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                        <div id="workPhotos-addNewButton" data-bind="visible: jobTitleID()">
+                            <button type="button" class="CompactLinkTile"
+                                    data-bind="visible: takePhotoSupported, disable: state.isLocked"
+                                    data-toggle="ActionSheet" data-target="workPhotos-photoSheet">
+                                <div class="Tile-content text-muted">Upload/take photo</div>
+                                <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+                            </button>
+                            <button-file class="CompactLinkTile"
+                                data-bind="visible: !takePhotoSupported()"
+                                params="disabled: state.isLocked, id: 'workPhotos-photoFile', inputElement: inputElement, accept: 'image/*'">
+                                <label class="Tile-content text-muted" for="workPhotos-photoFile">Upload/take photo</label>
+                                <div class="Tile-icon text-muted" aria-hidden="true"><span class="fa ion ion-plus"></span></div>
+                            </button-file>
+                        </div>
+                        <div class="LightForm-submitBar" data-bind="visible: list().length || removedItems().length">
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="click: save, text: saveBtnText, disable: state.isLocked">Save</button>
+                        </div>
+                    </form>
+                    <div class="ActionSheetBackdrop"></div>
+                    <div class="ActionSheet" id="workPhotos-photoSheet" hidden="hidden">
+                        <ul>
+                            <li><a href="#takePhoto" data-bind="click: takePhotoForNew">Take a photo</a></li>
+                            <li><a href="#pickPhoto" data-bind="click: pickPhotoForNew">Select a photo</a></li>
+                        </ul>
+                        <ul class="ActionSheet-close">
+                            <li><a href="#close">Cancel</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>
