@@ -36,6 +36,7 @@
 // TODO store-jsdocs
 'use strict';
 
+import bookings from './bookings';
 import weeklySchedule from './weeklySchedule';
 
 var Appointment = require('../models/Appointment');
@@ -44,7 +45,6 @@ var DateCache = require('./helpers/DateCache');
 var session = require('./session');
 var SingleEvent = require('../utils/SingleEvent').default;
 var calendarEvents = require('./calendarEvents');
-var bookings = require('./bookings');
 var schedulingPreferences = require('./schedulingPreferences');
 
 var cache = new DateCache({
@@ -60,14 +60,18 @@ var cache = new DateCache({
 var cacheCleaningRequestedEvent = new SingleEvent(exports);
 exports.cacheCleaningRequested = cacheCleaningRequestedEvent.subscriber;
 
-exports.clearCache = function clearCache() {
+exports.clearCache = () => {
     cache.clear();
     cacheCleaningRequestedEvent.emit();
 };
 
-session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
-});
+session.on.cacheCleaningRequested.subscribe(exports.clearCache);
+
+// Reset cache on new/updated/deleted bookings
+bookings.onDataChanges.subscribe(exports.clearCache);
+
+// We need to recompute availability as side effect of schedule
+weeklySchedule.onDataChanged.subscribe(exports.clearCache);
 
 /**
     Get a generic calendar appointment object, made of events and/or bookings,

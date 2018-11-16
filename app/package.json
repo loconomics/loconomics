@@ -24,7 +24,9 @@
     "bump-minor": "LAST_APP_VERSION=$(npm version minor) && git add package.json && git commit -m ${LAST_APP_VERSION}",
     "recommended-windows-shell": "npm config set script-shell \"C:\\Program Files\\git\\bin\\bash.exe\"",
     "analize-js:common": "discify ./build/assets/js/common.js -O",
-    "analize-js:app": "discify ./build/assets/js/app.js -O"
+    "analize-js:app": "discify ./build/assets/js/app.js -O",
+    "madge": "madge",
+    "find-circular-dependencies": "madge source/js --circular"
   },
   "repository": "loconomics/loconomics",
   "private": true,
@@ -83,6 +85,7 @@
     "load-script2": "^1.0.0",
     "localforage": "1.6.0",
     "lodash": "~4.17.4",
+    "madge": "^3.2.0",
     "mocha": "^3.5.3",
     "moment": "^2.19.2",
     "moment-timezone": "^0.5.14",
