@@ -1,10 +1,6 @@
 {
   "name": "LoconomicsApp",
-<<<<<<< HEAD
-  "version": "1.13.12",
-=======
   "version": "1.13.13",
->>>>>>> dev
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
   "appId": "com.loconomics.app",
