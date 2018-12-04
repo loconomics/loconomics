@@ -80,6 +80,10 @@ export default class LocalForageIndexedListDataProviderDriver {
         this.registerID = function(id) {
             return readIndex()
             .then((cache) => {
+                // If there is no index cache, create one
+                if (!cache || !cache.data) {
+                    cache = { data: [] };
+                }
                 // If not registered
                 if (!~cache.data.indexOf(id)) {
                     // Add to list and write
@@ -98,6 +102,10 @@ export default class LocalForageIndexedListDataProviderDriver {
         this.unregisterID = function(id) {
             return readIndex()
             .then((cache) => {
+                // If there is no index cache, discard process (nothing need to be wrote)
+                if (!cache || !cache.data) {
+                    return;
+                }
                 // If registered
                 const i = cache.data.indexOf(id);
                 if (~i) {
