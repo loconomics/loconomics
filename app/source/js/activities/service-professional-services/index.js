@@ -8,6 +8,7 @@
  */
 
 import * as activities from '../index';
+import * as clients from '../../data/clients';
 import { Route, RouteMatcher } from '../../utils/Router';
 import $ from 'jquery';
 import Activity from '../../components/Activity';
@@ -15,7 +16,6 @@ import Client from '../../models/Client';
 import ServiceProfessionalServiceViewModel from '../../viewmodels/ServiceProfessionalService';
 import UserJobProfile from '../../viewmodels/UserJobProfile';
 import UserType from '../../enums/UserType';
-import clients from '../../data/clients';
 import { item as getUserListing } from '../../data/userListings';
 import ko from 'knockout';
 import onboarding from '../../data/onboarding';
