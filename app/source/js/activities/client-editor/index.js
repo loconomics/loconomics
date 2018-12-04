@@ -213,7 +213,7 @@ export default class ClientEditor extends Activity {
         };
 
         this.tapServiceSummary = (serviceSummary, event) => {
-            var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID?mustReturn=#!client-editor/:clientID');
+            var route = new RouteParser('#!service-professional-services/:jobTitleID/client/:clientID?mustReturn=#!client-editor/:clientID');
             var url = route.reverse({
                 jobTitleID: serviceSummary.jobTitleID(),
                 clientID: this.clientID()
@@ -226,7 +226,7 @@ export default class ClientEditor extends Activity {
         };
 
         this.tapServiceSummaryNew = (serviceSummary, event) => {
-            var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID/new');
+            var route = new RouteParser('#!service-professional-services/:jobTitleID/client/:clientID/new');
             var url = route.reverse({
                 jobTitleID: serviceSummary.jobTitleID(),
                 clientID: this.clientID()
