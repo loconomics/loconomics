@@ -25,7 +25,7 @@ var STEPS = {
     'add-job-title': {
         userFlags: ['isServiceProfessional']
     },
-    serviceAddresses: {
+    'service-addresses': {
         userFlags: ['isServiceProfessional'],
         jobTitleSpecific: true
     }
