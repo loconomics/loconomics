@@ -11,6 +11,7 @@
  */
 
 import '../../kocomponents/badge/viewer';
+import '../../kocomponents/switch-checkbox';
 import * as activities from '../index';
 import { byListing as badgesByListing, expandUserBadges } from '../../data/userBadges';
 import $ from 'jquery';
