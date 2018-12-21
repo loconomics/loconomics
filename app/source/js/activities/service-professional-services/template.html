@@ -16,7 +16,7 @@
                 </div>
                 <p class="help-block" data-bind="visible: !$root.isSelectionMode()">Clients will be able to schedule the offerings you create here. Need to speak to clients first? Add a consultation.</p>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
-                <div data-bind="visible: jobTitleID() > 0">
+                <div data-bind="visible: jobTitleID() !== 0">
                     <div class="ServiceListGroup" data-bind="foreach: serviceListGroups">
                         <h2 class="ServiceListGroup-title" data-bind="visible: title.length > 0, text: title"></h2>
                         <div data-bind="foreach: serviceLists()">

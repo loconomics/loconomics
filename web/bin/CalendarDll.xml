@@ -1,0 +1,451 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CalendarDll</name>
+    </assembly>
+    <members>
+        <member name="T:CalendarDll.CalendarUtils">
+            <summary>
+            Calendar Utils
+            </summary>
+            <remarks>2012/12/11 by CA2S (Static version), 2012/12/21 by RM (Dynamic version)</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetCalendarLibraryInstance">
+            <summary>
+            Gets an Instance of the Calendar Library
+            </summary>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetFreeEvents(CalendarDll.CalendarUser,System.DateTimeOffset,System.DateTimeOffset,System.DateTimeOffset)">
+             <summary>
+             Get Free Events
+            
+             It includes both dates, full date times (not limited by the time in startDate and endDate)
+             </summary>
+             <param name="startDate"></param>
+             <param name="endDate"></param>
+             <param name="currentDateForAdvanceTime">Currend Date-Time for Calculating Advance Time.
+             We consider the time BEFORE this parameter + Advance Time as unavailable.
+             For two reasons: It is in the past, or we have to wait for the Advance Time to pass</param>
+             <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetCalendarEventsFromDBByUser(CalendarDll.CalendarUser)">
+            <summary>
+            Get the Calendar, filled with the Events for the User
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetCalendarEventsFromDBByUserDateRange(CalendarDll.CalendarUser,System.DateTimeOffset,System.DateTimeOffset)">
+             <summary>
+            
+             </summary>
+             <param name="user"></param>
+             <param name="startDate"></param>
+             <param name="endDate"></param>
+             <returns></returns>
+             <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetCalendarByUserForExport(CalendarDll.CalendarUser)">
+             <summary>
+             Get Calendar Events, for Export, by User
+            
+             It only takes into account the Events
+             with UIDs starting with Asterisk (*)
+             </summary>
+             <returns></returns>
+             <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.CreateEvent(CalendarDll.Data.CalendarEvents)">
+             <summary>
+             Create Event
+            
+             In iCal format, from the Loconomics DB
+             </summary>
+             <param name="eventFromDB"></param>
+             <returns></returns>
+             <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.CreateBetweenEvent(CalendarDll.iEvent,CalendarDll.CalendarUser)">
+             <summary>
+             Create Between Events
+            
+             It takes the Original iCal Event
+             and creates another iCal Event
+             following the original,
+             and with the duration of the Between Event of the User
+             </summary>
+             <param name="originalICalEvent"></param>
+             <returns></returns>
+             <remarks>2012/11 by CA2S FA</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventStatus(System.Int32)">
+            <summary>
+            Get Event Status
+            </summary>
+            <param name="statusID"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.getTransparency(System.Int32)">
+            <summary>
+            Get Transparency
+            </summary>
+            <param name="eventStatus"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.getAvailabilityId(Ical.Net.Interfaces.DataTypes.IFreeBusyEntry)">
+            <summary>
+            Get the Database AvailabilityID based on the
+            FreeBusyEntry status, that has one-to-one equivalencies
+            </summary>
+            <param name="fbentry"></param>
+            <returns></returns>
+            <remarks>IagoSRL 2013/05/08</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.getAvailabilityId(System.Int32)">
+            <summary>
+            Get Availability Id
+            </summary>
+            <param name="eventStatus"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.getAvailabilityId(System.String,System.String)">
+             <summary>
+             Availabilty when Importing
+            
+             It calculates the Availability
+             depending on the Status (which could be Confirmed, Tentative, Cancelled)
+             and the Transparency (which could be Opaque or Transparent)
+             </summary>
+             <param name="Status"></param>
+             <param name="Transparency"></param>
+             <returns></returns>
+             <remarks>2013/01/02 CA2S RM</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventsByUser(CalendarDll.CalendarUser)">
+            <summary>
+            Get Events by User
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventsByUserForExport(CalendarDll.CalendarUser,System.String)">
+            <summary>
+            Based on GetEventsByUser, it filter events by type to only that required in
+            the export task.
+            </summary>
+            <param name="user"></param>
+            <param name="defaultTZID"></param>
+            <returns></returns>
+            <remarks>IagoSRL</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventsByUserDateRange(CalendarDll.CalendarUser,System.DateTimeOffset,System.DateTimeOffset)">
+             <summary>
+             Get Events By User
+             (overloads another version without Dates parameters)
+            
+             And also by Range of Dates
+             Note: Because recurrence events are more complicated,
+             they are recovered regardless of dates
+             </summary>
+             <param name="user"></param>
+             <param name="startEvaluationDate"></param>
+             <param name="endEvaluationDate"></param>
+             <returns></returns>
+             <remarks>2012/12 by CA2S FA</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.OptimizedCreateEvent(CalendarDll.Data.CalendarEvents,System.Data.Entity.DbContext)">
+             <summary>
+             Create Event
+            
+             In iCal format, from the Loconomics DB
+             </summary>
+             <param name="eventFromDB"></param>
+             <returns></returns>
+             <remarks>2015-09 by iago</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.OptimizedGetEventsByUserDateRange(CalendarDll.CalendarUser,System.DateTimeOffset,System.DateTimeOffset)">
+            <summary>
+            Get Events By User and by Range of Dates
+            Note: Because recurrence events are more complicated,
+            they are recovered regardless of dates
+            </summary>
+            <param name="user"></param>
+            <param name="startEvaluationDate">Included (more than or equals)</param>
+            <param name="endEvaluationDate">Excluded (less than)</param>
+            <returns></returns>
+            <remarks>2015-09 Iago</remarks>
+        </member>
+        <member name="T:CalendarDll.CalendarUtils.AvailabilitySlot">
+            <summary>
+            Represents a slot of time (a range of two dates)
+            for a type of availability.
+            </summary>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventsOccurrencesInAvailabilitySlotsUtc(Ical.Net.Calendar,System.DateTimeOffset,System.DateTimeOffset)">
+            <summary>
+            Compute the occurrences of all events, normal and recurrents, from the filled in Calendar given between the dates
+            as of the internal logic of the Calendar component.
+            Results are in UTC
+            </summary>
+            <param name="ical"></param>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(System.Int32,System.DateTimeOffset,System.DateTimeOffset)">
+             <summary>
+             For the given user and included in the given dates, returns all the
+             availability slots for the computed event occurrences, complete or partial.
+             Results are event occurrences in the format of availability slots, so overlapping of
+             slots will happen, and holes. Results are sorted by start time.
+             Another method must perform the computation of put all this slots in a single, consecutive
+             and complete timeline, where some availabilities takes precedence over others to don't have overlapping.
+             Results may include slots that goes beyond the given filter dates, but it ensures that all that, partial or complete
+             happens in that dates will be returned.
+            
+             Resulting dates are given in UTC.
+             </summary>
+             <param name="userID"></param>
+             <param name="startTime">Included (more than or equals)</param>
+             <param name="endTime">Excluded (less than)</param>
+             <returns></returns>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillExceptionsDates(Ical.Net.Event,CalendarDll.Data.CalendarEvents,System.String)">
+            <summary>
+            Fill Exceptions Dates
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillRecurrencesDates(Ical.Net.Event,CalendarDll.Data.CalendarEvents,System.String)">
+            <summary>
+            Fill Recurrence Dates
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillContacts(Ical.Net.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Fill Contacts
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillContactsToDB(Ical.Net.Event,CalendarDll.Data.CalendarEvents)">
+             <summary>
+            
+             </summary>
+             <param name="iCalEvent"></param>
+             <param name="eventForDB"></param>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillAttendees(Ical.Net.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Fill Attendees
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillAttendeesToDB(Ical.Net.Interfaces.Components.IUniqueComponent,CalendarDll.Data.CalendarEvents)">
+             <summary>
+            
+             </summary>
+             <param name="iCalEvent"></param>
+             <param name="eventForDB"></param>
+             <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent.
+             This allow using the method not only for Events, like originally, else for vfreebusy objects
+             and others.</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillComments(Ical.Net.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Fill Comments
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillCommentsToDB(Ical.Net.Interfaces.Components.IUniqueComponent,CalendarDll.Data.CalendarEvents)">
+             <summary>
+            
+             </summary>
+             <param name="iCalObject"></param>
+             <param name="objectForDB"></param>
+             <remarks>Changed by IagoSRL on 2013/05/08 to be generic, accepting any IUniqueComponent
+             This allow using the method not only for Events, like originally, else for vfreebusy objects
+             and others.</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.FillRecurrences(Ical.Net.Event,CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Fill Recurrences
+            </summary>
+            <param name="iCalEvent"></param>
+            <param name="eventFromDB"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.SetFrequenciesToDB(Ical.Net.Interfaces.DataTypes.IRecurrencePattern,CalendarDll.Data.CalendarReccurrence)">
+            <summary>
+            Set Frecuencies - for Recurrences
+            </summary>
+            <param name="rec"></param>
+            <param name="recPattern"></param>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.PrepareExportDataForUser(CalendarDll.CalendarUser)">
+            <summary>
+            Prepare Data for Export
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="F:CalendarDll.CalendarUtils.FutureMonthsLimitForImportingFreeBusy">
+            <summary>
+            This property allows limit (when greater than zero) the FreeBusy items
+            to be imported by setting the limit in number of months of future items
+            allowed.
+            This allows avoid the overload of import excessive future items.
+            In other words: don't import freebusy events from x months and greater in the future.
+            IMPORTANT: Zero value has special meaning, being 'no limit' (all will get imported)
+            </summary>
+        </member>
+        <member name="M:CalendarDll.CalendarUtils.ImportCalendar(Ical.Net.Interfaces.IICalendarCollection,CalendarDll.CalendarUser)">
+             <summary>
+             Import Calendar.
+            
+             STRATEGIES:
+             When importing an iCalendar there are several precautions we need to take.
+            
+             1: not import our exported events.
+             Just in case the user sofware is reading our exported calendar and merging with
+             user defined events, we need to prevent importing events originally generated by us
+             (because we have them in database with a different types, to not duplicate, because
+             we do not let arbitrary editions of that events -even we completely lock them depending
+             on booking rules-, and at the same time we lock edition of imported events, since
+             do not export them).
+             Strategies to that:
+             A- check the UID of the imported event and verify it's not at our database
+                Costly operation, one read attempt for each record, usually with negative results
+             B- check a pattern at the UID that we know is generated by us
+                Quick. Still do not prevent that others use the same pattern, so we have false positives
+                when filtering that events.
+                -a check if starts with an asterisk (in use).
+                  Quick and dirty, too vague. Easy of false positives.
+                  ACTUALLY IN USE. TO REPLACE
+                -b check if ends with @loconomics.com suffix
+                  Better approach, difficult of false positives (still positive, but if other follow
+                  good practices must not happen).
+            
+             TODO switch to strategy B-b.
+            
+             2: insert/update/remove existing imported events
+             After the first read, we need to maintain the already imported events, updating them if
+             any change or removing them if no more exists at the source.
+            
+             Strategies:
+             A- Keep list of imported identifiers.
+               - Detect if an imported record (using UID) exists at DB: choose insert or update
+               - When finishing importing, remove from database all user (@UserID) imported events (EventType=4)
+                 that do not exists at the list of imported identifiers (AND NOT IN (@list))
+               More memory consumption; depends on the number of events, can be a lot, to keep the list
+               and for the large SQL to generate, or several calls to prevent some length limits.
+             B- Delete records first.
+               Idea: since we don't allow editions, we can safely start by removing previous imported
+               records and then insert all others
+               - Delete with: (DELETE CalendarEvents WHERE @UserID AND EventType=4)
+               - Insert every record from import file.
+               Quick (to implement and execute), more writes to database (all the removals, even unneded ones),
+               database IDs increase quickly (ID is an auto-increment; risk to reach limit depending on how
+               often importing is done).
+               ACTUALLY IN USE. TO REPLACE
+             C- Insert-update, then delete by UpdatedDate
+               - Create variable with current date-time as the updatedDate timestamp.
+               - Detect if an imported record (using UID) exists at DB: choose insert or update. Use the
+                 value of updatedDate or newer for the UpdatedDate field of each record.
+               - Remove from database all the user (@UserID) imported events (EventType=4) with an
+                 UpdatedDate older than variable udpatedDate.
+               Less memory than A, less writtings to database than B, IDs are kept for updated records.
+               Needs analysis: could be slower than B because the check about if an event exists or not (to insert/update),
+               but the non removal of records that then are re-created may be faster.
+            
+             TODO switch to strategy C
+             </summary>
+             <param name="calendar"></param>
+             <param name="user"></param>
+             <returns></returns>
+             <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
+        </member>
+        <member name="M:CalendarDll.EventsUtilities.CreateEvent(CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Create Event
+            </summary>
+            <param name="newCalendarEvent"></param>
+            <remarks>2013/02/06 CA2S Roque Mocan</remarks>
+        </member>
+        <member name="M:CalendarDll.EventsUtilities.EditEvent(CalendarDll.Data.CalendarEvents)">
+            <summary>
+            Edit Event
+            </summary>
+            <param name="calendarEventWithChanges"></param>
+            <returns>2013/02/11 CA2S Roque Mocan</returns>
+        </member>
+        <member name="M:CalendarDll.EventsUtilities.DeleteEvent(System.String)">
+            <summary>
+            Delete Event by UID
+            </summary>
+            <param name="UID"></param>
+            <returns></returns>
+            <remarks>2013/02/09 Roque Mocan</remarks>
+        </member>
+        <member name="M:CalendarDll.EventsUtilities.GetEventByUID(System.String)">
+            <summary>
+            Get Event by UID
+            </summary>
+            <param name="UIDToReturn"></param>
+            <returns></returns>
+            <remarks>2013/02/11 CA2S Roque Mocan</remarks>
+        </member>
+        <member name="T:CalendarDll.Resources">
+            <summary>
+              Clase de recurso fuertemente tipado, para buscar cadenas traducidas, etc.
+            </summary>
+        </member>
+        <member name="P:CalendarDll.Resources.ResourceManager">
+            <summary>
+              Devuelve la instancia de ResourceManager almacenada en caché utilizada por esta clase.
+            </summary>
+        </member>
+        <member name="P:CalendarDll.Resources.Culture">
+            <summary>
+              Reemplaza la propiedad CurrentUICulture del subproceso actual para todas las
+              búsquedas de recursos mediante esta clase de recurso fuertemente tipado.
+            </summary>
+        </member>
+        <member name="P:CalendarDll.Resources.BetweenTime">
+            <summary>
+              Busca una cadena traducida similar a Buffer time.
+            </summary>
+        </member>
+        <member name="T:Srl.Timeline">
+            <summary>
+            Allows registering times on performing tasks to help in the measuring of performance.
+            Author: IagoSRL@gmail.com
+            From Lib: SRL
+            </summary>
+        </member>
+        <member name="T:SRL.TimeRange">
+            It represents a pair of Start and End times and elapsed time between both.
+            Author: IagoSRL@gmail.com
+            From Lib: SRL
+        </member>
+    </members>
+</doc>

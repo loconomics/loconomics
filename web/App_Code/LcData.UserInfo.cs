@@ -161,8 +161,6 @@ public static partial class LcData
                                 -- Some preferences
                                 ,PreferredLanguageID
                                 ,PreferredCountryID
-                                ,IAuthZumigoVerification
-                                ,IAuthZumigoLocation
 
                             FROM Users A
                                  INNER JOIN
@@ -258,8 +256,6 @@ public static partial class LcData
                                 -- Some preferences
                                 ,PreferredLanguageID
                                 ,PreferredCountryID
-                                ,IAuthZumigoVerification
-                                ,IAuthZumigoLocation
 
                             FROM Users A
                                  INNER JOIN

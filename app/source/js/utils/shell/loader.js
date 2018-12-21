@@ -45,12 +45,26 @@ function removeActivityInstance($act, name) {
     return false;
 }
 
+/**
+ * Store loader-promises being processed.
+ * This prevents edge cases where same URL is being tried to be loaded twice
+ * before end, causing bugs (duplicated registers; loading 'public-contact-info'
+ * on first request, behavior got frozen with component loading error).
+ * It holds a dictionary of route/activity name and promise being processed. The 'load' process
+ * is in charge of adding it before the async task work and removing it.
+ * @private {Dict<string,Promise>}
+ */
+const inProcess = {};
+
 module.exports = {
 
     baseUrl: '/',
 
     load: function load(route, shell) {
-        return new Promise(function(resolve, reject) {
+        if (inProcess[route.name]) {
+            return inProcess[route.name];
+        }
+        const processing = new Promise(function(resolve, reject) {
             // Prepare this activity to be disposed after being used
             // IMPORTANT: Needs to be run only once per activity loaded,
             // or later calls to loader will keep attaching duplicated handlers;
@@ -97,10 +111,13 @@ module.exports = {
                         setTimeout(function() {
                             // Resolve with the html, that will be injected by the Shell/DomItemsManager
                             resolve(appActivities.get(route.name).template);
+                            delete inProcess[route.name];
                         }, 13);
                     }
                 }
             );
         });
+        inProcess[route.name] = processing;
+        return processing;
     }
 };

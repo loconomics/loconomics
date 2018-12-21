@@ -2110,7 +2110,7 @@ namespace CalendarDll
                             // Calculate the end date basing in the real End date set or the Start date
                             // plus the event Duration. For case of error (no dates) gets as default
                             // the minimum date (and will be discarded)
-                            var calculatedEndDate = currEvent.End.HasDate ? DateTimeOffsetFromCalDateTime(currEvent.End) :
+                            var calculatedEndDate = currEvent.End != null && currEvent.End.HasDate ? DateTimeOffsetFromCalDateTime(currEvent.End) :
                                 startTime.Add(currEvent.Duration);
 
                             // Check if this is a past event that doesn't need to be imported (only non recurrent ones)

@@ -13,12 +13,12 @@
  */
 
 import * as activities from '../index';
+import * as clients from '../../data/clients';
 import { Route, RouteMatcher } from '../../utils/Router';
 import Activity from '../../components/Activity';
 import Client from '../../models/Client';
 import PricingType from '../../models/PricingType';
 import UserType from '../../enums/UserType';
-import clients from '../../data/clients';
 import ko from 'knockout';
 import onboarding from '../../data/onboarding';
 import pricingTypes from '../../data/pricingTypes';

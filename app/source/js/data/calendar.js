@@ -36,8 +36,8 @@
 // TODO store-jsdocs
 'use strict';
 
+import * as weeklySchedule from './weeklySchedule';
 import bookings from './bookings';
-import weeklySchedule from './weeklySchedule';
 
 var Appointment = require('../models/Appointment');
 var DateAvailability = require('../models/DateAvailability');
