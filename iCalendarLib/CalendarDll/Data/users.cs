@@ -46,8 +46,6 @@ namespace CalendarDll.Data
         public string ModifiedBy { get; set; }
         public bool Active { get; set; }
         public bool LoconomicsCommunityCommunication { get; set; }
-        public Nullable<bool> IAuthZumigoVerification { get; set; }
-        public Nullable<bool> IAuthZumigoLocation { get; set; }
         public bool LoconomicsDBMCampaigns { get; set; }
         public int AccountStatusID { get; set; }
         public bool CoBrandedPartnerPermissions { get; set; }

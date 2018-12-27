@@ -542,8 +542,6 @@
           <Property Name="ModifiedBy" Type="varchar" MaxLength="50" />
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="LoconomicsCommunityCommunication" Type="bit" Nullable="false" />
-          <Property Name="IAuthZumigoVerification" Type="bit" />
-          <Property Name="IAuthZumigoLocation" Type="bit" />
           <Property Name="LoconomicsDBMCampaigns" Type="bit" Nullable="false" />
           <Property Name="AccountStatusID" Type="int" Nullable="false" />
           <Property Name="CoBrandedPartnerPermissions" Type="bit" Nullable="false" />
@@ -1216,8 +1214,6 @@
           <Property Name="ModifiedBy" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
           <Property Name="LoconomicsCommunityCommunication" Type="Boolean" Nullable="false" />
-          <Property Name="IAuthZumigoVerification" Type="Boolean" />
-          <Property Name="IAuthZumigoLocation" Type="Boolean" />
           <Property Name="LoconomicsDBMCampaigns" Type="Boolean" Nullable="false" />
           <Property Name="AccountStatusID" Type="Int32" Nullable="false" />
           <Property Name="CoBrandedPartnerPermissions" Type="Boolean" Nullable="false" />
@@ -1801,8 +1797,6 @@
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="LoconomicsCommunityCommunication" ColumnName="LoconomicsCommunityCommunication" />
-                <ScalarProperty Name="IAuthZumigoVerification" ColumnName="IAuthZumigoVerification" />
-                <ScalarProperty Name="IAuthZumigoLocation" ColumnName="IAuthZumigoLocation" />
                 <ScalarProperty Name="LoconomicsDBMCampaigns" ColumnName="LoconomicsDBMCampaigns" />
                 <ScalarProperty Name="AccountStatusID" ColumnName="AccountStatusID" />
                 <ScalarProperty Name="CoBrandedPartnerPermissions" ColumnName="CoBrandedPartnerPermissions" />
