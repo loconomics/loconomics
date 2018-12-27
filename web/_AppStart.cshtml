@@ -4,7 +4,7 @@
 @using System.Configuration;
 @{
     WebSecurity.InitializeDatabaseConnection("sqlloco", "userprofile", "UserId", "Email", false);
-    
+
     i18n.UrlLocalizer.UrlLocalizationScheme = i18n.UrlLocalizationScheme.Void;
     i18n.LocalizedApplication.Current.DefaultLanguage = "en-US";
 
@@ -69,9 +69,11 @@
     RouteTable.Routes.MapWebPageRoute("auth/confirm", "~/_specialRoutes/Confirm.cshtml");
 
     // App/Webapp explicit rules
-    // TODO: some day this list needs to be automatic, from the activity list, right now has some explicit rules to avoid conflicts with
-    // more generic rules after this (the problematic is the customURL rule, basically)
-    RouteTable.Routes.MapWebPageRoute("login/{*urldata}", "~/Default.cshtml");
+    // Near the end, there is an automatic list based on activities of the webapp, previously we did not have it
+    // so we had problems with some URLs, leading to add some explicit rules to avoid conflicts with
+    // more generic rules after this (the problematic is the customURL rule, basically). They are kept even if we
+    // have the automatic activities-list later, because the position will still be conflictive.
+    RouteTable.Routes.MapWebPageRoute("login/{*urldata}", "~/_specialRoutes/WebApp.cshtml");
 
     // Special Server ROUTES
     // Booking with service professional bookcode URL
@@ -103,12 +105,15 @@
     RouteTable.Routes.MapWebPageRoute("webcart/{*any}", "~/Errors/Error404.cshtml");
     RouteTable.Routes.MapWebPageRoute("webcart-lite/{*any}", "~/Errors/Error404.cshtml");
 
-    // MANAGE SPA ROUTES REDIRECTING TO INDEX
-    // CATCH-ALL:
-    RouteTable.Routes.MapWebPageRoute("{*any}", "~/Default.cshtml");
+    // MANAGE WEBAPP (SPA) ROUTES BY REDIRECTING THEM TO INDEX
+    foreach (var activityName in System.IO.File.ReadAllLines(System.Web.HttpContext.Current.Server.MapPath("~/_specialRoutes/activities-list.txt")))
+    {
+        RouteTable.Routes.MapWebPageRoute(activityName + "/{*any}", "~/_specialRoutes/WebApp.cshtml");
+    }
 
-    // IMPORTANT: because of the previous CATCH-ALL, this will never being displayed.
-    // BUT is important to know how to do it, since is expected we can replace the catch-all by specific SPA page URLs
+    // Index
+    RouteTable.Routes.MapWebPageRoute("", "~/_specialRoutes/Public.cshtml");
+
     // ANY NOT FOUND URL
     RouteTable.Routes.MapWebPageRoute("{*urldata}", "~/Errors/Error404.cshtml");
 }
