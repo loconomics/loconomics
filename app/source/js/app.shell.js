@@ -34,7 +34,9 @@ module.exports = new Shell({
 
     forceHashbang: hashBang,
     // Must be a all-users accesible URL
-    indexName: 'home',
+    // The 'root' is a fake activity, built-in at the activities index as going
+    // out of this webapp/shell redirecting user to the public pages
+    indexName: 'root',
     // Must be a all-users accesible URL
     forbiddenAccessName: 'login',
 
