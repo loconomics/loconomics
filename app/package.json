@@ -1,6 +1,6 @@
 {
   "name": "LoconomicsApp",
-  "version": "1.13.17",
+  "version": "1.13.18",
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
   "appId": "com.loconomics.app",
@@ -25,7 +25,8 @@
     "analize-js:common": "discify ./build/assets/js/common.js -O",
     "analize-js:app": "discify ./build/assets/js/app.js -O",
     "madge": "madge",
-    "find-circular-dependencies": "madge source/js --circular"
+    "find-circular-dependencies": "madge source/js --circular",
+    "release-webapp": "npm run bump-patch && npm run build-web-release"
   },
   "repository": "loconomics/loconomics",
   "private": true,
