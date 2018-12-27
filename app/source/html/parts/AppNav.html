@@ -1,7 +1,7 @@
 <div class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
     <nav id="mobileMainNav" role="navigation" class="SmartNavBar visible-xs visible-sm" aria-label="Main Navigation">
         <smart-nav-bar-action params="action: 'leftAction', navBar: navBar" class="SmartNavBar-edge left"></smart-nav-bar-action>
-        <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home" aria-label="Loconomics Home Page"></a>
+        <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/" aria-label="Loconomics Home Page"></a>
         <div class="SmartNavBar-notification bg-info"></div>
         <smart-nav-bar-action params="action: 'rightAction', navBar: navBar" class="SmartNavBar-edge right"></smart-nav-bar-action>
     </nav>
