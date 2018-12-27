@@ -1,5 +1,7 @@
 /**
- * Task ...?
+ * Task 'activities-routes-list' to create a plain text file listing all activities
+ * that need specific routing on the (asp.net) back-end, placing it there where
+ * the server code expect it.
  */
 'use strict';
 
