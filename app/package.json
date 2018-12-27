@@ -20,8 +20,8 @@
     "browserslist": "browserslist",
     "release-tags": "git tag | grep 'releases/release-' | sort -V",
     "app-release-tags": "git tag | grep 'releases/app-' | sort -V",
-    "bump-patch": "LAST_APP_VERSION=$(npm version patch) && git add package.json && git commit -m ${LAST_APP_VERSION}",
-    "bump-minor": "LAST_APP_VERSION=$(npm version minor) && git add package.json && git commit -m ${LAST_APP_VERSION}",
+    "bump-patch": "cross-env LAST_APP_VERSION=$(npm version patch) && git add package.json && cross-var git commit -m ${LAST_APP_VERSION}",
+    "bump-minor": "cross-env LAST_APP_VERSION=$(npm version minor) && git add package.json && cross-var git commit -m ${LAST_APP_VERSION}",
     "recommended-windows-shell": "npm config set script-shell \"C:\\Program Files\\git\\bin\\bash.exe\"",
     "analize-js:common": "discify ./build/assets/js/common.js -O",
     "analize-js:app": "discify ./build/assets/js/app.js -O",
@@ -154,5 +154,9 @@
         "jquery"
       ]
     }
+  },
+  "dependencies": {
+    "cross-env": "^5.2.0",
+    "cross-var": "^1.1.0"
   }
 }
