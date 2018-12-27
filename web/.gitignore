@@ -8,3 +8,4 @@ node_modules/*
 app.html
 assets/*
 welcome/*
+_specialRoutes/activities-list.txt
