@@ -13,7 +13,6 @@ if (!window.cordova) {
     }
 }
 
-//var History = require('./app-shell-history').create(baseUrl);
 var History = require('./utils/shell/hashbangHistory');
 
 // Shell dependencies
