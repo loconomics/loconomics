@@ -38,12 +38,13 @@ module.exports = {
     // *clean web directories from here is not allowed by grunt-clean
     // Remember to increase version at package.json. `npm version patch` or 'minor'
     // can be used from console.
-    // /web files to copy over: /web/assets, /web/welcome, /web/_specialRoutes/app.html
+    // /web files to copy over: /web/assets, /web/welcome, /web/app.html
     // remember to git-tag version after
     'build-web-release': [
         'clean:build',
         'prepare-for-build',
         'build-webapp',
+        'activities-routes-list',
         // Task 'build-landingPages' but without repeating things done by previous tasks in this list
         'stylus:landingPages',
         'cssmin:landingPages',

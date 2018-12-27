@@ -10,7 +10,7 @@ module.exports = function(grunt) {
         webapp: {
             options: commonOptions,
             files: {
-                '../web/_specialRoutes/app.html': '../web/_specialRoutes/app.html'
+                '../web/app.html': '../web/app.html'
             }
         },
         landingPagesBuild: {

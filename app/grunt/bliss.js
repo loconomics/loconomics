@@ -24,7 +24,7 @@ module.exports = function(grunt) {
     var tasks = {
         webapp: {
           files: {
-            '../web/_specialRoutes/app.html': ['source/html/web.js.html']
+            '../web/app.html': ['source/html/web.js.html']
           },
           options: {
             context: {
