@@ -6,7 +6,7 @@
 else{element.classList.remove('is-scrolling');}
 ticking=false;});ticking=true;}});})(window);(function(){function setupSlideshow(slideshow){var slides=slideshow.querySelectorAll(".SlideshowSection-content > li");var prev=slideshow.querySelector('.SlideshowSection-prev');var next=slideshow.querySelector('.SlideshowSection-next');var dots=slideshow.querySelectorAll(".SlideshowSection-index > li");var indexElement=slideshow.querySelector('.SlideshowSection-index');var slideIndex=1;function plusSlides(n){showSlides(slideIndex+=n);}
 prev.addEventListener('click',function(){plusSlides(-1);});next.addEventListener('click',function(){plusSlides(1);});function currentSlide(n){showSlides(slideIndex=n);}
-indexElement.addEventListener('click',function(event){var slide=event.target.getAttribute('href');if(slide){slide=slide.substr(1);currentSlide(slide);}
+indexElement.addEventListener('click',function(event){var slide=event.target.getAttribute('href');if(slide){slide=slide.match(/-(\d)$/);slide=slide&&slide[1];currentSlide(slide);}
 event.preventDefault();});function showSlides(n){var i;if(slides.length){if(n>slides.length){slideIndex=1;}
 if(n<1){slideIndex=slides.length;}
 for(i=0;i<slides.length;i++){slides[i].removeAttribute('aria-current');}
