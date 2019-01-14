@@ -28,8 +28,8 @@ namespace LcRest
         {
             var data = new Search();
             data.jobTitles = JobTitleSearchResult.SearchBySearchTerm(SearchTerm, origLat, origLong, SearchDistance, locale);
-            data.serviceProfessionals = ServiceProfessionalSearchResult.SearchBySearchTerm(SearchTerm, origLat, origLong, SearchDistance, locale);
-            data.categories = CategorySearchResult.SearchBySearchTerm(SearchTerm, origLat, origLong, SearchDistance, locale);
+            //data.serviceProfessionals = ServiceProfessionalSearchResult.SearchBySearchTerm(SearchTerm, origLat, origLong, SearchDistance, locale);
+            //data.categories = CategorySearchResult.SearchBySearchTerm(SearchTerm, origLat, origLong, SearchDistance, locale);
             return data;
         }
         #endregion
