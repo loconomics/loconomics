@@ -284,11 +284,10 @@ namespace LcRest
             userJobTitle.ValidateAndFixBookingPolicies();
             using (var db = new LcDatabase())
             {
-                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7, @8",
+                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7",
                     userJobTitle.userID,
                     userJobTitle.jobTitleID,
-                    LcData.GetCurrentLanguageID(),
-                    LcData.GetCurrentCountryID(),
+                    LcRest.Locale.Current.languageCode,
                     userJobTitle.cancellationPolicyID,
                     userJobTitle.intro,
                     userJobTitle.instantBooking,

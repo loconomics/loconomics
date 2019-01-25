@@ -90,15 +90,6 @@ namespace LcRest
                 return r;
             }
         }
-
-        public static IEnumerable<PublicJobTitle> SearchByCategory(string category, string city, Locale locale)
-        {
-            using (var db = new LcDatabase())
-            {
-                return db.Query("EXEC dbo.SearchPositionsByCategory @0, @1, @2", locale.languageID, locale.countryID, category, city)
-                    .Select(FromDB);
-            }
-        }
         #endregion
     }
 }

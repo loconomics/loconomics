@@ -47,6 +47,7 @@
                  "lastName": "Smith",
                  "phone": "1234",
                  "profileType": "service-professional",
+                 "countryCode": "US",
                  "facebookUserID": "",
                  "facebookAccessToken": "",
                  "returnProfile": false,
@@ -66,6 +67,7 @@
                  "lastName": "Student",
                  "phone": "1234",
                  "profileType": "service-professional",
+                 "countryCode": "US",
                  "facebookUserID": "",
                  "facebookAccessToken": "",
                  "returnProfile": false,
@@ -100,7 +102,8 @@
                 {
                     return LcAuthHelper.FacebookSignup(this.WebPage);
                 }
-                else {
+                else
+                {
                     throw new HttpException(404, "[[[Not Found]]]");
                 }
             }
@@ -243,13 +246,13 @@
             }
 
             db.Execute(@"
-                UPDATE Users SET
-                    GenderID = @1,
-                    BirthMonthDay = @2,
-                    BirthMonth = @3,
-                    BirthYear = @4
-                WHERE UserID = @0
-            ", userID, genderID, day, month, year);
+            UPDATE Users SET
+                GenderID = @1,
+                BirthMonthDay = @2,
+                BirthMonth = @3,
+                BirthYear = @4
+            WHERE UserID = @0
+        ", userID, genderID, day, month, year);
         }
         private void InsertCccUser(LcDatabase db, int userID)
         {
@@ -269,20 +272,20 @@
             // PlanExpirationDate to 180 days from signUp date #761
             var expiration = DateTime.Today.AddDays(180);
             db.Execute(@"
-                INSERT CCCUsers (
-                    UserID,
-                    InstitutionID,
-                    FieldOfStudyID,
-                    PlanExpirationDate,
-                    UserType
-                ) VALUES (
-                    @0,
-                    @1,
-                    @2,
-                    @3,
-                    @4
-                )
-            ", userID, institutionID, fieldOfStudyID, expiration, cccUserType);
+            INSERT CCCUsers (
+                UserID,
+                InstitutionID,
+                FieldOfStudyID,
+                PlanExpirationDate,
+                UserType
+            ) VALUES (
+                @0,
+                @1,
+                @2,
+                @3,
+                @4
+            )
+        ", userID, institutionID, fieldOfStudyID, expiration, cccUserType);
         }
         /// <summary>
         /// Specific for user type 'client' (GIG posting partners)
@@ -293,16 +296,16 @@
         {
             var institutionID = Request["institutionID"].IsInt() ? Request["institutionID"].AsInt() : (int?)null;
             db.Execute(@"
-                INSERT CCCUsers (
-                    UserID,
-                    InstitutionID,
-                    UserType
-                ) VALUES (
-                    @0,
-                    @1,
-                    @2
-                )
-            ", logged.userID, institutionID, "client");
+            INSERT CCCUsers (
+                UserID,
+                InstitutionID,
+                UserType
+            ) VALUES (
+                @0,
+                @1,
+                @2
+            )
+        ", logged.userID, institutionID, "client");
 
             // SPECIAL: update onboarding to skip 'welcome' step. This makes this back-end very tight with the front-end organization
             // hope it takes no long active!
@@ -315,31 +318,31 @@
             var institutionID = Request["institutionID"].AsInt();
             var fieldOfStudyID = Request["fieldOfStudyID"].AsInt();
             var fieldOfStudy = db.QueryValue(@"
-                SELECT FieldOfStudyName
-                FROM FieldOfStudy
-                WHERE FieldOfStudyID = @0
-            ", fieldOfStudyID);
+            SELECT FieldOfStudyName
+            FROM FieldOfStudy
+            WHERE FieldOfStudyID = @0
+        ", fieldOfStudyID);
             db.Execute(@"
-                INSERT usereducation (
-                    UserID,
-                    InstitutionID,
-                    FieldOfStudy,
-                    DegreeCertificate,
-                    CreatedDate,
-                    ModifiedDate,
-                    ModifiedBy,
-                    Active
-                ) VALUES (
-                    @0,
-                    @1,
-                    @2,
-                    '',
-                    getdate(),
-                    getdate(),
-                    'sys',
-                    1
-                )
-            ", userID, institutionID, fieldOfStudy);
+            INSERT usereducation (
+                UserID,
+                InstitutionID,
+                FieldOfStudy,
+                DegreeCertificate,
+                CreatedDate,
+                ModifiedDate,
+                ModifiedBy,
+                Active
+            ) VALUES (
+                @0,
+                @1,
+                @2,
+                '',
+                getdate(),
+                getdate(),
+                'sys',
+                1
+            )
+        ", userID, institutionID, fieldOfStudy);
         }
         private void InsertCccPaymentPlan(LcDatabase db, int userID)
         {
