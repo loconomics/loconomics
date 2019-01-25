@@ -262,8 +262,120 @@ GO
 PRINT 'Drop constraints'
 PRINT 'TODO'
 
+-- Update PKs
 PRINT 'Replace Primary Keys that had languageID/countryID as members'
-PRINT 'TODO'
+-- First, a small utility, so we can deal with unnamed/random PK names without problem
+-- (creates a proc, but is removed later)
+CREATE PROCEDURE fx__temp_util_drop_table_pk (
+	@table NVARCHAR(512)
+) AS BEGIN
+    -- Usage EXEC fx__temp_util_drop_table_pk(N'dbo.Student')
+	DECLARE @sql NVARCHAR(MAX)
+	DECLARE @name NVARCHAR(1000)
+
+	SELECT @name = name
+    FROM sys.key_constraints
+    WHERE [type] = 'PK'
+		AND [parent_object_id] = OBJECT_ID(@table);
+
+	SET @sql =
+		'ALTER TABLE ' + @table
+		+ ' DROP CONSTRAINT ' + @name + ';'
+
+	EXEC sp_executeSQL @sql;
+
+	PRINT 'Removed ' + @table + ' PK: ' + @name
+END
+-- Now the PKs
+EXEC fx__temp_util_drop_table_pk N'dbo.JobTitlePlatform'
+ALTER TABLE [JobTitlePlatform] ADD CONSTRAINT [PK_JobTitlePlatform] PRIMARY KEY ([JobTitleID] ASC, [PlatformID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.JobTitleSolution'
+ALTER TABLE [JobTitleSolution] ADD CONSTRAINT [PK_JobTitleSolution] PRIMARY KEY ([JobTitleID] ASC, [SolutionID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.Platform'
+ALTER TABLE [Platform] ADD CONSTRAINT [PK_Platform] PRIMARY KEY ([PlatformID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.PricingVariableDefinition'
+ALTER TABLE [PricingVariableDefinition] ADD CONSTRAINT [PK_PricingVariableDefinition] PRIMARY KEY ([PricingVariableID] ASC, [PositionID] ASC, [PricingTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.SearchSubCategory'
+ALTER TABLE [SearchSubCategory] ADD CONSTRAINT [PK_SearchSubCategory] PRIMARY KEY ([SearchSubCategoryID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.SearchSubCategorySolution'
+ALTER TABLE [SearchSubCategorySolution] ADD CONSTRAINT [PK_SearchSubCategorySolution] PRIMARY KEY ([SearchSubCategoryID] ASC, [SolutionID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.ServiceAttributeExperienceLevel'
+ALTER TABLE [ServiceAttributeExperienceLevel] ADD CONSTRAINT [PK_ServiceAttributeExperienceLevel] PRIMARY KEY ([UserID] ASC, [PositionID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.ServiceAttributeLanguageLevel'
+ALTER TABLE [ServiceAttributeLanguageLevel] ADD CONSTRAINT [PK_ServiceAttributeLanguageLevel] PRIMARY KEY ([UserID] ASC, [PositionID] ASC, [ServiceAttributeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.Solution'
+ALTER TABLE [Solution] ADD CONSTRAINT [PK_Solution] PRIMARY KEY ([SolutionID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.Specialization'
+ALTER TABLE [Specialization] ADD CONSTRAINT [PK_Specialization] PRIMARY KEY ([SpecializationID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.UserListingSpecialization'
+ALTER TABLE [UserListingSpecialization] ADD CONSTRAINT [PK_UserListingSpecialization] PRIMARY KEY ([UserID] ASC, [UserListingID] ASC, [SpecializationID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.VOCElement'
+ALTER TABLE [VOCElement] ADD CONSTRAINT [PK_VOCElement] PRIMARY KEY ([VOCElementID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.VOCExperienceCategory'
+ALTER TABLE [VOCExperienceCategory] ADD CONSTRAINT [PK_VOCExperienceCategory] PRIMARY KEY ([VOCExperienceCategoryID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.VOCFlag'
+ALTER TABLE [VOCFlag] ADD CONSTRAINT [PK_VOCFlag] PRIMARY KEY ([VOCFlagID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.addresstype'
+ALTER TABLE [addresstype] ADD CONSTRAINT [PK_addresstype] PRIMARY KEY ([AddressTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.alert'
+ALTER TABLE [alert] ADD CONSTRAINT [PK_alert] PRIMARY KEY ([AlertID] ASC, [AlertTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.backgroundcheck'
+ALTER TABLE [backgroundcheck] ADD CONSTRAINT [PK_backgroundcheck] PRIMARY KEY ([BackgroundCheckID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.cancellationpolicy'
+ALTER TABLE [cancellationpolicy] ADD CONSTRAINT [PK_cancellationpolicy] PRIMARY KEY ([CancellationPolicyID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.clienttype'
+ALTER TABLE [clienttype] ADD CONSTRAINT [PK_clienttype] PRIMARY KEY ([ClientTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.country'
+ALTER TABLE [country] ADD CONSTRAINT [PK_country] PRIMARY KEY ([CountryID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.languagelevel'
+ALTER TABLE [languagelevel] ADD CONSTRAINT [PK_languagelevel] PRIMARY KEY ([LanguageLevelID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.licensecertification'
+ALTER TABLE [licensecertification] ADD CONSTRAINT [PK_licensecertification] PRIMARY KEY ([LicenseCertificationID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.messagethreadstatus'
+ALTER TABLE [messagethreadstatus] ADD CONSTRAINT [PK_messagethreadstatus] PRIMARY KEY ([MessageThreadStatusID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.messagetype'
+ALTER TABLE [messagetype] ADD CONSTRAINT [PK_messagetype] PRIMARY KEY ([MessageTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.positionpricingtype'
+ALTER TABLE [positionpricingtype] ADD CONSTRAINT [PK_positionpricingtype] PRIMARY KEY ([PositionID] ASC, [PricingTypeID] ASC, [ClientTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.positionratings'
+ALTER TABLE [positionratings] ADD CONSTRAINT [PK_positionratings] PRIMARY KEY ([PositionID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.pricingtype'
+ALTER TABLE [pricingtype] ADD CONSTRAINT [PK_pricingtype] PRIMARY KEY ([PricingTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.providerpaymentpreferencetype'
+ALTER TABLE [providerpaymentpreferencetype] ADD CONSTRAINT [PK_providerpaymentpreferencetype] PRIMARY KEY ([ProviderPaymentPreferenceTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.serviceattribute'
+ALTER TABLE [serviceattribute] ADD CONSTRAINT [PK_serviceattribute] PRIMARY KEY ([ServiceAttributeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.serviceattributecategory'
+ALTER TABLE [serviceattributecategory] ADD CONSTRAINT [PK_serviceattributecategory] PRIMARY KEY ([ServiceAttributeCategoryID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.servicecategory'
+ALTER TABLE [servicecategory] ADD CONSTRAINT [PK_servicecategory] PRIMARY KEY ([ServiceCategoryID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.servicecategoryposition'
+ALTER TABLE [servicecategoryposition] ADD CONSTRAINT [PK_servicecategoryposition] PRIMARY KEY ([ServiceCategoryID] ASC, [PositionID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.servicecategorypositionattribute'
+ALTER TABLE [servicecategorypositionattribute] ADD CONSTRAINT [PK_servicecategorypositionattribute] PRIMARY KEY ([PositionID] ASC, [ServiceAttributeCategoryID] ASC, [ServiceAttributeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.servicesubcategory'
+ALTER TABLE [servicesubcategory] ADD CONSTRAINT [PK_servicesubcategory] PRIMARY KEY ([ServiceSubCategoryID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.taxentitytype'
+ALTER TABLE [taxentitytype] ADD CONSTRAINT [PK_taxentitytype] PRIMARY KEY ([TaxEntityTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.tintype'
+ALTER TABLE [tintype] ADD CONSTRAINT [PK_tintype] PRIMARY KEY ([TINTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.transporttype'
+ALTER TABLE [transporttype] ADD CONSTRAINT [PK_transporttype] PRIMARY KEY ([TransportTypeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.userprofileserviceattributes'
+ALTER TABLE [userprofileserviceattributes] ADD CONSTRAINT [PK_userprofileserviceattributes] PRIMARY KEY ([UserID] ASC, [PositionID] ASC, [ServiceAttributeCategoryID] ASC, [ServiceAttributeID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.verification'
+ALTER TABLE [verification] ADD CONSTRAINT [PK_verification] PRIMARY KEY ([VerificationID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.verificationcategory'
+ALTER TABLE [verificationcategory] ADD CONSTRAINT [PK_verificationcategory] PRIMARY KEY ([VerificationCategoryID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.verificationstatus'
+ALTER TABLE [verificationstatus] ADD CONSTRAINT [PK_verificationstatus] PRIMARY KEY ([VerificationStatusID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.verificationstatus'
+ALTER TABLE [verificationstatus] ADD CONSTRAINT [PK_verificationstatus] PRIMARY KEY ([VerificationStatusID] ASC)
+EXEC fx__temp_util_drop_table_pk N'dbo.xJobTitleReviewRules'
+ALTER TABLE [xJobTitleReviewRules] ADD CONSTRAINT [PK_xJobTitleReviewRules] PRIMARY KEY ([JobTitleID] ASC)
+
+-- Remove temporary utility
+DROP PROCEDURE fx__temp_util_drop_table_pk
 
 GO
 
