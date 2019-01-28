@@ -313,7 +313,7 @@ EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS(N'dbo.UserLicenseCertifications', 'FK_u
 EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS(N'dbo.UserLicenseCertifications', 'FK__userlicen__Provi__64CCF2AE')
 EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS(N'dbo.UserLicenseCertifications', 'FK__UserLicen__Provi__4FD1D5C8')
 ALTER TABLE [UserLicenseCertifications] ADD CONSTRAINT [FK_userlicen__ProviderUserID] FOREIGN KEY ([ProviderUserID]) REFERENCES [dbo].[users] ([UserID]))
---- Others..
+-- Others..
 ALTER TABLE JobTitlePlatform DROP CONSTRAINT [FK_JobTitlePlatform_Platform]
 ALTER TABLE JobTitlePlatform ADD CONSTRAINT [FK_JobTitlePlatform_Platform] FOREIGN KEY ([PlatformID]) REFERENCES [dbo].[Platform] ([PlatformID])
 ALTER TABLE JobTitleSolution DROP CONSTRAINT [FK_JobTitleSolution_positions]
@@ -340,6 +340,17 @@ ALTER TABLE booking DROP CONSTRAINT [FK__booking__jobtitle]
 ALTER TABLE booking ADD CONSTRAINT [FK__booking__jobtitle] FOREIGN KEY ([JobTitleID]) REFERENCES [dbo].[positions] ([PositionID])
 ALTER TABLE booking DROP CONSTRAINT [FK__booking__pricingSummary]
 ALTER TABLE booking ADD CONSTRAINT [FK__booking__pricingSummary] FOREIGN KEY ([PricingSummaryID]) REFERENCES [dbo].[pricingSummary] ([PricingSummaryID])
+ALTER TABLE servicesubcategory DROP CONSTRAINT [FK_servicesubcategory_servicecategory]
+ALTER TABLE servicesubcategory ADD CONSTRAINT [FK_servicesubcategory_servicecategory] FOREIGN KEY ([ServiceCategoryID]) REFERENCES [dbo].[servicecategory] ([ServiceCategoryID])
+ALTER TABLE userprofilepositions DROP CONSTRAINT [FK_userprofilepositions_positions]
+ALTER TABLE userprofilepositions ADD CONSTRAINT [FK_userprofilepositions_positions] FOREIGN KEY([PositionID]) REFERENCES [dbo].[positions] ([PositionID]),
+-- PositionPricingType
+ALTER TABLE positionpricingtype DROP CONSTRAINT [Fk_positionpricingtype]
+ALTER TABLE positionpricingtype DROP CONSTRAINT [Fk_positionpricingtype_0]
+ALTER TABLE positionpricingtype DROP CONSTRAINT [Fk_positionpricingtype_1]
+ALTER TABLE booking ADD CONSTRAINT [Fk_positionpricingtype_pricingtype] FOREIGN KEY ([PricingTypeID]) REFERENCES [dbo].[pricingtype] ([PricingTypeID])
+ALTER TABLE booking ADD CONSTRAINT [Fk_positionpricingtype_positions] FOREIGN KEY ([PositionID]) REFERENCES [dbo].[positions] ([PositionID])
+ALTER TABLE booking ADD CONSTRAINT [Fk_positionpricingtype_clienttype] FOREIGN KEY ([ClientTypeID]) REFERENCES [dbo].[clienttype] ([ClientTypeID])
 
 -- Remove utility
 DROP PROCEDURE temp_util_DROP_CONSTRAINT_IF_EXISTS
@@ -460,28 +471,6 @@ DROP INDEX clienttype.idx_clienttype
 EXEC sp_RENAME 'clienttype.CllientTypeID' , 'ClientTypeID', 'COLUMN'
 ALTER TABLE [clienttype] ADD CONSTRAINT [PK_clienttype] PRIMARY KEY ([ClientTypeID] ASC)
 CREATE NONCLUSTERED INDEX [idx_clienttype] ON [dbo].[clienttype]([ClientTypeID] ASC, [CountryID] ASC)
-
-/* STILL FOR REVIEW
-ALTER TABLE [dbo].[positionpricingtype] ADD
--    CONSTRAINT [Fk_positionpricingtype] FOREIGN KEY ([PricingTypeID], [LanguageID], [CountryID]) REFERENCES [dbo].[pricingtype] ([PricingTypeID], [LanguageID], [CountryID]),
--    CONSTRAINT [Fk_positionpricingtype_0] FOREIGN KEY ([PositionID], [LanguageID], [CountryID]) REFERENCES [dbo].[positions] ([PositionID], [LanguageID], [CountryID]),
--    CONSTRAINT [Fk_positionpricingtype_1] FOREIGN KEY ([ClientTypeID], [LanguageID], [CountryID]) REFERENCES [dbo].[clienttype] ([CllientTypeID], [LanguageID], [CountryID])
-+    CONSTRAINT [Fk_positionpricingtype] FOREIGN KEY ([PricingTypeID]) REFERENCES [dbo].[pricingtype] ([PricingTypeID]),
-+    CONSTRAINT [Fk_positionpricingtype_0] FOREIGN KEY ([PositionID]) REFERENCES [dbo].[positions] ([PositionID]),
-+    CONSTRAINT [Fk_positionpricingtype_1] FOREIGN KEY ([ClientTypeID]) REFERENCES [dbo].[clienttype] ([ClientTypeID])
-
- ALTER TABLE [dbo].[servicesubcategory] ADD
--    CONSTRAINT [FK_servicesubcategory_servicecategory] FOREIGN KEY ([ServiceCategoryID], [LanguageID], [CountryID]) REFERENCES [dbo].[servicecategory] ([ServiceCategoryID], [LanguageID], [CountryID])
-+    CONSTRAINT [FK_servicesubcategory_servicecategory] FOREIGN KEY ([ServiceCategoryID]) REFERENCES [dbo].[servicecategory] ([ServiceCategoryID])
-
- ALTER TABLE [dbo].[userprofilepositions] ADD
-     CONSTRAINT [FK_userprofilepositions_accountstatus] FOREIGN KEY ([StatusID]) REFERENCES [dbo].[accountstatus] ([AccountStatusID]),
--    CONSTRAINT [FK_userprofilepositions_positions] FOREIGN KEY ([PositionID], [LanguageID], [CountryID]) REFERENCES [dbo].[positions] ([PositionID], [LanguageID], [CountryID]),
-+    CONSTRAINT [FK_userprofilepositions_positions] FOREIGN KEY ([PositionID]) REFERENCES [dbo].[positions] ([PositionID]),
-     CONSTRAINT [FK_userprofilepositions_users] FOREIGN KEY ([UserID]) REFERENCES [dbo].[users] ([UserID])
-
-     
-*/
 
 -- Remove temporary utility
 DROP PROCEDURE fx__temp_util_drop_table_pk
