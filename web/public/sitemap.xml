@@ -3,6 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://loconomics.com/pages/communities/</loc>
+    <lastmod>2019-01-28T17:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://loconomics.com/pages/higher-education/</loc>
+    <lastmod>2019-01-28T17:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://loconomics.com/pages/workforce-development/</loc>
+    <lastmod>2019-01-28T17:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://loconomics.com/pages/help/</loc>
     <lastmod>2018-12-28T19:31:00+01:00</lastmod>
   </url>
@@ -59,7 +74,7 @@
   
   <url>
     <loc>https://loconomics.com/pages/</loc>
-    <lastmod>2018-12-28T19:31:00+01:00</lastmod>
+    <lastmod>2019-01-28T17:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
