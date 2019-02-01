@@ -361,6 +361,12 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK__FieldOfStudy__69DC8BE5]') AND parent_object_id = OBJECT_ID(N'[dbo].[FieldOfStudy]'))
 ALTER TABLE [dbo].[FieldOfStudy] DROP CONSTRAINT [FK__FieldOfStudy__69DC8BE5]
 GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK__FieldOfStudy__727BF387]') AND parent_object_id = OBJECT_ID(N'[dbo].[FieldOfStudy]'))
+ALTER TABLE [dbo].[FieldOfStudy] DROP CONSTRAINT [FK__FieldOfStudy__727BF387]
+GO
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK__FieldOfStudy__47919582]') AND parent_object_id = OBJECT_ID(N'[dbo].[FieldOfStudy]'))
+ALTER TABLE [dbo].[FieldOfStudy] DROP CONSTRAINT [FK__FieldOfStudy__47919582]
+GO
 ALTER TABLE Platform DROP CONSTRAINT [FK_Platform_language]
 GO
 ALTER TABLE SearchSubCategory DROP CONSTRAINT [FK_SearchSubCategory_language]
@@ -764,11 +770,17 @@ PRINT 'Drop languageID and countryID constraints (like defaults, indexes)'
 IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__alerttype__Langu__5CACADF9]') AND type = 'D')
 ALTER TABLE [dbo].[alerttype] DROP CONSTRAINT [DF__alerttype__Langu__5CACADF9]
 GO
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__alerttype__Langu__39237A9A]') AND type = 'D')
+ALTER TABLE [dbo].[alerttype] DROP CONSTRAINT [DF__alerttype__Langu__39237A9A]
+GO
 IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__pricingty__Langu__086B34A6]') AND type = 'D')
 ALTER TABLE [dbo].[pricingtype] DROP CONSTRAINT [DF__pricingty__Langu__086B34A6]
 GO
 IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__alerttype__Count__5DA0D232]') AND type = 'D')
 ALTER TABLE [dbo].[alerttype] DROP CONSTRAINT [DF__alerttype__Count__5DA0D232]
+GO
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__alerttype__Count__3A179ED3]') AND type = 'D')
+ALTER TABLE [dbo].[alerttype] DROP CONSTRAINT [DF__alerttype__Count__3A179ED3]
 GO
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[clienttype]') AND name = N'idx_clienttype')
 DROP INDEX [idx_clienttype] ON [dbo].[clienttype] WITH ( ONLINE = OFF )
