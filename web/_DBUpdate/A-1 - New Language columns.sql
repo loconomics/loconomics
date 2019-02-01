@@ -355,7 +355,9 @@ ALTER TABLE SearchCategory DROP CONSTRAINT [FK_SearchCategory_language]
 GO
 ALTER TABLE CalendarRecurrenceFrequencyTypes DROP CONSTRAINT [FK_CalendarRecurrenceFrequencyTypes_CalendarRecurrenceFrequencyTypes]
 GO
-ALTER TABLE FieldOfStudy DROP CONSTRAINT [FK__FieldOfStudy__LanguageID__CountryID]
+EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.FieldOfStudy', 'FK__FieldOfStudy__LanguageID__CountryID'
+GO
+EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.FieldOfStudy', 'FK__FieldOfStudy__69DC8BE5'
 GO
 ALTER TABLE Platform DROP CONSTRAINT [FK_Platform_language]
 GO
@@ -433,6 +435,18 @@ ALTER TABLE positionpricingtype DROP CONSTRAINT [Fk_positionpricingtype_0]
 GO
 ALTER TABLE positionpricingtype DROP CONSTRAINT [Fk_positionpricingtype_1]
 GO
+-- MessagingThreads: does not have lang-country, but is related to an ID to be changed
+EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.MessagingThreads', 'Fk_MessagingThreads_2'
+GO
+EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.MessagingThreads', 'FK_MessagingThreads_messagethreadstatus'
+GO
+-- Remove wrong FKs to itself at pricingSummary
+EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.pricingSummary', 'FK_pricingestimate_pricingestimate'
+GO
+EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.pricingSummary', 'FK_pricingSummary_pricingSummary'
+GO
+EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.pricingSummary', 'FK_pricingSummary_pricingSummary1'
+GO
 
 -- Remove utility (mandatory to happen at a different batch, or an error is thrown)
 GO
@@ -500,6 +514,10 @@ EXEC temp_util_drop_table_pk N'dbo.SearchSubCategorySolution'
 GO
 ALTER TABLE [SearchSubCategorySolution] ADD CONSTRAINT [PK_SearchSubCategorySolution] PRIMARY KEY ([SearchSubCategoryID] ASC, [SolutionID] ASC)
 GO
+EXEC temp_util_drop_table_pk N'dbo.ExperienceLevel'
+GO
+ALTER TABLE [ExperienceLevel] ADD CONSTRAINT [PK_ExperienceLevel] PRIMARY KEY ([ExperienceLevelID] ASC)
+GO
 EXEC temp_util_drop_table_pk N'dbo.ServiceAttributeExperienceLevel'
 GO
 ALTER TABLE [ServiceAttributeExperienceLevel] ADD CONSTRAINT [PK_ServiceAttributeExperienceLevel] PRIMARY KEY ([UserID] ASC, [PositionID] ASC)
@@ -552,6 +570,10 @@ EXEC temp_util_drop_table_pk N'dbo.country'
 GO
 ALTER TABLE [country] ADD CONSTRAINT [PK_country] PRIMARY KEY ([CountryID] ASC)
 GO
+EXEC temp_util_drop_table_pk N'dbo.Gender'
+GO
+ALTER TABLE [gender] ADD CONSTRAINT [PK_gender] PRIMARY KEY ([GenderID] ASC)
+GO
 EXEC temp_util_drop_table_pk N'dbo.languagelevel'
 GO
 ALTER TABLE [languagelevel] ADD CONSTRAINT [PK_languagelevel] PRIMARY KEY ([LanguageLevelID] ASC)
@@ -591,7 +613,7 @@ GO
 EXEC temp_util_drop_table_pk N'dbo.pricingtype'
 GO
 -- Special case: pricingtype had a (wrong) unique index, named with the expected name for the PK. Remove first since is a mistake, and
--- to be able to create the PK
+-- to be able to create the PK, and two identical FKs to it dropped previously
 ALTER TABLE [pricingtype] DROP CONSTRAINT [PK_pricingtype]
 GO
 ALTER TABLE [pricingtype] ADD CONSTRAINT [PK_pricingtype] PRIMARY KEY ([PricingTypeID] ASC)
@@ -722,6 +744,25 @@ ALTER TABLE positionpricingtype ADD CONSTRAINT [Fk_positionpricingtype_positions
 GO
 ALTER TABLE positionpricingtype ADD CONSTRAINT [Fk_positionpricingtype_clienttype] FOREIGN KEY ([ClientTypeID]) REFERENCES [dbo].[clienttype] ([ClientTypeID])
 GO
+ALTER TABLE [dbo].[MessagingThreads] ADD  CONSTRAINT [Fk_MessagingThreads_messagethreadstatus] FOREIGN KEY([MessageThreadStatusID])
+REFERENCES [dbo].[messagethreadstatus] ([MessageThreadStatusID])
+GO
+
+-- Drop lang-count constraints
+PRINT 'Drop languageID and countryID constraints (like defaults, indexes)'
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__alerttype__Langu__5CACADF9]') AND type = 'D')
+ALTER TABLE [dbo].[alerttype] DROP CONSTRAINT [DF__alerttype__Langu__5CACADF9]
+GO
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__pricingty__Langu__086B34A6]') AND type = 'D')
+ALTER TABLE [dbo].[pricingtype] DROP CONSTRAINT [DF__pricingty__Langu__086B34A6]
+GO
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__alerttype__Count__5DA0D232]') AND type = 'D')
+ALTER TABLE [dbo].[alerttype] DROP CONSTRAINT [DF__alerttype__Count__5DA0D232]
+GO
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[clienttype]') AND name = N'idx_clienttype')
+DROP INDEX [idx_clienttype] ON [dbo].[clienttype] WITH ( ONLINE = OFF )
+GO
+
 
 -- Drop old columns languageID columns
 PRINT 'Drop old languageID columns'
@@ -858,8 +899,6 @@ GO
 ALTER TABLE [cancellationpolicy]                    DROP COLUMN [CountryID]
 GO
 ALTER TABLE [clienttype]                            DROP COLUMN [CountryID]
-GO
-ALTER TABLE [country]                               DROP COLUMN [CountryID]
 GO
 ALTER TABLE [ExperienceLevel]                       DROP COLUMN [CountryID]
 GO
