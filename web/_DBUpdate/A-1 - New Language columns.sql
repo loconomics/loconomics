@@ -355,9 +355,11 @@ ALTER TABLE SearchCategory DROP CONSTRAINT [FK_SearchCategory_language]
 GO
 ALTER TABLE CalendarRecurrenceFrequencyTypes DROP CONSTRAINT [FK_CalendarRecurrenceFrequencyTypes_CalendarRecurrenceFrequencyTypes]
 GO
-EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.FieldOfStudy', 'FK__FieldOfStudy__LanguageID__CountryID'
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK__FieldOfStudy__LanguageID__CountryID]') AND parent_object_id = OBJECT_ID(N'[dbo].[FieldOfStudy]'))
+ALTER TABLE [dbo].[FieldOfStudy] DROP CONSTRAINT [FK__FieldOfStudy__LanguageID__CountryID]
 GO
-EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.FieldOfStudy', 'FK__FieldOfStudy__69DC8BE5'
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK__FieldOfStudy__69DC8BE5]') AND parent_object_id = OBJECT_ID(N'[dbo].[FieldOfStudy]'))
+ALTER TABLE [dbo].[FieldOfStudy] DROP CONSTRAINT [FK__FieldOfStudy__69DC8BE5]
 GO
 ALTER TABLE Platform DROP CONSTRAINT [FK_Platform_language]
 GO
@@ -422,11 +424,14 @@ ALTER TABLE servicesubcategory DROP CONSTRAINT [FK_servicesubcategory_servicecat
 GO
 ALTER TABLE userprofilepositions DROP CONSTRAINT [FK_userprofilepositions_positions]
 GO
-EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.pricingSummary', 'FK_pricingestimate_pricingestimate'
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_pricingestimate_pricingestimate]') AND parent_object_id = OBJECT_ID(N'[dbo].[pricingSummary]'))
+ALTER TABLE [dbo].[pricingSummary] DROP CONSTRAINT [FK_pricingestimate_pricingestimate]
 GO
-EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.pricingSummary', 'FK_pricingSummary_pricingSummary'
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_pricingSummary_pricingSummary]') AND parent_object_id = OBJECT_ID(N'[dbo].[pricingSummary]'))
+ALTER TABLE [dbo].[pricingSummary] DROP CONSTRAINT [FK_pricingSummary_pricingSummary]
 GO
-EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.pricingSummary', 'FK_pricingSummary_pricingSummary1'
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_pricingSummary_pricingSummary1]') AND parent_object_id = OBJECT_ID(N'[dbo].[pricingSummary]'))
+ALTER TABLE [dbo].[pricingSummary] DROP CONSTRAINT [FK_pricingSummary_pricingSummary1]
 GO
 -- PositionPricingType
 ALTER TABLE positionpricingtype DROP CONSTRAINT [Fk_positionpricingtype]
@@ -436,9 +441,11 @@ GO
 ALTER TABLE positionpricingtype DROP CONSTRAINT [Fk_positionpricingtype_1]
 GO
 -- MessagingThreads: does not have lang-country, but is related to an ID to be changed
-EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.MessagingThreads', 'Fk_MessagingThreads_2'
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[Fk_MessagingThreads_2]') AND parent_object_id = OBJECT_ID(N'[dbo].[MessagingThreads]'))
+ALTER TABLE [dbo].[MessagingThreads] DROP CONSTRAINT [Fk_MessagingThreads_2]
 GO
-EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.MessagingThreads', 'FK_MessagingThreads_messagethreadstatus'
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_MessagingThreads_messagethreadstatus]') AND parent_object_id = OBJECT_ID(N'[dbo].[MessagingThreads]'))
+ALTER TABLE [dbo].[MessagingThreads] DROP CONSTRAINT [FK_MessagingThreads_messagethreadstatus]
 GO
 -- Remove wrong FKs to itself at pricingSummary
 EXEC temp_util_DROP_CONSTRAINT_IF_EXISTS N'dbo.pricingSummary', 'FK_pricingestimate_pricingestimate'
@@ -591,6 +598,10 @@ GO
 ALTER TABLE [messagethreadstatus] ADD CONSTRAINT [PK_messagethreadstatus] PRIMARY KEY ([MessageThreadStatusID] ASC)
 GO
 EXEC temp_util_drop_table_pk N'dbo.messagetype'
+GO
+-- Special case: messagetype had a (wrong) unique index, named with the expected name for the PK. Remove first since is a mistake,
+-- and to be able to create the PK
+ALTER TABLE [messagetype] DROP CONSTRAINT [Pk_messagetype]
 GO
 ALTER TABLE [messagetype] ADD CONSTRAINT [PK_messagetype] PRIMARY KEY ([MessageTypeID] ASC)
 GO
@@ -762,7 +773,16 @@ GO
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[clienttype]') AND name = N'idx_clienttype')
 DROP INDEX [idx_clienttype] ON [dbo].[clienttype] WITH ( ONLINE = OFF )
 GO
-
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__pricingty__langu__12FE9D09]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[pricingtype] DROP CONSTRAINT [DF__pricingty__langu__12FE9D09]
+END
+GO
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[DF__pricingty__Count__095F58DF]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[pricingtype] DROP CONSTRAINT [DF__pricingty__Count__095F58DF]
+END
+GO
 
 -- Drop old columns languageID columns
 PRINT 'Drop old languageID columns'
