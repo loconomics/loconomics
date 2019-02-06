@@ -84,11 +84,11 @@
                     verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, x.jobTitleID),
                     serviceAddresses = full ? LcRest.Address.GetServiceAddresses(userID, x.jobTitleID) : null,
                     services = full ? LcRest.ServiceProfessionalService.GetList(userID, x.jobTitleID, clientVisibility: servicesVisibility) : null,
-                    serviceAttributes = full ? LcRest.PublicUserJobTitleServiceAttributes.Get(userID, x.jobTitleID, locale.languageID, locale.countryID) : null,
+                    serviceAttributes = full ? LcRest.PublicUserJobTitleServiceAttributes.Get(userID, x.jobTitleID, locale.ToString()) : null,
                     workPhotos = full ? LcData.Photo.GetUserWorkPhotos(userID, x.jobTitleID) : null,
                     verifications = full ? LcRest.PublicUserVerification.GetList(userID, x.jobTitleID) : null,
-                    licensesCertifications = full ? LcRest.PublicUserLicenseCertification.GetList(userID, x.jobTitleID, locale.languageID) : null,
-                    badges = full ? LcRest.UserBadge.ListByListing(userID, x.jobTitleID, locale.languageID, locale.countryID, true) : null,
+                    licensesCertifications = full ? LcRest.PublicUserLicenseCertification.GetList(userID, x.jobTitleID, locale.ToString()) : null,
+                    badges = full ? LcRest.UserBadge.ListByListing(userID, x.jobTitleID, locale.ToString(), true) : null,
                     solutions = full ? LcRest.UserSolution.GetSolutionsByListing(userID, x.userListingID, locale) : null
                 };
             });

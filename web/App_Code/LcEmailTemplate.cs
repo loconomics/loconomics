@@ -149,7 +149,7 @@ public static class LcEmailTemplate
             get
             {
                 if (_flags == null)
-                    _flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(booking.jobTitleID, booking.languageID, booking.countryID);
+                    _flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(booking.jobTitleID, booking.language);
                 return _flags;
             }
         }
@@ -160,7 +160,7 @@ public static class LcEmailTemplate
             get
             {
                 if (_jobTitle == null)
-                    _jobTitle = LcRest.PublicJobTitle.Get(booking.jobTitleID, booking.languageID, booking.countryID);
+                    _jobTitle = LcRest.PublicJobTitle.Get(booking.jobTitleID, booking.language);
                 return _jobTitle;
             }
         }
@@ -345,7 +345,7 @@ public static class LcEmailTemplate
         */
 
         // Cancellation policy
-        var policy = LcRest.CancellationPolicy.Get(b.cancellationPolicyID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+        var policy = LcRest.CancellationPolicy.Get(b.cancellationPolicyID, LcRest.Locale.Current.ToString());
 
         return new BookingEmailInfo
         {
@@ -605,7 +605,7 @@ public static class LcEmailTemplate
 
         public PostingEmailInfo(int userID, int userPostingID, int serviceProfessionalID)
         {
-            posting = LcRest.UserPosting.Get(userID, userPostingID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), false);
+            posting = LcRest.UserPosting.Get(userID, userPostingID, LcRest.Locale.Current.ToString(), false);
             this.serviceProfessionalID = serviceProfessionalID;
         }
     }

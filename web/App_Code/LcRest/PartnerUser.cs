@@ -42,8 +42,8 @@ namespace LcRest
         public int accountStatusID;
         public DateTime createdDate;
         public DateTime updatedDate;
-        public int countryID;
-        public int languageID;
+        public string language;
+        public string signupCountryCode;
 
         // Automatic field right now, but is better
         // to communicate it than to expect the App or API client
@@ -89,8 +89,8 @@ namespace LcRest
                 accountStatusID = record.accountStatusID,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
-                languageID = record.languageID,
-                countryID = record.countryID
+                language = record.language,
+                signupCountryCode = record.signupCountryCode
             };
         }
 
@@ -115,8 +115,8 @@ namespace LcRest
             ,accountStatusID
             ,createdDate
             ,Users.updatedDate
-            ,PreferredLanguageID as languageID
-            ,PreferredCountryID as countryID
+            ,PreferredLanguage as language
+            ,SignupCountryCode as countryCode
 
             ,O.orgName
             ,O.orgDescription

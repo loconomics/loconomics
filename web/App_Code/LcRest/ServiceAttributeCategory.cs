@@ -71,12 +71,10 @@ namespace LcRest
 	        FROM serviceattributecategory a
 	            JOIN servicecategorypositionattribute c
 	            on a.ServiceAttributeCategoryID = c.ServiceAttributeCategoryID
-	            and a.LanguageID = c.LanguageID
-	            and a.CountryID = c.CountryID
+	            and a.Language = c.Language
 	        WHERE
                 c.PositionID = @0
-	            and c.LanguageID  = @1
-	            and c.CountryID = @2
+	            and c.Language  = @1
 	            and (a.PricingOptionCategory is null OR a.PricingOptionCategory = 1)
 	            -- only actived
 	            and a.Active = 1

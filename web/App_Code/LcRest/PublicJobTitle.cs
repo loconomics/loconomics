@@ -12,8 +12,7 @@ namespace LcRest
     {
         #region Fields
         public int jobTitleID;
-        public int languageID;
-        public int countryID;
+        public string language;
         public string singularName;
         public string pluralName;
         public string aliases;
@@ -28,7 +27,7 @@ namespace LcRest
 
         public void FillPricingTypes()
         {
-            pricingTypes = JobTitlePricingType.GetList(jobTitleID, languageID, countryID);
+            pricingTypes = JobTitlePricingType.GetList(jobTitleID, language);
         }
         #endregion
 
@@ -46,8 +45,7 @@ namespace LcRest
                 searchDescription = record.searchDescription,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
-                languageID = record.languageID,
-                countryID = record.countryID
+                language = record.language
             };
         }
         #endregion
@@ -64,27 +62,21 @@ namespace LcRest
                 PositionSearchDescription As searchDescription,
                 CreatedDate As createdDate,
                 UpdatedDate As updatedDate,
-                languageID,
-                countryID
+                language
             FROM
                 positions
             WHERE
                 PositionID = @0
-                    AND LanguageID = @1
-                    AND CountryID = @2
+                    AND Language = @1
                     AND Active = 1
                     AND (Approved = 1 Or Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
         #endregion
-        public static PublicJobTitle Get(int jobTitleID, Locale locale)
-        {
-            return Get(jobTitleID, locale.languageID, locale.countryID);
-        }
-        public static PublicJobTitle Get(int jobTitleID, int languageID, int countryID)
+        public static PublicJobTitle Get(int jobTitleID, string language)
         {
             using (var db = new LcDatabase())
             {
-                var r = FromDB(db.QuerySingle(sqlGetItem, jobTitleID, languageID, countryID));
+                var r = FromDB(db.QuerySingle(sqlGetItem, jobTitleID, language));
                 if (r == null) return null;
                 r.FillPricingTypes();
                 return r;

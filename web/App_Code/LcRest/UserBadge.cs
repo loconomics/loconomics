@@ -68,32 +68,32 @@ namespace LcRest
         ";
         const string sqlWhere = @"
             WHERE b.userID = @0 AND b.Active = 1
-                AND b.languageID = @1 AND b.countryID = @2
+                AND b.language = @1
         ";
         const string sqlByID = @"
-            AND b.userBadgeID = @3
+            AND b.userBadgeID = @2
         ";
         const string sqlByListing = @"
                 LEFT JOIN UserSolution as s
                   ON s.solutionID = b.solutionID AND s.Active = 1
         " + sqlWhere + @"
-                and (s.userListingID = @3 OR b.solutionID is null)
+                and (s.userListingID = @2 OR b.solutionID is null)
         ";
         const string sqlBySolution = @"
                 LEFT JOIN UserSolution as s
                   ON s.solutionID = b.solutionID AND s.Active = 1
         " + sqlWhere + @"
-                and b.solutionID = @3
+                and b.solutionID = @2
         ";
         const string sqlAndPublicOnly = @"
                 AND (b.expiryDate is null OR b.expiryDate > getdate())
         ";
-        public static UserBadge Get(int userID, int userBadgeID, int languageID, int countryID)
+        public static UserBadge Get(int userID, int userBadgeID, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelect + sqlWhere + sqlByID;
-                return FromDB(db.QuerySingle(sql, userID, languageID, countryID, userBadgeID));
+                return FromDB(db.QuerySingle(sql, userID, language, userBadgeID));
             }
         }
         /// <summary>
@@ -101,16 +101,15 @@ namespace LcRest
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="userListingID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <param name="onlyPublicOnes">Request only badges that can be displayed publicly</param>
         /// <returns></returns>
-        public static IEnumerable<UserBadge> ListByListing(int userID, int userListingID, int languageID, int countryID, bool onlyPublicOnes = false)
+        public static IEnumerable<UserBadge> ListByListing(int userID, int userListingID, string language, bool onlyPublicOnes = false)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelect + sqlByListing + (onlyPublicOnes ? sqlAndPublicOnly : "");
-                return db.Query(sql, userID, languageID, countryID, userListingID).Select(FromDB);
+                return db.Query(sql, userID, language, userListingID).Select(FromDB);
             }
         }
         /// <summary>
@@ -118,30 +117,28 @@ namespace LcRest
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="solutionID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static IEnumerable<UserBadge> ListBySolution(int userID, int? solutionID, int languageID, int countryID)
+        public static IEnumerable<UserBadge> ListBySolution(int userID, int? solutionID, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelect + (solutionID.HasValue ? sqlBySolution : sqlWhere + " AND b.solutionID is null");
-                return db.Query(sql, userID, languageID, countryID, solutionID).Select(FromDB);
+                return db.Query(sql, userID, language, solutionID).Select(FromDB);
             }
         }
         /// <summary>
         /// List all (non deleted) user badges, for internal, admin, usage.
         /// </summary>
         /// <param name="userID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static IEnumerable<UserBadge> ListAllByUser(int userID, int languageID, int countryID)
+        public static IEnumerable<UserBadge> ListAllByUser(int userID, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelect + sqlWhere;
-                return db.Query(sql, userID, languageID, countryID).Select(FromDB);
+                return db.Query(sql, userID, language).Select(FromDB);
             }
         }
         #endregion
@@ -151,8 +148,8 @@ namespace LcRest
             UPDATE UserBadge
                 SET Active = 0
             WHERE UserID = @0
-                AND languageID = @1 AND countryID = @2
-                AND UserBadgeID = @3
+                AND language = @1
+                AND UserBadgeID = @2
         ";
         const string sqlRestrictToUserCreated = " AND CreatedBy like 'user'";
         /// <summary>
@@ -160,12 +157,12 @@ namespace LcRest
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="userBadgeID"></param>
-        public static void Delete(int userID, int userBadgeID, int languageID, int countryID, bool byAdmin = false)
+        public static void Delete(int userID, int userBadgeID, string language, bool byAdmin = false)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlDelete + (byAdmin ? "" : sqlRestrictToUserCreated);
-                db.Execute(sql, userID, languageID, countryID, userBadgeID);
+                db.Execute(sql, userID, userBadgeID);
             }
         }
         #endregion
@@ -197,8 +194,7 @@ namespace LcRest
                     ,type
                     ,category
                     ,expiryDate
-                    ,languageID
-                    ,countryID
+                    ,language
                     ,CreatedDate
                     ,updatedDate
                     ,createdBy
@@ -235,8 +231,7 @@ namespace LcRest
                     entry.type,
                     entry.category,
                     entry.expiryDate,
-                    locale.languageID,
-                    locale.countryID,
+                    locale.language,
                     entry.createdBy,
                     entry.modifiedBy
                 );

@@ -235,7 +235,7 @@ public class LcMessaging
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = T.PositionID
-					AND Pos.CountryID = @2 AND Pos.LanguageID = @1
+					AND Pos.language = @1
     "},
     { "where", @"
         WHERE   (T.CustomerUserID = @0 OR T.ProviderUserID = @0)
@@ -248,7 +248,7 @@ public class LcMessaging
     {
         var sql = String.Join(" ", sqlListMessageThread.Values);
         using (var db = Database.Open("sqlloco")) {
-            return db.Query(sql, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            return db.Query(sql, userID, LcRest.Locale.Current.ToString());
         }
     }
     public static Dictionary<string, dynamic> GetLastNewReadSentMessages(int userID, int maxPerType = 3)
@@ -272,7 +272,7 @@ public class LcMessaging
         using (var db = Database.Open("sqlloco")) {
             foreach (var sql in sqlList)
             {
-                dynamic d = db.Query(sql.Value, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                dynamic d = db.Query(sql.Value, userID, LcRest.Locale.Current.ToString());
                 if (d != null && d.Count > 0)
                     ret[sql.Key] = d;
             }
@@ -321,7 +321,7 @@ public class LcMessaging
                     sendReviewReminderToClient = record.sendReviewReminderToClient
                 };
             }
-            public static JobTitleMessagingFlags Get(int jobTitleID, int languageID, int countryID)
+            public static JobTitleMessagingFlags Get(int jobTitleID, string language)
             {
                 using (var db = new LcDatabase())
                 {
@@ -330,8 +330,8 @@ public class LcMessaging
                         coalesce(HIPAA, cast(0 as bit)) as hipaa,
                         coalesce(SendReviewReminderToClient, cast(0 as bit)) as sendReviewReminderToClient
                     FROM positions
-                    WHERE positionID = @0 AND languageID = @1 AND countryID = @2
-                ", jobTitleID, languageID, countryID));
+                    WHERE positionID = @0 AND language = @1
+                ", jobTitleID, language));
                 }
             }
         }
@@ -388,12 +388,12 @@ public class LcMessaging
         void prepareData(int bookingID)
         {
             info = LcEmailTemplate.GetBookingInfo(bookingID);
-            flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+            flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.language);
         }
         void prepareData(LcEmailTemplate.BookingEmailInfo info)
         {
             this.info = info;
-            flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
+            flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.language);
         }
         protected virtual string getSenderForClient()
         {

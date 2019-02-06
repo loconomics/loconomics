@@ -57,10 +57,8 @@ namespace LcRest
                 return db.Query(@"
                 DECLARE @searchTerm AS varchar(150)
                 SET @searchTerm = @0
-                DECLARE @LanguageID int  
-                SET @LanguageID = @1
-                DECLARE @CountryID int
-                SET @CountryID = @2
+                DECLARE @Language nvarchar(42)
+                SET @Language = @1
 
                 SELECT TOP 25
                     PositionID as jobTitleID
@@ -71,8 +69,7 @@ namespace LcRest
                     positions
                 WHERE
                     Active = 1
-                    AND LanguageID = @LanguageID
-                    AND CountryID = @CountryID
+                    AND Language = @Language
                     AND Approved = 1 
                     AND (PositionSingular like '%' + @searchTerm + '%'
                     OR PositionDescription like '%' + @searchTerm + '%'
@@ -81,7 +78,7 @@ namespace LcRest
                     OR Aliases like '%' + @searchTerm + '%')
                 ORDER BY
                     DisplayRank, PositionSingular
-                ", searchTerm, locale.languageID, locale.countryID);
+                ", searchTerm, locale.ToString());
             }
         }
         public static JobTitleSearchResult SearchByJobTitleID(int jobTitleID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
@@ -97,10 +94,8 @@ namespace LcRest
                     SET @origLong=@2
                     DECLARE @SearchDistance int
                     SET @SearchDistance = @3
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @4
-                    DECLARE @CountryID int
-                    SET @CountryID = @5
+                    DECLARE @Language nvarchar(42)
+                    SET @Language = @4
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
 
                    SELECT
@@ -127,8 +122,7 @@ namespace LcRest
                             UserProfilePositions As UP
                         ON 
                             UP.PositionID = P.PositionID
-                            AND UP.LanguageID = P.LanguageID
-                            AND UP.CountryID = P.CountryID
+                            AND UP.Language = P.Language
                             AND UP.Active = 1
                             AND UP.StatusID = 1
                         LEFT JOIN
@@ -213,14 +207,13 @@ namespace LcRest
                     WHERE
                         P.PositionID = @jobTitleID
                         AND P.Active = 1
-                        AND P.LanguageID = @languageID
-                        AND P.CountryID = @countryID
+                        AND P.Language = @language
                         AND p.Approved = 1 
                         AND dbo.fx_IfNW(p.PositionSingular, null) is not null    
                     GROUP BY P.PositionID, P.PositionSingular, P.PositionPlural, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
 
                     ORDER BY count(distinct spc.userID) DESC, P.DisplayRank
-                                ", jobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID));
+                                ", jobTitleID, origLat, origLong, SearchDistance, locale.ToString()));
             }
         }
         public static IEnumerable<JobTitleSearchResult> SearchByCategoryID(int categoryID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
@@ -236,10 +229,8 @@ namespace LcRest
                     SET @origLong=@2
                     DECLARE @SearchDistance int
                     SET @SearchDistance = @3
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @4
-                    DECLARE @CountryID int
-                    SET @CountryID = @5
+                    DECLARE @Language nvarchar(42)
+                    SET @Language = @4
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
                     
                     SELECT
@@ -266,14 +257,12 @@ namespace LcRest
                             ServiceCategoryPosition As SCP
                         ON 
                             P.PositionID = SCP.PositionID
-                            AND P.LanguageID = SCP.LanguageID
-                            AND P.CountryID = SCP.CountryID
+                            AND P.Language = SCP.Language
                         LEFT JOIN
                             UserProfilePositions As UP
                         ON 
                             UP.PositionID = P.PositionID
-                            AND UP.LanguageID = P.LanguageID
-                            AND UP.CountryID = P.CountryID
+                            AND UP.Language = P.Language
                             AND UP.Active = 1
                             AND UP.StatusID = 1
                         LEFT JOIN
@@ -359,143 +348,16 @@ namespace LcRest
                         SCP.ServiceCategoryID = @categoryID
                         AND SCP.Active = 1
                         AND P.Active = 1
-                        AND P.LanguageID = @languageID
-                        AND P.CountryID = @countryID
+                        AND P.Language = @language
                         AND p.Approved = 1 
                         AND dbo.fx_IfNW(p.PositionSingular, null) is not null    
                     GROUP BY P.PositionID, P.PositionSingular, P.PositionPlural, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
                     ORDER BY count(distinct spc.userID) DESC, P.displayRank, P.PositionPlural
-                                ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
+                                ", categoryID, origLat, origLong, SearchDistance, locale.ToString())
                     .Select(FromDB);
             }
         }
-/* TODO Create ServiceSubCategoryPosition table in db and map positions and double-check query
-        
-        public static IEnumerable<JobTitleSearchResult> SearchBySubCategoryID(int ServiceSubCategoryID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
-        {
-            using (var db = new LcDatabase())
-            {
-                return db.Query(@"
-                    DECLARE @ServiceSubCategoryID AS int
-                    SET @ServiceSubCategoryID = @0
-                    DECLARE @origLat DECIMAL(12, 9)
-                    SET @origLat=@1
-                    DECLARE @origLong DECIMAL(12, 9)
-                    SET @origLong=@2
-                    DECLARE @SearchDistance int
-                    SET @SearchDistance = @3
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @4
-                    DECLARE @CountryID int
-                    SET @CountryID = @5
-                    DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
-                    SELECT	
-                            P.PositionID as jobTitleID
-                            ,P.PositionPlural as pluralName
-                            ,P.PositionSingular as singularName
-                            ,P.PositionDescription as description
-                            ,P.PositionSearchDescription as searchDescription
-                            ,coalesce((SELECT
-                                avg( (coalesce(UR2.Rating1, 0) + coalesce(UR2.Rating2, 0) + coalesce(UR2.Rating3, 0)) / 3) As AVR
-                              FROM UserReviews As UR2
-                                INNER JOIN
-                                  UserProfilePositions As UP2
-                                  ON UP2.PositionID = UR2.PositionID
-                                    AND UR2.ProviderUserID = UP2.UserID
-                                    AND UP2.LanguageID = @LanguageID
-                                    AND UP2.CountryID = @CountryID
-                                    AND UP2.Active = 1
-                                    AND UP2.StatusID = 1
-                              WHERE UR2.PositionID = P.PositionID
-                            ), 0) As averageRating
-                            ,coalesce(sum(ur.TotalRatings), 0) As totalRatings
-                            ,avg(US.ResponseTimeMinutes) As averageResponseTimeMinutes
-                            ,avg(PHR.HourlyRate) As averageHourlyRate
-                            ,count (distinct SPC.UserID) As serviceProfessionalsCount
 
-                    FROM	Positions As P
-                             INNER JOIN
-                            ServiceSubCategoryPosition As SSCP
-                              ON P.PositionID = SSCP.PositionID
-                                AND P.LanguageID = SSCP.LanguageID
-                                AND P.CountryID = SSCP.CountryID
-                             INNER JOIN
-                            ServiceSubCategory As SSC
-                              ON SSCP.ServiceCategoryID = SSC.ServiceCategoryID
-                                AND SSCP.LanguageID = SSC.LanguageID
-                                AND SSCP.CountryID = SSC.CountryID
-                             LEFT JOIN
-                            UserProfilePositions As UP
-                              ON UP.PositionID = P.PositionID
-                                AND UP.LanguageID = P.LanguageID
-                                AND UP.CountryID = P.CountryID
-                                AND UP.Active = 1
-                                AND UP.StatusID = 1
-                             LEFT JOIN
-                                (SELECT up.PositionID, up.UserID
-                                    FROM address a
-                                    INNER JOIN
-                                    serviceaddress sa
-                                    ON a.addressID=sa.addressID
-                                    INNER JOIN UserProfilePositions up
-                                    ON sa.userID = up.UserID
-                                    AND sa.PositionID = up.PositionID
-                                    WHERE 
-                                    a.Latitude IS NOT NULL
-                                    AND a.Longitude IS NOT NULL
-                                    AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
-                                    (CASE WHEN (ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
-                                    CONVERT(FLOAT, ServiceRadiusFromLocation)
-                                    ELSE 
-                                    @SearchDistance
-                                    END)
-                                    AND up.StatusID=1
-                                    AND up.Active=1
-                                ) As SPC
-                                    ON
-                                    UP.PositionID = SPC.PositionID
-                             LEFT JOIN
-                            UserReviewScores AS UR
-                              ON UR.UserID = UP.UserID
-                                AND UR.PositionID = UP.PositionID
-                             LEFT JOIN
-                            UserStats As US
-                              ON US.UserID = UP.UserID
-                             LEFT JOIN
-                            (SELECT	ProviderPackage.ProviderUserID As UserID
-                                    ,ProviderPackage.PositionID
-                                    ,min(PriceRate) As HourlyRate
-                                    ,LanguageID
-                                    ,CountryID
-                             FROM	ProviderPackage
-                             WHERE	ProviderPackage.Active = 1
-                                    AND ProviderPackage.PriceRateUnit like 'HOUR' 
-                                    AND ProviderPackage.PriceRate > 0
-                             GROUP BY	ProviderPackage.ProviderUserID, ProviderPackage.PositionID
-                                        ,LanguageID, CountryID
-                            ) As PHR
-                              ON PHR.UserID = UP.UserID
-                                AND PHR.PositionID = UP.PositionID
-                                AND PHR.LanguageID = P.LanguageID
-                                AND PHR.CountryID = P.CountryID
-                    WHERE
-                            SSC.ServiceSubCategoryID = @ServiceSubCategoryID
-                             AND
-                            SSCP.Active = 1
-                             AND
-                            P.Active = 1
-                             AND
-                            P.LanguageID = @LanguageID
-                             AND
-                            P.CountryID = @CountryID
-                            AND (p.Approved = 1 Or p.Approved is null) 
-							AND dbo.fx_IfNW(p.PositionSingular, null) is not null           
-                    GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
-                    ORDER BY serviceProfessionalsCount DESC, P.DisplayRank, P.PositionPlural  
-                                ", ServiceSubCategoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
-                    .Select(FromDB);
-            }
-        }*/
         public static IEnumerable<JobTitleSearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
@@ -511,10 +373,8 @@ namespace LcRest
                 //    SET @origLong=@2
                 //    DECLARE @SearchDistance int
                 //    SET @SearchDistance = @3
-                //    DECLARE @LanguageID int                    
-                //    SET @LanguageID = @4
-                //    DECLARE @CountryID int
-                //    SET @CountryID = @5
+                //    DECLARE @Language nvarchar(42)
+                //    SET @Language = @4
                 //    DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
 
                 //    SELECT
@@ -541,14 +401,12 @@ namespace LcRest
                 //            ServiceCategoryPosition As SCP
                 //        ON 
                 //            P.PositionID = SCP.PositionID
-                //            AND P.LanguageID = SCP.LanguageID
-                //            AND P.CountryID = SCP.CountryID
+                //            AND P.Language = SCP.Language
                 //        LEFT JOIN
                 //            UserProfilePositions As UP
                 //        ON 
                 //            UP.PositionID = P.PositionID
-                //            AND UP.LanguageID = P.LanguageID
-                //            AND UP.CountryID = P.CountryID
+                //            AND UP.Language = P.Language
                 //            AND UP.Active = 1
                 //            AND UP.StatusID = 1
                 //        LEFT JOIN
@@ -633,8 +491,7 @@ namespace LcRest
                 //    WHERE
                 //        SCP.Active = 1
                 //        AND P.Active = 1
-                //        AND P.LanguageID = @languageID
-                //        AND P.CountryID = @countryID
+                //        AND P.Language = @language
                 //        AND p.Approved = 1 
                 //        AND dbo.fx_IfNW(p.PositionSingular, null) is not null    
                 //        AND (p.PositionSingular like @SearchTerm
@@ -656,12 +513,10 @@ namespace LcRest
                 //                      ON SP.ServiceAttributeID = SA.ServiceAttributeID
                 //                        AND SP.Active = 1
                 //                        AND SA.Active = 1
-                //                        AND SA.LanguageID = SP.LanguageID
-                //                        AND SA.CountryID = SP.CountryID
+                //                        AND SA.Language = SP.Language
                 //                    WHERE
                 //                    SP.PositionID = p.PositionID
-                //                    AND SA.LanguageID = @LanguageID
-                //                    AND SA.CountryID = @CountryID
+                //                    AND SA.Language = @Language
                 //                    AND (
                 //                     SA.Name like @SearchTerm
                 //                      OR
@@ -673,16 +528,14 @@ namespace LcRest
 
                 //    ORDER BY count(distinct spc.userID) DESC, P.displayRank
 
-                //                ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
+                //                ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.ToString())
                 //    .Select(FromDB);
 
                 return db.Query(@"
                     DECLARE @SearchTerm varchar(150)
                     SET @SearchTerm = @0
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @1
-                    DECLARE @CountryID int
-                    SET @CountryID = @2
+                    DECLARE @Language nvarchar(42)
+                    SET @Language = @1
                   
                     SELECT
                         P.PositionID as jobTitleID
@@ -703,8 +556,7 @@ namespace LcRest
                         Positions As P
                     WHERE
                         P.Active = 1
-                        AND P.LanguageID = @languageID
-                        AND P.CountryID = @countryID
+                        AND P.Language = @language
                         AND P.Approved = 1 
                         AND dbo.fx_IfNW(p.PositionSingular, null) is not null    
                         AND (p.PositionSingular like @SearchTerm
@@ -721,7 +573,7 @@ namespace LcRest
                         )
                     GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
                     ORDER BY P.displayRank, P.PositionSingular
-                    ", "%" + SearchTerm + "%", locale.languageID, locale.countryID)
+                    ", "%" + SearchTerm + "%", locale.ToString())
                     .Select(FromDB);
             }
         }

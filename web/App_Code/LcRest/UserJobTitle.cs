@@ -147,18 +147,17 @@ namespace LcRest
             FROM
                 userprofilepositions as u
                     INNER JOIN
-                positions on u.positionID = positions.positionID AND positions.languageID = @1 and positions.countryID = @2
+                positions on u.positionID = positions.positionID AND positions.language = @1
             WHERE
                 u.UserID = @0
-                    AND u.LanguageID = @1
-                    AND u.CountryID = @2
+                    AND u.Language = @1
                     AND u.Active = 1                   
                     -- Double check for approved positions
                     AND (positions.Active = 1 OR positions.positionID = -2)
                     AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
         
-        private const string sqlAndJobTitleID = " AND (@3 = -1 OR @3 = u.PositionID) "; 
+        private const string sqlAndJobTitleID = " AND (@2 = -1 OR @2 = u.PositionID) "; 
         private const string sqlAndActiveOrInactiveProfiles = " AND u.StatusID > 0 ";
         private const string sqlAndActiveProfiles = " AND u.StatusID = 1 ";
         private const string sqlAndBookMeButtonReady = " AND bookMeButtonReady = 1";
@@ -175,20 +174,19 @@ namespace LcRest
         /// <param name="jobTitleID"></param>
         public static UserJobTitle GetItem(int userID, int jobTitleID)
         {
-            return GetItem(userID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID(), jobTitleID, true, false);
+            return GetItem(userID, LcRest.Locale.Current.ToString(), jobTitleID, true, false);
         }
 
         /// <summary>
         /// Return a user job title based on userID and jobTitleID
         /// </summary>
         /// <param name="userID">userID of the professional</param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <param name="jobTitleID">jobTitleID of the user job title</param>
         /// <param name="includeDeactivatedProfile">if true, will include all non-deleted user job titles. If false, will only include those which are publicly active</param>
         /// <param name="bookMeButtonRequired"></param>
         /// <returns></returns>
-        public static UserJobTitle GetItem(int userID, int languageID, int countryID, int jobTitleID = -1, bool includeDeactivatedProfile = false, bool bookMeButtonRequired = false)
+        public static UserJobTitle GetItem(int userID, string language, int jobTitleID = -1, bool includeDeactivatedProfile = false, bool bookMeButtonRequired = false)
         {
             var sql = includeDeactivatedProfile ? sqlGetActiveOrInactiveItem : sqlGetActiveItem;
 
@@ -199,7 +197,7 @@ namespace LcRest
 
             using (var db = new LcDatabase())
             {
-                var userJobTitle = FromDB(db.QuerySingle(sql, userID, languageID, countryID, jobTitleID));
+                var userJobTitle = FromDB(db.QuerySingle(sql, userID, language, jobTitleID));
                 
                 if(userJobTitle != null)
                 {
@@ -216,16 +214,14 @@ namespace LcRest
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="jobTitleID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static Boolean HasItem(int userID, int jobTitleID, int? languageID = null, int? countryID = null)
+        public static Boolean HasItem(int userID, int jobTitleID, string language = null)
         {
-            languageID = languageID ?? LcData.GetCurrentLanguageID();
-            countryID = countryID ?? LcData.GetCurrentCountryID();
+            language = language ?? LcRest.Locale.Current.ToString();
             using (var db = new LcDatabase())
             {
-                return db.QuerySingle(sqlGetActiveOrInactiveItem, userID, languageID, countryID, jobTitleID) != null;
+                return db.QuerySingle(sqlGetActiveOrInactiveItem, userID, language, jobTitleID) != null;
             }
         }
 
@@ -233,7 +229,7 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                var userJobTitles = db.Query(sql, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID())
+                var userJobTitles = db.Query(sql, userID, LcRest.Locale.Current.ToString())
                                     .Select(FromDB);
 
                 return BindAlerts(userJobTitles, Alert.IndexByPosition(Alert.GetActive(userID)));
@@ -337,8 +333,7 @@ namespace LcRest
                         collectPaymentAtBookMeButton = @7,
                         UpdatedDate = getdate()
                 WHERE   UserID = @0 AND PositionID = @1
-                    AND LanguageID = @2
-                    AND CountryID = @3
+                    AND language = @2
             ";
 
             using (var db = new LcDatabase())
@@ -346,8 +341,7 @@ namespace LcRest
                 var affected = db.Execute(sqlUpdate,
                     userJobTitle.userID,
                     userJobTitle.jobTitleID,
-                    LcData.GetCurrentLanguageID(),
-                    LcData.GetCurrentCountryID(),
+                    LcRest.Locale.Current.ToString(),
                     userJobTitle.intro,
                     userJobTitle.cancellationPolicyID,
                     userJobTitle.instantBooking,
@@ -369,9 +363,8 @@ namespace LcRest
                     SET     StatusID = 0,
                             UpdatedDate = getdate()
                     WHERE UserID = @0 AND PositionID = @1
-                     AND LanguageID = @2
-                     AND CountryID = @3
-                ", userID, jobTitleID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                     AND Language = @2
+                ", userID, jobTitleID, LcRest.Locale.Current.ToString());
 
                 // Task done? Almost a record must be affected to be a success
                 return affected > 0;
@@ -395,11 +388,10 @@ namespace LcRest
                         SET     StatusID = 3,
                                 UpdatedDate = getdate()
                         WHERE UserID = @0 AND PositionID = @1
-                            AND LanguageID = @2
-                            AND CountryID = @3
+                            AND Language = @2
                     ",
                     userID, jobTitleID,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                    LcRest.Locale.Current.ToString());
 
                 // Task done? Almost a record must be affected to be a success
                 return affected > 0;
@@ -439,10 +431,9 @@ namespace LcRest
                             SET     StatusID = 2,
                                     UpdatedDate = getdate()
                             WHERE UserID = @0 AND PositionID = @1
-                                AND LanguageID = @2
-                                AND CountryID = @3
+                                AND Language = @2
                         ", userID, jobTitleID,
-                        LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                        LcRest.Locale.Current.ToString());
                 }
 
                 // It executes the profile activation that checks that all required alerts must be off to activate:
@@ -467,10 +458,9 @@ namespace LcRest
                                 SET     StatusID = @2,
                                         UpdatedDate = getdate()
                                 WHERE UserID = @0 AND PositionID = @1
-                                    AND LanguageID = @3
-                                    AND CountryID = @4
+                                    AND Language = @3
                             ", userID, jobTitleID, statusID,
-                            LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                            LcRest.Locale.Current.ToString());
                     }
 
                     return false;

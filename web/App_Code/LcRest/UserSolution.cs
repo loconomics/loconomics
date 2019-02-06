@@ -26,18 +26,16 @@ namespace LcRest
                 var sql = "SELECT " + Solution.sqlFields + Solution.sqlFrom + @"
                     INNER JOIN UserSolution As U
                      ON U.solutionID = S.solutionID
-                        AND U.languageID = S.languageID
-                        AND U.countryID = S.countryID
+                        AND U.language = S.language
                     WHERE
                         S.Active = 1
                          AND U.Active = 1
                          AND U.userID = @0
                          AND U.userListingID = @1
-                         AND S.languageID = @2
-                         AND S.countryID = @3
+                         AND S.language = @2
                     ORDER BY U.DisplayRank
                 ";
-                return db.Query(sql, userID, userListingID, locale.languageID, locale.countryID).Select(Solution.FromDB);
+                return db.Query(sql, userID, userListingID, locale.ToString()).Select(Solution.FromDB);
             }
         }
         #endregion
@@ -48,8 +46,7 @@ namespace LcRest
             SET Active = 0
             WHERE UserID = @0
                 AND UserListingID = @1
-                AND LanguageID = @2
-                AND CountryID = @3
+                AND Language = @2
         ";
         const string sqlSet = @"
             UPDATE UserSolution
@@ -59,16 +56,14 @@ namespace LcRest
                 ModifiedBy = @6
             WHERE UserID = @0
                 AND UserListingID = @1
-                AND LanguageID = @2
-                AND CountryID = @3
-                AND SolutionID = @4
+                AND Language = @2
+                AND SolutionID = @3
 
             IF @@ROWCOUNT = 0 BEGIN
                 INSERT INTO UserSolution (
                     UserID
                     ,UserListingID
-                    ,LanguageID
-                    ,CountryID
+                    ,Language
                     ,SolutionID
                     ,DisplayRank
                     ,CreatedDate
@@ -81,10 +76,9 @@ namespace LcRest
                     ,@2
                     ,@3
                     ,@4
+                    ,getdate()
+                    ,getdate()
                     ,@5
-                    ,getdate()
-                    ,getdate()
-                    ,@6
                     ,1
                 )
             END
@@ -97,8 +91,7 @@ namespace LcRest
                 db.QueryValue(sqlSet,
                     userID,
                     userListingID,
-                    locale.languageID,
-                    locale.countryID,
+                    locale.ToString(),
                     solutionID,
                     displayRank,
                     userID.ToString()
@@ -111,7 +104,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 db.Execute("BEGIN TRANSACTION");
-                db.Execute(sqlSoftDeleteByUserListing, userID, userListingID, locale.languageID, locale.countryID);
+                db.Execute(sqlSoftDeleteByUserListing, userID, userListingID, locale.ToString());
                 var displayRank = 1;
                 foreach (var solutionID in sortedSolutions)
                 {
@@ -132,7 +125,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 var listing = db.QuerySingle(@"
-                    SELECT TOP 1 userID, positionID as jobTitleID, languageID, countryID
+                    SELECT TOP 1 userID, positionID as jobTitleID, language
                     FROM userprofilepositions WHERE userListingID=@0",
                     userListingID);
                 if (listing != null)
@@ -141,9 +134,9 @@ namespace LcRest
                         SELECT solutionID, displayRank
                         FROM JobTitleSolution
                         WHERE DefaultSelected = 1
-                            AND jobTitleID=@0 AND languageID=@1 AND countryID=@2",
-                        listing.jobTitleID, listing.languageID, listing.countryID);
-                    var locale = Locale.From(listing.languageID, listing.countryID);
+                            AND jobTitleID=@0 AND language=@1",
+                        listing.jobTitleID, listing.language);
+                    var locale = Locale.From(listing.language);
                     db.Execute("BEGIN TRANSACTION");
                     foreach (var solution in defaultSolutions)
                     {

@@ -40,20 +40,15 @@ namespace LcRest
                 positionpricingtype
             WHERE
                 PositionID = @0
-                 AND LanguageID = @1
-                 AND CountryID = @2
+                 AND Language = @1
                  AND Active = 1
         ";
         #endregion
-        public static IEnumerable<JobTitlePricingType> GetList(int jobTitleID, Locale locale)
-        {
-            return GetList(jobTitleID, locale.languageID, locale.countryID);
-        }
-        public static IEnumerable<JobTitlePricingType> GetList(int jobTitleID, int languageID, int countryID)
+        public static IEnumerable<JobTitlePricingType> GetList(int jobTitleID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, jobTitleID, languageID, countryID).Select(FromDB);
+                return db.Query(sqlGetList, jobTitleID, language).Select(FromDB);
             }
         }
         #endregion

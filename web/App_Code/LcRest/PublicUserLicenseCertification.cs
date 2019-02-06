@@ -27,7 +27,7 @@ namespace LcRest
         public string statusDescription;
         public DateTime? lastVerifiedDate;
         public string submittedImageLocalURL;
-        public int languageID;
+        public string language;
         #endregion
 
         #region Link
@@ -35,7 +35,7 @@ namespace LcRest
 
         public void FillLicenseCertification()
         {
-            licenseCertification = LicenseCertification.GetItem(licenseCertificationID, languageID);
+            licenseCertification = LicenseCertification.GetItem(licenseCertificationID, language);
         }
         #endregion
         #region Instances
@@ -62,7 +62,7 @@ namespace LcRest
                 statusDescription = record.statusDescription,
                 lastVerifiedDate = record.lastVerifiedDate,
                 submittedImageLocalURL = record.submittedImageLocalURL,
-                languageID = record.languageID
+                language = record.language
             };
             item.FillLicenseCertification();
             return item;
@@ -76,8 +76,8 @@ namespace LcRest
             SET @ProviderUserID = @0         
             DECLARE @PositionID AS int
             SET @PositionID = @1   
-            DECLARE @languageID AS int
-            SET @languageID = @2  
+            DECLARE @language AS nvarchar(42)
+            SET @language = @2  
                        
             SELECT               
                 V.ProviderUserID As userID
@@ -96,7 +96,7 @@ namespace LcRest
                 ,VS.verificationStatusDisplayDescription as statusDescription
                 ,V.lastVerifiedDate
                 ,V.submittedImageLocalURL
-                ,@languageID as languageID
+                ,@language as language
             FROM
                 userlicensecertifications As V
                  INNER JOIN
@@ -107,7 +107,7 @@ namespace LcRest
                  AND
                 V.PositionID = @PositionID
                  AND 
-                VS.LanguageID = @languageID 
+                VS.Language = @language
                 AND 
                 V.VerificationStatusID = 1 
                 AND
@@ -115,11 +115,11 @@ namespace LcRest
         ";
         #endregion
 
-        public static IEnumerable<PublicUserLicenseCertification> GetList(int userID, int jobTitleID, int languageID)
+        public static IEnumerable<PublicUserLicenseCertification> GetList(int userID, int jobTitleID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, userID, jobTitleID, languageID).Select(FromDB);
+                return db.Query(sqlGetList, userID, jobTitleID, language).Select(FromDB);
             }
         }
         #endregion

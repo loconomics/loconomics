@@ -55,8 +55,8 @@ namespace LcRest
 		                SecondLastName,
 
                         marketingSource,
-                        preferredLanguageID,
-                        preferredCountryID,
+                        preferredLanguage,
+                        signupCountryCode,
 
 		                CreatedDate,
 		                UpdatedDate,
@@ -97,8 +97,8 @@ namespace LcRest
                 email,
                 isServiceProfessional,
                 marketingSource,
-                locale.languageID,
-                locale.countryID);
+                locale.ToString(),
+                locale.countryCode);
             }
         }
         /// <summary>
@@ -187,8 +187,8 @@ namespace LcRest
 		                SecondLastName,
 
                         marketingSource,
-                        preferredLanguageID,
-                        preferredCountryID,
+                        preferredLanguage,
+                        signupCountryCode,
 
                         mobilePhone,
 
@@ -236,8 +236,8 @@ namespace LcRest
                 firstName,
                 lastName,
                 marketingSource,
-                locale.languageID,
-                locale.countryID,
+                locale.ToString(),
+                locale.countryCode,
                 phone);
             }
         }

@@ -22,7 +22,7 @@ public class RestMyServiceAttributes : RestWebPage
             var jobTitleID = UrlData[0].AsInt();
             var locale = LcRest.Locale.Current;
 
-            return LcRest.UserJobTitleServiceAttributes.Get(userId, jobTitleID, locale.languageID, locale.countryID);
+            return LcRest.UserJobTitleServiceAttributes.Get(userId, jobTitleID, locale.ToString());
         }
 
         // DOUBT: API to filter by categoryID too? /jobTitleID/categoryID and get only array if serviceAttributeIDs??
@@ -51,8 +51,7 @@ public class RestMyServiceAttributes : RestWebPage
             data.userID = WebSecurity.CurrentUserId;
             data.jobTitleID = UrlData[0].AsInt();
             var locale = LcRest.Locale.Current;
-            data.languageID = locale.languageID;
-            data.countryID = locale.countryID;
+            data.language = locale.ToString();
 
             LcRest.UserJobTitleServiceAttributes.Set(data);
 

@@ -64,16 +64,16 @@ public static class RESTExtensions
                 return;
             }
 
-            var user = LcData.UserInfo.GetUserRow();
+            var user = LcRest.UserProfile.Get(WebSecurity.CurrentUserId);
 
             if (// Provider
                 type.HasFlag(LcData.UserInfo.UserType.Provider) &&
-                user.IsProvider == true ||
+                user.isServiceProfessional ||
                 // Admin
                 type.HasFlag(LcData.UserInfo.UserType.Admin) &&
-                user.IsAdmin == true ||
+                user.isAdmin ||
                 type.HasFlag(LcData.UserInfo.UserType.Client) &&
-                user.IsCustomer == true)
+                user.isClient)
             {
                 // valid
                 return;

@@ -32,8 +32,7 @@ public static partial class LcPricingModel
         /// </summary>
         public decimal HourlySurcharge;
         public bool IsPhone;
-        public int LanguageID;
-        public int CountryID;
+        public string Language;
         public bool Active;
         public int visibleToClientID;
         public List<int> ServiceAttributes = new List<int>();
@@ -60,8 +59,7 @@ public static partial class LcPricingModel
             PriceRate = package.PriceRate;
             PriceRateUnit = package.PriceRateUnit;
             IsPhone = package.IsPhone;
-            LanguageID = package.LanguageID;
-            CountryID = package.CountryID;
+            Language = package.Language;
             Active = package.Active;
             visibleToClientID = package.visibleToClientID;
         }
@@ -95,8 +93,7 @@ public static partial class LcPricingModel
                     PricingTypeID
                     ,ProviderUserID
                     ,PositionID
-                    ,LanguageID
-                    ,CountryID
+                    ,Language
                     ,ProviderPackageName
                     ,ProviderPackageDescription
                     ,ProviderPackagePrice
@@ -174,12 +171,12 @@ public static partial class LcPricingModel
                 WHERE   UserId = @0 AND PositionID = @1
                             -- NO filter by category on update here: AND ServiceAttributeCategoryID = @--2
                             AND ServiceAttributeID = @2
-                            AND LanguageID = @3 AND CountryID = @4
+                            AND Language = @3
 
                 IF @@rowcount = 0
                 BEGIN
                     INSERT INTO userprofileserviceattributes (UserID,
-                        PositionID, ServiceAttributeCategoryID, ServiceAttributeID, LanguageID, CountryID, CreateDate, UpdatedDate, 
+                        PositionID, ServiceAttributeCategoryID, ServiceAttributeID, Language, CreateDate, UpdatedDate, 
                         ModifiedBy, Active)
                     VALUES (@0, @1, 
                         /* category select first for attribute */
@@ -188,16 +185,15 @@ public static partial class LcPricingModel
                                 INNER JOIN
                             serviceattributecategory As sc
                                 ON a.ServiceAttributeCategoryID = sc.ServiceAttributeCategoryID
-                                AND a.LanguageID = sc.LanguageID AND a.CountryID = sc.CountryID
+                                AND a.Language = sc.Language
                             WHERE a.PositionID = @1
                             AND sc.EligibleForPackages = 1
                             AND a.Active = 1
                             AND sc.Active = 1
-                            AND a.LanguageID = @3
-                            AND a.CountryID = @3
+                            AND a.Language = @3
                             -- THIS ATTRIBUTE IS IN!
                             AND a.ServiceAttributeID = @2),
-                        @2, @3, @4, getdate(), getdate(), 'sys', 1)
+                        @2, @3, getdate(), getdate(), 'sys', 1)
                 END
             COMMIT TRAN
         ";
@@ -221,8 +217,7 @@ public static partial class LcPricingModel
                     this.PricingTypeID,
                     this.ProviderUserID,
                     this.PositionID, 
-                    this.LanguageID,
-                    this.CountryID,
+                    this.Language,
                     this.Name,
                     this.Description,
                     this.Price,
@@ -254,8 +249,7 @@ public static partial class LcPricingModel
                             this.ProviderUserID,
                             this.PositionID,
                             att,
-                            this.LanguageID,
-                            this.CountryID
+                            this.Language
                         );
                     }
                 }

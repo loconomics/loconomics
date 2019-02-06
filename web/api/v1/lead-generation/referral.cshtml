@@ -36,8 +36,8 @@
         - lastName: ''
         - secondLastName: ''
         - marketingSource: context.url.queryString + '&lead-generation=referral'
-        - preferredLanguageID: context.locale.languageID
-        - preferredCountryID: context.locale.countryID
+        - preferredLanguage: context.locale.ToString()
+        - preferredCountry: context.locale.countryCode
         - createdDate: DateTime.Now
         - updatedDate: DateTime.Now
         - active: true
@@ -112,8 +112,8 @@
         - secondLastNme: ''
         - mobilePhone: data.phone
         - marketingSource: context.url.queryString + '&lead-generation=referral'
-        - preferredLanguageID: context.locale.languageID
-        - preferredCountryID: context.locale.countryID
+        - preferredLanguage: context.locale.ToString()
+        - preferredCountry: context.locale.countryCode
         - createdDate: DateTime.Now
         - updatedDate: DateTime.Now
         - active: true

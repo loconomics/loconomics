@@ -42,30 +42,30 @@
                 var locale = LcRest.Locale.Current;
                 if (String.IsNullOrEmpty(term))
                 {
-                    return LcRest.Solution.List(locale.languageID, locale.countryID);
+                    return LcRest.Solution.List(locale.ToString());
                 }
                 else
                 {
-                    return LcRest.Solution.Search(term, locale.languageID, locale.countryID);
+                    return LcRest.Solution.Search(term, locale.ToString());
                 }
             }
             else if (UrlData.Count == 2 && UrlData[0] == "search-subcategory")
             {
                 var id = UrlData[1].AsInt();
                 var locale = LcRest.Locale.Current;
-                return LcRest.Solution.BySearchSubcategory(id, locale.languageID, locale.countryID);
+                return LcRest.Solution.BySearchSubcategory(id, locale.ToString());
             }
             else if (UrlData.Count == 2 && UrlData[0] == "job-title")
             {
                 var id = UrlData[1].AsInt();
                 var locale = LcRest.Locale.Current;
-                return LcRest.Solution.ByJobTitle(id, locale.languageID, locale.countryID);
+                return LcRest.Solution.ByJobTitle(id, locale.ToString());
             }
             else if (UrlData[0].IsInt())
             {
                 var id = UrlData[0].AsInt();
                 var locale = LcRest.Locale.Current;
-                return LcRest.Solution.Get(id, locale.languageID, locale.countryID);
+                return LcRest.Solution.Get(id, locale.ToString());
             }
 
             throw new HttpException(404, "Not Found");

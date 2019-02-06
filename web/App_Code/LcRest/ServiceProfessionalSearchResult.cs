@@ -101,10 +101,8 @@ namespace LcRest
                     SET @origLong=@2
                     DECLARE @SearchDistance int
                     SET @SearchDistance = @3
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @4
-                    DECLARE @CountryID int
-                    SET @CountryID = @5
+                    DECLARE @Language nvarchar(42)
+                    SET @Language = @4
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
 
                      SELECT 
@@ -118,8 +116,8 @@ namespace LcRest
                         u.businessName,
                         upp.InstantBooking,
                         p.PositionSingular As jobTitleNameSingular,
-                        otherJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.PositionID != @JobTitleID AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
-                        allJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
+                        otherJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.Language = @Language AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.PositionID != @JobTitleID AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
+                        allJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.Language = @Language AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
                         
                         MIN(ROUND(@orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371,1)) as distance
                     FROM dbo.users u 
@@ -131,14 +129,11 @@ namespace LcRest
                     INNER JOIN
                         address a
                         ON a.addressID=sa.addressID
-                        AND a.CountryID=upp.CountryID
                     INNER JOIN  positions p 
                         ON upp.PositionID = p.PositionID 
-                        AND upp.LanguageID = p.LanguageID
-                        AND upp.CountryID = p.CountryID 
+                        AND upp.Language = p.Language
                     WHERE
-                        upp.LanguageID = @LanguageID
-                        AND upp.CountryID = @CountryID
+                        upp.Language = @Language
                         AND u.Active = 1
                         AND upp.Active = 1
                         AND upp.StatusID = 1
@@ -162,7 +157,7 @@ namespace LcRest
                         upp.InstantBooking,
                         p.PositionSingular,
                         u.updatedDate
-                    ", JobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
+                    ", JobTitleID, origLat, origLong, SearchDistance, locale.ToString())
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, visibility));
             }
         }
@@ -181,10 +176,8 @@ namespace LcRest
                     SET @origLong=@2
                     DECLARE @SearchDistance int
                     SET @SearchDistance = @3
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @4
-                    DECLARE @CountryID int
-                    SET @CountryID = @5
+                    DECLARE @Language nvarchar(42)
+                    SET @Language = @4
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
 
                  SELECT 
@@ -198,8 +191,8 @@ namespace LcRest
                         u.businessName,
                         Cast(0 as bit) as instantBooking,
                         null As jobTitleNameSingular,
-                        otherJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
-                        allJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.LanguageID = @LanguageID AND P0.CountryID = @CountryID AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
+                        otherJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.Language = @Language AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
+                        allJobTitles=LTRIM(STUFF((SELECT ', ' + PositionSingular FROM Positions As P0 INNER JOIN UserProfilePositions As UP0 ON P0.PositionID = UP0.PositionID WHERE UP0.UserID = u.UserID AND P0.Language = @Language AND UP0.StatusID = 1 AND UP0.Active = 1 AND P0.Active = 1 AND P0.Approved <> 0 FOR XML PATH('')) , 1 , 1 , '' )),
                         MIN(ROUND(@orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371,1)) as distance
                     FROM dbo.users u 
                     INNER JOIN dbo.userprofilepositions upp 
@@ -210,14 +203,11 @@ namespace LcRest
                     INNER JOIN
                         address a
                         ON a.addressID=sa.addressID
-                        AND a.CountryID=upp.CountryID
                     INNER JOIN  positions p 
                         ON upp.PositionID = p.PositionID 
-                        AND upp.LanguageID = p.LanguageID
-                        AND upp.CountryID = p.CountryID 
+                        AND upp.Language = p.Language
                     WHERE
-                        upp.LanguageID = @LanguageID
-                        AND upp.CountryID = @CountryID
+                        upp.Language = @Language
                         AND u.Active = 1
                         AND upp.Active = 1
                         AND upp.StatusID = 1
@@ -240,7 +230,7 @@ namespace LcRest
                         u.publicBio,
                         u.businessName,
                         u.updatedDate
-                    ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
+                    ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.ToString())
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, visibility));
             }
         }

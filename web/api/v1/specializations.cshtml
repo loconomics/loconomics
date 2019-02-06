@@ -29,7 +29,7 @@
                 var term = Request.QueryString["searchTerm"];
                 var solutionID = Request.QueryString["solutionID"].AsInt(0);
                 var locale = LcRest.Locale.Current;
-                return LcRest.Specialization.AutocompleteSearch(term, solutionID, locale.languageID, locale.countryID);
+                return LcRest.Specialization.AutocompleteSearch(term, solutionID, locale.ToString());
             }
 
             throw new HttpException(404, "Not Found");

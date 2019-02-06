@@ -34,7 +34,7 @@ namespace LcRest
         public string submittedImageLocalURL;
         public string status; 
         public string statusDescription; 
-        public int languageID;
+        public string language;
         #endregion
 
         #region Link
@@ -42,7 +42,7 @@ namespace LcRest
 
         public void FillLicenseCertification()
         {
-            licenseCertification = LicenseCertification.GetItem(licenseCertificationID, languageID);
+            licenseCertification = LicenseCertification.GetItem(licenseCertificationID, language);
         }
         #endregion
             
@@ -75,7 +75,7 @@ namespace LcRest
                 submittedImageLocalURL = record.submittedImageLocalURL,
                 status = record.status,
                 statusDescription = record.statusDescription,
-                languageID = record.languageID,
+                language = record.language,
             };
             item.FillLicenseCertification();
             return item;
@@ -89,8 +89,8 @@ namespace LcRest
             SET @userID = @0      
             DECLARE @jobTitleID AS int
             SET @jobTitleID = @1        
-            DECLARE @languageID AS int
-            SET @languageID = @2  
+            DECLARE @language AS nvarchar(42)
+            SET @language = @2
                        
         	SELECT               
                 V.userLicenseCertificationID,
@@ -115,7 +115,7 @@ namespace LcRest
                 V.submittedImageLocalURL,
                 VS.verificationStatusName as status,
                 VS.verificationStatusDisplayDescription as statusDescription,
-                @languageID as languageID
+                @language as language
             FROM
                 userlicensecertifications As V
                  INNER JOIN
@@ -126,26 +126,26 @@ namespace LcRest
                  AND
                 V.PositionID = @jobTitleID
                  AND 
-                VS.LanguageID = @languageID 
+                VS.Language = @language
         ";
         const string sqlGetItem = sqlGetList + @"
             AND V.userLicenseCertificationID = @3
         ";
         #endregion
 
-        public static UserLicenseCertification Get(int userID, int jobTitleID, int languageID, int userLicenseCertificationID)
+        public static UserLicenseCertification Get(int userID, int jobTitleID, string language, int userLicenseCertificationID)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem, userID, jobTitleID, languageID, userLicenseCertificationID));
+                return FromDB(db.QuerySingle(sqlGetItem, userID, jobTitleID, language, userLicenseCertificationID));
             }
         }
 
-        public static IEnumerable<UserLicenseCertification> GetList(int userID, int jobTitleID, int languageID)
+        public static IEnumerable<UserLicenseCertification> GetList(int userID, int jobTitleID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, userID, jobTitleID, languageID).Select(FromDB);
+                return db.Query(sqlGetList, userID, jobTitleID, language).Select(FromDB);
             }
         }
         #endregion
@@ -275,7 +275,7 @@ namespace LcRest
             // For updates, needs to remove previous file
             if (item.userLicenseCertificationID > 0)
             {
-                var oldItem = Get(item.userID, item.jobTitleID, item.languageID, item.userLicenseCertificationID);
+                var oldItem = Get(item.userID, item.jobTitleID, item.language, item.userLicenseCertificationID);
                 if (oldItem == null)
                     // Not found:
                     return 0;

@@ -19,7 +19,7 @@ namespace LcRest
         public string howToGetLicensedUrl;
         public DateTime createdDate;
         public DateTime updatedDate;
-        public int languageID;
+        public string language;
         #endregion
 
         #region Instances
@@ -38,7 +38,7 @@ namespace LcRest
                 howToGetLicensedUrl = record.howToGetLicensedUrl,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
-                languageID = record.languageID
+                language = record.language
             };
         }
         #endregion
@@ -48,8 +48,8 @@ namespace LcRest
         const string sqlGetItem = @"         
             DECLARE @licensecertificationID AS int
             SET @licensecertificationID = @0       
-            DECLARE @languageID AS int
-            SET @languageID = @1 
+            DECLARE @language AS nvarchar(42)
+            SET @language = @1
                        
         	SELECT  
         		licenseCertificationID
@@ -60,23 +60,23 @@ namespace LcRest
                 ,howToGetLicensedUrl
                 ,createdDate
                 ,updatedDate
-                ,languageID
+                ,language
             FROM
                 licensecertification                                 
             WHERE
                 licensecertificationID = @licensecertificationID
                  AND 
-                languageID = @languageID 
+                language = @language
                  AND
                 active=1
         ";
         #endregion
 
-        public static LicenseCertification GetItem(int licenseCertificationID, int languageID)
+        public static LicenseCertification GetItem(int licenseCertificationID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem, licenseCertificationID, languageID));
+                return FromDB(db.QuerySingle(sqlGetItem, licenseCertificationID, language));
             }
         }
         #endregion

@@ -15,10 +15,9 @@ namespace LcRest
         /// Searchs for an exact match of a job title given a singular or plural name, and matching language
         /// </summary>
         /// <param name="jobTitleName"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static int? FindExactName(string jobTitleName, int languageID, int countryID)
+        public static int? FindExactName(string jobTitleName, string language)
         {
             if (String.IsNullOrWhiteSpace(jobTitleName))
             {

@@ -51,8 +51,7 @@ namespace LcRest
         public int accountStatusID;
         public DateTime createdDate;
         public DateTime updatedDate;
-        public int countryID;
-        public int languageID;
+        public string language;
 
         [JsonIgnore]
         public Owner owner;
@@ -121,8 +120,7 @@ namespace LcRest
                 accountStatusID = record.accountStatusID,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
-                languageID = record.languageID,
-                countryID = record.countryID,
+                language = record.language,
 
                 owner = new Owner
                 {
@@ -163,8 +161,8 @@ namespace LcRest
             ,accountStatusID
             ,createdDate
             ,Users.updatedDate
-            ,PreferredLanguageID as languageID
-            ,PreferredCountryID as countryID
+            ,PreferredLanguage as language
+            ,SignupCountryCode as signupCountryCode
 
             ,ownerStatusID
             ,ownerAnniversaryDate

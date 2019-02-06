@@ -32,8 +32,8 @@
     - lastName: ''
     - secondLastNme: ''
     - marketingSource: context.url.queryString + '&lead-generation=newsletter'
-    - preferredLanguageID: context.locale.languageID
-    - preferredCountryID: context.locale.countryID
+    - preferredLanguage: context.locale.ToString()
+    - preferredCountry: context.locale.countryCode
     - createdDate: DateTime.Now
     - updatedDate: DateTime.Now
     - active: true

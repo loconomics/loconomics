@@ -45,10 +45,8 @@ namespace LcRest
                 SET @userID = @0
                 DECLARE @jobTitleID AS int
                 SET @jobTitleID = @1
-                DECLARE @LanguageID int
-                SET @LanguageID = 1
-                DECLARE @CountryID int
-                SET @CountryID = 1
+                DECLARE @Language nvarchar(42)
+                SET @Language = 1
                     
                 ;";
 
@@ -60,8 +58,7 @@ namespace LcRest
                       WHERE ProviderPackage.Active = 1
                           AND ProviderUserID = @userID
                           AND PositionID = @jobTitleID
-                          AND LanguageID = @LanguageID
-                          AND CountryID = @CountryID
+                          AND Language = @Language
                           AND VisibleToClientID IN ({0}) -- placeholder for format
                     ) -- END ProviderPackageForClient
                 ,";
@@ -72,8 +69,7 @@ namespace LcRest
  					SELECT 
  							MSP.ProviderUserID
                             ,MSP.PositionID 
-                            ,MSP.LanguageID
-                            ,MSP.CountryID
+                            ,MSP.Language
                             ,MSP.minServicePrice
                             ,MSP.servicesCount
                             ,MUP.PriceRateUnit
@@ -84,8 +80,7 @@ namespace LcRest
                         (SELECT 
                             ProviderUserID
                             ,PositionID
-                            ,LanguageID
-                            ,CountryID
+                            ,Language
                             ,min(ProviderPackagePrice) as minServicePrice
                             ,servicesCount=
                             (SELECT count(*) FROM ProviderPackageForClient)
@@ -94,30 +89,28 @@ namespace LcRest
                             WHERE ProviderPackageForClient.PricingTypeID != 7
 
                          GROUP BY
-                            ProviderUserID, PositionID, LanguageID, CountryID) MSP
+                            ProviderUserID, PositionID, Language) MSP
                             LEFT JOIN
                             (
   							SELECT 
 	                            ProviderUserID
 	                            ,PositionID
-	                            ,LanguageID
-	                            ,CountryID
+	                            ,Language
 	                            ,PriceRateUnit
 	                            ,min(PriceRate) as minUnitRate
 	                            ,count(distinct ProviderPackageID) as UnitPackages
-	                            ,ROW_NUMBER() OVER (PARTITION BY ProviderUserID, PositionID, LanguageID, CountryID 
+	                            ,ROW_NUMBER() OVER (PARTITION BY ProviderUserID, PositionID, Language
                                   ORDER BY count(distinct ProviderPackageID) DESC)
                                   AS rn -- lowest RN means highest number of packages for a PriceRateUnit
                             FROM ProviderPackageForClient
                             WHERE PriceRate is not null
 
                          GROUP BY
-                            ProviderUserID, PositionID, LanguageID, CountryID, PriceRateUnit) as MUP
+                            ProviderUserID, PositionID, Language, PriceRateUnit) as MUP
                             ON
                             MSP.ProviderUserID=MUP.ProviderUserID
                             AND MSP.PositionID=MUP.PositionID
-                            AND MSP.LanguageID=MUP.LanguageID
-                            AND MSP.CountryID=MUP.CountryID
+                            AND MSP.Language=MUP.Language
                     )
                     SELECT
                     ProviderUserID as userID

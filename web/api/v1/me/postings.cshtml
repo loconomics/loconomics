@@ -77,16 +77,16 @@
             var userID = WebSecurity.CurrentUserId;
             if (UrlData.Count == 0)
             {
-                return LcRest.UserPosting.List(userID, locale.languageID, locale.countryID, true);
+                return LcRest.UserPosting.List(userID, locale.ToString(), true);
             }
             else if (UrlData.Count == 1 && UrlData[0].IsInt())
             {
                 var id = UrlData[0].AsInt(0);
-                return LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+                return LcRest.UserPosting.Get(userID, id, locale.ToString(), true);
             }
             else if (UrlData.Count == 1 && UrlData[0] == "suggested")
             {
-                return LcRest.UserPosting.ListSuggestedPostings(userID, locale.languageID, locale.countryID);
+                return LcRest.UserPosting.ListSuggestedPostings(userID, locale.ToString());
             }
             return base.Get();
         }
@@ -140,12 +140,12 @@
                 record.userPostingID = LcRest.UserPosting.Set(record, locale);
                 // Send emails to SendSuggestedPosting
                 // TODO Doubt: What if this take too long? (it waits for email to be sent?) Should be fast, without delay cause of emails
-                foreach (var prof in LcRest.UserPosting.ListSuggestedProfessionals(record.userPostingID, locale.languageID, locale.countryID))
+                foreach (var prof in LcRest.UserPosting.ListSuggestedProfessionals(record.userPostingID, locale.ToString()))
                 {
                     LcMessaging.SendSuggestedPosting(prof.userID, prof.email, record.userPostingID);
                 }
                 // Return the generated posting
-                return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
+                return LcRest.UserPosting.Get(userID, record.userPostingID, locale.ToString(), true);
             }
             else if (UrlData.Count == 2 && UrlData[0].IsInt() && UrlData[1] == "close")
             {
@@ -154,7 +154,7 @@
                 var locale = LcRest.Locale.Current;
                 LcRest.UserPosting.SetStatus(userID, id, LcEnum.UserPostingStatus.closed);
                 this.StatusCode = 200;
-                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+                var record = LcRest.UserPosting.Get(userID, id, locale.ToString(), true);
                 if (record == null)
                 {
                     throw new HttpException(404, "Not Found");
@@ -175,13 +175,13 @@
                 {
                     case "apply":
                         LcRest.UserPosting.SetServiceProfessionalReaction(id, userID, LcEnum.UserPostingReactionType.applied, message);
-                        var posting = LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.languageID, locale.countryID);
+                        var posting = LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.ToString());
                         var clientEmail = LcRest.UserEmail.Get(posting.userID).email;
                         LcMessaging.SendPostingApplicationToAuthor(posting.userID, clientEmail, id, userID, userEmail);
                         return posting;
                     case "discard":
                         LcRest.UserPosting.SetServiceProfessionalReaction(id, userID, LcEnum.UserPostingReactionType.discarded);
-                        return LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.languageID, locale.countryID);
+                        return LcRest.UserPosting.GetSuggestedPosting(id, userID, locale.ToString());
                     default:
                         throw new HttpException(404, "Not Found");
                 }
@@ -204,7 +204,7 @@
                 var locale = LcRest.Locale.Current;
                 var userID = WebSecurity.CurrentUserId;
 
-                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, false);
+                var record = LcRest.UserPosting.Get(userID, id, locale.ToString(), false);
                 if (record == null)
                 {
                     throw new HttpException(404, "Not Found");
@@ -238,7 +238,7 @@
 
                 // Update and return with db generated data
                 LcRest.UserPosting.Set(record, locale);
-                return LcRest.UserPosting.Get(userID, record.userPostingID, locale.languageID, locale.countryID, true);
+                return LcRest.UserPosting.Get(userID, record.userPostingID, locale.ToString(), true);
             }
             return base.Put();
         }
@@ -251,12 +251,12 @@
                 var locale = LcRest.Locale.Current;
                 var userID = WebSecurity.CurrentUserId;
                 // Get copy
-                var record = LcRest.UserPosting.Get(userID, id, locale.languageID, locale.countryID, true);
+                var record = LcRest.UserPosting.Get(userID, id, locale.ToString(), true);
                 if (record == null)
                 {
                     throw new HttpException(404, "Not Found");
                 }
-                LcRest.UserPosting.Delete(userID, id, locale.languageID, locale.countryID);
+                LcRest.UserPosting.Delete(userID, id, locale.ToString());
                 return record;
             }
             return base.Delete();

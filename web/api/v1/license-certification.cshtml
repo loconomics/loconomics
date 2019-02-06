@@ -16,9 +16,8 @@
         {           
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
                 var licenseCertificationID = UrlData[0].AsInt();
-                var languageID = LcRest.Locale.Current.languageID;
 
-                return LcRest.LicenseCertification.GetItem(licenseCertificationID, languageID);
+                return LcRest.LicenseCertification.GetItem(licenseCertificationID, LcRest.Locale.Current.ToString());
             }
 
             return base.Get();

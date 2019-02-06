@@ -473,89 +473,6 @@
 @*===============
  * Form Helpers
  *@
-@helper CountryOptions(string selectedCountryID = null)
-    {
-        var sql = @"
-        SELECT CountryID, CountryName, CountryCode
-        FROM    Country
-        WHERE   LanguageID=@0
-        ORDER BY CountryName
-    ";
-        using (var db = Database.Open("sqlloco"))
-        {
-            foreach (var country in db.Query(sql, LcData.GetCurrentLanguageID()))
-            {
-            <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID)>@country.CountryName</option>
-            }
-        }
-}
-@helper CountyOptions(string selectedCountyID = null)
-    {
-        var sql = @"
-        SELECT CountyID, CountyName, FIPSCode, StateProvinceID
-        FROM    County
-        ORDER BY CountyName
-    ";
-        using (var db = Database.Open("sqlloco"))
-        {
-            foreach (var county in db.Query(sql))
-            {
-            <option value="@county.CountyID" @IsSelected(selectedCountyID, county.CountyID)>@county.CountyName</option>
-            }
-        }
-}
-@helper StateProvinceOptions(int selectedStateID)
-    {
-    @StateProvinceOptions(selectedStateID.ToString())
-}
-@helper StateProvinceOptions(string selectedStateID)
-    {
-        var sql = @"
-        SELECT StateProvinceID, StateProvinceName, StateProvinceCode
-        FROM    StateProvince
-        WHERE   CountryID=@0
-        ORDER BY StateProvinceName
-    ";
-        using (var db = Database.Open("sqlloco"))
-        {
-            foreach (var state in db.Query(sql, LcData.GetCurrentCountryID()))
-            {
-            <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID)>@state.StateProvinceName</option>
-            }
-        }
-}
-@helper StateProvinceCodeOptions(string selectedStateCode)
-    {
-        var sql = @"
-        SELECT StateProvinceName, StateProvinceCode
-        FROM    StateProvince
-        WHERE   CountryID=@0
-        ORDER BY StateProvinceName
-    ";
-        using (var db = Database.Open("sqlloco"))
-        {
-            foreach (var state in db.Query(sql, LcData.GetCurrentCountryID()))
-            {
-            <option value="@state.StateProvinceCode" @IsSelected(selectedStateCode, state.StateProvinceCode)>@state.StateProvinceName</option>
-            }
-        }
-}
-@helper MonthOptions(string selectedMonth)
-    {
-        for (var i = 1; i < 13; i++)
-        {
-        <option @IsSelected(selectedMonth, i) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
-        }
-}
-@helper CardYearOptions(string selectedYear)
-    {
-        var year = DateTime.Today.Year;
-        var limitYear = year + 10;
-        for (; year < limitYear; year++)
-        {
-        <option @IsSelected(selectedYear, year) value="@(year)">@(year)</option>
-        }
-}
 @helper IsChecked(object valueA, object valueB)
     {
         if (LcUtils.AreEquivalents(valueA, valueB))
@@ -563,66 +480,9 @@
         @Html.Raw("checked='checked'")
         }
 }
-@helper IsSelected(object valueA, object valueB)
-    {
-        if (LcUtils.AreEquivalents(valueA, valueB))
-        {
-        @Html.Raw("selected='selected'")
-        }
-}
-@helper CssCurrent(string a, string b, string className = "current")
-    {
-        if (LcUtils.AreEquivalents(a, b))
-        {
-        @(className)
-        }
-}
-@functions{
-    static public string GetRedirectURLFromReferrer(string filter = "")
-    {
-        return Request["RedirectURL"] ??
-                (Request.UrlReferrer != null && Request.UrlReferrer.PathAndQuery.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) > 0 ?
-                Request.UrlReferrer.PathAndQuery : "");
-    }
-}
 @*=================
  * JavaScript
  *@
-@helper SetupStarRatingPlugin()
-    {
-    <script type="text/javascript">
-        if (!jqueryStarRatingPluginLoaded) var jqueryStarRatingPluginLoaded = false;
-        if (!jqueryStarRatingPluginLoaded) {
-            jqueryStarRatingPluginLoaded = true;
-            LC.load({ 
-                scripts: [
-                    LcUrl.AppPath + "Scripts/star-rating/jquery.MetaData.js",
-                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
-                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.css"
-                ]
-            });
-        } else {
-            if ($ && $().rating)
-                // Re-apply plugin (to new added elements without the plugin loaded):
-                $('input[type=radio].star').rating();
-        }
-    </script>
-}
-@helper GetValidationScripts()
-    {
-    <script type="text/javascript">
-        @GetValidationScriptCode()
-    </script>
-}
-@helper GetValidationScriptCode()
-    {
-    <text>
-    if (window['LC'] && LC['setupValidation'])
-        LC.setupValidation();
-    else
-        $(document).on('lcLibReady', function () { LC.setupValidation() });
-    </text>
-}
 @functions{
     /*========= JSON =============*/
     public static void ReturnJson(object jsondata, bool endResponse = true)

@@ -18,7 +18,7 @@
                 int userID = WebSecurity.CurrentUserId;
                 var jobTitleID = UrlData[0].AsInt();
 
-                return LcRest.JobTitleLicense.Get(userID, jobTitleID, LcRest.Locale.Current.languageID);
+                return LcRest.JobTitleLicense.Get(userID, jobTitleID, LcRest.Locale.Current.ToString());
             }
 
             return base.Get();

@@ -188,8 +188,7 @@
                         Request["preNotesToClient"],
                         Request["preNotesToSelf"],
                         Request["allowBookUnavailableTime"].AsBool(false),
-                        locale.languageID,
-                        locale.countryID
+                        locale.ToString()
                     ).bookingID;
                 }
                 else {

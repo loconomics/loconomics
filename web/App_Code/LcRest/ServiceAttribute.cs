@@ -37,15 +37,13 @@ namespace LcRest
 	        DECLARE @PositionID int
 	        -- CategoryID can be Zero (0) to retrieve all attributes without regarding the category
 	        DECLARE @ServiceAttributeCategoryID int
-	        DECLARE @LanguageID int = 1
-	        DECLARE @CountryID int = 1
+	        DECLARE @Language nvarchar(42)
 	        DECLARE @UserID int = 0
 
             SET @PositionID = @0
             SET @ServiceAttributeCategoryID = @1
-            SET @LanguageID = @2
-            SET @CountryID = @3
-            SET @UserID = @4
+            SET @Language = @2
+            SET @UserID = @3
 
             SELECT 
                 se.serviceAttributeCategoryID,
@@ -60,25 +58,21 @@ namespace LcRest
                  ON d.ServiceAttributeID = s.ServiceAttributeID 
                 JOIN serviceattributecategory se 
                  ON d.ServiceAttributeCategoryID = se.ServiceAttributeCategoryID 
-                    and d.LanguageID = se.LanguageID
-                    and d.CountryID = se.CountryID
-                    and se.LanguageID = s.LanguageID
-                    and se.CountryID = s.CountryID
+                    and d.Language = se.Language
+                    and se.Language = s.Language
 
                 INNER JOIN userprofileserviceattributes as us
                  ON d.ServiceAttributeID = us.ServiceAttributeID
                     and d.ServiceAttributeCategoryID = us.ServiceAttributeCategoryID
                     and d.PositionID = us.PositionID
-                    and d.LanguageID = us.LanguageID
-                    and d.CountryID = us.CountryID
+                    and d.Language = us.Language
                     and us.Active = 1
                     and us.UserID = @UserID
 
             WHERE  d.PositionID = @PositionID  
                 -- iagosrl: 2012-07-20, added the possibility of value Zero of CategoryID parameter to retrieve position attributes from all position-mapped categories
                 and (@ServiceAttributeCategoryID = 0 OR d.ServiceAttributeCategoryID = @ServiceAttributeCategoryID)
-                and d.LanguageID  = @LanguageID
-                and d.CountryID = @CountryID
+                and d.Language  = @Language
                 -- only actived
                 and d.Active = 1
                 and se.Active = 1
@@ -90,13 +84,11 @@ namespace LcRest
 	        DECLARE @PositionID int
 	        -- CategoryID can be Zero (0) to retrieve all attributes without regarding the category
 	        DECLARE @ServiceAttributeCategoryID int
-	        DECLARE @LanguageID int = 1
-	        DECLARE @CountryID int = 1
+	        DECLARE @Language nvarchar(42)
 
             SET @PositionID = @0
             SET @ServiceAttributeCategoryID = @1
-            SET @LanguageID = @2
-            SET @CountryID = @3
+            SET @Language = @2
 
             SELECT 
                 se.serviceAttributeCategoryID,
@@ -113,16 +105,13 @@ namespace LcRest
                  ON d.ServiceAttributeID = s.ServiceAttributeID 
                 JOIN serviceattributecategory se 
                  ON d.ServiceAttributeCategoryID = se.ServiceAttributeCategoryID 
-                    and d.LanguageID = se.LanguageID
-                    and d.CountryID = se.CountryID
-                    and se.LanguageID = s.LanguageID
-                    and se.CountryID = s.CountryID
+                    and d.Language = se.Language
+                    and se.Language = s.Language
 
             WHERE  d.PositionID = @PositionID  
                 -- iagosrl: 2012-07-20, added the possibility of value Zero of CategoryID parameter to retrieve position attributes from all position-mapped categories
                 and (@ServiceAttributeCategoryID = 0 OR d.ServiceAttributeCategoryID = @ServiceAttributeCategoryID)
-                and d.LanguageID  = @LanguageID
-                and d.CountryID = @CountryID
+                and d.Language = @Language
                 -- only actived
                 and d.Active = 1
                 and se.Active = 1
@@ -139,16 +128,15 @@ namespace LcRest
                 se.eligibleForPackages
             FROM serviceattributecategory se
             WHERE se.PositionReference = @0
-                AND se.LanguageID = @1
-                AND se.CountryID = @2
+                AND se.Language = @1
                 AND se.Active = 1
         ";
 
-        private static IEnumerable<dynamic> GetUserJobTitleListData(int userID, int jobTitleID, int serviceAttributeCategoryID, int languageID, int countryID)
+        private static IEnumerable<dynamic> GetUserJobTitleListData(int userID, int jobTitleID, int serviceAttributeCategoryID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetUserList, jobTitleID, serviceAttributeCategoryID, languageID, countryID, userID);
+                return db.Query(sqlGetUserList, jobTitleID, serviceAttributeCategoryID, language, userID);
             }
         }
 
@@ -158,12 +146,11 @@ namespace LcRest
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="jobTitleID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static IEnumerable<PublicServiceAttributeCategory> GetGroupedUserJobTitleAttributes(int jobTitleID, int userID, int languageID, int countryID)
+        public static IEnumerable<PublicServiceAttributeCategory> GetGroupedUserJobTitleAttributes(int jobTitleID, int userID, string language)
         {
-            return GetUserJobTitleListData(userID, jobTitleID, 0, languageID, countryID)
+            return GetUserJobTitleListData(userID, jobTitleID, 0, language)
             .GroupBy(att => (int)att.serviceAttributeCategoryID, (k, l) => (PublicServiceAttributeCategory)PublicServiceAttributeCategory.FromDB(l.First(), l));
         }
 
@@ -173,12 +160,11 @@ namespace LcRest
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="jobTitleID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static Dictionary<int, List<int>> GetGroupedUserJobTitleAttributeIDs(int jobTitleID, int userID, int languageID, int countryID)
+        public static Dictionary<int, List<int>> GetGroupedUserJobTitleAttributeIDs(int jobTitleID, int userID, string language)
         {
-            return GetUserJobTitleListData(userID, jobTitleID, 0, languageID, countryID)
+            return GetUserJobTitleListData(userID, jobTitleID, 0, language)
             .GroupBy(att => (int)att.serviceAttributeCategoryID, att => (int)att.serviceAttributeID)
             .ToDictionary(x => x.Key, x => x.ToList());
         }
@@ -189,22 +175,21 @@ namespace LcRest
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="jobTitleID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static IEnumerable<ServiceAttributeCategory> GetGroupedJobTitleAttributes(int jobTitleID, int languageID, int countryID)
+        public static IEnumerable<ServiceAttributeCategory> GetGroupedJobTitleAttributes(int jobTitleID, string language)
         {
             using (var db = new LcDatabase())
             {
                 // Get all existent attributes
-                var data = db.Query(sqlGetJobTitleList, jobTitleID, 0, languageID, countryID);
+                var data = db.Query(sqlGetJobTitleList, jobTitleID, 0, language);
 
                 // Get all existent attributes grouped by category
                 var catAtts = data.GroupBy(att => (int)att.serviceAttributeCategoryID, (k, l) => (ServiceAttributeCategory)ServiceAttributeCategory.FromDB(l.First(), l));
 
                 // But we still need to read all the categories that has no attributes still
                 // and were assigned to the job-title using the special [PositionReference] field.
-                var referenceCats = db.Query(sqlGetJobTitleReferenceCats, jobTitleID, languageID, countryID)
+                var referenceCats = db.Query(sqlGetJobTitleReferenceCats, jobTitleID, language)
                     .Select<dynamic, ServiceAttributeCategory>(c => ServiceAttributeCategory.FromDB(c, new List<dynamic>())).ToList();
                 // We iterate and return all the cats with attributes
                 // while creating and index of IDs

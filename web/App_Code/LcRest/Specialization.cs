@@ -24,9 +24,8 @@ namespace LcRest
             SELECT count(*) as c
             FROM Specialization
             WHERE specializationID IN (@0)
-                AND languageID = @1
-                AND countryID = @2
-                AND solutionID = @3
+                AND language = @1
+                AND solutionID = @2
         ";
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 var sql = db.UseListInSqlParameter(sqlCheckSpecializations, 0, sanitizedList, "-1");
-                if (sanitizedList.Count == (int)db.QueryValue(sql, null, locale.languageID, locale.countryID, solutionID))
+                if (sanitizedList.Count == (int)db.QueryValue(sql, null, locale.ToString(), solutionID))
                 {
                     // valid
                     return sanitizedList;
@@ -108,8 +107,7 @@ namespace LcRest
 
             INSERT INTO Specialization (
                 specializationID,
-                languageID,
-                countryID,
+                language,
                 solutionID,
                 name,
                 displayRank,
@@ -124,7 +122,6 @@ namespace LcRest
                 @0,
                 @1,
                 @2,
-                @3,
                 null,
                 getdate(),
                 getdate(),
@@ -132,7 +129,7 @@ namespace LcRest
                 -- By default, approval is not defined still (null)
                 null,
                 1,
-                @4
+                @3
             )
             SELECT @id as id
         ";
@@ -156,7 +153,7 @@ namespace LcRest
             using (var db = new LcDatabase(sharedDb))
             {
                 return (int)db.QueryValue(sqlInsertUserGenerated,
-                    locale.languageID, locale.countryID,
+                    locale.ToString(),
                     solutionID, name,
                     enteredByUserID);
             }
@@ -170,10 +167,9 @@ namespace LcRest
                 name
             FROM specialization
             WHERE (Approved = 1 OR Approved is null)
-                AND languageID = @0
-                AND countryID = @1
-                AND name like '%' + @2 + '%'
-                AND (@3 = 0 OR @3 = solutionID)
+                AND language = @0
+                AND name like '%' + @1 + '%'
+                AND (@2 = 0 OR @2 = solutionID)
             ORDER BY DisplayRank, name
         ";
         /// <summary>
@@ -181,16 +177,15 @@ namespace LcRest
         /// subset of fields needed (matches UserPostingSpecialization type).
         /// </summary>
         /// <param name="searchText"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
         public static IEnumerable<UserPostingSpecialization> AutocompleteSearch(
-            string searchText, int solutionID, int languageID, int countryID)
+            string searchText, int solutionID, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlAutocomplete;
-                return db.Query(sql, languageID, countryID, searchText, solutionID).Select(UserPostingSpecialization.FromDB);
+                return db.Query(sql, language, searchText, solutionID).Select(UserPostingSpecialization.FromDB);
             }
         }
         #endregion

@@ -27,8 +27,7 @@ namespace LcRest
         public int clientUserID;
         public int serviceProfessionalUserID;
         public int jobTitleID;
-        public int languageID;
-        public int countryID;
+        public string language;
         public int bookingStatusID;
         public int bookingTypeID;
         public int cancellationPolicyID;
@@ -146,8 +145,7 @@ namespace LcRest
                 clientUserID = booking.clientUserID,
                 serviceProfessionalUserID = booking.serviceProfessionalUserID,
                 jobTitleID = booking.jobTitleID,
-                languageID = booking.languageID,
-                countryID = booking.countryID,
+                language = booking.language,
                 bookingStatusID = booking.bookingStatusID,
                 bookingTypeID = booking.bookingTypeID,
                 cancellationPolicyID = booking.cancellationPolicyID,
@@ -208,8 +206,7 @@ namespace LcRest
         /// - clientUserID
         /// - serviceProfessionalUserID
         /// - jobTitleID
-        /// - languageID
-        /// - countryID
+        /// - language
         /// - bookingStatusID (defaults to 'incomplete' status, must be later overwritted when saving it)
         /// - bookingTypeID
         /// - cancellationTypeID
@@ -221,14 +218,13 @@ namespace LcRest
         /// <param name="jobTitleID"></param>
         /// <param name="bookCode"></param>
         /// <returns></returns>
-        public static Booking NewFor(int clientID, int serviceProfessionalID, int jobTitleID, int langID, int countryID, string bookCode, bool isServiceProfessionalBooking = false)
+        public static Booking NewFor(int clientID, int serviceProfessionalID, int jobTitleID, string language, string bookCode, bool isServiceProfessionalBooking = false)
         {
             var booking = new Booking();
             booking.clientUserID = clientID;
             booking.serviceProfessionalUserID = serviceProfessionalID;
             booking.jobTitleID = jobTitleID;
-            booking.languageID = langID;
-            booking.countryID = countryID;
+            booking.language = language;
 
             // Set bookingType (IMPORTANT: before fill the user job title)
             if (isServiceProfessionalBooking)
@@ -296,7 +292,7 @@ namespace LcRest
             booking.pricingSummary = summary;
             // empty details
             booking.pricingSummary.details = new List<PricingSummaryDetail>();
-            var flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(jobTitleID, langID, countryID);
+            var flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(jobTitleID, language);
 
             var type = BookingType.Get(booking.bookingTypeID);
 
@@ -415,8 +411,7 @@ namespace LcRest
                 clientUserID,
                 serviceProfessionalUserID,
                 jobTitleID,
-                languageID,
-                countryID,
+                language,
                 bookingStatusID,
                 bookingTypeID,
                 cancellationPolicyID,
@@ -870,7 +865,7 @@ namespace LcRest
             var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
             var isBookMeNowBooking = bookingTypeID == (int)LcEnum.BookingType.bookNowBooking;
             var includeDeactivated = isServiceProfessionalBooking || isBookMeNowBooking || internalUse;
-            var internalUserJobTitle = LcRest.UserJobTitle.GetItem(serviceProfessionalUserID, languageID, countryID, jobTitleID, includeDeactivated, isBookMeNowBooking);
+            var internalUserJobTitle = LcRest.UserJobTitle.GetItem(serviceProfessionalUserID, language, jobTitleID, includeDeactivated, isBookMeNowBooking);
             userJobTitle = LcRest.PublicUserJobTitle.FromUserJobTitle(internalUserJobTitle);
         }
 
@@ -908,8 +903,7 @@ namespace LcRest
                 [ClientUserID]
                 ,[ServiceProfessionalUserID]
                 ,[JobTitleID]
-                ,[LanguageID]
-                ,[CountryID]
+                ,[Language]
                 ,[BookingStatusID]
                 ,[BookingTypeID]
                 ,[CancellationPolicyID]
@@ -1229,8 +1223,7 @@ namespace LcRest
                         booking.clientUserID,
                         booking.serviceProfessionalUserID,
                         booking.jobTitleID,
-                        booking.languageID,
-                        booking.countryID,
+                        booking.language,
                         booking.bookingStatusID,
                         booking.bookingTypeID,
                         booking.cancellationPolicyID,
@@ -1994,7 +1987,7 @@ namespace LcRest
 
             if (isCancelledByClient || isDeclinedByClient)
             {
-                var policy = CancellationPolicy.Get(cancellationPolicyID, languageID, countryID);
+                var policy = CancellationPolicy.Get(cancellationPolicyID, language);
                 if (serviceDate == null)
                     FillServiceDates();
 
@@ -2093,8 +2086,7 @@ namespace LcRest
         /// <param name="allowBookUnavailableTime">This value allows (when true) to avoid the check of availability
         /// for the given time, letting the freelancer to book any time even if unavailable (this must be asked
         /// and warned in the UI).</param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
         public static Booking InsServiceProfessionalBooking(
             int clientUserID,
@@ -2106,25 +2098,24 @@ namespace LcRest
             string preNotesToClient,
             string preNotesToSelf,
             bool allowBookUnavailableTime,
-            int languageID,
-            int countryID
+            string language
         )
         {
             using (var db = new LcDatabase())
             {
                 // 0: previous data and checks
                 var provider = LcData.UserInfo.GetUserRowWithContactData(serviceProfessionalUserID);
-                var customer = LcData.UserInfo.GetUserRow(clientUserID);
+                var customer = LcRest.UserProfile.Exists(clientUserID);
 
                 if (provider == null)
                     throw new ConstraintException("[[[Unable to retrieve the service professional's info. Their profile may no longer exist.]]]");
-                if (customer == null)
+                if (customer)
                     throw new ConstraintException("[[[Unable to retrieve the client's info. Their profile may no longer exist.]]]");
                 if (services == null)
                     throw new ConstraintException("[[[Bookings require the selection of at least one service]]]");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
-                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null, true);
+                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, language, null, true);
                 if (booking == null)
                     throw new ConstraintException("[[[Impossible to create a booking for that Job Title.]]]");
 
@@ -2241,11 +2232,11 @@ namespace LcRest
                 // in the Booking.Set method for any update done by the service professional).
 
                 var provider = LcData.UserInfo.GetUserRowWithContactData(serviceProfessionalUserID);
-                var customer = LcData.UserInfo.GetUserRow(booking.clientUserID);
+                var customer = LcRest.UserProfile.Exists(booking.clientUserID);
 
                 if (provider == null)
                     throw new ConstraintException("[[[Unable to retrieve the service professional's info. Their profile may no longer exist.]]]");
-                if (customer == null)
+                if (customer)
                     throw new ConstraintException("[[[Unable to retrieve the client's info. Their profile may no longer exist.]]]");
                 if (services == null)
                     throw new ConstraintException("[[[Bookings require the selection of at least one service]]]");
@@ -2611,8 +2602,7 @@ namespace LcRest
         /// <param name="alternative1StartTime"></param>
         /// <param name="alternative2StartTime"></param>
         /// <param name="services"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
         public static Booking InsClientBooking(
             int clientUserID,
@@ -2623,8 +2613,7 @@ namespace LcRest
             DateTimeOffset? alternative1StartTime,
             DateTimeOffset? alternative2StartTime,
             IEnumerable<int> services,
-            int languageID,
-            int countryID,
+            string language,
             string bookCode,
             string specialRequests
         )
@@ -2633,17 +2622,17 @@ namespace LcRest
             {
                 // 0: previous data and checks
                 var provider = LcData.UserInfo.GetUserRowWithContactData(serviceProfessionalUserID);
-                var customer = LcData.UserInfo.GetUserRow(clientUserID);
+                var customer = LcRest.UserProfile.Exists(clientUserID);
 
                 if (provider == null)
                     throw new ConstraintException("[[[Unable to retrieve the service professional's info. Their profile may no longer exist.]]]");
-                if (customer == null)
+                if (customer)
                     throw new ConstraintException("[[[Unable to retrieve the client's info. Their profile may no longer exist.]]]");
                 if (services == null)
                     throw new ConstraintException("[[[Bookings require the selection of at least one service]]]");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
-                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, bookCode);
+                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, language, bookCode);
                 if (booking == null)
                     throw new ConstraintException("[[[Impossible to create a booking for that Job Title.]]]");
 
@@ -2902,11 +2891,11 @@ namespace LcRest
                 }
 
                 var provider = LcData.UserInfo.GetUserRowWithContactData(booking.serviceProfessionalUserID);
-                var customer = LcData.UserInfo.GetUserRow(booking.clientUserID);
+                var customer = LcRest.UserProfile.Exists(booking.clientUserID);
 
                 if (provider == null)
                     throw new ConstraintException("[[[Unable to retrieve the service professional's info. Their profile may no longer exist.]]]");
-                if (customer == null)
+                if (customer)
                     throw new ConstraintException("[[[Unable to retrieve the client's info. Their profile may no longer exist.]]]");
                 if (services == null)
                     throw new ConstraintException("[[[Bookings require the selection of at least one service]]]");

@@ -154,11 +154,11 @@ namespace LcRest
                  INNER JOIN
                 platform as P
                     ON P.platformID = L.platformID
-                    AND P.languageID = @0 AND P.countryID = @1
+                    AND P.language = @0
                   INNER JOIN
                 positions as J
                     ON J.positionID = E.jobTitleID
-                    AND J.languageID = @0 AND J.countryID = @1
+                    AND J.language = @0
                   INNER JOIN
                 CCCUsers as U
                     ON U.UserID = E.UserID
@@ -173,12 +173,12 @@ namespace LcRest
                     ON F.fieldOfStudyID = U.fieldOfStudyID
               WHERE
                 E.active = 1
-                AND (@2 is null OR E.PaidDate >= @2)
-                AND (@3 is null OR E.PaidDate <= @3)
-                AND (@4 is null OR E.JobTitleID = @4)
-                AND (@5 is null OR L.PlatformID = @5)
-                AND (@6 is null OR U.institutionID = @6)
-                AND (@7 is null OR U.fieldOfStudyID = @7)
+                AND (@2 is null OR E.PaidDate >= @1)
+                AND (@3 is null OR E.PaidDate <= @2)
+                AND (@4 is null OR E.JobTitleID = @3)
+                AND (@5 is null OR L.PlatformID = @4)
+                AND (@6 is null OR U.institutionID = @5)
+                AND (@7 is null OR U.fieldOfStudyID = @6)
         ";
         #endregion
         public class DetailedReport
@@ -217,7 +217,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return db.Query(sqlCccAdminDetailedReport,
-                    locale.languageID, locale.countryID,
+                    locale.ToString(),
                     filter.fromDate, filter.toDate,
                     filter.jobTitleID,
                     filter.platformID,

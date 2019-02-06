@@ -125,7 +125,7 @@
         public IEnumerable<dynamic> GetByJobTitleID(int jobTitleID)
         {
             var locale = LcRest.Locale.Current;
-            var ids = LcRest.JobTitlePricingType.GetList(jobTitleID, locale.languageID, locale.countryID).Select((x) => x.pricingTypeID);
+            var ids = LcRest.JobTitlePricingType.GetList(jobTitleID, locale.ToString()).Select((x) => x.pricingTypeID);
             foreach (var pricingTypeID in ids)
             {
                 if (LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(pricingTypeID))

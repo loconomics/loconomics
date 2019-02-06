@@ -210,8 +210,7 @@
             }
 
             // Setting up data (will be used to be saved or to display form errors)
-            data.LanguageID = LcData.GetCurrentLanguageID();
-            data.CountryID = LcData.GetCurrentCountryID();
+            data.Language = LcRest.Locale.Current.ToString();
             data.Name = config.FixedName ?? Request["name"];
             data.Description = Request["description"] ?? "";
             data.Price = Request["price"].AsDecimal();
