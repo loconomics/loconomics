@@ -13,7 +13,6 @@ namespace LcRest
     {
         public string languageCode { get; private set; }
         public string countryCode { get; private set; }
-        public int languageID { get; private set; }
         public int countryID { get; private set; }
 
         private Locale() { }
@@ -57,44 +56,6 @@ namespace LcRest
                     return 2;
                 default:
                     // US by default
-                    return 1;
-            }
-        }
-
-        /// <summary>
-        /// TODO Implement database look-up, throgh Language class
-        /// </summary>
-        /// <param name="LanguageID"></param>
-        /// <returns></returns>
-        public static string GetLanguageCodeByID(int LanguageID)
-        {
-            switch (LanguageID)
-            {
-                case 1:
-                    return "EN";
-                case 2:
-                    return "ES";
-                default:
-                    // EN by default
-                    return "EN";
-            }
-        }
-
-        /// <summary>
-        /// TODO Implement database look-up, throgh Language class
-        /// </summary>
-        /// <param name="LanguageCode"></param>
-        /// <returns></returns>
-        public static int GetLanguageIDByCode(string LanguageCode)
-        {
-            switch (LanguageCode)
-            {
-                case "EN":
-                    return 1;
-                case "ES":
-                    return 2;
-                default:
-                    // EN by default
                     return 1;
             }
         }
@@ -159,25 +120,13 @@ namespace LcRest
                     {
                         countryCode = info.country,
                         countryID = GetCountryIDByCode(info.country),
-                        languageCode = info.language,
-                        languageID = GetLanguageIDByCode(info.language)
+                        languageCode = info.language
                     };
 
                     return locale;
                 }
                 return null;
             }
-        }
-
-        public static Locale From(int languageID, int countryID)
-        {
-            return new Locale
-            {
-                countryCode = GetCountryCodeByID(countryID),
-                countryID = countryID,
-                languageCode = GetLanguageCodeByID(languageID),
-                languageID = languageID
-            };
         }
     }
 }

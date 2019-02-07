@@ -84,14 +84,14 @@ namespace LcRest
             END
         ";
 
-        static void Set(int userID, int userListingID, int solutionID, int displayRank, Locale locale, LcDatabase sharedDb = null)
+        static void Set(int userID, int userListingID, int solutionID, int displayRank, string language, LcDatabase sharedDb = null)
         {
             using (var db = new LcDatabase(sharedDb))
             {
                 db.QueryValue(sqlSet,
                     userID,
                     userListingID,
-                    locale.ToString(),
+                    language,
                     solutionID,
                     displayRank,
                     userID.ToString()
@@ -136,11 +136,11 @@ namespace LcRest
                         WHERE DefaultSelected = 1
                             AND jobTitleID=@0 AND language=@1",
                         listing.jobTitleID, listing.language);
-                    var locale = Locale.From(listing.language);
+
                     db.Execute("BEGIN TRANSACTION");
                     foreach (var solution in defaultSolutions)
                     {
-                        Set(listing.userID, userListingID, solution.solutionID, solution.displayRank, locale, db);
+                        Set(listing.userID, userListingID, solution.solutionID, solution.displayRank, listing.language, db);
                     }
                     db.Execute("COMMIT TRANSACTION");
                 }
