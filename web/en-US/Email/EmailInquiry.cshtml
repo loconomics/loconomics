@@ -69,7 +69,7 @@
                  INNER JOIN
                 Positions As Pos
                   ON Pos.PositionID = T.PositionID
-					AND Pos.CountryID = @1 AND Pos.LanguageID = @2
+					AND Pos.Language = @1
         WHERE   ThreadID = @0
     ";
     var sqlListMessagesInThread = @"
@@ -84,7 +84,7 @@
 
     dynamic messages = null, thread = null;
     using (var db = Database.Open("sqlloco")){
-        thread = db.QuerySingle(sqlGetMessageThread, threadID, 1, 1);
+        thread = db.QuerySingle(sqlGetMessageThread, threadID, "en-US");
         messages = db.Query(sqlListMessagesInThread, threadID);
     }
 }

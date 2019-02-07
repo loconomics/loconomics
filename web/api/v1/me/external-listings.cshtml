@@ -101,7 +101,7 @@
                     notes = notes
                 };
                 var locale = LcRest.Locale.Current;
-                record.FillJobTitlesWithIds(jobTitlesList, locale.languageID, locale.countryID);
+                record.FillJobTitlesWithIds(jobTitlesList, locale.ToString());
 
                 var itemID = LcRest.UserExternalListing.Insert(record);
                 return LcRest.UserExternalListing.Get(userID, itemID);
@@ -135,7 +135,7 @@
                     notes = notes
                 };
                 var locale = LcRest.Locale.Current;
-                record.FillJobTitlesWithIds(jobTitlesList, locale.languageID, locale.countryID);
+                record.FillJobTitlesWithIds(jobTitlesList, locale.ToString());
 
                 if (!LcRest.UserExternalListing.Update(record))
                 {

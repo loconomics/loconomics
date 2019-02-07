@@ -98,453 +98,106 @@ public static partial class LcData
 
         #region Account personal data
         #region Query Basic Account Info
-
-        /* Get a data row with the User information identified with 'userId' from the database
-        */
-        public static dynamic GetUserRow(int userId) {
-
-            // Implemented a basic, per-page, cache, faster and simplified for each page
-            var u = HelperPage.PageData["userow:" + userId.ToString()] ?? HelperPage.PageData["userow-withcontactdata:" + userId.ToString()];
-            if (u == null){
-                using (var db = Database.Open("sqlloco")){
-                    var sqluser = 
-                        //"exec GetUserDetails @0";
-                        // NOTE: UserID is needed!
-                        // NOTE2: remove location details from GetUserDetails (in this sql is not already), for that use GetUserWithContactData
-                        @"
-                            SELECT
-                                -- Basic data
-                                a.UserID
-                                ,UP.Email
-                                ,a.CreatedDate As MemberSinceDate
-
-                                -- Name
-                                ,FirstName
-                                ,LastName
-                                ,SecondLastName
-                                ,MiddleIn
-                                ,(dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(FirstName, dbo.fx_concatBothOrNothing(MiddleIn, '.', ''), ' '), LastName, ' '), SecondLastName, ' ')) As FullName
-                            
-                                -- DEPRECATED PHOTO
-                                ,Photo
-
-                                -- User Type
-                                ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
-                                ,IsCustomer
-                                ,IsProvider
-                                ,IsContributor
-                                ,AccountStatusID
-
-                                -- Only Providers:
-                                ,(CASE WHEN IsProvider=1 AND (
-                                    SELECT count(*) FROM UserProfilePositions As UPS
-                                    -- Must have almost one position active and enabled (1) or disabled manually (3).
-                                    WHERE UPS.UserID = A.UserID AND UPS.Active=1 AND UPS.StatusID IN (1, 3)
-                                    ) > 0 THEN Cast(1 As bit)
-                                    ELSE Cast(0 As bit)
-                                END) As IsActiveProvider
-
-                                ,OnboardingStep
-                                
-                                ,ProviderWebsiteURL
-                                ,ProviderProfileURL
-                            
-                                -- Personal data
-                                ,PublicBio
-                                ,A.GenderID
-                                ,GenderSingular
-                                ,GenderPlural
-                                ,SubjectPronoun
-                                ,ObjectPronoun
-                                ,PossesivePronoun
-
-                                -- Some preferences
-                                ,PreferredLanguageID
-                                ,PreferredCountryID
-
-                            FROM Users A
-                                 INNER JOIN
-                                UserProfile As UP
-                                  ON UP.UserID = A.UserID
-                                 LEFT JOIN
-                                Gender As G
-                                  ON G.GenderID = A.GenderID
-                                  	AND G.LanguageID = A.PreferredLanguageID  
-                                  	AND G.CountryID = A.PreferredCountryID                                         
-                            WHERE A.UserID = @0
-                        ";
-                    u = db.QuerySingle(sqluser, userId);
-                }
-                HelperPage.PageData["userow:" + userId.ToString()] = u;
-            }
-            return u;
-        }
         public static dynamic GetUserRowWithContactData(int userId) {
-            // Implemented a basic, per-page, cache, faster and simplified for each page
-            var u = HelperPage.PageData["userow-withcontactdata:" + userId.ToString()];
-            if (u == null){
-                using (var db = Database.Open("sqlloco")){
-                    var sqluser = 
-                        //"exec GetUserDetails @0";
-                        // NOTE: UserID is needed!
-                        // CREATED A NEW VIEW CALLED vwUsersContactData WITH THIS EXACT CONTENT
-                        // PLEASE, ANY CHANGE REPLICATE IT ON THAT VIEW, THAT IS USED BY SOME
-                        // STORED PROCEDURE TOO
-                        // (THE ONLY MISSING THING OF COURSE IS THE USERID CONDITION)
-                        @"
-                            SELECT
-                                -- Basic data
-                                a.UserID
-                                ,UP.Email
-                                ,a.CreatedDate As MemberSinceDate
+            using (var db = Database.Open("sqlloco")) {
+                var sqluser = 
+                    // NOTE: UserID is needed!
+                    // CREATED A NEW VIEW CALLED vwUsersContactData WITH THIS EXACT CONTENT
+                    // PLEASE, ANY CHANGE REPLICATE IT ON THAT VIEW, THAT IS USED BY SOME
+                    // STORED PROCEDURE TOO
+                    // (THE ONLY MISSING THING OF COURSE IS THE USERID CONDITION)
+                    @"
+                        SELECT
+                            -- Basic data
+                            a.UserID
+                            ,UP.Email
+                            ,a.CreatedDate As MemberSinceDate
 
-                                -- Name
-                                ,FirstName
-                                ,LastName
-                                ,SecondLastName
-                                ,MiddleIn
-                                ,(dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(FirstName, dbo.fx_concatBothOrNothing(MiddleIn, '.', ''), ' '), LastName, ' '), SecondLastName, ' ')) As FullName
+                            -- Name
+                            ,FirstName
+                            ,LastName
+                            ,SecondLastName
+                            ,MiddleIn
+                            ,(dbo.fx_concat(dbo.fx_concat(dbo.fx_concat(FirstName, dbo.fx_concatBothOrNothing(MiddleIn, '.', ''), ' '), LastName, ' '), SecondLastName, ' ')) As FullName
                             
-                                -- DEPRECATED PHOTO
-                                ,Photo
+                            -- DEPRECATED PHOTO
+                            ,Photo
 
-                                -- User Type
-                                ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
-                                ,IsCustomer
-                                ,IsProvider
-                                ,AccountStatusID
+                            -- User Type
+                            ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
+                            ,IsCustomer
+                            ,IsProvider
+                            ,AccountStatusID
 
-                                -- Only Providers:
-                                ,(CASE WHEN IsProvider=1 AND (
-                                    SELECT count(*) FROM UserProfilePositions As UPS
-                                    -- Must have almost one position active and enabled (1) or disabled manually (3).
-                                    WHERE UPS.UserID = A.UserID AND UPS.Active=1 AND UPS.StatusID IN (1, 3)
-                                    ) > 0 THEN Cast(1 As bit)
-                                    ELSE Cast(0 As bit)
-                                END) As IsActiveProvider
+                            -- Only Providers:
+                            ,(CASE WHEN IsProvider=1 AND (
+                                SELECT count(*) FROM UserProfilePositions As UPS
+                                -- Must have almost one position active and enabled (1) or disabled manually (3).
+                                WHERE UPS.UserID = A.UserID AND UPS.Active=1 AND UPS.StatusID IN (1, 3)
+                                ) > 0 THEN Cast(1 As bit)
+                                ELSE Cast(0 As bit)
+                            END) As IsActiveProvider
 
-                                ,OnboardingStep
+                            ,OnboardingStep
 
-                                ,ProviderWebsiteURL
-                                ,ProviderProfileURL
+                            ,ProviderWebsiteURL
+                            ,ProviderProfileURL
 
-                                -- Contact data
-                                ,MobilePhone
-                                ,AlternatePhone
-                                ,ProviderWebsiteURL
+                            -- Contact data
+                            ,MobilePhone
+                            ,AlternatePhone
+                            ,ProviderWebsiteURL
                             
-                                -- Address
-                                ,L.AddressLine1
-                                ,L.AddressLine2
-                                ,L.City
-                                ,L.StateProvinceID
-                                ,SP.StateProvinceName
-                                ,SP.StateProvinceCode
-                                ,L.CountryID
-                                ,PC.PostalCode
-                                ,L.PostalCodeID
+                            -- Address
+                            ,L.AddressLine1
+                            ,L.AddressLine2
+                            ,L.City
+                            ,L.StateProvinceID
+                            ,SP.StateProvinceName
+                            ,SP.StateProvinceCode
+                            ,L.CountryID
+                            ,PC.PostalCode
+                            ,L.PostalCodeID
 
-                                -- Personal data
-                                ,PublicBio
-                                ,A.GenderID
-                                ,GenderSingular
-                                ,GenderPlural
-                                ,SubjectPronoun
-                                ,ObjectPronoun
-                                ,PossesivePronoun
+                            -- Personal data
+                            ,PublicBio
+                            ,A.GenderID
+                            ,GenderSingular
+                            ,GenderPlural
+                            ,SubjectPronoun
+                            ,ObjectPronoun
+                            ,PossesivePronoun
                                                             
-                                -- Some preferences
-                                ,PreferredLanguageID
-                                ,PreferredCountryID
+                            -- Some preferences
+                            ,PreferredLanguage
 
-                            FROM Users A
-                                 INNER JOIN
-                                UserProfile As UP
-                                  ON UP.UserID = A.UserID
-                                 LEFT JOIN
-                                Gender As G
-                                  ON G.GenderID = A.GenderID
-                                  	AND G.LanguageID = A.PreferredLanguageID  
-                                  	AND G.CountryID = A.PreferredCountryID                                
-                                 LEFT JOIN
-                                Address As L
-                                  ON L.UserID = A.UserID
-                                    AND L.AddressTypeID = 1 -- Only one address with type 1 (home) can exists
-                                 LEFT JOIN
-                                StateProvince As SP
-                                  ON SP.StateProvinceID = L.StateProvinceID
-                                 LEFT JOIN
-                                PostalCode As PC
-                                  ON PC.PostalCodeID = L.PostalCodeID
-                            WHERE A.UserID = @0
-                        ";
-                    u = db.QuerySingle(sqluser, userId);
-                }
-                HelperPage.PageData["userow-withcontactdata:" + userId.ToString()] = u;
-            }
-            return u;
-        }
-        /* Get a data row with the current user information from the database
-        */
-        public static dynamic GetUserRow() {
-            if (!WebSecurity.IsAuthenticated) return null;
-            // Implemented a basic, per-page, cache, faster and simplified for each page
-            var u = HelperPage.PageData["userow"] ?? HelperPage.PageData["userow-withcontactdata"];
-            if (u == null){
-                HelperPage.PageData["userow"] = u = GetUserRow(WebSecurity.CurrentUserId);
-            }
-            // Maybe this authenticated user (with valid cookie) doesn't exist just now, do a redirect to Logout to avoid more pages from break!
-            if (u == null) {
-                // A simple WebSecurity.Logout() doesn't work because we must ensure that user is not already inside a SecurePage
-                HttpContext.Current.Response.Redirect(LcUrl.LangPath + "Account/Logout/", true);
-            }
-            return u;
-        }
-        public static dynamic GetUserRowWithContactData() {
-            if (!WebSecurity.IsAuthenticated) return null;
-            // Implemented a basic, per-page, cache, faster and simplified for each page
-            var u = HelperPage.PageData["userow-withcontactdata"];
-            if (u == null){
-                HelperPage.PageData["userow-withcontactdata"] = u = GetUserRowWithContactData(WebSecurity.CurrentUserId);
-            }
-            // Maybe this authenticated user (with valid cookie) doesn't exist just now, do a redirect to Logout to avoid more pages from break!
-            if (u == null) {
-                // A simple WebSecurity.Logout() doesn't work because we must ensure that user is not already inside a SecurePage
-                HttpContext.Current.Response.Redirect(LcUrl.LangPath + "Account/Logout/", true);
-            }
-            return u;
-        }
-        public static dynamic GetRequestedUserRow(int userid = 0) {
-            var u = HelperPage.PageData["requesteduserrow"];
-            if (u == null || u != null && userid > 0 && u.UserID != userid) {
-                if (userid == 0) {
-                    userid = HttpContext.Current.Request["userid"].AsInt();
-                }
-                HelperPage.PageData["requesteduserrow"] = u = GetUserRow(userid);
-            }
-            return u;
-        }
-        #endregion
-
-        #region Update personal data
-        public static void UpdatePersonalAndContactData(
-            int userId,
-            string firstName,
-            string middleInitial,
-            string lastName,
-            string secondLastName,
-            string mobilePhone,
-            string alternatePhone,
-            string street1,
-            string street2,
-            string city,
-            int stateId,
-            int postalCodeId,
-            int countryId,
-            int languageId,
-            int? genderId)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                // Check what data changes to revoke verifications and update data:
-                db.Execute(@"
-                    DECLARE 
-                    @UserID int
-                    ,@FirstName varchar(50)
-                    ,@MiddleIn varchar(1)
-                    ,@LastName varchar(145)
-                    ,@SecondLastName varchar(145)
-                    ,@MobilePhone varchar(20)
-                    ,@AlternatePhone varchar(20)
-                    ,@AddressLine1 varchar(145)
-                    ,@AddressLine2 varchar(145)
-                    ,@City varchar(145)
-                    ,@StateProvinceID int
-                    ,@PostalCodeID int
-                    ,@CountryID int
-                    ,@GenderID int
-                    ,@LanguageID int
-
-                    SET @UserID = @0
-                    SET @FirstName = @1
-                    SET @MiddleIn = @2
-                    SET @LastName = @3
-                    SET @SecondLastName = @4
-                    SET @MobilePhone = @5
-                    SET @AlternatePhone = @6
-                    SET @AddressLine1 = @7
-                    SET @AddressLine2 = @8
-                    SET @City = @9
-                    SET @StateProvinceID = @10
-                    SET @PostalCodeID = @11
-                    SET @CountryID = @12
-                    SET @GenderID = @13
-                    SET @LanguageID = @14
-
-                    -- Getting the original data for that optional fields that
-                    -- passed as NULL instead of Empty.
-                    SELECT
-                        @MiddleIn = coalesce(@MiddleIn, MiddleIn)
-                        ,@SecondLastName = coalesce(@SecondLastName, SecondLastName)
-                        ,@AlternatePhone = coalesce(@AlternatePhone, AlternatePhone)
-                        ,@GenderID = coalesce(@GenderID, GenderID)
-                    FROM users
-                    WHERE UserId = @UserID
-                    
-                    SELECT  @AddressLine2 = coalesce(@AddressLine2, AddressLine2)
-                    FROM    Address
-                    WHERE   UserID = @UserID
-                            AND AddressTypeID = 1 -- Home address
-
-                    -- Saving all the data and updating verifications
-                    BEGIN TRAN
-
-                    /* Do checks to revoke verifications on some changes */
-                    -- @c var allow us check if data is equals (=1) or was changed (=0)
-                    DECLARE @c int
-
-                    -- Checking Full Name
-                    SELECT  @c = count(*)
-                    FROM    Users
-                    WHERE   UserID = @UserID
-                                AND
-                            FirstName = @FirstName AND MiddleIn = @MiddleIn AND LastName = @LastName AND SecondLastName = @SecondLastName
-                    IF @c = 0 BEGIN
-                        -- Revoke social verifications (all VerificationCategoryID = 3)
-                        UPDATE  UserVerification SET
-                            VerificationStatusID = 3, -- revoked status
-                            UpdatedDate = getdate()
-                        WHERE   VerificationID IN (
-                                    SELECT VerificationID
-                                    FROM    Verification
-                                    WHERE   VerificationCategoryID = 3
-                                )
-
-                        -- Revoke name verification (VerificationID=1)
-                        UPDATE  UserVerification SET
-                            VerificationStatusID = 3, -- revoked status
-                            UpdatedDate = getdate()
-                        WHERE   VerificationID = 1
-
-                        -- Revoke background check verification (VerificationID=7)
-                        UPDATE  UserVerification SET
-                            VerificationStatusID = 3, -- revoked status
-                            UpdatedDate = getdate()
-                        WHERE   VerificationID = 7
-                    END
-
-                    -- Checking Address
-                    SELECT  @c = count(*)
-                    FROM    Address
-                    WHERE   UserID = @UserID
-                            AND AddressTypeID = 1 -- Must be the type 1, its personal-home address
-                            AND AddressLine1 = @AddressLine1
-                            AND AddressLine2 = @AddressLine2
-                            AND City = @City
-                            AND StateProvinceID = @StateProvinceID
-                            AND PostalCodeID = @PostalCodeID
-                            AND CountryID = @CountryID
-                    IF @c = 0 BEGIN
-                        -- Revoke address verification (VerificationID=2)
-                        UPDATE  UserVerification SET
-                            VerificationStatusID = 3, -- revoked status
-                            UpdatedDate = getdate()
-                        WHERE   VerificationID = 2
-                    END
-
-                    -- Checking Phone
-                    SELECT  @c = count(*)
-                    FROM    Users
-                    WHERE   UserID = @UserID
-                            AND MobilePhone = @MobilePhone
-                            AND AlternatePhone = @AlternatePhone
-                    IF @c = 0 BEGIN
-                        -- Revoke phone verification (VerificationID=4)
-                        UPDATE  UserVerification SET
-                            VerificationStatusID = 3, -- revoked status
-                            UpdatedDate = getdate()
-                        WHERE   VerificationID = 4
-                    END
-
-
-                    /** UPSERT Personal Address **/
-                    EXEC SetHomeAddress @UserID, @AddressLine1, @AddressLine2, @City, @StateProvinceID, @PostalCodeID, @CountryID, @LanguageID
-
-
-                    /* Update User Personal Data */
-                    UPDATE	Users
-                    SET     FirstName = @FirstName
-		                    ,MiddleIn = @MiddleIn
-		                    ,LastName = @LastName
-		                    ,SecondLastName = @SecondLastName
-		                    ,MobilePhone = @MobilePhone
-		                    ,AlternatePhone = @AlternatePhone
-
-		                    ,GenderID = @GenderID
-
-                            ,UpdatedDate = getdate()
-                            ,ModifiedBy = 'sys'
-                    WHERE   UserId = @UserID
-
-                    -- A lot of direct and indirect alerts depend on contact info,
-                    -- execute all its alerts for all its positions
-                    EXEC TestAllUserAlerts @UserID
-
-                    COMMIT TRAN
-                ", userId,
-                 firstName,
-                 middleInitial,
-                 lastName,
-                 secondLastName,
-                 mobilePhone,
-                 alternatePhone,
-                 street1,
-                 street2,
-                 city,
-                 stateId,
-                 postalCodeId,
-                 countryId,
-                 genderId,
-                 languageId
-                );
-            }
-        }
-
-        public static void BecomeCollaborator(int userID)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                db.Execute(@"
-                    UPDATE users SET IsCollaborator=1 WHERE UserID = @0
-                ", userID);
+                        FROM Users A
+                                INNER JOIN
+                            UserProfile As UP
+                                ON UP.UserID = A.UserID
+                                LEFT JOIN
+                            Gender As G
+                                ON G.GenderID = A.GenderID
+                                AND G.Language= A.PreferredLanguage                             
+                                LEFT JOIN
+                            Address As L
+                                ON L.UserID = A.UserID
+                                AND L.AddressTypeID = 1 -- Only one address with type 1 (home) can exists
+                                LEFT JOIN
+                            StateProvince As SP
+                                ON SP.StateProvinceID = L.StateProvinceID
+                                LEFT JOIN
+                            PostalCode As PC
+                                ON PC.PostalCodeID = L.PostalCodeID
+                        WHERE A.UserID = @0
+                    ";
+                return db.QuerySingle(sqluser, userId);
             }
         }
         #endregion
         #endregion
 
         #region Provider Position
-
-        #region Cache
-        public static void CleanCacheGetUserPos(int userId)
-        {
-            HelperPage.PageData["userposrows:" + userId.ToString() + ":active"] = null;
-            HelperPage.PageData["userposrows:" + userId.ToString() + ":all"] = null;
-        }
-        public static void CleanCacheGetUserPos()
-        {
-            HelperPage.PageData["posrows:active"] = null;
-            HelperPage.PageData["posrows:all"] = null;
-        }
-        public static void CleanCacheGetUserPos(int userId, int posId)
-        {
-            HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()] = null;
-        }
-        public static void CleanCacheGetUserCurrentPos()
-        {
-            HelperPage.PageData["position"] = null;
-        }
-        #endregion
-
         #region Utilities
         /// <summary>
         /// Creates a new random BookCode for the given provider.
@@ -576,97 +229,19 @@ public static partial class LcData
         #endregion
 
         #region Get
-        /* Get a data object with the Positions rows of the user identified with 'userId' from the database
-        */
-        public static dynamic GetUserPos(int userId, bool onlyActivePositions = false){
-            var cachekey = String.Format("userposrows:{0}:{1}", userId, onlyActivePositions ? "active" : "all");
-
-            var poss = HelperPage.PageData[cachekey];
-            if (poss == null) {
-                using (var db = Database.Open("sqlloco")) {
-                    var sqlpositions = @"
-                        SELECT a.UserID, a.PositionID, a.Active, a.StatusID, InstantBooking,
-                            PositionSingular, PositionPlural, a.UpdatedDate, a.PositionIntro
-                        FROM dbo.userprofilepositions a join
-                            positions c on a.PositionID = c.PositionID and a.CountryID = c.CountryID and a.LanguageID = c.LanguageID
-                        WHERE a.UserID = @0 and c.LanguageID = @2 and c.CountryID = @3
-                            AND c.Active = 1
-                            AND a.Active = 1 AND ((@1 = 0 AND a.StatusID > 0) OR a.StatusID = 1)
-                            AND (c.Approved = 1 Or c.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
-                    ";
-                    poss = db.Query(sqlpositions, userId, onlyActivePositions ? 1 : 0, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-                }
-                HelperPage.PageData[cachekey] = poss;
-            }
-            return poss;
-        }
-        /* Get a data object with the Positions rows of the current user from the database
-        */
-        public static dynamic GetUserPos(bool onlyActivePositions = false){
-            var cachekey = "posrows:" + (onlyActivePositions ? "active" : "all");
-            var poss = HelperPage.PageData[cachekey];
-            if (poss == null) {
-                poss = GetUserPos(WebSecurity.CurrentUserId, onlyActivePositions);
-                HelperPage.PageData[cachekey] = poss;
-            }
-            return poss;
-        }
-        /* Get a data object with the Position row of the user 'userId' with PositionId 'posId' from the database
-         */
-        public static dynamic GetUserPos(int userId, int posId, int langID = 0, int countryID = 0)
-        {
-            if (langID == 0) langID = LcData.GetCurrentLanguageID();
-            if (countryID == 0) countryID = LcData.GetCurrentCountryID();
-
-            // Implemented a basic, per-page, cache, faster and simplified for each page
-            var u = HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()];
-            if (u == null){
-                using (var db = Database.Open("sqlloco")){
-                    var sqlpositions = @"
-                        SELECT  a.UserID, a.PositionID, a.Active, a.StatusID, InstantBooking,
-                                PositionSingular, PositionPlural, a.UpdatedDate, a.PositionIntro
-                        FROM    dbo.userprofilepositions a join positions c on a.PositionID = c.PositionID 
-                        WHERE   a.UserID = @0 and a.PositionID = @1 and c.LanguageID = @2 and c.CountryID = @3
-                                AND c.Active = 1 AND a.Active = 1 AND a.StatusID > 0";
-                    u = db.QuerySingle(sqlpositions, userId, posId, langID, countryID);
-                }
-                HelperPage.PageData["userpos:" + userId.ToString() + ":" + posId.ToString()] = u;
-            }
-            return u;
-        }
-        public static dynamic GetUserCurrentPos() {
-            if (HelperPage.PageData["position"] == null) {
-                HelperPage.PageData["position"] = GetUserPos(WebSecurity.CurrentUserId, HttpContext.Current.Request["positionid"].AsInt());
-            }
-            return HelperPage.PageData["position"];
-        }
-        public static dynamic GetCurrentRequestedUserPos() {
-            if (HelperPage.PageData["position"] == null) {
-                int userid = HttpContext.Current.Request["UserID"].AsInt();
-                userid = userid == 0 ? HelperPage.PageData["requesteduserrow"] != null ? HelperPage.PageData["requesteduserrow"].UserID : WebSecurity.CurrentUserId : userid;
-                HelperPage.PageData["position"] = GetUserPos(userid, HttpContext.Current.Request["positionid"].AsInt());
-            }
-            return HelperPage.PageData["position"];
-        }
         public static int GetUserPositionStatus(int userID, int positionID)
         {
             using (var db = Database.Open("sqlloco"))
             {
-                var statusID = db.QueryValue("SELECT StatusID FROM UserProfilePositions WHERE UserID = @0 AND PositionID = @1 AND LanguageID = @2 AND LanguageID = @3",
-                    userID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                var locale = LcRest.Locale.Current;
+                var statusID = db.QueryValue("SELECT StatusID FROM UserProfilePositions WHERE UserID = @0 AND PositionID = @1 AND Language = @2",
+                    userID, positionID, locale.ToString());
                 if (statusID is int)
                     return statusID;
                 else
                     // There is no position for the user, there is no user, or not for the languagen and country
                     return -1;
             }
-        }
-        public static Dictionary<int, dynamic> GetUserPositionsStatuses(int userID)
-        {
-            var d = new Dictionary<int, dynamic>();
-            foreach (var p in GetUserPos(userID, false))
-                d.Add(p.PositionID, p);
-            return d;
         }
         #endregion
         #endregion
@@ -765,51 +340,6 @@ public static partial class LcData
                     userID,
                     String.IsNullOrWhiteSpace(onboardingStep) ? null : onboardingStep
                 );
-            }
-        }
-        #endregion
-
-        #region Verifications
-        public static dynamic GetUserVerifications(int userID)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                return db.Query(@"
-                    SELECT  UV.LastVerifiedDate,
-                            UV.VerificationStatusID,
-                            VS.VerificationStatusName,
-                            V.VerificationType,
-                            V.Icon,
-                            V.VerificationID,
-                            V.VerificationCategoryID
-                    FROM    UserVerification As UV
-                             INNER JOIN
-                            Verification As V
-                              ON UV.VerificationID = V.VerificationID
-                             INNER JOIN
-                            VerificationStatus As VS
-                              ON UV.VerificationStatusID = VS.VerificationStatusID
-                                AND V.LanguageID = @1 AND V.CountryID = @2
-                    WHERE   UserID = @0
-                ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-            }
-        }
-
-        public static bool HasEmailVerification(int userID)
-        {
-            using (var db = Database.Open("sqlloco")) {
-                return N.D(db.QueryValue(@"SELECT ConfirmationToken FROM webpages_Membership WHERE UserId=@0", userID)) == null;
-            }
-        }
-
-        public static bool HasFacebookVerification(int userID)
-        {
-            using (var db = Database.Open("sqlloco")) {
-                return (db.QueryValue(@"
-                    SELECT count(*)
-                    FROM userverification
-                    WHERE UserId=@0 AND PositionID=0 AND VerificationID=8 AND VerificationStatusID=1",
-                userID)) == 1;
             }
         }
         #endregion

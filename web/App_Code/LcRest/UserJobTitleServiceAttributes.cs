@@ -23,8 +23,7 @@ namespace LcRest
         /// </summary>
         internal Dictionary<int, List<string>> proposedServiceAttributes;
         public int experienceLevelID;
-        public int languageID;
-        public int countryID;
+        public string language;
         #endregion
 
         #region Instances
@@ -32,30 +31,29 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static UserJobTitleServiceAttributes Get(int userID, int jobTitleID, int languageID, int countryID)
+        public static UserJobTitleServiceAttributes Get(int userID, int jobTitleID, string language)
         {
             var data = new UserJobTitleServiceAttributes
             {
                 userID = userID,
                 jobTitleID = jobTitleID,
-                languageID = languageID,
-                countryID = countryID
+                language = language
             };
-            data.serviceAttributes = LcRest.ServiceAttribute.GetGroupedUserJobTitleAttributeIDs(jobTitleID, userID, languageID, countryID);
-            data.experienceLevelID = GetExperienceLevelID(userID, jobTitleID, languageID, countryID);
+            data.serviceAttributes = LcRest.ServiceAttribute.GetGroupedUserJobTitleAttributeIDs(jobTitleID, userID, language);
+            data.experienceLevelID = GetExperienceLevelID(userID, jobTitleID, language);
 
             return data;
         }
 
-        public static int GetExperienceLevelID(int userID, int jobTitleID, int languageID, int countryID)
+        public static int GetExperienceLevelID(int userID, int jobTitleID, string language)
         {
             using (var db = new LcDatabase())
             {
                 return (int)((int?)db.QueryValue(@"
                     SELECT  UL.experienceLevelID
                     FROM    ServiceAttributeExperienceLevel As UL
-                    WHERE   UL.UserID = @0 AND UL.PositionID = @1 AND UL.LanguageID = @2 AND UL.CountryID = @3
-                ", userID, jobTitleID, languageID, countryID) ?? 0);
+                    WHERE   UL.UserID = @0 AND UL.PositionID = @1 AND UL.Language = @2
+                ", userID, jobTitleID, language) ?? 0);
             }
         }
         #endregion
@@ -68,8 +66,7 @@ namespace LcRest
             SELECT @attID = (max(serviceattributeid) + 1) from serviceattribute
             INSERT INTO [serviceattribute]
                 ([ServiceAttributeID]
-                ,[LanguageID]
-                ,[CountryID]
+                ,[Language]
                 ,[SourceID]
                 ,[Name]
                 ,[ServiceAttributeDescription]
@@ -83,19 +80,18 @@ namespace LcRest
                 ,[Approved])
             VALUES
                 (@attID
-                ,@0 --<LanguageID, int,>
-                ,@1 --<CountryID, int,>
-                ,@2 --<SourceID, int,>
-                ,@3 --<Name, varchar(100),>
-                ,@4 --<ServiceAttributeDescription, varchar(2000),>
+                ,@0 --<Language, nvarchar(42),>
+                ,@1 --<SourceID, int,>
+                ,@2 --<Name, varchar(100),>
+                ,@3 --<ServiceAttributeDescription, varchar(2000),>
                 ,getdate() --<CreateDate, datetime,>
                 ,getdate() --<UpdatedDate, datetime,>
                 ,'sys' --<ModifiedBy, varchar(45),>
                 ,1 --<Active, bit,>
                 ,1 --<DisplayRank, int,>
-                ,@5 --<PositionReference, int,>
-                ,@6 --<EnteredByUserID, int,>
-                ,@7 --<Approved, bit,>
+                ,@4 --<PositionReference, int,>
+                ,@5 --<EnteredByUserID, int,>
+                ,@6 --<Approved, bit,>
             )
 
             -- Link attribute with category and position
@@ -103,8 +99,7 @@ namespace LcRest
                 ([PositionID]
                 ,[ServiceAttributeCategoryID]
                 ,[ServiceAttributeID]
-                ,[LanguageID]
-                ,[CountryID]
+                ,[Language]
                 ,[CreateDate]
                 ,[UpdatedDate]
                 ,[ModifiedBy]
@@ -112,88 +107,35 @@ namespace LcRest
                 ,[EnteredByUserID]
                 ,[Approved])
             VALUES
-                (@5
-                ,@8
+                (@4
+                ,@7
                 ,@attID
                 ,@0
-                ,@1
                 ,getdate()
                 ,getdate()
                 ,'sys'
                 ,1
+                ,@5
                 ,@6
-                ,@7
             )
 
             -- Return ID
             SELECT @attID ServiceAttributeID
         ";
-        /*const string sqlSetAttribute = @"
-            BEGIN TRAN
-                UPDATE  userprofileserviceattributes WITH (serializable)
-                SET     Active = 1,
-                        UpdatedDate = getdate(),
-                        ModifiedBy = 'sys'
-                WHERE   UserId = @0 AND PositionID = @1
-                            AND ServiceAttributeCategoryID = @2
-                            AND ServiceAttributeID = @3
-                            AND LanguageID = @4 AND CountryID = @5
-
-                IF @@rowcount = 0
-                BEGIN
-                    INSERT INTO userprofileserviceattributes (UserID,
-                        PositionID, ServiceAttributeCategoryID, ServiceAttributeID, LanguageID, CountryID, CreateDate, UpdatedDate, 
-                        ModifiedBy, Active)
-                    VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys', 1)
-                END
-            COMMIT TRAN
-        ";*/
         const string sqlInsertAttribute = @"
             INSERT INTO userprofileserviceattributes (UserID,
-                PositionID, ServiceAttributeCategoryID, ServiceAttributeID, LanguageID, CountryID, CreateDate, UpdatedDate, 
+                PositionID, ServiceAttributeCategoryID, ServiceAttributeID, Language, CreateDate, UpdatedDate, 
                 ModifiedBy, Active)
-            VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys', 1)
+            VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys', 1)
         ";
-        /*const string sqlDelAttribute = @"
-            DELETE FROM userprofileserviceattributes
-            WHERE       UserID = @0 AND PositionID = @1
-                            AND ServiceAttributeCategoryID = @2
-                            AND ServiceAttributeID = @3
-                            AND LanguageID = @4 AND CountryID = @5
-        ";*/
         const string sqlDelAllAttributes = @"
             DELETE FROM userprofileserviceattributes
             WHERE       UserID = @0 AND PositionID = @1
-                            AND LanguageID = @2 AND CountryID = @3
+                            AND Language = @2
         ";
         #endregion
 
         #region SQLs Pseudo service attributes
-        /*const string sqlSetLangLevel = @"
-        BEGIN TRAN
-            UPDATE  ServiceAttributeLanguageLevel WITH (serializable)
-            SET     LanguageLevelID = @5,
-                    UpdatedDate = getdate(),
-                    ModifiedBy = 'sys'
-            WHERE   UserId = @0 AND PositionID = @1
-                        AND ServiceAttributeID = @2
-                        AND LanguageID = @3 AND CountryID = @4
-
-            IF @@rowcount = 0
-            BEGIN
-                INSERT INTO ServiceAttributeLanguageLevel (UserID,
-                    PositionID, ServiceAttributeID, LanguageID, CountryID, LanguageLevelID,
-                    CreatedDate, UpdatedDate, ModifiedBy)
-                VALUES (@0, @1, @2, @3, @4, @5, getdate(), getdate(), 'sys')
-            END
-        COMMIT TRAN
-        ";
-        const string sqlDelLangLevel = @"
-        DELETE FROM ServiceAttributeLanguageLevel
-        WHERE   UserId = @0 AND PositionID = @1
-                        AND ServiceAttributeID = @2
-                        AND LanguageID = @3 AND CountryID = @4
-        ";*/
         const string sqlSetExpLevel = @"
         BEGIN TRAN
             UPDATE  ServiceAttributeExperienceLevel WITH (serializable)
@@ -201,12 +143,12 @@ namespace LcRest
                     UpdatedDate = getdate(),
                     ModifiedBy = 'sys'
             WHERE   UserId = @0 AND PositionID = @1
-                        AND LanguageID = @2 AND CountryID = @3
+                        AND Language = @2
 
             IF @@rowcount = 0
             BEGIN
                 INSERT INTO ServiceAttributeExperienceLevel (UserID,
-                    PositionID, LanguageID, CountryID, ExperienceLevelID,
+                    PositionID, Language, ExperienceLevelID,
                     CreatedDate, UpdatedDate, ModifiedBy)
                 VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys')
             END
@@ -215,7 +157,7 @@ namespace LcRest
         const string sqlDelExpLevel = @"
         DELETE FROM ServiceAttributeExperienceLevel
         WHERE   UserId = @0 AND PositionID = @1
-                        AND LanguageID = @2 AND CountryID = @3
+                        AND Language = @2
         ";
         #endregion
 
@@ -225,7 +167,7 @@ namespace LcRest
             // Validate
             // Get all attributes that applies (we avoid save selected attributes that does not apply
             // to the job title).
-            var validAttributes = ServiceAttribute.GetGroupedJobTitleAttributes(serviceAttributes.jobTitleID, serviceAttributes.languageID, serviceAttributes.countryID);
+            var validAttributes = ServiceAttribute.GetGroupedJobTitleAttributes(serviceAttributes.jobTitleID, serviceAttributes.language);
             var indexedValidAttributes = new Dictionary<int, HashSet<int>>();
 
             // Check that there is almost one value for required categories, or show error
@@ -247,7 +189,7 @@ namespace LcRest
                 db.Execute("BEGIN TRANSACTION");
                 
                 // First, remove all current attributes, replaced by the new set
-                db.Execute(sqlDelAllAttributes, serviceAttributes.userID, serviceAttributes.jobTitleID, serviceAttributes.languageID, serviceAttributes.countryID);
+                db.Execute(sqlDelAllAttributes, serviceAttributes.userID, serviceAttributes.jobTitleID, serviceAttributes.language);
 
                 // Add new ones, if they are valid
                 foreach (var cat in serviceAttributes.serviceAttributes)
@@ -259,7 +201,7 @@ namespace LcRest
                             if (indexedValidAttributes[cat.Key].Contains(att))
                             {
                                 // Add to database
-                                db.Execute(sqlInsertAttribute, serviceAttributes.userID, serviceAttributes.jobTitleID, cat.Key, att, serviceAttributes.languageID, serviceAttributes.countryID);
+                                db.Execute(sqlInsertAttribute, serviceAttributes.userID, serviceAttributes.jobTitleID, cat.Key, att, serviceAttributes.language);
                             }
                             // else JUST DISCARD SILENTLY INVALID ATTID
                         }
@@ -284,8 +226,7 @@ namespace LcRest
 
                             // Register new attribute
                             int serviceAttributeID = db.QueryValue(sqlRegisterNewAttribute,
-                                serviceAttributes.languageID,
-                                serviceAttributes.countryID,
+                                serviceAttributes.language,
                                 null, // sourceID
                                 newAttName,
                                 null, // description
@@ -296,7 +237,7 @@ namespace LcRest
                             );
                             // Set for the user:
                             db.Execute(sqlInsertAttribute, serviceAttributes.userID, serviceAttributes.jobTitleID,
-                                cat.Key, serviceAttributeID, serviceAttributes.languageID, serviceAttributes.countryID);
+                                cat.Key, serviceAttributeID, serviceAttributes.language);
                         }
                     }
                 }
@@ -309,11 +250,11 @@ namespace LcRest
                 // specific code to save its data.
                 if (serviceAttributes.experienceLevelID > 0)
                 {
-                    db.Execute(sqlSetExpLevel, serviceAttributes.userID, serviceAttributes.jobTitleID, serviceAttributes.languageID, serviceAttributes.countryID, serviceAttributes.experienceLevelID);
+                    db.Execute(sqlSetExpLevel, serviceAttributes.userID, serviceAttributes.jobTitleID, serviceAttributes.language, serviceAttributes.experienceLevelID);
                 }
                 else
                 {
-                    db.Execute(sqlDelExpLevel, serviceAttributes.userID, serviceAttributes.jobTitleID, serviceAttributes.languageID, serviceAttributes.countryID);
+                    db.Execute(sqlDelExpLevel, serviceAttributes.userID, serviceAttributes.jobTitleID, serviceAttributes.language);
                 }
 
                 // Check alert

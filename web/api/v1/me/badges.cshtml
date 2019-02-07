@@ -58,20 +58,20 @@
             {
                 var locale = LcRest.Locale.Current;
                 var userListingID = UrlData[1].AsInt();
-                return LcRest.UserBadge.ListByListing(WebSecurity.CurrentUserId, userListingID, locale.languageID, locale.countryID);
+                return LcRest.UserBadge.ListByListing(WebSecurity.CurrentUserId, userListingID, locale.ToString());
             }
             if (UrlData[0] == "by-solution" && UrlData.Count <= 2)
             {
                 var locale = LcRest.Locale.Current;
                 var solutionID = UrlData.Count == 1 ? null : (int?)UrlData[1].AsInt();
-                return LcRest.UserBadge.ListBySolution(WebSecurity.CurrentUserId, solutionID, locale.languageID, locale.countryID);
+                return LcRest.UserBadge.ListBySolution(WebSecurity.CurrentUserId, solutionID, locale.ToString());
             }
             else if (UrlData[0].IsInt() && UrlData.Count == 1)
             {
                 var userID = WebSecurity.CurrentUserId;
                 var itemID = UrlData[0].AsInt();
                 var locale = LcRest.Locale.Current;
-                var item = LcRest.UserBadge.Get(userID, itemID, locale.languageID, locale.countryID);
+                var item = LcRest.UserBadge.Get(userID, itemID, locale.ToString());
                 if (item != null)
                 {
                     return item;
@@ -122,7 +122,7 @@
                 var locale = LcRest.Locale.Current;
 
                 // Get a copy before deletion to send later
-                var item = LcRest.UserBadge.Get(userID, itemID, locale.languageID, locale.countryID);
+                var item = LcRest.UserBadge.Get(userID, itemID, locale.ToString());
 
                 if (item == null)
                 {
@@ -130,7 +130,7 @@
                 }
 
                 // Delete
-                LcRest.UserBadge.Delete(userID, itemID, locale.languageID, locale.countryID);
+                LcRest.UserBadge.Delete(userID, itemID, locale.ToString());
 
                 return item;
             }
@@ -168,7 +168,7 @@
             item.userBadgeID = LcRest.UserBadge.Set(item, locale);
 
             // Returns the updated client data
-            return LcRest.UserBadge.Get(userID, item.userBadgeID, locale.languageID, locale.countryID);
+            return LcRest.UserBadge.Get(userID, item.userBadgeID, locale.ToString());
         }
 
         private LcRest.UserBadge GetItemFromForm()

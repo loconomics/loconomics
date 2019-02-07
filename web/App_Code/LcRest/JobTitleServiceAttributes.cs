@@ -17,8 +17,7 @@ namespace LcRest
         public int jobTitleID;
         public IEnumerable<ServiceAttributeCategory> serviceAttributes;
         public IEnumerable<ExperienceLevel> experienceLevels;
-        public int languageID;
-        public int countryID;
+        public string language;
         #endregion
 
         #region Instances
@@ -26,14 +25,13 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static JobTitleServiceAttributes Get(int jobTitleID, int languageID, int countryID)
+        public static JobTitleServiceAttributes Get(int jobTitleID, string language)
         {
             var data = new JobTitleServiceAttributes();
             data.jobTitleID = jobTitleID;
-            data.languageID = languageID;
-            data.countryID = countryID;
-            data.serviceAttributes = ServiceAttribute.GetGroupedJobTitleAttributes(jobTitleID, languageID, countryID);
-            data.experienceLevels = ExperienceLevel.GetList(languageID, countryID);
+            data.language = language;
+            data.serviceAttributes = ServiceAttribute.GetGroupedJobTitleAttributes(jobTitleID, language);
+            data.experienceLevels = ExperienceLevel.GetList(language);
 
             return data;
         }

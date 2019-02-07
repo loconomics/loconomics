@@ -21,7 +21,7 @@
             {
                 var id = UrlData[0].AsInt();
                 var locale = LcRest.Locale.Current;
-                return LcRest.PostingTemplate.Get(id, locale.languageID, locale.countryID, true);
+                return LcRest.PostingTemplate.Get(id, locale.ToString(), true);
             }
 
             throw new HttpException(404, "Not Found");

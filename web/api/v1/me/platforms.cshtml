@@ -32,7 +32,7 @@
             {
                 var id = UrlData[0].AsInt(0);
                 var locale = LcRest.Locale.Current;
-                var item = LcRest.Platform.Get(WebSecurity.CurrentUserId, id, locale.languageID, locale.countryID);
+                var item = LcRest.Platform.Get(WebSecurity.CurrentUserId, id, locale.ToString());
                 if (item != null)
                 {
                     return item;
@@ -46,7 +46,7 @@
             {
                 // Full list
                 var locale = LcRest.Locale.Current;
-                return LcRest.Platform.GetList(WebSecurity.CurrentUserId, locale.languageID, locale.countryID);
+                return LcRest.Platform.GetList(WebSecurity.CurrentUserId, locale.ToString());
             }
             return base.Get();
         }

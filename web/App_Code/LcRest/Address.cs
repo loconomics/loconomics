@@ -257,7 +257,7 @@ namespace LcRest
                      INNER JOIN
                     Country As C
                       ON L.CountryID = C.CountryID
-                        AND C.LanguageID = @0
+                        AND C.Language = @0
                      LEFT JOIN
                     ServiceAddress As SA
                       -- Special case when the jobtitle/position requested is zero
@@ -307,7 +307,7 @@ namespace LcRest
             {
                 var sql = sqlSelect + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + (jobTitleID > 0 ? sqlcondOnlyActiveServiceAddress : sqlcondOnlyNamedAddresses);
                 return db.Query(sql,
-                    LcData.GetCurrentLanguageID(), userID, jobTitleID)
+                    LcRest.Locale.Current.ToString(), userID, jobTitleID)
                     .Select(FromDB)
                     .ToList();
             }
@@ -321,7 +321,7 @@ namespace LcRest
                 // the service-address table
                 // Null value as 3th parameter since that placeholder is reserved for addressID
                 return db.Query(sqlSelect + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + sqlAndTypeID,
-                    LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, null, AddressType.Billing)
+                    LcRest.Locale.Current.ToString(), userID, NotAJobTitleID, null, AddressType.Billing)
                     .Select(FromDB)
                     .ToList();
             }
@@ -346,7 +346,7 @@ namespace LcRest
                 }
                 sql += sqlAndCreatedBy;
                 return db.Query(sql,
-                    LcData.GetCurrentLanguageID(), onBehalfOfUserID, jobTitleID, createdByUserID)
+                    LcRest.Locale.Current.ToString(), onBehalfOfUserID, jobTitleID, createdByUserID)
                     .Select(FromDB);
             }
         }
@@ -369,7 +369,7 @@ namespace LcRest
             {
                 return GetSingleFrom(db.Query(
                     sqlSelectOne + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + sqlAndAddressID + sqlcondOnlyActiveServiceAddress,
-                    LcData.GetCurrentLanguageID(), userID, jobTitleID, addressID
+                    LcRest.Locale.Current.ToString(), userID, jobTitleID, addressID
                 ));
             }
         }
@@ -391,7 +391,7 @@ namespace LcRest
                 var sqlAndUserIdInList = " AND L.UserID IN (" + idList + ") ";
                 return GetSingleFrom(db.Query(
                     sqlSelectOne + sqlFields + sqlAndUserIdInList + sqlAndAddressID,
-                    LcData.GetCurrentLanguageID(),
+                    LcRest.Locale.Current.ToString(),
                     null, // There is no @1 on this SQL
                     NotAJobTitleID, // @2 has special meaning on the SQL, avoid some bad results
                     addressID
@@ -407,7 +407,7 @@ namespace LcRest
                 // the service-address table
                 return GetSingleFrom(db.Query(
                     sqlSelectOne + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + sqlAndAddressID + sqlAndTypeID,
-                    LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, addressID, AddressType.Billing
+                    LcRest.Locale.Current.ToString(), userID, NotAJobTitleID, addressID, AddressType.Billing
                 ));
             }
         }
@@ -424,7 +424,7 @@ namespace LcRest
                 // is returned.
                 var add = GetSingleFrom(db.Query(
                     sqlSelectOne + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndTypeID,
-                    LcData.GetCurrentLanguageID(), userID, null, null, AddressType.Home
+                    LcRest.Locale.Current.ToString(), userID, null, null, AddressType.Home
                 ));
 
                 if (add == null)

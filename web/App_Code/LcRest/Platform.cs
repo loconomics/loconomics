@@ -8,8 +8,7 @@ namespace LcRest
     {
         #region Fields
         public int platformID;
-        public int languageID;
-        public int countryID;
+        public string language;
         public string name;
         public string shortDescription;
         public string longDescription;
@@ -39,8 +38,7 @@ namespace LcRest
             return new Platform
             {
                 platformID = record.platformID,
-                languageID = record.languageID,
-                countryID = record.countryID,
+                language = record.language,
                 name = record.name,
                 shortDescription = record.shortDescription,
                 longDescription = record.longDescription,
@@ -60,8 +58,7 @@ namespace LcRest
         const string sqlSelect = @"
             SELECT
                 p.platformID,
-                p.languageID,
-                p.countryID,
+                p.language,
                 p.name,
                 p.shortDescription,
                 p.longDescription,
@@ -81,39 +78,37 @@ namespace LcRest
                     FROM JobTitlePlatform as JP
                     JOIN UserProfilePositions as J
                     ON (JP.JobTitleID = J.PositionID OR JP.JobTitleID = -1)
-                    AND JP.LanguageID = J.LanguageID
-                    AND JP.CountryID = J.CountryID
+                    AND JP.Language = J.Language
                     AND J.Active = 1
                     AND J.StatusID > 0
                     WHERE P.PlatformID = JP.PlatformID
-                    AND P.LanguageID = JP.LanguageID
-                    AND P.CountryID = JP.CountryID
+                    AND P.Language = JP.Language
                     AND P.Active = 1
                     AND JP.Active = 1
                     AND J.UserID = @0
                 )
-                AND P.LanguageID = @1 AND P.CountryID = @2
+                AND P.Language = @1
         ";
         const string sqlGetUserItem = sqlGetUserList + @"
-                AND P.platformID = @3
+                AND P.platformID = @2
         ";
         const string sqlGetItem = sqlSelect + @"
                 WHERE P.platformID = @0
         ";
         #endregion
 
-        public static IEnumerable<Platform> GetList(int userID, int languageID, int countryID)
+        public static IEnumerable<Platform> GetList(int userID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetUserList, userID, languageID, countryID).Select(FromDB);
+                return db.Query(sqlGetUserList, userID, language).Select(FromDB);
             }
         }
-        public static Platform Get(int userID, int platformID, int languageID, int countryID)
+        public static Platform Get(int userID, int platformID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetUserItem, userID, languageID, countryID, platformID));
+                return FromDB(db.QuerySingle(sqlGetUserItem, userID, language, platformID));
             }
         }
         public static Platform GetItem(int platformID)
@@ -128,13 +123,13 @@ namespace LcRest
         #region Fetch Public Full List
         const string sqlGetFullList = sqlSelect + @"
             WHERE
-                P.LanguageID = @0 AND P.CountryID = @1
+                P.Language = @0
         ";
-        public static IEnumerable<Platform> GetFullList(int languageID, int countryID)
+        public static IEnumerable<Platform> GetFullList(string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetFullList, languageID, countryID).Select(FromDB);
+                return db.Query(sqlGetFullList, language).Select(FromDB);
             }
         }
         #endregion

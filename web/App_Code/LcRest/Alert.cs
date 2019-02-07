@@ -49,18 +49,16 @@ namespace LcRest
                           ON UP.PositionID = P.PositionID
                              AND UP.Active = 1
                              AND UP.StatusID > 0
-                             AND UP.LanguageID = P.LanguageID
-                             AND UP.CountryID = P.CountryID
+                             AND UP.Language = P.Language
                         )
                           ON P.PositionID = UA.PositionID
-                             AND P.LanguageID = A.LanguageID
-                             AND P.CountryID = A.CountryID
+                             AND P.Language = A.Language
                              AND UP.UserID = UA.UserID
                 WHERE A.Active = 1 AND UA.UserID = @0
-                         AND A.LanguageID = @1 AND A.CountryID = @2
+                         AND A.Language = @1
                          AND (UA.PositionID = 0 OR P.PositionID is not null)
                         -- Filtered optionally by position (-1 to not filter by position)
-                         AND (UA.PositionID = 0 OR @3 = -1 OR UA.PositionID = @3)
+                         AND (UA.PositionID = 0 OR @2 = -1 OR UA.PositionID = @2)
                 ORDER BY A.DisplayRank, A.AlertName
         ";
 
@@ -70,8 +68,7 @@ namespace LcRest
             {
                 return db.Query(
                         sqlSelect, userID,
-                        LcData.GetCurrentLanguageID(),
-                        LcData.GetCurrentCountryID(),
+                        LcRest.Locale.Current.ToString(),
                         positionID)
                 .Select(FromDB);
             }

@@ -14,8 +14,7 @@ public static partial class LcPricingModel
     public class PricingVariableDefinition
     {
         public int PricingVariableID { get; internal set; }
-        public int LanguageID { get; internal set; }
-        public int CountryID { get; internal set; }
+        public string Language { get; internal set; }
         public int PositionID { get; internal set; }
         public int PricingTypeID { get; internal set; }
         public string InternalName { get; internal set; }
@@ -41,8 +40,7 @@ public static partial class LcPricingModel
         {
             return new PricingVariableDefinition {
                 PricingVariableID       = r.PricingVariableID
-                ,LanguageID             = r.LanguageID
-                ,CountryID              = r.CountryID
+                ,Language               = r.Language
                 ,PositionID             = r.PositionID
                 ,PricingTypeID          = r.PricingTypeID
                 ,InternalName           = r.InternalName
@@ -91,15 +89,13 @@ public static partial class LcPricingModel
         public class PrimaryKey
         {
             public int PricingVariableID { get; private set; }
-            public int LanguageID { get; private set; }
-            public int CountryID { get; private set; }
+            public string Language { get; private set; }
             public int PositionID { get; private set; }
             public int PricingTypeID { get; private set; }
-            public PrimaryKey (int pricingVariableID, int languageID, int countryID, int positionID, int pricingTypeID)
+            public PrimaryKey (int pricingVariableID, string language, int positionID, int pricingTypeID)
             {
                 PricingVariableID = PricingVariableID;
-                LanguageID = languageID;
-                CountryID = countryID;
+                Language = language;
                 PositionID = positionID;
                 PricingTypeID = pricingTypeID;
             }
@@ -109,14 +105,13 @@ public static partial class LcPricingModel
                 if (pk == null)
                     return false;
                 return (this.PricingVariableID == pk.PricingVariableID
-                    && this.LanguageID == pk.LanguageID
-                    && this.CountryID == pk.CountryID
+                    && this.Language == pk.Language
                     && this.PositionID == pk.PositionID
                     && this.PricingTypeID == pk.PricingTypeID);
             }
             public override int GetHashCode()
             {
-                return string.Format("{0}-{1}-{2}-{3}-{4}", PricingTypeID, LanguageID, CountryID, PositionID, PricingTypeID).GetHashCode();
+                return string.Format("{0}-{1}-{2}-{3}-{4}", PricingTypeID, Language, PositionID, PricingTypeID).GetHashCode();
             }
         }
         private static Dictionary<PrimaryKey, PricingVariableDefinition> Cached
@@ -151,8 +146,7 @@ public static partial class LcPricingModel
             {
                 var pk = new PrimaryKey (
                     record.PricingVariableID
-                    ,record.LanguageID
-                    ,record.CountryID
+                    ,record.Language
                     ,record.PositionID
                     ,record.PricingTypeID
                 );
@@ -442,8 +436,7 @@ public static partial class LcPricingModel
                     ,V.ProviderMinNumberAllowed
                     ,V.ProviderMaxNumberAllowed
                     ,D.InternalName
-                    ,D.LanguageID
-                    ,D.CountryID
+                    ,D.Language
                     ,D.PositionID
                     ,D.PricingTypeID
                     ,D.IsProviderVariable
@@ -472,8 +465,7 @@ public static partial class LcPricingModel
                     AND ProviderPackageID = @1
                     AND PricingEstimateID = @2
                     AND PricingEstimateRevision = @3
-                    AND D.LanguageID = @4
-                    AND D.CountryID = @5
+                    AND D.Language = @4
         ";
         const string sqlGetVariablesForEdit = selectVarValuesDef + @"
             FROM    PricingVariableDefinition As D
@@ -487,16 +479,14 @@ public static partial class LcPricingModel
                         AND V.PricingEstimateID = 0
                         AND V.PricingEstimateRevision = 0
             WHERE   D.Active = 1
-                    AND D.LanguageID = @4
-                    AND D.CountryID = @5
+                    AND D.Language = @4
                     AND (D.PositionID = @2 OR D.PositionID = -1)
                     AND D.PricingTypeID = @3
         ";
         const string sqlGetVariablesForNewPackage = @"
             SELECT  D.PricingVariableID
                     ,D.InternalName
-                    ,D.LanguageID
-                    ,D.CountryID
+                    ,D.Language
                     ,D.PositionID
                     ,D.PricingTypeID
                     ,D.IsProviderVariable
@@ -518,8 +508,7 @@ public static partial class LcPricingModel
             FROM    PricingVariableDefinition As D
             WHERE   (D.PositionID = @0 OR D.PositionID = -1)
                     AND D.PricingTypeID = @1
-                    AND D.LanguageID = @2
-                    AND D.CountryID = @3
+                    AND D.Language = @2
                     AND D.Active = 1
         ";
         const string sqlSetVariables = @"
@@ -576,7 +565,7 @@ public static partial class LcPricingModel
             using (var db = Database.Open("sqlloco"))
             {
                 var vars = db.Query(sqlGetVariablesForNewPackage, positionID, pricingTypeID,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                    LcRest.Locale.Current.ToString());
                 foreach(var r in vars)
                 {
                     var varValue = new PricingVariableValue {
@@ -612,8 +601,7 @@ public static partial class LcPricingModel
                     packageID,
                     positionID,
                     pricingTypeID,
-                    LcData.GetCurrentLanguageID(),
-                    LcData.GetCurrentCountryID());
+                    LcRest.Locale.Current.ToString());
                 foreach(var r in vars)
                 {
                     var varValue = PricingVariableValue.CreateFromDbRecord(r);
@@ -628,7 +616,7 @@ public static partial class LcPricingModel
             using (var db = Database.Open("sqlloco"))
             {
                 var vars = db.Query(sqlGetVariablesActualValues, userID, packageID, pricingEstimateID, pricingEstimateRevision,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                    LcRest.Locale.Current.ToString());
                 foreach(var r in vars)
                 {
                     var varValue = PricingVariableValue.CreateFromDbRecord(r);

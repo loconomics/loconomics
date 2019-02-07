@@ -40,7 +40,7 @@ namespace LcRest
                     L.ExperienceLevelDescription as description,
                     L.updatedDate
             FROM    ExperienceLevel As L
-            WHERE   L.LanguageID = @0 AND L.CountryID = @1
+            WHERE   L.Language = @0
         ";
         const string sqlGetItem = @"
             SELECT  TOP 1
@@ -49,22 +49,22 @@ namespace LcRest
                     L.ExperienceLevelDescription as description,
                     L.updatedDate
             FROM    ExperienceLevel As L
-            WHERE   L.LanguageID = @0 AND L.CountryID = @1 AND L.experienceLevelID = @2
+            WHERE   L.Language = @0 AND L.experienceLevelID = @1
         ";
 
-        public static IEnumerable<ExperienceLevel> GetList(int languageID, int countryID)
+        public static IEnumerable<ExperienceLevel> GetList(string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, languageID, countryID).Select(FromDB);
+                return db.Query(sqlGetList, language).Select(FromDB);
             }
         }
 
-        public static ExperienceLevel GetItem(int experienceLevelID, int languageID, int countryID)
+        public static ExperienceLevel GetItem(int experienceLevelID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem, languageID, countryID, experienceLevelID));
+                return FromDB(db.QuerySingle(sqlGetItem, language, experienceLevelID));
             }
         }
         #endregion

@@ -104,7 +104,7 @@ namespace LcRest
         /// external REST API.
         /// </summary>
         /// <param name="jobTitleIds"></param>
-        public void FillJobTitlesWithIds(IEnumerable<int> jobTitleIds, int languageID, int countryID)
+        public void FillJobTitlesWithIds(IEnumerable<int> jobTitleIds, string language)
         {
             jobTitles = new Dictionary<int, string>();
             using (var db = new LcDatabase())
@@ -113,9 +113,8 @@ namespace LcRest
                 {
                     var name = (string)db.QueryValue(@"SELECT PositionSingular FROM Positions WHERE Active = 1
                         AND PositionID = @0
-                        AND LanguageID = @1
-                        AND CountryID = @2
-                    ", jobTitleID, languageID, countryID);
+                        AND Language = @1
+                    ", jobTitleID, language);
                     if (String.IsNullOrEmpty(name))
                     {
                         throw new ConstraintException("[[[Invalid Job Title ID]]]");

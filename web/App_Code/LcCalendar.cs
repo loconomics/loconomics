@@ -744,9 +744,9 @@ public static partial class LcCalendar
             return db.Query(@"
                 SELECT  CalendarAvailabilityTypeID As AvailabilityTypeID, SelectableAs As DisplayName
                 FROM    CalendarAvailabilityType
-                WHERE   LanguageID = @0 AND CountryID = @1
+                WHERE   Language = @0
                         AND SelectableAs is not null
-            ", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            ", LcRest.Locale.Current.ToString());
         }
     }
 
@@ -1493,7 +1493,6 @@ public static partial class LcCalendar
         CalendarUtils libCalendarUtils = new CalendarUtils();
         var calUser = new CalendarUser(UserID);
         // Get User Time Zone
-        var userinfo = LcData.UserInfo.GetUserRowWithContactData(UserID);
         calUser.DefaultTimeZone = LcCalendar.GetAvailability.GetUserTimeZone(UserID);
         return libCalendarUtils.PrepareExportDataForUser(calUser);
     }

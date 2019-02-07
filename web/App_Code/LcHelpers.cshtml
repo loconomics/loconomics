@@ -353,73 +353,6 @@
     /*
      * Page helpers
      * */
-    /// <summary>
-    /// General IsPost-IsValid-ReturnOrRedirect for new dashboard,
-    /// supporting OnBoarding (redirecto to next step, with @page being
-    /// current) and normal (returning JSON, setting button to 'save').
-    /// Must be executed on the 
-    /// </summary>
-    /// <param name="page">Current page name (single page url segment)</param>
-    public static bool CheckDashboardSuccessPost(string page, bool alternativeSuccess = false)
-    {
-        var userId = WebMatrix.WebData.WebSecurity.CurrentUserId;
-        using (var db = Database.Open("sqlloco"))
-        {
-            var onboardingStep = N.DW(db.QueryValue("SELECT OnboardingStep FROM users WHERE userid = @0", userId)) ?? "";
-            var inOnboarding = !String.IsNullOrEmpty(onboardingStep);
-
-            // On Post check validation status, returning a Json response or html
-            if (IsPost && ModelState.IsValid)
-            {
-                if (inOnboarding)
-                {
-                    // Go next step
-                    var stepsPages = LcData.OnboardingSteps.Keys.ToList();
-                    var iNextStep = stepsPages.IndexOf(page) + 1;
-                    var nextStep = "";
-                    if (iNextStep < stepsPages.Count) {
-                        nextStep = stepsPages[iNextStep];
-                    }
-
-                    db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
-                        userId,
-                        nextStep == "" ? null : nextStep
-                    );
-
-                    var url = LcUrl.LangPath + "dashboard/" + nextStep;
-                    if (Request.IsAjaxRequest()) {
-                        ReturnJsonResult(1, url);
-                    } else {
-                        Response.Redirect(url);
-                    }
-                }
-                else
-                {
-                    if (alternativeSuccess) {
-                        return true;
-                    } else {
-                        if (Request.IsAjaxRequest()) {
-                            ReturnJsonResult(5, LcRessources.ShortDataSaved);
-                        }
-                    }
-                }
-            }
-            else if (IsPost)
-            {
-                // Save current as the OnboardingStep if in onboarding, no matters if there was
-                // error, just to track current status
-                if (inOnboarding)
-                {
-                    db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
-                        userId,
-                        page
-                    );
-                }
-            }
-        }
-        return false;
-    }
-
     public static int GetIeVersion() {
         // Sniff old IE browsers based on its engine (Trident) and version: so if it's Trident engine but is not the latest
         // version 7.0, then is IE 10 or lower; Trident/7.0 is IE11, and it's fine. Compatibility mode uses a lower Trident version,
@@ -473,89 +406,6 @@
 @*===============
  * Form Helpers
  *@
-@helper CountryOptions(string selectedCountryID = null)
-    {
-        var sql = @"
-        SELECT CountryID, CountryName, CountryCode
-        FROM    Country
-        WHERE   LanguageID=@0
-        ORDER BY CountryName
-    ";
-        using (var db = Database.Open("sqlloco"))
-        {
-            foreach (var country in db.Query(sql, LcData.GetCurrentLanguageID()))
-            {
-            <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID)>@country.CountryName</option>
-            }
-        }
-}
-@helper CountyOptions(string selectedCountyID = null)
-    {
-        var sql = @"
-        SELECT CountyID, CountyName, FIPSCode, StateProvinceID
-        FROM    County
-        ORDER BY CountyName
-    ";
-        using (var db = Database.Open("sqlloco"))
-        {
-            foreach (var county in db.Query(sql))
-            {
-            <option value="@county.CountyID" @IsSelected(selectedCountyID, county.CountyID)>@county.CountyName</option>
-            }
-        }
-}
-@helper StateProvinceOptions(int selectedStateID)
-    {
-    @StateProvinceOptions(selectedStateID.ToString())
-}
-@helper StateProvinceOptions(string selectedStateID)
-    {
-        var sql = @"
-        SELECT StateProvinceID, StateProvinceName, StateProvinceCode
-        FROM    StateProvince
-        WHERE   CountryID=@0
-        ORDER BY StateProvinceName
-    ";
-        using (var db = Database.Open("sqlloco"))
-        {
-            foreach (var state in db.Query(sql, LcData.GetCurrentCountryID()))
-            {
-            <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID)>@state.StateProvinceName</option>
-            }
-        }
-}
-@helper StateProvinceCodeOptions(string selectedStateCode)
-    {
-        var sql = @"
-        SELECT StateProvinceName, StateProvinceCode
-        FROM    StateProvince
-        WHERE   CountryID=@0
-        ORDER BY StateProvinceName
-    ";
-        using (var db = Database.Open("sqlloco"))
-        {
-            foreach (var state in db.Query(sql, LcData.GetCurrentCountryID()))
-            {
-            <option value="@state.StateProvinceCode" @IsSelected(selectedStateCode, state.StateProvinceCode)>@state.StateProvinceName</option>
-            }
-        }
-}
-@helper MonthOptions(string selectedMonth)
-    {
-        for (var i = 1; i < 13; i++)
-        {
-        <option @IsSelected(selectedMonth, i) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
-        }
-}
-@helper CardYearOptions(string selectedYear)
-    {
-        var year = DateTime.Today.Year;
-        var limitYear = year + 10;
-        for (; year < limitYear; year++)
-        {
-        <option @IsSelected(selectedYear, year) value="@(year)">@(year)</option>
-        }
-}
 @helper IsChecked(object valueA, object valueB)
     {
         if (LcUtils.AreEquivalents(valueA, valueB))
@@ -563,66 +413,9 @@
         @Html.Raw("checked='checked'")
         }
 }
-@helper IsSelected(object valueA, object valueB)
-    {
-        if (LcUtils.AreEquivalents(valueA, valueB))
-        {
-        @Html.Raw("selected='selected'")
-        }
-}
-@helper CssCurrent(string a, string b, string className = "current")
-    {
-        if (LcUtils.AreEquivalents(a, b))
-        {
-        @(className)
-        }
-}
-@functions{
-    static public string GetRedirectURLFromReferrer(string filter = "")
-    {
-        return Request["RedirectURL"] ??
-                (Request.UrlReferrer != null && Request.UrlReferrer.PathAndQuery.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) > 0 ?
-                Request.UrlReferrer.PathAndQuery : "");
-    }
-}
 @*=================
  * JavaScript
  *@
-@helper SetupStarRatingPlugin()
-    {
-    <script type="text/javascript">
-        if (!jqueryStarRatingPluginLoaded) var jqueryStarRatingPluginLoaded = false;
-        if (!jqueryStarRatingPluginLoaded) {
-            jqueryStarRatingPluginLoaded = true;
-            LC.load({ 
-                scripts: [
-                    LcUrl.AppPath + "Scripts/star-rating/jquery.MetaData.js",
-                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
-                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.css"
-                ]
-            });
-        } else {
-            if ($ && $().rating)
-                // Re-apply plugin (to new added elements without the plugin loaded):
-                $('input[type=radio].star').rating();
-        }
-    </script>
-}
-@helper GetValidationScripts()
-    {
-    <script type="text/javascript">
-        @GetValidationScriptCode()
-    </script>
-}
-@helper GetValidationScriptCode()
-    {
-    <text>
-    if (window['LC'] && LC['setupValidation'])
-        LC.setupValidation();
-    else
-        $(document).on('lcLibReady', function () { LC.setupValidation() });
-    </text>
-}
 @functions{
     /*========= JSON =============*/
     public static void ReturnJson(object jsondata, bool endResponse = true)
@@ -660,27 +453,11 @@
         if (!WebSecurity.IsAuthenticated)
             RedirectToLogin();
     }
-    public static void ProviderPage()
-    {
-        SecurePage();
-        if (LcData.UserInfo.GetUserRow().IsProvider == false)
-        {
-            Forbidden(LcData.UserInfo.UserType.Provider);
-        }
-    }
-    public static void AdminPage()
-    {
-        SecurePage();
-        if (LcData.UserInfo.GetUserRow().IsAdmin == false && !(Session["OnBehalfOf_LoggedUserID"] is int))
-        {
-            Forbidden(LcData.UserInfo.UserType.Admin);
-        }
-    }
     public static void ContributorPage()
     {
         SecurePage();
-        var u = LcData.UserInfo.GetUserRow();
-        if (!(u.IsAdmin == true || u.IsContributor == true))
+        var u = LcRest.UserProfile.Get(WebSecurity.CurrentUserId);
+        if (!(u.isAdmin || u.isCollaborator))
         {
             Forbidden(LcData.UserInfo.UserType.Contributor);
         }
@@ -691,44 +468,6 @@
         {
             ContributorPage();
         }
-    }
-    public static string OnBehalfOf()
-    {
-        if (WebSecurity.IsAuthenticated)
-        {
-            // Only for Admin users, for any page executing this (SiteLayout is fine, will redirect)
-            if (LcData.UserInfo.GetUserRow().IsAdmin == true
-                && Request["OnBehalfOf"].IsInt())
-            {
-                // Remember users data:
-                int oboID = Request["OnBehalfOf"].AsInt();
-                var loggedID = WebSecurity.CurrentUserId;
-                var loggedName = WebSecurity.CurrentUserName;
-                var oboUser = LcData.UserInfo.GetUserRow(oboID);
-
-                // Enter the site as another user, but remember the original to warning about
-                Session.Clear();
-
-                // New session:
-                Session["OnBehalfOf_LoggedUserID"] = loggedID;
-                Session["OnBehalfOf_LoggedUserName"] = loggedName;
-
-                // New authentication cookie:
-                System.Web.Security.FormsAuthentication.SetAuthCookie(oboUser.Email, false);
-
-                // Return to the original URL, setting the new cooking
-                Response.Redirect(LcUrl.GetTheGoodURL(Request.Url.OriginalString).Replace("OnBehalfOf", "_"));
-            }
-            else if (Session["OnBehalfOf_LoggedUserID"] is int)
-            {
-                return String.Format("Logged as {0}:{1} On Behalf Of {2}:{3}",
-                    Session["OnBehalfOf_LoggedUserID"],
-                    Session["OnBehalfOf_LoggedUserName"],
-                    WebSecurity.CurrentUserId,
-                    WebSecurity.CurrentUserName);
-            }
-        }
-        return null;
     }
     /// <summary>
     /// Shows to the user the PageNotFound:404 page instead of the current one requested.

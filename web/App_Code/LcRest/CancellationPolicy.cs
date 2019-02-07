@@ -12,8 +12,7 @@ namespace LcRest
     {
         #region Fields
         public int cancellationPolicyID;
-        public int languageID;
-        public int countryID;
+        public string language;
         public string name;
         public string description;
         public int hoursRequired;
@@ -31,8 +30,7 @@ namespace LcRest
             return new CancellationPolicy
             {
                 cancellationPolicyID = record.cancellationPolicyID,
-                languageID = record.languageID,
-                countryID = record.countryID,
+                language = record.language,
                 name = record.name,
                 description = record.description,
                 hoursRequired = record.hoursRequired,
@@ -56,8 +54,7 @@ namespace LcRest
         const string sqlGetItem = @"
             SELECT
                 cancellationPolicyID,
-                languageID,
-                countryID,
+                language,
                 cancellationPolicyName As name,
                 cancellationPolicyDescription As description,
                 hoursRequired,
@@ -66,15 +63,15 @@ namespace LcRest
                 updatedDate
             FROM CancellationPolicy
             WHERE CancellationPolicyID = @0
-                AND LanguageID = @1 AND CountryID = @2
+                AND Language = @1
         ";
         #endregion
 
-        public static CancellationPolicy Get(int cancellationPolicyID, int languageID, int countryID)
+        public static CancellationPolicy Get(int cancellationPolicyID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem, cancellationPolicyID, languageID, countryID));
+                return FromDB(db.QuerySingle(sqlGetItem, cancellationPolicyID, language));
             }
         }
         #endregion

@@ -21,8 +21,7 @@ namespace LcRest
         public int pricingTypeID;
         public int serviceProfessionalUserID;
         public int jobTitleID;
-        public int languageID;
-        public int countryID;
+        public string language;
         public string name;
         public string description;
         public decimal? price;
@@ -162,8 +161,6 @@ namespace LcRest
         public static IEnumerable<ServiceProfessionalService> GetListByIds(int serviceProfessionalUserID, IEnumerable<int> serviceIds)
         {
             int jobTitleID = 0;
-            int langID = 0;
-            int countryID = 0;
 
             using (var db = new LcDatabase())
             {
@@ -178,12 +175,8 @@ namespace LcRest
                     if (jobTitleID == 0)
                     {
                         jobTitleID = service.jobTitleID;
-                        langID = service.languageID;
-                        countryID = service.countryID;
                     }
-                    else if (jobTitleID != service.jobTitleID ||
-                        langID != service.languageID ||
-                        countryID != service.countryID)
+                    else if (jobTitleID != service.jobTitleID)
                     {
                         // All services must be part of the same position
                         throw new ConstraintException("[[[All services must be selected from the same job title]]]");
@@ -206,8 +199,7 @@ namespace LcRest
                     ,PP.ProviderUserID As serviceProfessionalUserID
                     ,PP.pricingTypeID
                     ,PP.PositionID As jobTitleID
-                    ,PP.languageID
-                    ,PP.countryID
+                    ,PP.language
 
                     ,PP.ProviderPackageName As name
                     ,PP.ProviderPackageDescription As description
@@ -230,8 +222,7 @@ namespace LcRest
                      INNER JOIN
                     PricingType As PT
                         ON PP.PricingTypeID = PT.PricingTypeID
-                        AND PP.LanguageID = PT.LanguageID
-                        AND PP.CountryID = PT.CountryID
+                        AND PP.Language = PT.Language
             WHERE   P.PricingSummaryID = @0
                      AND 
                     P.PricingSummaryRevision = @1
@@ -273,7 +264,7 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
-                return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+                return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, LcRest.Locale.Current.ToString());
             }
         }
 
@@ -291,8 +282,7 @@ namespace LcRest
                         ,p.PriceRate
                         ,p.PriceRateUnit
                         ,p.IsPhone
-                        ,p.LanguageID
-                        ,p.CountryID
+                        ,p.Language
                         ,p.CreatedDate
                         ,p.UpdatedDate
                         ,p.Active
@@ -312,9 +302,8 @@ namespace LcRest
                          INNER JOIN
                         ServiceAttribute As A
                           ON A.ServiceAttributeID = PD.ServiceAttributeID
-                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
-                WHERE   A.LanguageID = @1
-                        AND A.CountryID = @2
+                            AND A.Language = P.Language
+                WHERE   A.Language = @1
                         AND PD.ProviderPackageID = @0
                 ORDER BY A.Name ASC
         ";
@@ -331,14 +320,14 @@ namespace LcRest
                          INNER JOIN
                         ServiceAttribute As A
                           ON A.ServiceAttributeID = PD.ServiceAttributeID
-                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
+                            AND A.Language = P.Language
                 WHERE   P.ProviderUserID = @0
                          AND (@1 = -1 OR P.PositionID = @1)
-                         AND P.LanguageID = @2 AND P.CountryID = @3
+                         AND P.Language = @2
                          AND PD.Active = 1 AND P.Active = 1
-                         AND (@4 = -1 OR P.ProviderPackageID = @4)
-                         AND (@5 = -1 OR P.PricingTypeID = @5)
-                         AND (@6 = -1 OR P.IsAddOn = @6)
+                         AND (@4 = -1 OR P.ProviderPackageID = @3)
+                         AND (@5 = -1 OR P.PricingTypeID = @4)
+                         AND (@6 = -1 OR P.IsAddOn = @5)
                 ORDER BY A.Name ASC
         ";
 
@@ -351,24 +340,22 @@ namespace LcRest
                          INNER JOIN
                         PricingType As PT
                           ON P.PricingTypeID = PT.PricingTypeID
-                            AND P.LanguageID = PT.LanguageID
-                            AND P.CountryID = PT.CountryID
+                            AND P.Language = PT.Language
                          INNER JOIN
                         PositionPricingType AS PPT
                           ON PPT.PositionID = P.PositionID
                             AND PPT.PricingTypeID = PT.PricingTypeID
-                            AND PPT.LanguageID = PT.LanguageID
-                            AND PPT.CountryID = PT.CountryID
+                            AND PPT.Language = PT.Language
                             AND PPT.Active = 1
                 WHERE   p.ProviderUserID = @0
                          AND (@1 = -1 OR P.PositionID = @1)
                          AND 
-                        p.LanguageID = @2 AND p.CountryID = @3
+                        p.Language = @2
                          AND 
                         p.Active = 1
-                         AND (@4 = -1 OR p.ProviderPackageID = @4)
-                         AND (@5 = -1 OR p.PricingTypeID = @5)
-                         AND (@6 = -1 OR P.IsAddOn = @6)
+                         AND (@4 = -1 OR p.ProviderPackageID = @3)
+                         AND (@5 = -1 OR p.PricingTypeID = @4)
+                         AND (@6 = -1 OR P.IsAddOn = @5)
                          AND P.VisibleToClientID IN ({0})
                 ORDER BY PT.DisplayRank ASC
             ";
@@ -379,8 +366,7 @@ namespace LcRest
             return db.Query(query,
                 providerUserID,
                 positionID,
-                LcData.GetCurrentLanguageID(),
-                LcData.GetCurrentCountryID(),
+                LcRest.Locale.Current.ToString(),
                 packageID,
                 pricingTypeID,
                 (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
@@ -392,8 +378,7 @@ namespace LcRest
             return db.Query(SQLGetPackageServiceAttributesByMulti,
                 providerUserID,
                 positionID,
-                LcData.GetCurrentLanguageID(),
-                LcData.GetCurrentCountryID(),
+                LcRest.Locale.Current.ToString(),
                 packageID,
                 pricingTypeID,
                 (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)

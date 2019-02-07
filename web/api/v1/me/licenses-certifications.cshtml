@@ -42,9 +42,8 @@
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
                 var userID = WebSecurity.CurrentUserId;
                 var jobTitleID = UrlData[0].AsInt();
-                var languageID = LcRest.Locale.Current.languageID;
 
-                return LcRest.UserLicenseCertification.GetList(userID, jobTitleID, languageID);
+                return LcRest.UserLicenseCertification.GetList(userID, jobTitleID, LcRest.Locale.Current.ToString());
             }
 
             return base.Get();
@@ -76,7 +75,7 @@
             // Input Data
             var userID = WebSecurity.CurrentUserId;
             var licenseCertificationID = Request["licenseCertificationID"].AsInt();
-            var languageID = LcRest.Locale.Current.languageID;
+            var language = LcRest.Locale.Current.ToString();
             var itemID = 0;
             
             try {
@@ -98,7 +97,7 @@
                         jobTitleID = jobTitleID,
                         userLicenseCertificationID = userLicenseCertificationID,
                         licenseCertificationID = licenseCertificationID,
-                        languageID = languageID
+                        language = language
                     }, fileuploaded.FileName, photoStream);
                 }
             }
@@ -108,7 +107,7 @@
             }
 
             if (ModelState.IsValid) {
-                return LcRest.UserLicenseCertification.Get(userID, jobTitleID, languageID, itemID);
+                return LcRest.UserLicenseCertification.Get(userID, jobTitleID, language, itemID);
             }
             else {
                 var errMsg = String.Join("; ", ModelState.Values.First().Errors);

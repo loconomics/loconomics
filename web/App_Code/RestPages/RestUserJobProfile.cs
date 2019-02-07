@@ -184,7 +184,7 @@ public class RestUserJobProfile : RestWebPage
             // Search: we try an exact match, just in case we have already the job title (singular or plural) and
             // user didn't select it from the list
             var locale = LcRest.Locale.Current;
-            var jobTitle = LcRest.JobTitle.FindExactName(jobTitleName, locale.languageID, locale.countryID);
+            var jobTitle = LcRest.JobTitle.FindExactName(jobTitleName, locale.ToString());
             if (jobTitle.HasValue)
             {
                 // Use the first one
@@ -199,7 +199,7 @@ public class RestUserJobProfile : RestWebPage
         // Double check that the job title exists
         else
         {
-            var existentTitle = LcRest.PublicJobTitle.Get(jobTitleID, LcRest.Locale.Current);
+            var existentTitle = LcRest.PublicJobTitle.Get(jobTitleID, LcRest.Locale.Current.ToString());
             if (existentTitle == null)
             {
                 throw new HttpException(404, "Job Title not found or disapproved");

@@ -17,7 +17,7 @@ namespace LcRest
         public bool required;
         public int stateProvinceID;
         public string stateProvinceName;
-        public int languageID;
+        public string language;
         public bool submitted;
         public string optionGroup;
         #endregion
@@ -27,7 +27,7 @@ namespace LcRest
 
         public void FillLicenseCertification()
         {
-            licenseCertification = LicenseCertification.GetItem(licenseCertificationID, languageID);
+            licenseCertification = LicenseCertification.GetItem(licenseCertificationID, language);
         }
         #endregion
             
@@ -44,7 +44,7 @@ namespace LcRest
                 required = record.required,
                 stateProvinceID = record.stateProvinceID,
                 stateProvinceName = record.stateProvinceName,
-                languageID = record.languageID,
+                language = record.language,
                 submitted = record.submitted,
                 optionGroup = record.optionGroup
             };
@@ -60,8 +60,8 @@ namespace LcRest
             SET @userID = @0       
             DECLARE @jobTitleID AS int
             SET @jobTitleID = @1   
-            DECLARE @languageID AS int
-            SET @languageID = @2
+            DECLARE @language AS nvarchar(42)
+            SET @language = @2
              
             SELECT
                 JL.positionID as jobTitleID
@@ -69,7 +69,7 @@ namespace LcRest
                 ,JL.required
                 ,JL.stateProvinceID
                 ,SP.stateProvinceName
-                ,@languageID as languageID
+                ,@language as language
                 ,CASE WHEN UL.LicenseCertificationID = JL.LicenseCertificationID then CAST(1 as bit) else CAST(0 as bit) END as submitted
                 ,JL.optionGroup 
             FROM
@@ -103,11 +103,11 @@ namespace LcRest
         ";
         #endregion
 
-        public static IEnumerable<JobTitleStateProvinceLicense> GetList(int userID, int jobTitleID, int languageID)
+        public static IEnumerable<JobTitleStateProvinceLicense> GetList(int userID, int jobTitleID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, userID, jobTitleID, languageID).Select(FromDB);
+                return db.Query(sqlGetList, userID, jobTitleID, language).Select(FromDB);
             }
         }
         #endregion

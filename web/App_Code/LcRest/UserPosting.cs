@@ -51,9 +51,7 @@ namespace LcRest
         /// </summary>
         public DateTimeOffset? reactionDate;
         [JsonIgnore]
-        public int languageID;
-        [JsonIgnore]
-        public int countryID;
+        public string language;
         public DateTimeOffset createdDate;
         public DateTimeOffset updatedDate;
         #endregion
@@ -91,8 +89,7 @@ namespace LcRest
                 updatedDate = record.updatedDate,
                 neededSpecializationIDs = neededSpecializations,
                 desiredSpecializationIDs = desiredSpecializations,
-                languageID = record.languageID,
-                countryID = record.countryID,
+                language = record.language,
                 postingTemplateID = record.postingTemplateID
             };
             if (fillSpecializations)
@@ -114,8 +111,8 @@ namespace LcRest
         #region Links
         public void FillSpecializations(LcDatabase database = null)
         {
-            neededSpecializations = UserPostingSpecialization.ListBy(neededSpecializationIDs, languageID, countryID);
-            desiredSpecializations = UserPostingSpecialization.ListBy(desiredSpecializationIDs, languageID, countryID);
+            neededSpecializations = UserPostingSpecialization.ListBy(neededSpecializationIDs, language);
+            desiredSpecializations = UserPostingSpecialization.ListBy(desiredSpecializationIDs, language);
         }
         
         public void FillClient(int requesterUserID)
@@ -157,48 +154,45 @@ namespace LcRest
                 a.desiredSpecializationIDs,
                 a.createdDate,
                 a.updatedDate,
-                a.languageID,
-                a.countryID
+                a.language
         ";
         const string sqlFromTables = @"
                 UserPosting as A
                 INNER JOIN Solution as S
                  ON A.solutionID = S.solutionID
-                 AND A.languageID = S.languageID
-                 AND A.countryID = S.countryID
+                 AND A.language = S.language
         ";
         const string sqlSelect = @"
             SELECT " + sqlFields + @"
             FROM " + sqlFromTables;
         const string sqlWhereUser = @"
             WHERE a.userID = @0
-                AND a.languageID = @1 AND a.countryID = @2
+                AND a.language = @1
         ";
         const string sqlWhereUserAndID = sqlWhereUser + @"
-            AND a.userPostingID = @3
+            AND a.userPostingID = @2
         ";
         const string sqlOrderByDate = "ORDER BY a.createdDate DESC";
-        public static UserPosting Get(int userID, int userPostingID, int languageID, int countryID, bool fillLinks)
+        public static UserPosting Get(int userID, int userPostingID, string language, bool fillLinks)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelect + sqlWhereUserAndID;
-                return FromDB(db.QuerySingle(sql, userID, languageID, countryID, userPostingID), fillLinks, fillQuestionsResponses: fillLinks);
+                return FromDB(db.QuerySingle(sql, userID, language, userPostingID), fillLinks, fillQuestionsResponses: fillLinks);
             }
         }
         /// <summary>
         /// List postings of an user
         /// </summary>
         /// <param name="userID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static IEnumerable<UserPosting> List(int userID, int languageID, int countryID, bool fillLinks)
+        public static IEnumerable<UserPosting> List(int userID, string language, bool fillLinks)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelect + sqlWhereUser + sqlOrderByDate;
-                return db.Query(sql, userID, languageID, countryID).Select((r) => (UserPosting)FromDB(r, fillLinks, fillQuestionsResponses: fillLinks));
+                return db.Query(sql, userID, language).Select((r) => (UserPosting)FromDB(r, fillLinks, fillQuestionsResponses: fillLinks));
             }
         }
         #endregion
@@ -216,7 +210,7 @@ namespace LcRest
                  AND R.serviceProfessionalUserID = @0
             WHERE a.userID <> @0
                 AND UserSolution.userID = @0
-                AND a.languageID = @1 AND a.countryID = @2
+                AND a.language = @1
                 AND a.statusID = 1
         ";
         const string sqlReactionFiltered = @"
@@ -229,16 +223,15 @@ namespace LcRest
         /// and matches based on the solutionID and the user listings (maybe on needed specializations at some point)
         /// </summary>
         /// <param name="userID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <param name="fillLinks"></param>
         /// <returns></returns>
-        public static IEnumerable<UserPosting> ListSuggestedPostings(int userID, int languageID, int countryID)
+        public static IEnumerable<UserPosting> ListSuggestedPostings(int userID, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelectSuggestedForUser + sqlReactionFiltered + sqlOrderByDate;
-                return db.Query(sql, userID, languageID, countryID)
+                return db.Query(sql, userID, language)
                     .Select((r) => {
                         var post = (UserPosting)FromDB(r, true, userID, true);
                         post.reactionDate = r.reactionDate;
@@ -252,15 +245,14 @@ namespace LcRest
         /// </summary>
         /// <param name="userPostingID"></param>
         /// <param name="userID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static UserPosting GetSuggestedPosting(int userPostingID, int userID, int languageID, int countryID)
+        public static UserPosting GetSuggestedPosting(int userPostingID, int userID, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlSelectSuggestedForUser + " AND a.userPostingID = @3 " + sqlOrderByDate;
-                var r = db.QuerySingle(sql, userID, languageID, countryID, userPostingID);
+                var r = db.QuerySingle(sql, userID, language, userPostingID);
                 var post = (UserPosting)FromDB(r, true, userID, true);
                 post.reactionDate = r.reactionDate;
                 post.reactionTypeID = (LcEnum.UserPostingReactionType?)r.reactionTypeID;
@@ -283,21 +275,20 @@ namespace LcRest
                  ON CCCUsers.userID = userprofile.userId
                  AND CCCUsers.UserType like 'student'
             WHERE a.userPostingID = @0
-                AND a.languageID = @1 AND a.countryID = @2
+                AND a.language = @1
                 AND a.statusID = 1
         " + sqlOrderByDate;
         /// <summary>
         /// Provides a list of service professionals suggested to apply to a given userPostingID
         /// </summary>
         /// <param name="userPostingID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static IEnumerable<UserEmail> ListSuggestedProfessionals(int userPostingID, int languageID, int countryID)
+        public static IEnumerable<UserEmail> ListSuggestedProfessionals(int userPostingID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlSelectSuggestedProfessionals, userPostingID, languageID, countryID)
+                return db.Query(sqlSelectSuggestedProfessionals, userPostingID, language)
                     .Select((r) => (UserEmail)UserEmail.FromDB(r));
             }
         }
@@ -356,22 +347,21 @@ namespace LcRest
         const string sqlDelete = @"
             DELETE FROM UserPosting
             WHERE UserID = @0
-                AND languageID = @1 AND countryID = @2
-                AND UserPostingID = @3
+                AND language = @1
+                AND UserPostingID = @2
         ";
         /// <summary>
         /// 
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="userPostingID"></param>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
-        public static void Delete(int userID, int userPostingID, int languageID, int countryID)
+        /// <param name="language"></param>
+        public static void Delete(int userID, int userPostingID, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlDelete;
-                db.Execute(sql, userID, languageID, countryID, userPostingID);
+                db.Execute(sql, userID, language, userPostingID);
             }
         }
         #endregion
@@ -397,8 +387,7 @@ namespace LcRest
                 ,title
                 ,neededSpecializationIDs
                 ,desiredSpecializationIDs
-                ,languageID
-                ,countryID
+                ,language
                 ,CreatedDate
                 ,updatedDate
                 ,ModifiedBy
@@ -411,7 +400,6 @@ namespace LcRest
                 ,@5
                 ,@6
                 ,@7
-                ,@8
                 ,getdate()
                 ,getdate()
                 ,@0
@@ -454,8 +442,7 @@ namespace LcRest
                         entry.title,
                         neededSpecializationsText,
                         desiredSpecializationsText,
-                        locale.languageID,
-                        locale.countryID,
+                        locale.ToString(),
                         entry.userID
                     );
                     foreach (var qr in entry.questionsResponses)

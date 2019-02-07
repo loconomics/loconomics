@@ -35,11 +35,10 @@ namespace LcRest
             SELECT specializationID, name
             FROM Specialization
             WHERE specializationID IN (@0)
-                AND languageID = @1
-                AND countryID = @2
+                AND language = @1
                 AND (Approved = 1 OR Approved is null)
         ";
-        public static IEnumerable<UserPostingSpecialization> ListBy(IEnumerable<int> ids, int languageID, int countryID)
+        public static IEnumerable<UserPostingSpecialization> ListBy(IEnumerable<int> ids, string language)
         {
             // Quick return
             if (ids.Count() == 0)
@@ -49,7 +48,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 var sql = db.UseListInSqlParameter(sqlGetSpecializationsByIds, 0, ids, "-1");
-                return db.Query(sql, null, languageID, countryID).Select(FromDB);
+                return db.Query(sql, null, language).Select(FromDB);
             }
         }
         #endregion

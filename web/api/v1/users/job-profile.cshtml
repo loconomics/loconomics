@@ -69,7 +69,7 @@
         {
             if (itemID > 0)
             {
-                var item = LcRest.PublicUserJobTitle.FromUserJobTitle(LcRest.UserJobTitle.GetItem(userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), itemID));
+                var item = LcRest.PublicUserJobTitle.FromUserJobTitle(LcRest.UserJobTitle.GetItem(userID, LcRest.Locale.Current.ToString(), itemID));
                 if (item != null) {
                     return item;
                 }

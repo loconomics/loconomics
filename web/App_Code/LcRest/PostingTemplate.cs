@@ -47,11 +47,11 @@ namespace LcRest
         ";
         #endregion
 
-        public static PostingTemplate Get(int postingTemplateID, int languageID, int countryID, bool fillQuestions)
+        public static PostingTemplate Get(int postingTemplateID, string language, bool fillQuestions)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGet, postingTemplateID, languageID, countryID), fillQuestions);
+                return FromDB(db.QuerySingle(sqlGet, postingTemplateID, language), fillQuestions);
             }
         }
         #endregion

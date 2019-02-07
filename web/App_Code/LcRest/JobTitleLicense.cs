@@ -23,13 +23,13 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static JobTitleLicense Get(int userID, int jobTitleID, int languageID)
+        public static JobTitleLicense Get(int userID, int jobTitleID, string language)
         {
             var data = new JobTitleLicense();
-            data.municipality =  JobTitleMunicipalLicense.GetList(userID, jobTitleID, languageID);
-            data.county =  JobTitleCountyLicense.GetList(userID, jobTitleID, languageID);
-            data.stateProvince =  JobTitleStateProvinceLicense.GetList(userID, jobTitleID, languageID);
-            data.country = JobTitleCountryLicense.GetList(userID, jobTitleID, languageID);
+            data.municipality =  JobTitleMunicipalLicense.GetList(userID, jobTitleID, language);
+            data.county =  JobTitleCountyLicense.GetList(userID, jobTitleID, language);
+            data.stateProvince =  JobTitleStateProvinceLicense.GetList(userID, jobTitleID, language);
+            data.country = JobTitleCountryLicense.GetList(userID, jobTitleID, language);
             return data;
         }
         #endregion  

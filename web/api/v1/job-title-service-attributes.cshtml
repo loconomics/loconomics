@@ -17,8 +17,7 @@
         {           
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
                 var jobTitleID = UrlData[0].AsInt();
-                var locale = LcRest.Locale.Current;
-                return LcRest.JobTitleServiceAttributes.Get(jobTitleID, locale.languageID, locale.countryID);
+                return LcRest.JobTitleServiceAttributes.Get(jobTitleID, LcRest.Locale.Current.ToString());
             }
 
             return base.Get();

@@ -12,8 +12,7 @@ namespace LcRest
     {
         #region Fields
         public int solutionID;
-        public int languageID;
-        public int countryID;
+        public string language;
         public string name;
         public bool credentialCheckRequired;
         public bool backgroundCheckRequired;
@@ -34,8 +33,7 @@ namespace LcRest
             return new Solution
             {
                 solutionID = record.solutionID,
-                languageID = record.languageID,
-                countryID = record.countryID,
+                language = record.language,
                 name = record.name,
                 credentialCheckRequired = record.credentialCheckRequired,
                 backgroundCheckRequired = record.backgroundCheckRequired,
@@ -58,8 +56,7 @@ namespace LcRest
         const string sqlSelect = "SELECT";
         public const string sqlFields = @"
                 S.solutionID,
-                S.languageID,
-                S.countryID,
+                S.language,
                 S.name,
                 S.credentialCheckRequired,
                 S.backgroundCheckRequired,
@@ -75,32 +72,29 @@ namespace LcRest
         const string sqlCommonWhere = @"
             WHERE
                 S.Active = 1
-                 AND S.languageID = @0
-                 AND S.countryID = @1
+                 AND S.language = @0
         ";
         const string sqlGetList = sqlFields + sqlFrom + sqlCommonWhere;
         const string sqlSearchConditions = @"
-                 AND S.name like '%' + @2 + '%'
+                 AND S.name like '%' + @1 + '%'
         ";
         const string sqlAndId = @"
-                 AND S.solutionID = @2
+                 AND S.solutionID = @1
         ";
         const string sqlBySearchSubcategoryID = sqlSelect + sqlFields + sqlFrom + @"
                 INNER JOIN SearchSubCategorySolution As C
                  ON C.solutionID = S.solutionID
-                 AND C.languageID = S.languageID
-                 AND C.countryID = S.countryID
+                 AND C.language = S.language
         " + sqlCommonWhere + @"
-                 AND C.searchSubcategoryID = @2
+                 AND C.searchSubcategoryID = @1
                 ORDER BY C.displayRank, S.name
         ";
         const string sqlByJobTitleID = sqlSelect + sqlFields + sqlFrom + @"
                 INNER JOIN JobTitleSolution As C
                  ON C.solutionID = S.solutionID
-                 AND C.languageID = S.languageID
-                 AND C.countryID = S.countryID
+                 AND C.language = S.language
         " + sqlCommonWhere + @"
-                 AND C.jobTitleID = @2
+                 AND C.jobTitleID = @1
                 ORDER BY C.displayRank, S.name
         ";
         #endregion
@@ -108,47 +102,46 @@ namespace LcRest
         /// <summary>
         /// List all
         /// </summary>
-        /// <param name="languageID"></param>
-        /// <param name="countryID"></param>
+        /// <param name="language"></param>
         /// <returns></returns>
-        public static IEnumerable<Solution> List(int languageID, int countryID)
+        public static IEnumerable<Solution> List(string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlSelect + sqlGetList + sqlCommonOrder, languageID, countryID).Select(FromDB);
+                return db.Query(sqlSelect + sqlGetList + sqlCommonOrder, language).Select(FromDB);
             }
         }
 
-        public static IEnumerable<Solution> BySearchSubcategory(int searchSubcategoryID, int languageID, int countryID)
+        public static IEnumerable<Solution> BySearchSubcategory(int searchSubcategoryID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlBySearchSubcategoryID, languageID, countryID, searchSubcategoryID).Select(FromDB);
+                return db.Query(sqlBySearchSubcategoryID, language, searchSubcategoryID).Select(FromDB);
             }
         }
 
-        public static IEnumerable<Solution> ByJobTitle(int jobTitleID, int languageID, int countryID)
+        public static IEnumerable<Solution> ByJobTitle(int jobTitleID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlByJobTitleID, languageID, countryID, jobTitleID).Select(FromDB);
+                return db.Query(sqlByJobTitleID, language, jobTitleID).Select(FromDB);
             }
         }
 
-        public static IEnumerable<Solution> Search(string searchText, int languageID, int countryID)
+        public static IEnumerable<Solution> Search(string searchText, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = sqlLimitedSelect + sqlGetList + sqlSearchConditions + sqlCommonOrder;
-                return db.Query(sql, languageID, countryID, searchText).Select(FromDB);
+                return db.Query(sql, language, searchText).Select(FromDB);
             }
         }
 
-        public static Solution Get(int solutionID, int languageID, int countryID)
+        public static Solution Get(int solutionID, string language)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle("SELECT TOP 1 " + sqlGetList + sqlAndId, languageID, countryID, solutionID));
+                return FromDB(db.QuerySingle("SELECT TOP 1 " + sqlGetList + sqlAndId, language, solutionID));
             }
         }
         #endregion

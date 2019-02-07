@@ -79,10 +79,11 @@
                     LcLogger.LogAspnetError(new Exception(subject + "::" + feedback.message));
                 }
 
-                // User becomes an owner by its own request
-                if (feedback.becomeCollaborator) {
-                    LcData.UserInfo.BecomeCollaborator(feedback.userID);
-                }
+                // Re-enable? (BecomeCollaborator was removed as dependent on old code, reference initially not there at VS)
+                // // User becomes an owner by its own request
+                // if (feedback.becomeCollaborator) {
+                //     LcData.UserInfo.BecomeCollaborator(feedback.userID);
+                // }
 
                 return feedback;
             }

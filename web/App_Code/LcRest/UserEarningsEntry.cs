@@ -95,17 +95,16 @@ namespace LcRest
             WHERE
                 e.Active = 1
                 AND e.UserID = @0
-                AND j.languageID = @1
-                AND j.countryID = @2
+                AND j.language = @1
         ";
         const string sqlAndLimits = @"
                 AND
-                (@4 is null OR e.earningsEntryID < @4)
+                (@3 is null OR e.earningsEntryID < @3)
                 AND
-                (@5 is null OR e.earningsEntryID > @5)
+                (@4 is null OR e.earningsEntryID > @4)
         ";
         const string sqlAndID = @"
-                AND e.earningsEntryID = @3
+                AND e.earningsEntryID = @2
         ";
         private const string sqlOrderDesc = @"
             ORDER BY e.paidDate DESC
@@ -113,16 +112,16 @@ namespace LcRest
         private const string sqlOrderAsc = @"
             ORDER BY e.paidDate ASC
         ";
-        public static UserEarningsEntry Get(int userID, int earningsEntryID, int languageID, int countryID)
+        public static UserEarningsEntry Get(int userID, int earningsEntryID, string language)
         {
             using (var db = new LcDatabase())
             {
                 var sql = (sqlSelect + sqlAndID).Replace("@LIMIT", "1");
-                return FromDB(db.QuerySingle(sql, userID, languageID, countryID, earningsEntryID));
+                return FromDB(db.QuerySingle(sql, userID, language, earningsEntryID));
             }
         }
 
-        public static IEnumerable<UserEarningsEntry> GetList(int userID, int languageID, int countryID, int limit, int? untilID = null, int? sinceID = null)
+        public static IEnumerable<UserEarningsEntry> GetList(int userID, string language, int limit, int? untilID = null, int? sinceID = null)
         {
             // Limits: Minimum: 1, Maximum: 100
             limit = Math.Max(1, Math.Min(limit, 100));
@@ -146,7 +145,7 @@ namespace LcRest
                 // so we do manual replacement, and for convenience we use a name
                 sql = sql.Replace("@LIMIT", limit.ToString());
 
-                var data = db.Query(sql, userID, languageID, countryID, limit, untilID, sinceID)
+                var data = db.Query(sql, userID, language, limit, untilID, sinceID)
                 .Select(FromDB);
 
                 if (usingSinceOnly)
@@ -272,7 +271,7 @@ namespace LcRest
                             notes = ""
                         };
                         var locale = Locale.Current;
-                        newForPlatform.FillJobTitlesWithIds(new int[] { entry.jobTitleID }, locale.languageID, locale.countryID);
+                        newForPlatform.FillJobTitlesWithIds(new int[] { entry.jobTitleID }, locale.ToString());
                         // insert and get the ID
                         entry.userExternalListingID = UserExternalListing.Insert(newForPlatform);
                         // this inserts the job title in the user Loconomics listing too if not exists
@@ -315,7 +314,7 @@ namespace LcRest
                         var jobTitleIds = externalListing.jobTitles.Keys.ToList();
                         jobTitleIds.Add(entry.jobTitleID);
                         var locale = Locale.Current;
-                        externalListing.FillJobTitlesWithIds(jobTitleIds, locale.languageID, locale.countryID);
+                        externalListing.FillJobTitlesWithIds(jobTitleIds, locale.ToString());
                         // and save it
                         UserExternalListing.Update(externalListing);
                     }

@@ -184,7 +184,7 @@
             try
             {
                 var locale = LcRest.Locale.Current;
-                var itemID = LcRest.Client.SetClient(serviceProfessionalUserID, client, locale.languageID, locale.countryID);
+                var itemID = LcRest.Client.SetClient(serviceProfessionalUserID, client, locale.ToString());
 
                 // If returned ID is zero rather than the provided one
                 // is because the requested ID was not found.

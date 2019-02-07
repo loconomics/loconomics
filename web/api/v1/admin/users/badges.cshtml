@@ -52,11 +52,11 @@
             var locale = LcRest.Locale.Current;
             if (UrlData.Count == 1 && UrlData[0].IsInt())
             {
-                return LcRest.UserBadge.Get(userID, UrlData[0].AsInt(), locale.languageID, locale.countryID);
+                return LcRest.UserBadge.Get(userID, UrlData[0].AsInt(), locale.ToString());
             }
             else if (UrlData.Count == 0)
             {
-                return LcRest.UserBadge.ListAllByUser(userID, locale.languageID, locale.countryID);
+                return LcRest.UserBadge.ListAllByUser(userID, locale.ToString());
             }
             else
             {
@@ -100,7 +100,7 @@
                 var locale = LcRest.Locale.Current;
 
                 // Get a copy before deletion to send later
-                var item = LcRest.UserBadge.Get(userID, itemID, locale.languageID, locale.countryID);
+                var item = LcRest.UserBadge.Get(userID, itemID, locale.ToString());
 
                 if (item == null)
                 {
@@ -108,7 +108,7 @@
                 }
 
                 // Delete
-                LcRest.UserBadge.Delete(userID, itemID, locale.languageID, locale.countryID, true);
+                LcRest.UserBadge.Delete(userID, itemID, locale.ToString(), true);
 
                 return item;
             }
@@ -151,7 +151,7 @@
             item.userBadgeID = LcRest.UserBadge.Set(item, locale);
 
             // Returns the updated client data
-            return LcRest.UserBadge.Get(userID, item.userBadgeID, locale.languageID, locale.countryID);
+            return LcRest.UserBadge.Get(userID, item.userBadgeID, locale.ToString());
         }
 
         private LcRest.UserBadge GetItemFromForm()

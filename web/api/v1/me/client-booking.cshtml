@@ -117,7 +117,7 @@
             var jobTitleID = Request["jobTitleID"].AsInt();
             var bookCode = Request["bookCode"];
             var locale = LcRest.Locale.Current;
-            var newBooking = LcRest.Booking.NewFor(clientID, serviceProfessionalID, jobTitleID, locale.languageID, locale.countryID, bookCode);
+            var newBooking = LcRest.Booking.NewFor(clientID, serviceProfessionalID, jobTitleID, locale.ToString(), bookCode);
             if (newBooking == null)
                 throw new HttpException(404, "[[[Not Found]]]");
 
@@ -326,7 +326,7 @@
 
             var locale = LcRest.Locale.Current;
             // Get booking presets for current data, to know some fixed settings like instantBooking
-            var booking = LcRest.Booking.NewFor(userID, serviceProfessionalUserID, jobTitleID, locale.languageID, locale.countryID, bookCode);
+            var booking = LcRest.Booking.NewFor(userID, serviceProfessionalUserID, jobTitleID, locale.ToString(), bookCode);
 
             var servicesIds = GetFormServices();
 
@@ -388,8 +388,7 @@
                     alternative1StartTime,
                     alternative2StartTime,
                     servicesIds,
-                    locale.languageID,
-                    locale.countryID,
+                    locale.ToString(),
                     bookCode,
                     specialRequests
                 );

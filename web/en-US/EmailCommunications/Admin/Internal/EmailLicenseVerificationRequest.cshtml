@@ -66,27 +66,13 @@
         <li><strong>User - Email:</strong> @provider.Email</li>
         <li><strong>User - First Name:</strong> @provider.FirstName</li>
         <li><strong>User - Last Name:</strong> @provider.LastName</li>
-        @if (LcData.GetCurrentCountryID() == 1)
-        {
         <li><strong>User - Middle Initial:</strong> @provider.MiddleIn</li>
-        }
-        @if (LcData.GetCurrentCountryID() == 2)
-        {
-        <li><strong>User - Second Last Name:</strong> @provider.SecondLastName</li>
-        }
         <li><strong>User - City:</strong> @provider.City</li>
         <li><strong>User - State Name:</strong> @provider.StateProvinceName</li>
         
         <li><strong>License - First Name:</strong> @data.FirstName</li>
         <li><strong>License - Last Name:</strong> @data.LastName</li>
-        @if (LcData.GetCurrentCountryID() == 1)
-        {
         <li><strong>License - Middle Initial:</strong> @data.MiddleInitial</li>
-        }
-        @if (LcData.GetCurrentCountryID() == 2)
-        {
-        <li><strong>License - Second Last Name:</strong> @data.SecondLastName</li>
-        }
         <li><strong>License - Business Name:</strong> @data.BusinessName</li>
         <li><strong>License - City:</strong> @data.City</li>
         <li><strong>License - State Name:</strong> @data.StateProvinceName</li>

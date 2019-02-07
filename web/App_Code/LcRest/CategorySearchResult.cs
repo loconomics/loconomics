@@ -54,10 +54,9 @@ namespace LcRest
                     SET @origLong=@2
                     DECLARE @SearchDistance int
                     SET @SearchDistance = @3
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @4
-                    DECLARE @CountryID int
-                    SET @CountryID = @5
+                    DECLARE @Language nvarchar(42)
+                    SET @Language = @4
+
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
                        SELECT TOP 1
                     		SC.ServiceCategoryID as categoryID,
@@ -70,15 +69,13 @@ namespace LcRest
                                   UserProfilePositions As UP2
                                   ON UP2.PositionID = UR2.PositionID
                                     AND UR2.ProviderUserID = UP2.UserID
-                                    AND UP2.LanguageID = @LanguageID
-                                    AND UP2.CountryID = @CountryID
+                                    AND UP2.Language = @Language
                                     AND UP2.Active = 1
                                     AND UP2.StatusID = 1
                                 INNER JOIN
                                   ServiceCategoryPosition As SCP2
                                   ON SCP2.PositionID = UP2.PositionID
-                                    AND SCP2.LanguageID = @LanguageID
-                                    AND SCP2.CountryID = @CountryID
+                                    AND SCP2.Language = @Language
                                     AND SCP2.Active = 1
                               WHERE SCP2.ServiceCategoryID = SC.ServiceCategoryID
                             ), 0) As averageRating
@@ -91,19 +88,16 @@ namespace LcRest
                              LEFT JOIN
                             ServiceCategoryPosition As SCP
                               ON P.PositionID = SCP.PositionID
-                                AND P.LanguageID = SCP.LanguageID
-                                AND P.CountryID = SCP.CountryID
+                                AND P.Language = SCP.Language
                              LEFT JOIN
                              ServiceCategory As SC
                               ON SCP.ServiceCategoryID = SC.ServiceCategoryID
-                                AND SCP.LanguageID = SC.LanguageID
-                                AND SCP.CountryID = SC.CountryID
+                                AND SCP.Language = SC.Language
                                 AND SC.Active = 1
                              LEFT JOIN
                             UserProfilePositions As UP
                               ON UP.PositionID = P.PositionID
-                                AND UP.LanguageID = P.LanguageID
-                                AND UP.CountryID = P.CountryID
+                                AND UP.Language = P.Language
                                 AND UP.Active = 1
                                 AND UP.StatusID = 1
                              LEFT JOIN
@@ -140,33 +134,29 @@ namespace LcRest
                             (SELECT	ProviderPackage.ProviderUserID As UserID
                                     ,ProviderPackage.PositionID
                                     ,min(PriceRate) As HourlyRate
-                                    ,LanguageID
-                                    ,CountryID
+                                    ,Language
                              FROM	ProviderPackage
                              WHERE	ProviderPackage.Active = 1
                                     AND ProviderPackage.PriceRateUnit like 'HOUR' 
                                     AND ProviderPackage.PriceRate > 0
                              GROUP BY	ProviderPackage.ProviderUserID, ProviderPackage.PositionID
-                                        ,LanguageID, CountryID
+                                        ,Language
                             ) As PHR
                               ON PHR.UserID = UP.UserID
                                 AND PHR.PositionID = UP.PositionID
-                                AND PHR.LanguageID = P.LanguageID
-                                AND PHR.CountryID = P.CountryID
+                                AND PHR.Language = P.Language
                     WHERE
                             SCP.Active = 1
                              AND
                             P.Active = 1
                              AND
-                            P.LanguageID = @LanguageID
-                             AND
-                            P.CountryID = @CountryID
+                            P.Language = @Language
                            AND (p.Approved = 1 Or p.Approved is null) 
 							AND dbo.fx_IfNW(p.PositionSingular, null) is not null
 							AND SC.ServiceCategoryID = @categoryID       
                     GROUP BY SC.ServiceCategoryID, SC.Name, SC.Description
                     ORDER BY serviceProfessionalsCount DESC, SC.Name
-                    ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID));
+                    ", categoryID, origLat, origLong, SearchDistance, locale.ToString()));
             }
         }
         public static IEnumerable<CategorySearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
@@ -182,10 +172,9 @@ namespace LcRest
                     SET @origLong=@2
                     DECLARE @SearchDistance int
                     SET @SearchDistance = @3
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @4
-                    DECLARE @CountryID int
-                    SET @CountryID = @5
+                    DECLARE @Language nvarchar(42)
+                    SET @Language = @4
+
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
                   SELECT	
                     		SC.ServiceCategoryID as categoryID,
@@ -198,15 +187,13 @@ namespace LcRest
                                   UserProfilePositions As UP2
                                   ON UP2.PositionID = UR2.PositionID
                                     AND UR2.ProviderUserID = UP2.UserID
-                                    AND UP2.LanguageID = @LanguageID
-                                    AND UP2.CountryID = @CountryID
+                                    AND UP2.Language = @Language
                                     AND UP2.Active = 1
                                     AND UP2.StatusID = 1
                                 INNER JOIN
                                   ServiceCategoryPosition As SCP2
                                   ON SCP2.PositionID = UP2.PositionID
-                                    AND SCP2.LanguageID = @LanguageID
-                                    AND SCP2.CountryID = @CountryID
+                                    AND SCP2.Language = @Language
                                     AND SCP2.Active = 1
                               WHERE SCP2.ServiceCategoryID = SC.ServiceCategoryID
                             ), 0) As averageRating
@@ -219,19 +206,16 @@ namespace LcRest
                              LEFT JOIN
                             ServiceCategoryPosition As SCP
                               ON P.PositionID = SCP.PositionID
-                                AND P.LanguageID = SCP.LanguageID
-                                AND P.CountryID = SCP.CountryID
+                                AND P.Language = SCP.Language
                              LEFT JOIN
                              ServiceCategory As SC
                               ON SCP.ServiceCategoryID = SC.ServiceCategoryID
-                                AND SCP.LanguageID = SC.LanguageID
-                                AND SCP.CountryID = SC.CountryID
+                                AND SCP.Language = SC.Language
                                 AND SC.Active = 1
                              LEFT JOIN
                             UserProfilePositions As UP
                               ON UP.PositionID = P.PositionID
-                                AND UP.LanguageID = P.LanguageID
-                                AND UP.CountryID = P.CountryID
+                                AND UP.Language = P.Language
                                 AND UP.Active = 1
                                 AND UP.StatusID = 1
                              LEFT JOIN
@@ -268,27 +252,23 @@ namespace LcRest
                             (SELECT	ProviderPackage.ProviderUserID As UserID
                                     ,ProviderPackage.PositionID
                                     ,min(PriceRate) As HourlyRate
-                                    ,LanguageID
-                                    ,CountryID
+                                    ,Language
                              FROM	ProviderPackage
                              WHERE	ProviderPackage.Active = 1
                                     AND ProviderPackage.PriceRateUnit like 'HOUR' 
                                     AND ProviderPackage.PriceRate > 0
                              GROUP BY	ProviderPackage.ProviderUserID, ProviderPackage.PositionID
-                                        ,LanguageID, CountryID
+                                        ,Language
                             ) As PHR
                               ON PHR.UserID = UP.UserID
                                 AND PHR.PositionID = UP.PositionID
-                                AND PHR.LanguageID = P.LanguageID
-                                AND PHR.CountryID = P.CountryID
+                                AND PHR.Language = P.Language
                     WHERE
                             SCP.Active = 1
                              AND
                             P.Active = 1
                              AND
-                            P.LanguageID = @LanguageID
-                             AND
-                            P.CountryID = @CountryID
+                            P.Language = @Language
                            AND (p.Approved = 1 Or p.Approved is null) 
 							AND dbo.fx_IfNW(p.PositionSingular, null) is not null
 							AND (
@@ -310,7 +290,7 @@ namespace LcRest
 								)            
                     GROUP BY SC.ServiceCategoryID, SC.Name, SC.Description
                     ORDER BY serviceProfessionalsCount DESC, SC.Name
-                                ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
+                                ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.ToString())
                     .Select(FromDB);
             }
         }
