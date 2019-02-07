@@ -108,7 +108,7 @@ namespace LcRest
                 var displayRank = 1;
                 foreach (var solutionID in sortedSolutions)
                 {
-                    Set(userID, userListingID, solutionID, displayRank, locale, db);
+                    Set(userID, userListingID, solutionID, displayRank, locale.ToString(), db);
                     displayRank += 1;
                 }
                 db.Execute("COMMIT TRANSACTION");

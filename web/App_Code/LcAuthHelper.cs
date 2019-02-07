@@ -652,10 +652,10 @@ public static class LcAuthHelper
             null,
             null,
             null,
-            0,
+            null,
             false
         );
-        LcAuth.ConnectWithFacebookAccount(result.userID, facebookUser.id);
+        LcAuth.ConnectWithFacebookAccount(result.UserID, facebookUser.id);
         LcAuth.SendRegisterUserEmail(result);
         return result;
     }

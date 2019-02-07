@@ -161,7 +161,6 @@ namespace LcRest
         public static IEnumerable<ServiceProfessionalService> GetListByIds(int serviceProfessionalUserID, IEnumerable<int> serviceIds)
         {
             int jobTitleID = 0;
-            int langID = 0;
 
             using (var db = new LcDatabase())
             {
@@ -176,10 +175,8 @@ namespace LcRest
                     if (jobTitleID == 0)
                     {
                         jobTitleID = service.jobTitleID;
-                        langID = service.language;
                     }
-                    else if (jobTitleID != service.jobTitleID ||
-                        langID != service.language)
+                    else if (jobTitleID != service.jobTitleID)
                     {
                         // All services must be part of the same position
                         throw new ConstraintException("[[[All services must be selected from the same job title]]]");

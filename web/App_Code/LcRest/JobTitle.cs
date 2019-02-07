@@ -29,15 +29,14 @@ namespace LcRest
                     SELECT PositionID
                     FROM Positions
                     WHERE Active = 1
-                        AND LanguageID = @0
-                        AND CountryID = @1
+                        AND Language = @0
                         AND Approved = 1 
                         AND (
-                            PositionSingular like @2
+                            PositionSingular like @1
                              OR
-                            PositionPlural like @2
+                            PositionPlural like @1
                         )
-                    ", languageID, countryID, jobTitleName);
+                    ", language, jobTitleName);
             }
         }
     }

@@ -231,7 +231,7 @@ namespace LcRest
                     entry.type,
                     entry.category,
                     entry.expiryDate,
-                    locale.language,
+                    locale.ToString(),
                     entry.createdBy,
                     entry.modifiedBy
                 );

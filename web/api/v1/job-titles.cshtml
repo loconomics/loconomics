@@ -48,7 +48,7 @@
             {
                 var id = UrlData[0].AsInt(0);
 
-                var item = LcRest.PublicJobTitle.Get(id, LcRest.Locale.Current);
+                var item = LcRest.PublicJobTitle.Get(id, LcRest.Locale.Current.ToString());
 
                 if (item != null)
                     return item;
