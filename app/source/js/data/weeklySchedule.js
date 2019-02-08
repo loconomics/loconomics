@@ -14,14 +14,10 @@ var session = require('./session');
 var remote = require('./drivers/restClient');
 
 /**
+ * Notifies when a change was pushed successfully to the server
  * @private {SingleEvent}
  */
 const onDataChanged = new SingleEvent();
-/**
- * Notifies when a change was pushed successfully to the server
- * @member {SingleEvent}
- */
-exports.onDataChanged = onDataChanged.subscriber;
 
 var api = new RemoteModel({
     data: new WeeklySchedule(),
@@ -46,6 +42,8 @@ api.save = (data) => save(data).then((result) => {
     userListings.invalidateCache();
     return result;
 });
+
+api.onDataChanged = onDataChanged.subscriber;
 
 export default api;
 
