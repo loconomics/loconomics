@@ -48,8 +48,8 @@ namespace CalendarDll.Data
         public Nullable<System.TimeSpan> TimeBlock { get; set; }
         public Nullable<int> DayofWeek { get; set; }
         public string Description { get; set; }
+        public Nullable<System.DateTimeOffset> Deleted { get; set; }
         public int EventType { get; set; }
-        public DateTimeOffset? Deleted { get; set; }
     
         public virtual CalendarAvailabilityType CalendarAvailabilityType { get; set; }
         public virtual ICollection<CalendarEventComments> CalendarEventComments { get; set; }

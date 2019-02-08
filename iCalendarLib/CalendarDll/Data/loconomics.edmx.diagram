@@ -20,7 +20,6 @@
         <EntityTypeShape EntityType="loconomicsModel.CalendarReccurrenceFrequency" Width="2.25" PointX="6.625" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.country" Width="1.5" PointX="5.375" PointY="17.25" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.county" Width="1.5" PointX="7.375" PointY="14.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="loconomicsModel.language" Width="1.5" PointX="8.375" PointY="18.25" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.postalcode" Width="1.5" PointX="10.375" PointY="14.25" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.serviceaddress" Width="1.5" PointX="13.375" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.stateprovince" Width="1.5" PointX="10.375" PointY="19.25" IsExpanded="true" />

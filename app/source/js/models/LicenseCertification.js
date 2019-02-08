@@ -6,7 +6,7 @@ var Model = require('./Model');
 function LicenseCertification(values) {
 
     Model(this);
-    
+
     this.model.defProperties({
         licenseCertificationID: 0,
         name: '',
@@ -16,10 +16,10 @@ function LicenseCertification(values) {
         howToGetLicensedUrl: null,
         createdDate: null, // Autofilled by server
         updatedDate: null, // Autofilled by server
-        languageID: 0
+        language: ''
     }, values);
-    
-    this.model.defID(['licenseCertificationID', 'languageID']);
+
+    this.model.defID(['licenseCertificationID']);
 }
 
 module.exports = LicenseCertification;

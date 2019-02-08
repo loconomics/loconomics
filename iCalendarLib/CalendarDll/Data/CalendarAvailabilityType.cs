@@ -16,12 +16,12 @@ namespace CalendarDll.Data
     {
         public CalendarAvailabilityType()
         {
+            this.Language = "en-US";
             this.CalendarEvents = new HashSet<CalendarEvents>();
         }
     
         public int CalendarAvailabilityTypeID { get; set; }
-        public int LanguageID { get; set; }
-        public int CountryID { get; set; }
+        public string Language { get; set; }
         public string CalendarAvailabilityTypeName { get; set; }
         public string CalendarAvailabilityTypeDescription { get; set; }
         public string SelectableAs { get; set; }

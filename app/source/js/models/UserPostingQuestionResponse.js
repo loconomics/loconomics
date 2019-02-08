@@ -122,8 +122,7 @@ export default class UserPostingQuestionResponse {
  * @property {string} helpBlock Optional assistive text for users relative to
  * the question (note that each option has a tooltip property for option specific
  * help text)
- * @property {number} languageID
- * @property {number} countryID
+ * @property {string} language
  * @property {Date} createdDate
  * @property {Date} updatedDate
  * @property {string} modifiedBy

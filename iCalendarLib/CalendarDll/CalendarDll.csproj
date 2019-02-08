@@ -152,9 +152,6 @@
     <Compile Include="Data\GetProviderAvailabilityFullSet_Result.cs">
       <DependentUpon>loconomics.tt</DependentUpon>
     </Compile>
-    <Compile Include="Data\language.cs">
-      <DependentUpon>loconomics.tt</DependentUpon>
-    </Compile>
     <Compile Include="Data\loconomics.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
