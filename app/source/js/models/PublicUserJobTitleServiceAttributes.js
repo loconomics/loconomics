@@ -20,8 +20,7 @@ function PublicUserJobTitleServiceAttributes(values) {
         experienceLevel: {
             Model: ExperienceLevel
         },
-        languageID: 0,
-        countryID: 0
+        language: '',
         //createdDate: null,
         //updatedDate: null
     }, values);

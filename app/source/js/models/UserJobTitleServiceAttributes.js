@@ -95,8 +95,7 @@ function UserJobTitleServiceAttributes(values) {
         serviceAttributes: {},
         proposedServiceAttributes: {},
         experienceLevelID: false,
-        languageID: 0,
-        countryID: 0
+        language: '',
         //createdDate: null,
         //updatedDate: null
     }, values);

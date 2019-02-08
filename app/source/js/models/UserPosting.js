@@ -51,8 +51,7 @@ export default class UserPosting {
              */
             reactionTypeID: null,
             reactionDate: null,
-            languageID: null,
-            countryID: null,
+            language: '',
             createdDate: null,
             updatedDate: null
         }, values);
