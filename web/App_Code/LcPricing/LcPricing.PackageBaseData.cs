@@ -110,25 +110,25 @@ public static partial class LcPricingModel
                     ,IsAddon
                     ,visibleToClientID
                 ) VALUES (
-                    @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, getdate(), getdate(), 'sys', @15, @16, @17
+                    @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, getdate(), getdate(), 'sys', @14, @15, @16
                 )
                 SET @PackageID = @@Identity
             END ELSE
                 UPDATE ProviderPackage SET
-                    ProviderPackageName = @6
-                    ,ProviderPackageDescription = @7
-                    ,ProviderPackagePrice = @8
-                    ,ProviderPackageServiceDuration = @9
-                    ,FirstTimeClientsOnly = @10
-                    ,NumberOfSessions = @11
-                    ,PriceRate = @12
-                    ,PriceRateUnit = @13
-                    ,IsPhone=@14
+                    ProviderPackageName = @5
+                    ,ProviderPackageDescription = @6
+                    ,ProviderPackagePrice = @7
+                    ,ProviderPackageServiceDuration = @8
+                    ,FirstTimeClientsOnly = @9
+                    ,NumberOfSessions = @10
+                    ,PriceRate = @11
+                    ,PriceRateUnit = @12
+                    ,IsPhone=@13
                     ,UpdatedDate = getdate()
                     ,ModifiedBy = 'sys'
-                    ,Active = @15
-                    ,IsAddon = @16
-                    ,visibleToClientID = @17
+                    ,Active = @14
+                    ,IsAddon = @15
+                    ,visibleToClientID = @16
                 WHERE ProviderPackageID = @PackageID
 
             -- Test Alert

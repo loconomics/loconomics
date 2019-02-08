@@ -325,9 +325,9 @@ namespace LcRest
                          AND (@1 = -1 OR P.PositionID = @1)
                          AND P.Language = @2
                          AND PD.Active = 1 AND P.Active = 1
-                         AND (@4 = -1 OR P.ProviderPackageID = @3)
-                         AND (@5 = -1 OR P.PricingTypeID = @4)
-                         AND (@6 = -1 OR P.IsAddOn = @5)
+                         AND (@3 = -1 OR P.ProviderPackageID = @3)
+                         AND (@4 = -1 OR P.PricingTypeID = @4)
+                         AND (@5 = -1 OR P.IsAddOn = @5)
                 ORDER BY A.Name ASC
         ";
 
@@ -353,9 +353,9 @@ namespace LcRest
                         p.Language = @2
                          AND 
                         p.Active = 1
-                         AND (@4 = -1 OR p.ProviderPackageID = @3)
-                         AND (@5 = -1 OR p.PricingTypeID = @4)
-                         AND (@6 = -1 OR P.IsAddOn = @5)
+                         AND (@3 = -1 OR p.ProviderPackageID = @3)
+                         AND (@4 = -1 OR p.PricingTypeID = @4)
+                         AND (@5 = -1 OR P.IsAddOn = @5)
                          AND P.VisibleToClientID IN ({0})
                 ORDER BY PT.DisplayRank ASC
             ";
