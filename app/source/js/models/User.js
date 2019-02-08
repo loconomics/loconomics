@@ -46,7 +46,7 @@ function User(values) {
         accountStatusID: 0,
         createdDate: null,
         updatedDate: null,
-        language: ''
+        language: '',
     }, values);
 
     this.fullName = ko.pureComputed(function() {

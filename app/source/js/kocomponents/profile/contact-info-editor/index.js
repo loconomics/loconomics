@@ -5,7 +5,6 @@
  */
 import Komponent from '../../helpers/KnockoutComponent';
 import User from '../../../models/User';
-import countriesOptions from '../../../viewmodels/CountriesOptions';
 import ko from 'knockout';
 import onboarding from '../../../data/onboarding';
 import phoneValidationRegex from '../../../utils/phoneValidationRegex';
@@ -133,7 +132,12 @@ export default class ProfileContactInfoEditor extends Komponent {
          * @member {KnockoutComputed<boolean>}
          */
         this.isPhoneValid = ko.pureComputed(() => {
-            var isUSA = this.data.countryID() === countriesOptions.unitedStates.id;
+            // Removed check for 'isUSA' since doesn't play well with other platform
+            // changes regarding country id fields.
+            // Added a very simple check, if starts with 1 is USA and we validate that more precise way
+            // either way is general
+            // TODO: Need a more international enabled validation
+            const isUSA = /^1/.test(this.data.phone());
             var phoneRegex = isUSA ? phoneValidationRegex.NORTH_AMERICA_PATTERN : phoneValidationRegex.GENERAL_VALID_CHARS;
             return phoneRegex.test(this.data.phone());
         });
