@@ -14,8 +14,13 @@ namespace CalendarDll.Data
     
     public partial class country
     {
+        public country()
+        {
+            this.Language = "en-US";
+        }
+    
         public int CountryID { get; set; }
-        public int LanguageID { get; set; }
+        public string Language { get; set; }
         public string CountryName { get; set; }
         public string CountryCode { get; set; }
         public string CountryCallingCode { get; set; }

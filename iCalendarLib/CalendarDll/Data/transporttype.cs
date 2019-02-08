@@ -14,9 +14,13 @@ namespace CalendarDll.Data
     
     public partial class transporttype
     {
+        public transporttype()
+        {
+            this.Language = "en-US";
+        }
+    
         public int TransportTypeID { get; set; }
-        public int LanguageID { get; set; }
-        public int CountryID { get; set; }
+        public string Language { get; set; }
         public string TransportTypeName { get; set; }
         public string TransportTypeDescription { get; set; }
         public System.DateTime CreatedDate { get; set; }

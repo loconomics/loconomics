@@ -16,6 +16,7 @@ namespace CalendarDll.Data
     {
         public users()
         {
+            this.PreferredLanguage = "en-US";
             this.serviceaddress = new HashSet<serviceaddress>();
             this.CalendarEvents = new HashSet<CalendarEvents>();
         }
@@ -28,8 +29,8 @@ namespace CalendarDll.Data
         public string NickName { get; set; }
         public string PublicBio { get; set; }
         public int GenderID { get; set; }
-        public Nullable<int> PreferredLanguageID { get; set; }
-        public Nullable<int> PreferredCountryID { get; set; }
+        public string PreferredLanguage { get; set; }
+        public string SignupCountryCode { get; set; }
         public Nullable<bool> IsProvider { get; set; }
         public Nullable<bool> IsCustomer { get; set; }
         public Nullable<bool> IsAdmin { get; set; }

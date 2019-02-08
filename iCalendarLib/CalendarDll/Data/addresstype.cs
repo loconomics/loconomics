@@ -14,9 +14,13 @@ namespace CalendarDll.Data
     
     public partial class addresstype
     {
+        public addresstype()
+        {
+            this.Language = "en-US";
+        }
+    
         public int AddressTypeID { get; set; }
-        public int LanguageID { get; set; }
-        public int CountryID { get; set; }
+        public string Language { get; set; }
         public string AddressType1 { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
