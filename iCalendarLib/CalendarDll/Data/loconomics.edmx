@@ -24,7 +24,7 @@
           <EntitySet Name="country" EntityType="loconomicsModel.Store.country" store:Type="Tables" store:Schema="dbo" store:Name="country">
             <DefiningQuery>SELECT 
       [country].[CountryID] AS [CountryID], 
-      [country].[LanguageID] AS [LanguageID], 
+      [country].[Language] AS [Language], 
       [country].[CountryName] AS [CountryName], 
       [country].[CountryCode] AS [CountryCode], 
       [country].[CountryCallingCode] AS [CountryCallingCode], 
@@ -87,8 +87,7 @@
           <EntitySet Name="transporttype" EntityType="loconomicsModel.Store.transporttype" store:Type="Tables" store:Schema="dbo" store:Name="transporttype">
             <DefiningQuery>SELECT 
       [transporttype].[TransportTypeID] AS [TransportTypeID], 
-      [transporttype].[LanguageID] AS [LanguageID], 
-      [transporttype].[CountryID] AS [CountryID], 
+      [transporttype].[Language] AS [Language], 
       [transporttype].[TransportTypeName] AS [TransportTypeName], 
       [transporttype].[TransportTypeDescription] AS [TransportTypeDescription], 
       [transporttype].[CreatedDate] AS [CreatedDate], 
@@ -173,12 +172,10 @@
         <EntityType Name="addresstype">
           <Key>
             <PropertyRef Name="AddressTypeID" />
-            <PropertyRef Name="LanguageID" />
-            <PropertyRef Name="CountryID" />
+            <PropertyRef Name="Language" />
           </Key>
           <Property Name="AddressTypeID" Type="int" Nullable="false" />
-          <Property Name="LanguageID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
+          <Property Name="Language" Type="varchar" Nullable="false" />
           <Property Name="AddressType" Type="varchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
@@ -192,8 +189,7 @@
             <PropertyRef Name="CalendarAvailabilityTypeID" />
           </Key>
           <Property Name="CalendarAvailabilityTypeID" Type="int" Nullable="false" />
-          <Property Name="LanguageID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
+          <Property Name="Language" Type="varchar" Nullable="false" />
           <Property Name="CalendarAvailabilityTypeName" Type="nvarchar" Nullable="false" MaxLength="50" />
           <Property Name="CalendarAvailabilityTypeDescription" Type="nvarchar" Nullable="false" MaxLength="300" />
           <Property Name="SelectableAs" Type="nvarchar" MaxLength="50" />
@@ -349,13 +345,13 @@
         <EntityType Name="country">
           <Key>
             <PropertyRef Name="CountryID" />
-            <PropertyRef Name="LanguageID" />
+            <PropertyRef Name="Language" />
             <PropertyRef Name="CountryName" />
             <PropertyRef Name="CountryCode" />
             <PropertyRef Name="Active" />
           </Key>
           <Property Name="CountryID" Type="int" Nullable="false" />
-          <Property Name="LanguageID" Type="int" Nullable="false" />
+          <Property Name="Language" Type="varchar" Nullable="false" />
           <Property Name="CountryName" Type="varchar" Nullable="false" MaxLength="100" />
           <Property Name="CountryCode" Type="varchar" Nullable="false" MaxLength="3" />
           <Property Name="CountryCallingCode" Type="varchar" MaxLength="3" />
@@ -467,7 +463,7 @@
         <EntityType Name="transporttype">
           <Key>
             <PropertyRef Name="TransportTypeID" />
-            <PropertyRef Name="LanguageID" />
+            <PropertyRef Name="Language" />
             <PropertyRef Name="TransportTypeName" />
             <PropertyRef Name="CreatedDate" />
             <PropertyRef Name="UpdatedDate" />
@@ -475,8 +471,7 @@
             <PropertyRef Name="Active" />
           </Key>
           <Property Name="TransportTypeID" Type="int" Nullable="false" />
-          <Property Name="LanguageID" Type="int" Nullable="false" />
-          <Property Name="CountryID" Type="int" Nullable="false" />
+          <Property Name="Language" Type="varchar" Nullable="false" />
           <Property Name="TransportTypeName" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="TransportTypeDescription" Type="varchar" MaxLength="300" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -496,8 +491,8 @@
           <Property Name="NickName" Type="varchar" MaxLength="50" />
           <Property Name="PublicBio" Type="varchar" MaxLength="500" />
           <Property Name="GenderID" Type="int" Nullable="false" />
-          <Property Name="PreferredLanguageID" Type="int" />
-          <Property Name="PreferredCountryID" Type="int" />
+          <Property Name="PreferredLanguage" Type="varchar" />
+          <Property Name="SignupCountryCode" Type="varchar" />
           <Property Name="IsProvider" Type="bit" />
           <Property Name="IsCustomer" Type="bit" />
           <Property Name="IsAdmin" Type="bit" />
@@ -1462,7 +1457,7 @@
             <EntityTypeMapping TypeName="loconomicsModel.addresstype">
               <MappingFragment StoreEntitySet="addresstype">
                 <ScalarProperty Name="AddressTypeID" ColumnName="AddressTypeID" />
-                <ScalarProperty Name="Language" ColumnName="LanguageID" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="AddressType1" ColumnName="AddressType" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
@@ -1478,7 +1473,7 @@
               <MappingFragment StoreEntitySet="CalendarAvailabilityType">
                 <ScalarProperty Name="SelectableAs" ColumnName="SelectableAs" />
                 <ScalarProperty Name="CalendarAvailabilityTypeID" ColumnName="CalendarAvailabilityTypeID" />
-                <ScalarProperty Name="Language" ColumnName="LanguageID" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="CalendarAvailabilityTypeName" ColumnName="CalendarAvailabilityTypeName" />
                 <ScalarProperty Name="CalendarAvailabilityTypeDescription" ColumnName="CalendarAvailabilityTypeDescription" />
               </MappingFragment>
@@ -1601,7 +1596,7 @@
             <EntityTypeMapping TypeName="loconomicsModel.country">
               <MappingFragment StoreEntitySet="country">
                 <ScalarProperty Name="CountryID" ColumnName="CountryID" />
-                <ScalarProperty Name="Language" ColumnName="LanguageID" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="CountryName" ColumnName="CountryName" />
                 <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
                 <ScalarProperty Name="CountryCallingCode" ColumnName="CountryCallingCode" />
@@ -1691,7 +1686,7 @@
             <EntityTypeMapping TypeName="loconomicsModel.transporttype">
               <MappingFragment StoreEntitySet="transporttype">
                 <ScalarProperty Name="TransportTypeID" ColumnName="TransportTypeID" />
-                <ScalarProperty Name="Language" ColumnName="LanguageID" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
                 <ScalarProperty Name="TransportTypeName" ColumnName="TransportTypeName" />
                 <ScalarProperty Name="TransportTypeDescription" ColumnName="TransportTypeDescription" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
@@ -1713,8 +1708,8 @@
                 <ScalarProperty Name="NickName" ColumnName="NickName" />
                 <ScalarProperty Name="PublicBio" ColumnName="PublicBio" />
                 <ScalarProperty Name="GenderID" ColumnName="GenderID" />
-                <ScalarProperty Name="PreferredLanguage" ColumnName="PreferredLanguageID" />
-                <ScalarProperty Name="SignupCountryCode" ColumnName="PreferredCountryID" />
+                <ScalarProperty Name="PreferredLanguage" ColumnName="PreferredLanguage" />
+                <ScalarProperty Name="SignupCountryCode" ColumnName="SignupCountryCode" />
                 <ScalarProperty Name="IsProvider" ColumnName="IsProvider" />
                 <ScalarProperty Name="IsCustomer" ColumnName="IsCustomer" />
                 <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />

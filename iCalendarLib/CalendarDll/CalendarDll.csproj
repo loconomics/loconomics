@@ -251,7 +251,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.es-ES.resx" />
-    <EmbeddedResource Include="Resources.es-SV.resx" />
     <EmbeddedResource Include="Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
