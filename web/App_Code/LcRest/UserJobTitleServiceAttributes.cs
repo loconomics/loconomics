@@ -139,7 +139,7 @@ namespace LcRest
         const string sqlSetExpLevel = @"
         BEGIN TRAN
             UPDATE  ServiceAttributeExperienceLevel WITH (serializable)
-            SET     ExperienceLevelID = @4,
+            SET     ExperienceLevelID = @3,
                     UpdatedDate = getdate(),
                     ModifiedBy = 'sys'
             WHERE   UserId = @0 AND PositionID = @1
@@ -150,7 +150,7 @@ namespace LcRest
                 INSERT INTO ServiceAttributeExperienceLevel (UserID,
                     PositionID, Language, ExperienceLevelID,
                     CreatedDate, UpdatedDate, ModifiedBy)
-                VALUES (@0, @1, @2, @3, @4, getdate(), getdate(), 'sys')
+                VALUES (@0, @1, @2, @3, getdate(), getdate(), 'sys')
             END
         COMMIT TRAN
         ";

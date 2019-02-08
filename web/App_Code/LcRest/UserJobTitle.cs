@@ -327,10 +327,10 @@ namespace LcRest
             userJobTitle.ValidateAndFixBookingPolicies();
             var sqlUpdate = @"
                 UPDATE  UserProfilePositions
-                SET     PositionIntro = @4,
-                        CancellationPolicyID = @5,
-                        InstantBooking = @6,
-                        collectPaymentAtBookMeButton = @7,
+                SET     PositionIntro = @3,
+                        CancellationPolicyID = @4,
+                        InstantBooking = @5,
+                        collectPaymentAtBookMeButton = @6,
                         UpdatedDate = getdate()
                 WHERE   UserID = @0 AND PositionID = @1
                     AND language = @2
