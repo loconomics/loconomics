@@ -251,7 +251,7 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                var sql = sqlSelectSuggestedForUser + " AND a.userPostingID = @3 " + sqlOrderByDate;
+                var sql = sqlSelectSuggestedForUser + " AND a.userPostingID = @2 " + sqlOrderByDate;
                 var r = db.QuerySingle(sql, userID, language, userPostingID);
                 var post = (UserPosting)FromDB(r, true, userID, true);
                 post.reactionDate = r.reactionDate;
