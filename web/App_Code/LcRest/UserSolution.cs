@@ -51,9 +51,9 @@ namespace LcRest
         const string sqlSet = @"
             UPDATE UserSolution
             SET Active = 1,
-                DisplayRank = @5,
+                DisplayRank = @4,
                 UpdatedDate = getdate(),
-                ModifiedBy = @6
+                ModifiedBy = @5
             WHERE UserID = @0
                 AND UserListingID = @1
                 AND Language = @2
