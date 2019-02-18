@@ -34,7 +34,6 @@ export default class Login extends Activity {
     constructor($activity, app) {
         super($activity, app);
 
-        this.accessLevel = UserType.loggedUser;
         this.navBar = Activity.createSectionNavBar(null);
         this.title = 'Sign in to your account';
 
@@ -241,6 +240,12 @@ export default class Login extends Activity {
 
     show(state) {
         super.show(state);
+
+        // Go out if enters a logged user, by any redirection mistake or link, or
+        // will be confusing (and maybe locking navigation)
+        if (user.userType() & UserType.loggedUser) {
+            setTimeout(() => this.app.goDashboard());
+        }
 
         this.reset();
         const params = state.route.segments;
