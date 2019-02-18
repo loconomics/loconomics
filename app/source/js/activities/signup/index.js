@@ -28,13 +28,11 @@ export default class Signup extends Activity {
 
         this.accessLevel = UserType.anonymous;
         this.navBar = Activity.createSectionNavBar(null);
-        this.title = 'Welcome to Loconomics';
+        this.title = 'Sign up for your toolbelt';
 
         // Component API entry point: expects SignupVM
         this.signup = ko.observable();
         this.signup.subscribe(() => this.reset);
-        // A static utility (currently only used to conditionally show/hide DownloadApp links)
-        this.inApp = ko.observable(!!window.cordova);
 
         this.redirect = () => app.goDashboard();
     }
