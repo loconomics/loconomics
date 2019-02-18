@@ -246,11 +246,15 @@ export default class Login extends Activity {
         const params = state.route.segments;
         const query = state.route.query;
 
-        var redirectUrl = state.redirectUrl || query.redirectUrl;
+        let redirectUrl = state.redirectUrl || query.redirectUrl;
         if (!redirectUrl && state.requiredLevel) {
             // Called from the shell access control after a failed access to an activity,
             // automatically use previous activity and returning URL
             redirectUrl = shell.referrerRoute && shell.referrerRoute.url;
+        }
+        // Prevent loops!! (happens easily on external links to the page)
+        if (/login/.test(redirectUrl)) {
+            redirectUrl = null;
         }
         this.redirectUrl(redirectUrl);
 
